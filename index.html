@@ -1,685 +1,1136 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>支付宝资产配置分析报告</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', 'Noto Sans SC', sans-serif; }
-        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .card-shadow { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
-        .metric-card { transition: transform 0.2s; }
-        .metric-card:hover { transform: translateY(-2px); }
-        .tab-active { border-bottom: 2px solid #667eea; color: #667eea; }
-        .fade-in { animation: fadeIn 0.5s ease-in; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0f172a">
+  <title>资产配置</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --bg-elevated: #111827;
+      --bg-card: #1a2236;
+      --bg-card-hover: #232d45;
+      --border: #1f2937;
+      --text: #f1f5f9;
+      --text-dim: #94a3b8;
+      --text-muted: #64748b;
+      --green: #22c55e;
+      --green-dim: rgba(34,197,94,0.12);
+      --red: #ef4444;
+      --red-dim: rgba(239,68,68,0.12);
+      --blue: #3b82f6;
+      --blue-dim: rgba(59,130,246,0.12);
+      --purple: #a855f7;
+      --purple-dim: rgba(168,85,247,0.12);
+      --orange: #f97316;
+      --orange-dim: rgba(249,115,22,0.12);
+      --yellow: #eab308;
+      --radius: 16px;
+      --radius-sm: 12px;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      padding-bottom: calc(72px + var(--safe-bottom));
+    }
+
+    /* Header */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(11, 15, 25, 0.92);
+      backdrop-filter: blur(20px) saturate(1.8);
+      -webkit-backdrop-filter: blur(20px) saturate(1.8);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 16px;
+    }
+
+    .app-header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .app-header h1 {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .app-header .subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    .header-refresh {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-dim);
+      font-size: 16px;
+      transition: all 0.2s;
+    }
+
+    .header-refresh:active { transform: scale(0.92); background: var(--bg-card-hover); }
+
+    /* Content */
+    .content { padding: 12px 16px; }
+
+    /* Cards */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 12px;
+      transition: transform 0.15s, background 0.15s;
+    }
+
+    .card:active { transform: scale(0.995); }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-dim);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Hero stats */
+    .hero-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .hero-stat {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 14px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-stat::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--blue), var(--purple));
+      opacity: 0.6;
+    }
+
+    .hero-stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .hero-stat-value {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .hero-stat-change {
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .hero-stat-change.up { color: var(--green); }
+    .hero-stat-change.down { color: var(--red); }
+
+    /* Allocation mini bars */
+    .alloc-bar {
+      display: flex;
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 12px 0 8px;
+    }
+
+    .alloc-bar-seg { transition: width 0.6s ease; }
+
+    .alloc-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .alloc-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .alloc-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    /* Fund list */
+    .fund-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .fund-item:last-child { border-bottom: none; }
+
+    .fund-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    .fund-tag {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+      margin-top: 4px;
+      display: inline-block;
+    }
+
+    .fund-tag.bond { background: var(--green-dim); color: var(--green); }
+    .fund-tag.qdii { background: var(--orange-dim); color: var(--orange); }
+    .fund-tag.money { background: var(--blue-dim); color: var(--blue); }
+
+    .fund-right { text-align: right; }
+
+    .fund-amount { font-size: 14px; font-weight: 600; }
+
+    .fund-return {
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .fund-return.up { color: var(--green); }
+    .fund-return.down { color: var(--red); }
+
+    /* Scenario cards */
+    .scenario-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      margin-bottom: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .scenario-card.recommended {
+      border-color: rgba(168, 85, 247, 0.4);
+      background: linear-gradient(135deg, var(--bg-card) 0%, rgba(168,85,247,0.06) 100%);
+    }
+
+    .scenario-card.recommended::before {
+      content: '推荐';
+      position: absolute;
+      top: 8px;
+      right: -22px;
+      background: var(--purple);
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 24px;
+      transform: rotate(35deg);
+    }
+
+    .scenario-name { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+
+    .scenario-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; }
+
+    .scenario-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .scenario-metric { text-align: center; }
+
+    .scenario-metric-value {
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .scenario-metric-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* SIP timeline */
+    .sip-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+
+    .sip-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .sip-name { font-size: 14px; font-weight: 600; }
+
+    .sip-return {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--green);
+    }
+
+    .sip-detail {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    /* Advice list */
+    .advice-item {
+      display: flex;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .advice-item:last-child { border-bottom: none; }
+
+    .advice-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .advice-content { flex: 1; }
+
+    .advice-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+
+    .advice-desc { font-size: 12px; color: var(--text-dim); line-height: 1.5; }
+
+    /* Bottom nav */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(11, 15, 25, 0.95);
+      backdrop-filter: blur(20px) saturate(1.8);
+      -webkit-backdrop-filter: blur(20px) saturate(1.8);
+      border-top: 1px solid var(--border);
+      padding-bottom: var(--safe-bottom);
+      display: flex;
+      justify-content: space-around;
+      padding-top: 6px;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 6px 12px;
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 500;
+      transition: color 0.2s;
+      cursor: pointer;
+      border: none;
+      background: none;
+      -webkit-appearance: none;
+    }
+
+    .nav-item.active { color: var(--blue); }
+
+    .nav-icon {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    /* Page transitions */
+    .page { display: none; animation: fadeIn 0.25s ease; }
+    .page.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Table */
+    .data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .data-table th, .data-table td { padding: 8px 6px; text-align: left; border-bottom: 1px solid var(--border); }
+    .data-table th { color: var(--text-muted); font-weight: 600; font-size: 11px; }
+    .data-table td { color: var(--text); }
+    .data-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+    /* Chart container */
+    .chart-wrap { position: relative; height: 220px; margin: 10px 0; }
+    .chart-wrap-sm { position: relative; height: 160px; margin: 10px 0; }
+
+    /* Scroll hint */
+    .scroll-hint {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-align: center;
+      padding: 4px 0;
+    }
+
+    /* Risk badge */
+    .risk-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .risk-badge.low { background: var(--green-dim); color: var(--green); }
+    .risk-badge.mid { background: var(--yellow-dim); color: var(--yellow); }
+    .risk-badge.high { background: var(--red-dim); color: var(--red); }
+
+    /* Pull to refresh spinner */
+    .ptr-spinner {
+      text-align: center;
+      padding: 12px;
+      color: var(--text-muted);
+      font-size: 12px;
+      display: none;
+    }
+
+    .ptr-spinner.show { display: block; }
+
+    /* Warning box */
+    .warning-box {
+      background: rgba(234, 179, 8, 0.08);
+      border: 1px solid rgba(234, 179, 8, 0.2);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      font-size: 12px;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    /* Section divider */
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 20px 0 10px;
+      padding-left: 10px;
+      border-left: 3px solid var(--blue);
+    }
+  </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
-    <!-- Header -->
-    <header class="gradient-bg text-white py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
-                <div>
-                    <h1 class="text-3xl font-bold">支付宝资产配置分析报告</h1>
-                    <p class="mt-2 text-blue-100">基于量化回测的投资建议 | 更新日期：2026年6月23日</p>
-                </div>
-                <div class="mt-4 md:mt-0 text-right">
-                    <div class="text-2xl font-bold">¥707,301.01</div>
-                    <div class="text-sm text-blue-100">总资产</div>
-                </div>
-            </div>
+<body>
+
+<!-- Header -->
+<header class="app-header">
+  <div class="app-header-inner">
+    <div>
+      <h1>资产配置</h1>
+      <div class="subtitle">2026.06.23 更新</div>
+    </div>
+    <button class="header-refresh" onclick="refreshData()" aria-label="刷新">&#x21bb;</button>
+  </div>
+</header>
+
+<!-- Pull to refresh -->
+<div class="ptr-spinner" id="ptrSpinner">正在刷新数据...</div>
+
+<!-- ==================== PAGE: OVERVIEW ==================== -->
+<div class="page active" id="page-overview">
+  <div class="content">
+    <!-- Hero Stats -->
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-label">总资产</div>
+        <div class="hero-stat-value">¥70.7<span style="font-size:14px;color:var(--text-dim)">万</span></div>
+        <div class="hero-stat-change up">+¥632.65 昨日</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-label">累计收益</div>
+        <div class="hero-stat-value" style="color:var(--green)">+¥7,487</div>
+        <div class="hero-stat-change up">+1.06%</div>
+      </div>
+    </div>
+
+    <!-- Allocation -->
+    <div class="card">
+      <div class="card-title">&#x1F4CA; 资产分布</div>
+      <div class="alloc-bar">
+        <div class="alloc-bar-seg" style="width:72.4%;background:var(--green)"></div>
+        <div class="alloc-bar-seg" style="width:26.2%;background:var(--blue)"></div>
+        <div class="alloc-bar-seg" style="width:1.4%;background:var(--orange)"></div>
+      </div>
+      <div class="alloc-legend">
+        <div class="alloc-legend-item"><div class="alloc-dot" style="background:var(--green)"></div>债券 72.4%</div>
+        <div class="alloc-legend-item"><div class="alloc-dot" style="background:var(--blue)"></div>货币 26.2%</div>
+        <div class="alloc-legend-item"><div class="alloc-dot" style="background:var(--orange)"></div>QDII 1.4%</div>
+      </div>
+      <div class="chart-wrap-sm">
+        <canvas id="allocChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Key Metrics -->
+    <div class="card">
+      <div class="card-title">&#x23F3; 定投概览</div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;">
+        <div style="text-align:center;padding:10px;background:var(--bg);border-radius:10px;">
+          <div style="font-size:20px;font-weight:700;">24</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">进行中定投</div>
         </div>
-    </header>
-
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Navigation Tabs -->
-        <div class="bg-white rounded-lg shadow mb-6 overflow-x-auto">
-            <nav class="flex space-x-8 px-6 py-4 min-w-max">
-                <button onclick="showSection('overview')" id="tab-overview" class="tab-btn tab-active font-medium pb-2">资产概览</button>
-                <button onclick="showSection('backtest')" id="tab-backtest" class="tab-btn font-medium pb-2 text-gray-500 hover:text-gray-700">回测分析</button>
-                <button onclick="showSection('sip')" id="tab-sip" class="tab-btn font-medium pb-2 text-gray-500 hover:text-gray-700">定投分析</button>
-                <button onclick="showSection('montecarlo')" id="tab-montecarlo" class="tab-btn font-medium pb-2 text-gray-500 hover:text-gray-700">蒙特卡洛</button>
-                <button onclick="showSection('recommend')" id="tab-recommend" class="tab-btn font-medium pb-2 text-gray-500 hover:text-gray-700">投资建议</button>
-            </nav>
+        <div style="text-align:center;padding:10px;background:var(--bg);border-radius:10px;">
+          <div style="font-size:20px;font-weight:700;">1,368</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">已定投天数</div>
         </div>
-
-        <!-- Section: Overview -->
-        <div id="section-overview" class="section-content fade-in">
-            <!-- Current Allocation -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-                <div class="lg:col-span-2 bg-white rounded-lg card-shadow p-6">
-                    <h2 class="text-xl font-bold mb-4">当前资产配置</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div class="bg-green-50 rounded-lg p-4 border border-green-200">
-                            <div class="text-green-600 text-sm font-medium">稳健理财（债券）</div>
-                            <div class="text-2xl font-bold text-green-700 mt-1">¥512,111</div>
-                            <div class="text-green-600 text-sm mt-1">72.4%</div>
-                            <div class="mt-2 text-xs text-green-600">昨日收益: +¥396.21</div>
-                        </div>
-                        <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
-                            <div class="text-blue-600 text-sm font-medium">灵活取用（货币）</div>
-                            <div class="text-2xl font-bold text-blue-700 mt-1">¥185,106</div>
-                            <div class="text-blue-600 text-sm mt-1">26.2%</div>
-                            <div class="mt-2 text-xs text-blue-600">昨日收益: +¥2.73</div>
-                        </div>
-                        <div class="bg-orange-50 rounded-lg p-4 border border-orange-200">
-                            <div class="text-orange-600 text-sm font-medium">进阶理财（QDII）</div>
-                            <div class="text-2xl font-bold text-orange-700 mt-1">¥10,084</div>
-                            <div class="text-orange-600 text-sm mt-1">1.4%</div>
-                            <div class="mt-2 text-xs text-orange-600">昨日收益: +¥233.71</div>
-                        </div>
-                    </div>
-                    <div class="mt-6">
-                        <canvas id="allocationChart" height="200"></canvas>
-                    </div>
-                </div>
-                <div class="bg-white rounded-lg card-shadow p-6">
-                    <h2 class="text-xl font-bold mb-4">关键指标</h2>
-                    <div class="space-y-4">
-                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
-                            <span class="text-gray-600">昨日总收益</span>
-                            <span class="font-bold text-green-600">+¥632.65</span>
-                        </div>
-                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
-                            <span class="text-gray-600">进行中订单</span>
-                            <span class="font-bold">34笔+</span>
-                        </div>
-                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
-                            <span class="text-gray-600">定投计划</span>
-                            <span class="font-bold">24个</span>
-                        </div>
-                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
-                            <span class="text-gray-600">已定投天数</span>
-                            <span class="font-bold">1,368天</span>
-                        </div>
-                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
-                            <span class="text-gray-600">6月定投进度</span>
-                            <span class="font-bold">54.7%</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Bond Details -->
-            <div class="bg-white rounded-lg card-shadow p-6 mb-6">
-                <h2 class="text-xl font-bold mb-4">稳健理财明细（6支）</h2>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">基金名称</th>
-                                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">金额</th>
-                                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">占比</th>
-                                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">持有收益</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-200">
-                            <tr>
-                                <td class="px-4 py-3 font-medium">景顺长城景颐裕利债券C</td>
-                                <td class="px-4 py-3 text-right">¥206,701.83</td>
-                                <td class="px-4 py-3 text-right">32.95%</td>
-                                <td class="px-4 py-3 text-right text-green-600">+¥1,108.58 (+0.54%)</td>
-                            </tr>
-                            <tr>
-                                <td class="px-4 py-3 font-medium">西部利得汇享债券C</td>
-                                <td class="px-4 py-3 text-right">¥166,539.49</td>
-                                <td class="px-4 py-3 text-right">26.55%</td>
-                                <td class="px-4 py-3 text-right text-red-600">-¥137.92 (-0.08%)</td>
-                            </tr>
-                            <tr>
-                                <td class="px-4 py-3 font-medium">西部利得季季稳90天滚动持有债券A</td>
-                                <td class="px-4 py-3 text-right">¥97,722.98</td>
-                                <td class="px-4 py-3 text-right">15.58%</td>
-                                <td class="px-4 py-3 text-right text-green-600">+¥464.47 (+0.90%)</td>
-                            </tr>
-                            <tr>
-                                <td class="px-4 py-3 font-medium">信澳稳悦60天滚动持有债券C</td>
-                                <td class="px-4 py-3 text-right">¥40,312.87</td>
-                                <td class="px-4 py-3 text-right">6.43%</td>
-                                <td class="px-4 py-3 text-right text-green-600">+¥16.71 (+0.04%)</td>
-                            </tr>
-                            <tr>
-                                <td class="px-4 py-3 font-medium">华泰保兴尊睿6个月持有期债券A</td>
-                                <td class="px-4 py-3 text-right">¥814.18</td>
-                                <td class="px-4 py-3 text-right">0.13%</td>
-                                <td class="px-4 py-3 text-right text-green-600">+¥4.18 (+0.52%)</td>
-                            </tr>
-                            <tr>
-                                <td class="px-4 py-3 font-medium">易方达中短期美元债债券(QDII)A</td>
-                                <td class="px-4 py-3 text-right">¥20.00</td>
-                                <td class="px-4 py-3 text-right">0.00%</td>
-                                <td class="px-4 py-3 text-right">¥0.00</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+        <div style="text-align:center;padding:10px;background:var(--bg);border-radius:10px;">
+          <div style="font-size:20px;font-weight:700;">54.7%</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">6月进度</div>
         </div>
-
-        <!-- Section: Backtest -->
-        <div id="section-backtest" class="section-content hidden">
-            <div class="bg-white rounded-lg card-shadow p-6 mb-6">
-                <h2 class="text-xl font-bold mb-2">配置方案回测对比</h2>
-                <p class="text-gray-600 text-sm mb-6">基于真实市场参数模拟，回测5种不同配置方案的风险收益表现</p>
-                
-                <!-- Metrics Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
-                    <div class="metric-card bg-gray-50 rounded-lg p-4 border-2 border-gray-300">
-                        <div class="text-sm text-gray-500">当前配置</div>
-                        <div class="text-xs text-gray-400 mt-1">债72.4% + 货26.2% + QDII1.4%</div>
-                        <div class="mt-3 text-lg font-bold text-gray-700">夏普 1.36</div>
-                        <div class="text-sm text-green-600">3年收益 11.45%</div>
-                        <div class="text-xs text-gray-500">最大回撤 -0.76%</div>
-                    </div>
-                    <div class="metric-card bg-blue-50 rounded-lg p-4 border-2 border-blue-300">
-                        <div class="text-sm text-blue-600">保守优化</div>
-                        <div class="text-xs text-blue-400 mt-1">债65% + 货25% + QDII10%</div>
-                        <div class="mt-3 text-lg font-bold text-blue-700">夏普 1.52</div>
-                        <div class="text-sm text-green-600">3年收益 13.72%</div>
-                        <div class="text-xs text-gray-500">最大回撤 -1.00%</div>
-                    </div>
-                    <div class="metric-card bg-green-50 rounded-lg p-4 border-2 border-green-300">
-                        <div class="text-sm text-green-600">平衡配置 ⭐</div>
-                        <div class="text-xs text-green-400 mt-1">债50% + 货20% + QDII30%</div>
-                        <div class="mt-3 text-lg font-bold text-green-700">夏普 1.20</div>
-                        <div class="text-sm text-green-600">3年收益 19.22%</div>
-                        <div class="text-xs text-gray-500">最大回撤 -2.52%</div>
-                    </div>
-                    <div class="metric-card bg-orange-50 rounded-lg p-4 border-2 border-orange-300">
-                        <div class="text-sm text-orange-600">成长配置</div>
-                        <div class="text-xs text-orange-400 mt-1">债35% + 货15% + QDII50%</div>
-                        <div class="mt-3 text-lg font-bold text-orange-700">夏普 1.06</div>
-                        <div class="text-sm text-green-600">3年收益 24.81%</div>
-                        <div class="text-xs text-gray-500">最大回撤 -4.61%</div>
-                    </div>
-                    <div class="metric-card bg-red-50 rounded-lg p-4 border-2 border-red-300">
-                        <div class="text-sm text-red-600">进取配置</div>
-                        <div class="text-xs text-red-400 mt-1">债20% + 货10% + QDII70%</div>
-                        <div class="mt-3 text-lg font-bold text-red-700">夏普 0.99</div>
-                        <div class="text-sm text-green-600">3年收益 30.48%</div>
-                        <div class="text-xs text-gray-500">最大回撤 -6.67%</div>
-                    </div>
-                </div>
-
-                <!-- Charts -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div>
-                        <h3 class="font-semibold mb-3">风险收益散点图（3年）</h3>
-                        <canvas id="riskReturnChart"></canvas>
-                    </div>
-                    <div>
-                        <h3 class="font-semibold mb-3">最大回撤对比</h3>
-                        <canvas id="drawdownChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Detailed Metrics Table -->
-            <div class="bg-white rounded-lg card-shadow p-6">
-                <h2 class="text-xl font-bold mb-4">详细回测指标</h2>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">配置方案</th>
-                                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">3年总收益</th>
-                                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">年化收益</th>
-                                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">年化波动</th>
-                                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">夏普比率</th>
-                                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">最大回撤</th>
-                                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">卡玛比率</th>
-                                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">日胜率</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-200" id="backtestTableBody">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+        <div style="text-align:center;padding:10px;background:var(--bg);border-radius:10px;">
+          <div style="font-size:20px;font-weight:700;color:var(--blue)">~5万</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">月均定投</div>
         </div>
+      </div>
+    </div>
 
-        <!-- Section: SIP -->
-        <div id="section-sip" class="section-content hidden">
-            <div class="bg-white rounded-lg card-shadow p-6 mb-6">
-                <h2 class="text-xl font-bold mb-2">定投回测分析</h2>
-                <p class="text-gray-600 text-sm mb-6">模拟每月定投5万元，持续3年的收益表现</p>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-purple-50 rounded-lg p-6 border border-purple-200">
-                        <div class="text-purple-600 text-sm font-medium">纳斯达克100指数定投</div>
-                        <div class="mt-4">
-                            <div class="flex justify-between text-sm">
-                                <span class="text-gray-600">总投入</span>
-                                <span class="font-semibold">¥1,850,000</span>
-                            </div>
-                            <div class="flex justify-between text-sm mt-2">
-                                <span class="text-gray-600">终值</span>
-                                <span class="font-semibold text-purple-700">¥2,020,625</span>
-                            </div>
-                            <div class="flex justify-between text-sm mt-2">
-                                <span class="text-gray-600">总收益</span>
-                                <span class="font-semibold text-green-600">+9.22%</span>
-                            </div>
-                            <div class="flex justify-between text-sm mt-2">
-                                <span class="text-gray-600">年化收益</span>
-                                <span class="font-semibold text-green-600">+2.98%</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-indigo-50 rounded-lg p-6 border border-indigo-200">
-                        <div class="text-indigo-600 text-sm font-medium">全球科技混合定投</div>
-                        <div class="mt-4">
-                            <div class="flex justify-between text-sm">
-                                <span class="text-gray-600">总投入</span>
-                                <span class="font-semibold">¥1,850,000</span>
-                            </div>
-                            <div class="flex justify-between text-sm mt-2">
-                                <span class="text-gray-600">终值</span>
-                                <span class="font-semibold text-indigo-700">¥2,369,953</span>
-                            </div>
-                            <div class="flex justify-between text-sm mt-2">
-                                <span class="text-gray-600">总收益</span>
-                                <span class="font-semibold text-green-600">+28.11%</span>
-                            </div>
-                            <div class="flex justify-between text-sm mt-2">
-                                <span class="text-gray-600">年化收益</span>
-                                <span class="font-semibold text-green-600">+8.61%</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-teal-50 rounded-lg p-6 border border-teal-200">
-                        <div class="text-teal-600 text-sm font-medium">中国债券定投</div>
-                        <div class="mt-4">
-                            <div class="flex justify-between text-sm">
-                                <span class="text-gray-600">总投入</span>
-                                <span class="font-semibold">¥1,850,000</span>
-                            </div>
-                            <div class="flex justify-between text-sm mt-2">
-                                <span class="text-gray-600">终值</span>
-                                <span class="font-semibold text-teal-700">¥2,061,103</span>
-                            </div>
-                            <div class="flex justify-between text-sm mt-2">
-                                <span class="text-gray-600">总收益</span>
-                                <span class="font-semibold text-green-600">+11.41%</span>
-                            </div>
-                            <div class="flex justify-between text-sm mt-2">
-                                <span class="text-gray-600">年化收益</span>
-                                <span class="font-semibold text-green-600">+3.67%</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SIP Insights -->
-            <div class="bg-white rounded-lg card-shadow p-6">
-                <h2 class="text-xl font-bold mb-4">定投分析结论</h2>
-                <div class="space-y-4">
-                    <div class="flex items-start p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-                        <div class="flex-shrink-0 text-yellow-500 text-xl mr-3">💡</div>
-                        <div>
-                            <div class="font-semibold text-yellow-800">全球科技混合定投收益最高</div>
-                            <div class="text-yellow-700 text-sm mt-1">3年定投全球科技混合基金，年化收益达8.61%，显著高于债券定投的3.67%。说明权益类资产通过定投可以有效平滑波动，获取更高收益。</div>
-                        </div>
-                    </div>
-                    <div class="flex items-start p-4 bg-blue-50 rounded-lg border border-blue-200">
-                        <div class="flex-shrink-0 text-blue-500 text-xl mr-3">📊</div>
-                        <div>
-                            <div class="font-semibold text-blue-800">定投纪律性的重要性</div>
-                            <div class="text-blue-700 text-sm mt-1">您目前已有24个定投计划，日定投金额约2,280元。回测显示，坚持定投3年以上，即使经历市场波动，仍有较大概率获得正收益。</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- Latest Transaction -->
+    <div class="card">
+      <div class="card-title">&#x1F4B8; 最新交易</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;">
+        <div>
+          <div style="font-size:13px;font-weight:500;">买入 兴全天添益货币A</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">2026-06-23 02:20</div>
         </div>
-
-        <!-- Section: Monte Carlo -->
-        <div id="section-montecarlo" class="section-content hidden">
-            <div class="bg-white rounded-lg card-shadow p-6 mb-6">
-                <h2 class="text-xl font-bold mb-2">蒙特卡洛模拟（10年期）</h2>
-                <p class="text-gray-600 text-sm mb-6">基于1000次随机模拟，预测不同配置方案10年后的资产分布</p>
-                
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                    <div>
-                        <canvas id="monteCarloChart"></canvas>
-                    </div>
-                    <div>
-                        <canvas id="monteCarloProbChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">配置方案</th>
-                                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">预期终值</th>
-                                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">中位数</th>
-                                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">5%分位</th>
-                                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">95%分位</th>
-                                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">盈利概率</th>
-                                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">翻倍概率</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-200" id="monteCarloTableBody">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+        <div style="text-align:right;">
+          <div style="font-size:14px;font-weight:600;">¥80,000</div>
+          <div style="font-size:11px;color:var(--yellow)">交易中</div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-        <!-- Section: Recommendations -->
-        <div id="section-recommend" class="section-content hidden">
-            <div class="bg-white rounded-lg card-shadow p-6 mb-6">
-                <h2 class="text-xl font-bold mb-2">投资建议</h2>
-                <p class="text-gray-600 text-sm mb-6">基于回测数据，为您提供以下投资建议</p>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                    <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-6 border border-blue-200">
-                        <div class="flex items-center mb-3">
-                            <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold mr-3">1</div>
-                            <h3 class="font-bold text-blue-800">推荐：平衡配置</h3>
-                        </div>
-                        <p class="text-blue-700 text-sm mb-4">债券50% + 货币20% + QDII 30%</p>
-                        <div class="space-y-2 text-sm">
-                            <div class="flex justify-between">
-                                <span class="text-blue-600">3年预期收益</span>
-                                <span class="font-semibold">19.22%</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-blue-600">夏普比率</span>
-                                <span class="font-semibold">1.20</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-blue-600">最大回撤</span>
-                                <span class="font-semibold">-2.52%</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-blue-600">10年盈利概率</span>
-                                <span class="font-semibold">99.7%</span>
-                            </div>
-                        </div>
-                        <div class="mt-4 p-3 bg-white rounded text-sm text-blue-800">
-                            <strong>推荐理由：</strong>在风险可控的前提下，显著提升收益潜力。相比当前配置，3年收益提升约8%，同时最大回撤仅增加1.76%。
-                        </div>
-                    </div>
-                    
-                    <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-6 border border-green-200">
-                        <div class="flex items-center mb-3">
-                            <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-bold mr-3">2</div>
-                            <h3 class="font-bold text-green-800">备选：保守优化</h3>
-                        </div>
-                        <p class="text-green-700 text-sm mb-4">债券65% + 货币25% + QDII 10%</p>
-                        <div class="space-y-2 text-sm">
-                            <div class="flex justify-between">
-                                <span class="text-green-600">3年预期收益</span>
-                                <span class="font-semibold">13.72%</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-green-600">夏普比率</span>
-                                <span class="font-semibold">1.52</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-green-600">最大回撤</span>
-                                <span class="font-semibold">-1.00%</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-green-600">10年盈利概率</span>
-                                <span class="font-semibold">100%</span>
-                            </div>
-                        </div>
-                        <div class="mt-4 p-3 bg-white rounded text-sm text-green-800">
-                            <strong>推荐理由：</strong>夏普比率最高(1.52)，风险调整后收益最优。适合风险偏好较低但希望适度提升收益的投资者。
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Action Items -->
-                <div class="space-y-4">
-                    <h3 class="font-bold text-lg">具体操作建议</h3>
-                    
-                    <div class="flex items-start p-4 bg-gray-50 rounded-lg">
-                        <div class="flex-shrink-0 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white text-sm font-bold mr-3">1</div>
-                        <div>
-                            <div class="font-semibold">精简QDII基金</div>
-                            <div class="text-gray-600 text-sm mt-1">当前持有23支QDII基金，其中12支为纳斯达克100指数，高度同质化。建议合并为2-3支优质产品，降低管理复杂度。</div>
-                        </div>
-                    </div>
-                    
-                    <div class="flex items-start p-4 bg-gray-50 rounded-lg">
-                        <div class="flex-shrink-0 w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white text-sm font-bold mr-3">2</div>
-                        <div>
-                            <div class="font-semibold">新增8万资金配置建议</div>
-                            <div class="text-gray-600 text-sm mt-1">建议将新增8万货币基金中的部分资金（如3-5万）逐步转入权益类QDII基金，提升整体组合收益潜力，而非全部保留在货币基金。</div>
-                        </div>
-                    </div>
-                    
-                    <div class="flex items-start p-4 bg-gray-50 rounded-lg">
-                        <div class="flex-shrink-0 w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-white text-sm font-bold mr-3">3</div>
-                        <div>
-                            <div class="font-semibold">债券持仓分散化</div>
-                            <div class="text-gray-600 text-sm mt-1">前两支债券基金占比约60%，集中度较高。建议增加不同风格债券品种（如信用债、可转债等），分散单一基金风险。</div>
-                        </div>
-                    </div>
-                    
-                    <div class="flex items-start p-4 bg-gray-50 rounded-lg">
-                        <div class="flex-shrink-0 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white text-sm font-bold mr-3">4</div>
-                        <div>
-                            <div class="font-semibold">增加A股核心指数配置</div>
-                            <div class="text-gray-600 text-sm mt-1">当前权益仓位仅1.4%，且全部集中在海外QDII。建议增加A股沪深300、中证500等核心指数配置，平衡海外风险。</div>
-                        </div>
-                    </div>
-                    
-                    <div class="flex items-start p-4 bg-gray-50 rounded-lg">
-                        <div class="flex-shrink-0 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold mr-3">5</div>
-                        <div>
-                            <div class="font-semibold">定投计划合并优化</div>
-                            <div class="text-gray-600 text-sm mt-1">24个定投计划管理复杂。建议将同质化基金合并，保留5-8个核心定投计划，降低管理成本。</div>
-                        </div>
-                    </div>
-                    
-                    <div class="flex items-start p-4 bg-gray-50 rounded-lg">
-                        <div class="flex-shrink-0 w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white text-sm font-bold mr-3">6</div>
-                        <div>
-                            <div class="font-semibold">关注现金流压力</div>
-                            <div class="text-gray-600 text-sm mt-1">每日定投约2,300元，月均约5万元。请确保现金流充裕，避免因资金紧张中断定投纪律。</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Risk Warning -->
-            <div class="bg-yellow-50 border border-yellow-300 rounded-lg p-4">
-                <div class="flex items-start">
-                    <div class="flex-shrink-0 text-yellow-600 text-xl mr-3">⚠️</div>
-                    <div>
-                        <div class="font-semibold text-yellow-800">风险提示</div>
-                        <div class="text-yellow-700 text-sm mt-1">
-                            本报告基于历史数据模拟回测，仅供参考，不构成投资建议。市场有风险，投资需谨慎。过往业绩不代表未来表现。请根据自身的风险承受能力和投资目标做出独立判断。
-                        </div>
-                    </div>
-                </div>
-            </div>
+<!-- ==================== PAGE: HOLDINGS ==================== -->
+<div class="page" id="page-holdings">
+  <div class="content">
+    <div class="section-title">稳健理财（债券）</div>
+    <div class="card" style="padding:0 16px;">
+      <div class="fund-item">
+        <div>
+          <div class="fund-name">景顺长城景颐裕利债券C</div>
+          <span class="fund-tag bond">固收+</span>
         </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-gray-300 py-6 mt-12">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p>支付宝资产配置分析报告 | 生成时间：2026-06-23 | 数据仅供参考</p>
-            <p class="text-sm text-gray-500 mt-2">本报告由自动化分析系统生成，不构成投资建议</p>
+        <div class="fund-right">
+          <div class="fund-amount">¥206,702</div>
+          <div class="fund-return up">+0.54%</div>
         </div>
-    </footer>
+      </div>
+      <div class="fund-item">
+        <div>
+          <div class="fund-name">西部利得汇享债券C</div>
+          <span class="fund-tag bond">固收+</span>
+        </div>
+        <div class="fund-right">
+          <div class="fund-amount">¥166,539</div>
+          <div class="fund-return down">-0.08%</div>
+        </div>
+      </div>
+      <div class="fund-item">
+        <div>
+          <div class="fund-name">西部利得季季稳90天滚动持有债券A</div>
+          <span class="fund-tag bond">纯固收</span>
+        </div>
+        <div class="fund-right">
+          <div class="fund-amount">¥97,723</div>
+          <div class="fund-return up">+0.90%</div>
+        </div>
+      </div>
+      <div class="fund-item">
+        <div>
+          <div class="fund-name">信澳稳悦60天滚动持有债券C</div>
+          <span class="fund-tag bond">纯固收</span>
+        </div>
+        <div class="fund-right">
+          <div class="fund-amount">¥40,313</div>
+          <div class="fund-return up">+0.04%</div>
+        </div>
+      </div>
+      <div class="fund-item">
+        <div>
+          <div class="fund-name">华泰保兴尊睿6个月持有期债券A</div>
+          <span class="fund-tag bond">固收+</span>
+        </div>
+        <div class="fund-right">
+          <div class="fund-amount">¥814</div>
+          <div class="fund-return up">+0.52%</div>
+        </div>
+      </div>
+    </div>
 
-    <script>
-        // Tab switching
-        function showSection(sectionId) {
-            document.querySelectorAll('.section-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById('section-' + sectionId).classList.remove('hidden');
-            document.querySelectorAll('.tab-btn').forEach(el => {
-                el.classList.remove('tab-active');
-                el.classList.add('text-gray-500');
-            });
-            document.getElementById('tab-' + sectionId).classList.add('tab-active');
-            document.getElementById('tab-' + sectionId).classList.remove('text-gray-500');
+    <div class="section-title">灵活取用（货币）</div>
+    <div class="card" style="padding:0 16px;">
+      <div class="fund-item">
+        <div>
+          <div class="fund-name">余额宝</div>
+          <span class="fund-tag money">货币基金</span>
+        </div>
+        <div class="fund-right">
+          <div class="fund-amount">¥105,106</div>
+          <div class="fund-return up">累计+¥7,488</div>
+        </div>
+      </div>
+      <div class="fund-item">
+        <div>
+          <div class="fund-name">兴全天添益货币A</div>
+          <span class="fund-tag money">货币基金</span>
+        </div>
+        <div class="fund-right">
+          <div class="fund-amount">¥80,000</div>
+          <div class="fund-return" style="color:var(--yellow)">交易中</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">进阶理财（QDII）</div>
+    <div class="card" style="padding:0 16px;">
+      <div class="fund-item">
+        <div>
+          <div class="fund-name">易方达全球优质企业混合(QDII)A</div>
+          <span class="fund-tag qdii">全球科技</span>
+        </div>
+        <div class="fund-right">
+          <div class="fund-amount">¥1,112</div>
+          <div class="fund-return up">+12.30%</div>
+        </div>
+      </div>
+      <div class="fund-item">
+        <div>
+          <div class="fund-name">广发全球精选股票(QDII)A</div>
+          <span class="fund-tag qdii">全球精选</span>
+        </div>
+        <div class="fund-right">
+          <div class="fund-amount">¥901</div>
+          <div class="fund-return up">+7.83%</div>
+        </div>
+      </div>
+      <div class="fund-item">
+        <div>
+          <div class="fund-name">万家纳斯达克100指数(QDII)A</div>
+          <span class="fund-tag qdii">纳指100</span>
+        </div>
+        <div class="fund-right">
+          <div class="fund-amount">¥804</div>
+          <div class="fund-return up">+1.46%</div>
+        </div>
+      </div>
+      <div class="scroll-hint">下滑查看全部 23 支 QDII 基金</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== PAGE: BACKTEST ==================== -->
+<div class="page" id="page-backtest">
+  <div class="content">
+    <div class="card">
+      <div class="card-title">&#x1F4CA; 风险收益对比（3年回测）</div>
+      <div class="chart-wrap">
+        <canvas id="riskReturnChart"></canvas>
+      </div>
+    </div>
+
+    <div class="section-title">配置方案对比</div>
+
+    <div class="scenario-card">
+      <div class="scenario-name">当前配置</div>
+      <div class="scenario-desc">债券72.4% + 货币26.2% + QDII 1.4%</div>
+      <div class="scenario-metrics">
+        <div class="scenario-metric">
+          <div class="scenario-metric-value" style="color:var(--green)">11.45%</div>
+          <div class="scenario-metric-label">3年收益</div>
+        </div>
+        <div class="scenario-metric">
+          <div class="scenario-metric-value">1.36</div>
+          <div class="scenario-metric-label">夏普比率</div>
+        </div>
+        <div class="scenario-metric">
+          <div class="scenario-metric-value" style="color:var(--green)">-0.76%</div>
+          <div class="scenario-metric-label">最大回撤</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scenario-card">
+      <div class="scenario-name">保守优化</div>
+      <div class="scenario-desc">债券65% + 货币25% + QDII 10%</div>
+      <div class="scenario-metrics">
+        <div class="scenario-metric">
+          <div class="scenario-metric-value" style="color:var(--green)">13.72%</div>
+          <div class="scenario-metric-label">3年收益</div>
+        </div>
+        <div class="scenario-metric">
+          <div class="scenario-metric-value" style="color:var(--blue)">1.52</div>
+          <div class="scenario-metric-label">夏普比率</div>
+        </div>
+        <div class="scenario-metric">
+          <div class="scenario-metric-value" style="color:var(--green)">-1.00%</div>
+          <div class="scenario-metric-label">最大回撤</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scenario-card recommended">
+      <div class="scenario-name">平衡配置</div>
+      <div class="scenario-desc">债券50% + 货币20% + QDII 30%</div>
+      <div class="scenario-metrics">
+        <div class="scenario-metric">
+          <div class="scenario-metric-value" style="color:var(--green)">19.22%</div>
+          <div class="scenario-metric-label">3年收益</div>
+        </div>
+        <div class="scenario-metric">
+          <div class="scenario-metric-value">1.20</div>
+          <div class="scenario-metric-label">夏普比率</div>
+        </div>
+        <div class="scenario-metric">
+          <div class="scenario-metric-value" style="color:var(--orange)">-2.52%</div>
+          <div class="scenario-metric-label">最大回撤</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scenario-card">
+      <div class="scenario-name">成长配置</div>
+      <div class="scenario-desc">债券35% + 货币15% + QDII 50%</div>
+      <div class="scenario-metrics">
+        <div class="scenario-metric">
+          <div class="scenario-metric-value" style="color:var(--green)">24.81%</div>
+          <div class="scenario-metric-label">3年收益</div>
+        </div>
+        <div class="scenario-metric">
+          <div class="scenario-metric-value">1.06</div>
+          <div class="scenario-metric-label">夏普比率</div>
+        </div>
+        <div class="scenario-metric">
+          <div class="scenario-metric-value" style="color:var(--orange)">-4.61%</div>
+          <div class="scenario-metric-label">最大回撤</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scenario-card">
+      <div class="scenario-name">进取配置</div>
+      <div class="scenario-desc">债券20% + 货币10% + QDII 70%</div>
+      <div class="scenario-metrics">
+        <div class="scenario-metric">
+          <div class="scenario-metric-value" style="color:var(--green)">30.48%</div>
+          <div class="scenario-metric-label">3年收益</div>
+        </div>
+        <div class="scenario-metric">
+          <div class="scenario-metric-value">0.99</div>
+          <div class="scenario-metric-label">夏普比率</div>
+        </div>
+        <div class="scenario-metric">
+          <div class="scenario-metric-value" style="color:var(--red)">-6.67%</div>
+          <div class="scenario-metric-label">最大回撤</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">&#x1F4C8; 最大回撤对比</div>
+      <div class="chart-wrap-sm">
+        <canvas id="drawdownChart"></canvas>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">&#x1F4CB; 详细指标</div>
+      <div style="overflow-x:auto;">
+        <table class="data-table">
+          <thead>
+            <tr><th>方案</th><th class="num">3年收益</th><th class="num">年化</th><th class="num">夏普</th><th class="num">回撤</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>当前配置</td><td class="num">11.45%</td><td class="num">3.57%</td><td class="num">1.36</td><td class="num" style="color:var(--green)">-0.76%</td></tr>
+            <tr><td>保守优化</td><td class="num">13.72%</td><td class="num">4.25%</td><td class="num" style="color:var(--blue)">1.52</td><td class="num">-1.00%</td></tr>
+            <tr><td>平衡配置</td><td class="num" style="color:var(--green)">19.22%</td><td class="num">5.89%</td><td class="num">1.20</td><td class="num">-2.52%</td></tr>
+            <tr><td>成长配置</td><td class="num" style="color:var(--green)">24.81%</td><td class="num">7.56%</td><td class="num">1.06</td><td class="num">-4.61%</td></tr>
+            <tr><td>进取配置</td><td class="num" style="color:var(--green)">30.48%</td><td class="num">9.26%</td><td class="num">0.99</td><td class="num" style="color:var(--red)">-6.67%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== PAGE: SIP ==================== -->
+<div class="page" id="page-sip">
+  <div class="content">
+    <div class="card">
+      <div class="card-title">&#x1F4C9; 定投回测（月投5万 x 3年）</div>
+      <div class="chart-wrap">
+        <canvas id="sipChart"></canvas>
+      </div>
+    </div>
+
+    <div class="section-title">各资产定投表现</div>
+
+    <div class="sip-card">
+      <div class="sip-header">
+        <div>
+          <div class="sip-name">全球科技混合</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">QDII 主动管理型</div>
+        </div>
+        <div class="sip-return">+28.11%</div>
+      </div>
+      <div class="sip-detail">
+        <span>投入 ¥185万</span>
+        <span>终值 ¥237万</span>
+        <span>年化 8.61%</span>
+      </div>
+    </div>
+
+    <div class="sip-card">
+      <div class="sip-header">
+        <div>
+          <div class="sip-name">中国债券</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">中短债基金</div>
+        </div>
+        <div class="sip-return">+11.41%</div>
+      </div>
+      <div class="sip-detail">
+        <span>投入 ¥185万</span>
+        <span>终值 ¥206万</span>
+        <span>年化 3.67%</span>
+      </div>
+    </div>
+
+    <div class="sip-card">
+      <div class="sip-header">
+        <div>
+          <div class="sip-name">纳斯达克100</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">指数型 QDII</div>
+        </div>
+        <div class="sip-return">+9.22%</div>
+      </div>
+      <div class="sip-detail">
+        <span>投入 ¥185万</span>
+        <span>终值 ¥202万</span>
+        <span>年化 2.98%</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">&#x1F4CA; 10年蒙特卡洛模拟</div>
+      <div class="chart-wrap-sm">
+        <canvas id="mcChart"></canvas>
+      </div>
+      <div style="font-size:11px;color:var(--text-muted);text-align:center;margin-top:4px;">基于1000次随机模拟的预期终值分布</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== PAGE: ADVICE ==================== -->
+<div class="page" id="page-advice">
+  <div class="content">
+    <div class="card" style="background: linear-gradient(135deg, rgba(59,130,246,0.1) 0%, rgba(168,85,247,0.1) 100%); border-color: rgba(168,85,247,0.3);">
+      <div style="font-size:15px;font-weight:700;margin-bottom:4px;">&#x2B50; 推荐方案：平衡配置</div>
+      <div style="font-size:12px;color:var(--text-dim);margin-bottom:12px;">债券50% + 货币20% + QDII 30%</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+        <div style="text-align:center;padding:8px;background:rgba(0,0,0,0.2);border-radius:8px;">
+          <div style="font-size:16px;font-weight:700;color:var(--green)">19.22%</div>
+          <div style="font-size:10px;color:var(--text-muted);">3年收益</div>
+        </div>
+        <div style="text-align:center;padding:8px;background:rgba(0,0,0,0.2);border-radius:8px;">
+          <div style="font-size:16px;font-weight:700;">1.20</div>
+          <div style="font-size:10px;color:var(--text-muted);">夏普比率</div>
+        </div>
+        <div style="text-align:center;padding:8px;background:rgba(0,0,0,0.2);border-radius:8px;">
+          <div style="font-size:16px;font-weight:700;color:var(--purple)">99.7%</div>
+          <div style="font-size:10px;color:var(--text-muted);">10年盈利概率</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">操作建议</div>
+
+    <div class="card" style="padding:0 16px;">
+      <div class="advice-item">
+        <div class="advice-num" style="background:var(--red-dim);color:var(--red)">1</div>
+        <div class="advice-content">
+          <div class="advice-title">精简QDII基金</div>
+          <div class="advice-desc">当前23支QDII中12支为纳指100，高度同质化。建议合并为2-3支优质产品。</div>
+        </div>
+      </div>
+      <div class="advice-item">
+        <div class="advice-num" style="background:var(--orange-dim);color:var(--orange)">2</div>
+        <div class="advice-content">
+          <div class="advice-title">新增8万资金配置</div>
+          <div class="advice-desc">建议将部分新增资金（3-5万）逐步转入权益类QDII，提升收益潜力。</div>
+        </div>
+      </div>
+      <div class="advice-item">
+        <div class="advice-num" style="background:var(--yellow-dim);color:var(--yellow)">3</div>
+        <div class="advice-content">
+          <div class="advice-title">债券持仓分散化</div>
+          <div class="advice-desc">前两支债券占比约60%，建议增加信用债、可转债等不同风格品种。</div>
+        </div>
+      </div>
+      <div class="advice-item">
+        <div class="advice-num" style="background:var(--green-dim);color:var(--green)">4</div>
+        <div class="advice-content">
+          <div class="advice-title">增加A股核心指数</div>
+          <div class="advice-desc">当前权益全在海外，建议增加沪深300、中证500等A股配置平衡风险。</div>
+        </div>
+      </div>
+      <div class="advice-item">
+        <div class="advice-num" style="background:var(--blue-dim);color:var(--blue)">5</div>
+        <div class="advice-content">
+          <div class="advice-title">定投计划合并</div>
+          <div class="advice-desc">24个定投计划过多，建议合并为5-8个核心计划，降低管理成本。</div>
+        </div>
+      </div>
+      <div class="advice-item">
+        <div class="advice-num" style="background:var(--purple-dim);color:var(--purple)">6</div>
+        <div class="advice-content">
+          <div class="advice-title">关注现金流压力</div>
+          <div class="advice-desc">日定投约2,300元，月均约5万。请确保现金流充裕，避免中断定投纪律。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="warning-box" style="margin-top:12px;">
+      <strong style="color:var(--yellow)">&#x26A0; 风险提示</strong><br>
+      本报告基于历史数据模拟回测，仅供参考，不构成投资建议。市场有风险，投资需谨慎。过往业绩不代表未来表现。
+    </div>
+  </div>
+</div>
+
+<!-- ==================== BOTTOM NAV ==================== -->
+<nav class="bottom-nav">
+  <button class="nav-item active" onclick="goPage('overview')">
+    <div class="nav-icon">&#x1F3E0;</div>
+    <span>概览</span>
+  </button>
+  <button class="nav-item" onclick="goPage('holdings')">
+    <div class="nav-icon">&#x1F4CB;</div>
+    <span>持仓</span>
+  </button>
+  <button class="nav-item" onclick="goPage('backtest')">
+    <div class="nav-icon">&#x1F4CA;</div>
+    <span>回测</span>
+  </button>
+  <button class="nav-item" onclick="goPage('sip')">
+    <div class="nav-icon">&#x1F4C8;</div>
+    <span>定投</span>
+  </button>
+  <button class="nav-item" onclick="goPage('advice')">
+    <div class="nav-icon">&#x2B50;</div>
+    <span>建议</span>
+  </button>
+</nav>
+
+<script>
+  // Page navigation
+  function goPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    event.currentTarget.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Refresh
+  function refreshData() {
+    const spinner = document.getElementById('ptrSpinner');
+    spinner.classList.add('show');
+    setTimeout(() => spinner.classList.remove('show'), 1500);
+  }
+
+  // Chart.js defaults for dark theme
+  Chart.defaults.color = '#94a3b8';
+  Chart.defaults.borderColor = '#1f2937';
+  Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+
+  // Allocation Doughnut
+  new Chart(document.getElementById('allocChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['债券', '货币', 'QDII'],
+      datasets: [{
+        data: [72.4, 26.2, 1.4],
+        backgroundColor: ['#22c55e', '#3b82f6', '#f97316'],
+        borderWidth: 0,
+        hoverOffset: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '68%',
+      plugins: {
+        legend: { display: false }
+      }
+    }
+  });
+
+  // Risk-Return Scatter
+  new Chart(document.getElementById('riskReturnChart'), {
+    type: 'scatter',
+    data: {
+      datasets: [
+        { label: '当前', data: [{x:1.15,y:3.57}], backgroundColor:'#64748b', pointRadius:14 },
+        { label: '保守', data: [{x:1.47,y:4.25}], backgroundColor:'#3b82f6', pointRadius:14 },
+        { label: '平衡', data: [{x:3.24,y:5.89}], backgroundColor:'#a855f7', pointRadius:16 },
+        { label: '成长', data: [{x:5.26,y:7.56}], backgroundColor:'#f97316', pointRadius:14 },
+        { label: '进取', data: [{x:7.32,y:9.26}], backgroundColor:'#ef4444', pointRadius:14 }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: { title: { display:true, text:'年化波动率 %', color:'#64748b', font:{size:11} }, grid:{color:'#1f2937'} },
+        y: { title: { display:true, text:'年化收益率 %', color:'#64748b', font:{size:11} }, grid:{color:'#1f2937'} }
+      },
+      plugins: {
+        legend: { labels: { boxWidth:8, font:{size:11} } },
+        tooltip: {
+          callbacks: {
+            label: (c) => `${c.dataset.label}: 收益${c.raw.y}%, 波动${c.raw.x}%`
+          }
         }
+      }
+    }
+  });
 
-        // Allocation Chart
-        const allocationCtx = document.getElementById('allocationChart').getContext('2d');
-        new Chart(allocationCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['稳健理财 72.4%', '灵活取用 26.2%', '进阶理财 1.4%'],
-                datasets: [{
-                    data: [72.4, 26.2, 1.4],
-                    backgroundColor: ['#4CAF50', '#2196F3', '#FF9800'],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { position: 'bottom' }
-                }
-            }
-        });
+  // Drawdown Bar
+  new Chart(document.getElementById('drawdownChart'), {
+    type: 'bar',
+    data: {
+      labels: ['当前', '保守', '平衡', '成长', '进取'],
+      datasets: [
+        { label: '1年回撤', data: [0.48,0.58,1.48,2.89,4.38], backgroundColor:'rgba(59,130,246,0.7)', borderRadius:4 },
+        { label: '3年回撤', data: [0.76,1.00,2.52,4.61,6.67], backgroundColor:'rgba(239,68,68,0.7)', borderRadius:4 }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: { grid:{color:'#1f2937'}, ticks:{color:'#64748b', callback:v=>v+'%'} },
+        x: { grid:{display:false}, ticks:{color:'#94a3b8'} }
+      },
+      plugins: { legend: { labels: { boxWidth:10, font:{size:11} } } }
+    }
+  });
 
-        // Risk-Return Chart
-        const riskReturnCtx = document.getElementById('riskReturnChart').getContext('2d');
-        new Chart(riskReturnCtx, {
-            type: 'scatter',
-            data: {
-                datasets: [
-                    { label: '当前配置', data: [{x: 1.15, y: 3.57}], backgroundColor: '#9E9E9E', pointRadius: 12 },
-                    { label: '保守优化', data: [{x: 1.47, y: 4.25}], backgroundColor: '#2196F3', pointRadius: 12 },
-                    { label: '平衡配置', data: [{x: 3.24, y: 5.89}], backgroundColor: '#4CAF50', pointRadius: 12 },
-                    { label: '成长配置', data: [{x: 5.26, y: 7.56}], backgroundColor: '#FF9800', pointRadius: 12 },
-                    { label: '进取配置', data: [{x: 7.32, y: 9.26}], backgroundColor: '#F44336', pointRadius: 12 }
-                ]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    x: { title: { display: true, text: '年化波动率 (%)' } },
-                    y: { title: { display: true, text: '年化收益率 (%)' } }
-                },
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return context.dataset.label + ': 收益' + context.raw.y + '%, 波动' + context.raw.x + '%';
-                            }
-                        }
-                    }
-                }
-            }
-        });
+  // SIP Comparison
+  new Chart(document.getElementById('sipChart'), {
+    type: 'bar',
+    data: {
+      labels: ['全球科技', '中国债券', '纳指100'],
+      datasets: [
+        { label: '总收益率', data: [28.11, 11.41, 9.22], backgroundColor: ['#a855f7','#22c55e','#3b82f6'], borderRadius:6 }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: { grid:{color:'#1f2937'}, ticks:{color:'#64748b', callback:v=>v+'%'} },
+        x: { grid:{display:false}, ticks:{color:'#94a3b8'} }
+      },
+      plugins: { legend: { display: false } }
+    }
+  });
 
-        // Drawdown Chart
-        const drawdownCtx = document.getElementById('drawdownChart').getContext('2d');
-        new Chart(drawdownCtx, {
-            type: 'bar',
-            data: {
-                labels: ['当前配置', '保守优化', '平衡配置', '成长配置', '进取配置'],
-                datasets: [
-                    { label: '1年最大回撤', data: [0.48, 0.58, 1.48, 2.89, 4.38], backgroundColor: 'rgba(66, 165, 245, 0.8)' },
-                    { label: '3年最大回撤', data: [0.76, 1.00, 2.52, 4.61, 6.67], backgroundColor: 'rgba(239, 83, 80, 0.8)' }
-                ]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: { title: { display: true, text: '最大回撤 (%)' } }
-                }
-            }
-        });
+  // Monte Carlo
+  new Chart(document.getElementById('mcChart'), {
+    type: 'bar',
+    data: {
+      labels: ['当前', '保守', '平衡', '成长', '进取'],
+      datasets: [
+        { label: '预期终值(万)', data: [93.3, 102.6, 128.9, 162.1, 205.1], backgroundColor: ['#64748b','#3b82f6','#a855f7','#f97316','#ef4444'], borderRadius:4 }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: { grid:{color:'#1f2937'}, ticks:{color:'#64748b'} },
+        x: { grid:{display:false}, ticks:{color:'#94a3b8'} }
+      },
+      plugins: { legend: { display: false } }
+    }
+  });
 
-        // Monte Carlo Chart
-        const mcCtx = document.getElementById('monteCarloChart').getContext('2d');
-        new Chart(mcCtx, {
-            type: 'bar',
-            data: {
-                labels: ['当前配置', '保守优化', '平衡配置', '成长配置', '进取配置'],
-                datasets: [
-                    { label: '预期终值（万）', data: [93.3, 102.6, 128.9, 162.1, 205.1], backgroundColor: ['#9E9E9E', '#2196F3', '#4CAF50', '#FF9800', '#F44336'] }
-                ]
-            },
-            options: {
-                responsive: true,
-                plugins: { title: { display: true, text: '10年预期终值（万元）' } },
-                scales: { y: { title: { display: true, text: '万元' } } }
-            }
-        });
-
-        // Monte Carlo Probability Chart
-        const mcProbCtx = document.getElementById('monteCarloProbChart').getContext('2d');
-        new Chart(mcProbCtx, {
-            type: 'bar',
-            data: {
-                labels: ['当前配置', '保守优化', '平衡配置', '成长配置', '进取配置'],
-                datasets: [
-                    { label: '盈利概率', data: [100, 100, 99.7, 99.0, 98.6], backgroundColor: ['#9E9E9E', '#2196F3', '#4CAF50', '#FF9800', '#F44336'] }
-                ]
-            },
-            options: {
-                responsive: true,
-                plugins: { title: { display: true, text: '10年盈利概率 (%)' } },
-                scales: { y: { min: 95, max: 100, title: { display: true, text: '%' } } }
-            }
-        });
-
-        // Populate Backtest Table
-        const backtestData = [
-            { name: '当前配置', return3y: 11.45, annRet: 3.57, vol: 1.15, sharpe: 1.36, dd: -0.76, calmar: 4.69, win: 56.08 },
-            { name: '保守优化', return3y: 13.72, annRet: 4.25, vol: 1.47, sharpe: 1.52, dd: -1.00, calmar: 4.24, win: 57.23 },
-            { name: '平衡配置', return3y: 19.22, annRet: 5.89, vol: 3.24, sharpe: 1.20, dd: -2.52, calmar: 2.34, win: 51.98 },
-            { name: '成长配置', return3y: 24.81, annRet: 7.56, vol: 5.26, sharpe: 1.06, dd: -4.61, calmar: 1.64, win: 50.45 },
-            { name: '进取配置', return3y: 30.48, annRet: 9.26, vol: 7.32, sharpe: 0.99, dd: -6.67, calmar: 1.39, win: 49.81 }
-        ];
-
-        const backtestTableBody = document.getElementById('backtestTableBody');
-        backtestData.forEach(row => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td class="px-4 py-3 font-medium">${row.name}</td>
-                <td class="px-4 py-3 text-right text-green-600">${row.return3y}%</td>
-                <td class="px-4 py-3 text-right">${row.annRet}%</td>
-                <td class="px-4 py-3 text-right">${row.vol}%</td>
-                <td class="px-4 py-3 text-right font-semibold">${row.sharpe}</td>
-                <td class="px-4 py-3 text-right text-red-600">${row.dd}%</td>
-                <td class="px-4 py-3 text-right">${row.calmar}</td>
-                <td class="px-4 py-3 text-right">${row.win}%</td>
-            `;
-            backtestTableBody.appendChild(tr);
-        });
-
-        // Populate Monte Carlo Table
-        const mcData = [
-            { name: '当前配置', mean: 932859, median: 931247, p5: 863354, p95: 1005384, profit: 100.0, double: 0.0 },
-            { name: '保守优化', mean: 1025780, median: 1024339, p5: 903726, p95: 1155446, profit: 100.0, double: 0.0 },
-            { name: '平衡配置', mean: 1289297, median: 1268381, p5: 920727, p95: 1751249, profit: 99.7, double: 26.9 },
-            { name: '成长配置', mean: 1621306, median: 1528171, p5: 908815, p95: 2638646, profit: 99.0, double: 59.9 },
-            { name: '进取配置', mean: 2050522, median: 1856129, p5: 909268, p95: 3818856, profit: 98.6, double: 73.5 }
-        ];
-
-        const mcTableBody = document.getElementById('monteCarloTableBody');
-        mcData.forEach(row => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td class="px-4 py-3 font-medium">${row.name}</td>
-                <td class="px-4 py-3 text-right">¥${row.mean.toLocaleString()}</td>
-                <td class="px-4 py-3 text-right">¥${row.median.toLocaleString()}</td>
-                <td class="px-4 py-3 text-right text-red-600">¥${row.p5.toLocaleString()}</td>
-                <td class="px-4 py-3 text-right text-green-600">¥${row.p95.toLocaleString()}</td>
-                <td class="px-4 py-3 text-right font-semibold">${row.profit}%</td>
-                <td class="px-4 py-3 text-right">${row.double}%</td>
-            `;
-            mcTableBody.appendChild(tr);
-        });
-    </script>
+  // Register service worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+</script>
 </body>
 </html>

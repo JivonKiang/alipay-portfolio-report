@@ -1,0 +1,287 @@
+{
+  "generated_at": "2026-06-23 03:15:55",
+  "portfolio": {
+    "total": 707301.01,
+    "alloc": {
+      "bond": {
+        "v": 512111.35,
+        "r": 72.4
+      },
+      "money": {
+        "v": 185106.1,
+        "r": 26.2
+      },
+      "qdii": {
+        "v": 10083.56,
+        "r": 1.4
+      }
+    }
+  },
+  "scenarios": {
+    "current": {
+      "name": "当前配置",
+      "desc": "债券72.4% + 货币26.2% + QDII 1.4%",
+      "alloc": {
+        "bond": 0.724,
+        "money": 0.262,
+        "qdii": 0.014
+      },
+      "1y_m": {
+        "tr": 5.95,
+        "ar": 5.75,
+        "vol": 1.82,
+        "sharpe": 2.067,
+        "dd": -0.74,
+        "win": 57.85
+      },
+      "3y_m": {
+        "tr": 14.15,
+        "ar": 4.38,
+        "vol": 1.7,
+        "sharpe": 1.395,
+        "dd": -1.23,
+        "win": 55.83
+      },
+      "5y_m": {
+        "tr": 23.19,
+        "ar": 4.13,
+        "vol": 1.69,
+        "sharpe": 1.263,
+        "dd": -1.6,
+        "win": 54.87
+      }
+    },
+    "conservative": {
+      "name": "保守优化",
+      "desc": "债券65% + 货币25% + QDII 10%",
+      "alloc": {
+        "bond": 0.65,
+        "money": 0.25,
+        "qdii": 0.1
+      },
+      "1y_m": {
+        "tr": 5.18,
+        "ar": 5.02,
+        "vol": 1.97,
+        "sharpe": 1.534,
+        "dd": -0.9,
+        "win": 57.47
+      },
+      "3y_m": {
+        "tr": 17.83,
+        "ar": 5.45,
+        "vol": 1.85,
+        "sharpe": 1.87,
+        "dd": -1.05,
+        "win": 57.87
+      },
+      "5y_m": {
+        "tr": 24.51,
+        "ar": 4.35,
+        "vol": 1.86,
+        "sharpe": 1.262,
+        "dd": -1.59,
+        "win": 55.72
+      }
+    },
+    "balanced": {
+      "name": "平衡配置",
+      "desc": "债券50% + 货币20% + QDII 30%",
+      "alloc": {
+        "bond": 0.5,
+        "money": 0.2,
+        "qdii": 0.3
+      },
+      "1y_m": {
+        "tr": 3.51,
+        "ar": 3.45,
+        "vol": 3.42,
+        "sharpe": 0.425,
+        "dd": -2.77,
+        "win": 51.34
+      },
+      "3y_m": {
+        "tr": 26.99,
+        "ar": 8.08,
+        "vol": 3.38,
+        "sharpe": 1.795,
+        "dd": -2.13,
+        "win": 56.21
+      },
+      "5y_m": {
+        "tr": 27.85,
+        "ar": 4.93,
+        "vol": 3.42,
+        "sharpe": 0.855,
+        "dd": -3.67,
+        "win": 53.88
+      }
+    },
+    "growth": {
+      "name": "成长配置",
+      "desc": "债券35% + 货币15% + QDII 50%",
+      "alloc": {
+        "bond": 0.35,
+        "money": 0.15,
+        "qdii": 0.5
+      },
+      "1y_m": {
+        "tr": 1.83,
+        "ar": 1.91,
+        "vol": 5.32,
+        "sharpe": -0.017,
+        "dd": -4.95,
+        "win": 51.34
+      },
+      "3y_m": {
+        "tr": 36.67,
+        "ar": 10.77,
+        "vol": 5.37,
+        "sharpe": 1.631,
+        "dd": -3.47,
+        "win": 56.47
+      },
+      "5y_m": {
+        "tr": 30.97,
+        "ar": 5.51,
+        "vol": 5.42,
+        "sharpe": 0.648,
+        "dd": -6.68,
+        "win": 52.49
+      }
+    },
+    "aggressive": {
+      "name": "进取配置",
+      "desc": "债券20% + 货币10% + QDII 70%",
+      "alloc": {
+        "bond": 0.2,
+        "money": 0.1,
+        "qdii": 0.7
+      },
+      "1y_m": {
+        "tr": 0.13,
+        "ar": 0.39,
+        "vol": 7.33,
+        "sharpe": -0.22,
+        "dd": -7.16,
+        "win": 50.57
+      },
+      "3y_m": {
+        "tr": 46.87,
+        "ar": 13.52,
+        "vol": 7.46,
+        "sharpe": 1.544,
+        "dd": -5.02,
+        "win": 55.31
+      },
+      "5y_m": {
+        "tr": 33.84,
+        "ar": 6.1,
+        "vol": 7.5,
+        "sharpe": 0.546,
+        "dd": -11.39,
+        "win": 51.19
+      }
+    }
+  },
+  "sip": {
+    "qdii_nasdaq": {
+      "asset": "纳斯达克100",
+      "invested": 1850000,
+      "final_value": 2387350.94,
+      "total_return": 29.05,
+      "ann_return": 8.87
+    },
+    "qdii_tech": {
+      "asset": "全球科技",
+      "invested": 1850000,
+      "final_value": 1935629.6,
+      "total_return": 4.63,
+      "ann_return": 1.52
+    },
+    "bond_china": {
+      "asset": "中国债券",
+      "invested": 1850000,
+      "final_value": 2061103.41,
+      "total_return": 11.41,
+      "ann_return": 3.67
+    }
+  },
+  "monte_carlo": {
+    "current": {
+      "name": "当前配置",
+      "mean_final": 932882.11,
+      "median_final": 932400.49,
+      "p5": 866179.54,
+      "p25": 902233.19,
+      "p75": 961618.47,
+      "p95": 1005604.14,
+      "prob_profit": 100.0,
+      "prob_double": 0.0,
+      "exp_ret": 2.79,
+      "exp_vol": 1.47
+    },
+    "conservative": {
+      "name": "保守优化",
+      "mean_final": 1025673.57,
+      "median_final": 1025597.46,
+      "p5": 906216.66,
+      "p25": 971016.53,
+      "p75": 1073791.0,
+      "p95": 1157988.19,
+      "prob_profit": 100.0,
+      "prob_double": 0.0,
+      "exp_ret": 3.75,
+      "exp_vol": 2.42
+    },
+    "balanced": {
+      "name": "平衡配置",
+      "mean_final": 1290140.91,
+      "median_final": 1259110.86,
+      "p5": 927674.25,
+      "p25": 1100950.27,
+      "p75": 1436319.32,
+      "p95": 1771214.57,
+      "prob_profit": 99.7,
+      "prob_double": 27.0,
+      "exp_ret": 6.0,
+      "exp_vol": 6.22
+    },
+    "growth": {
+      "name": "成长配置",
+      "mean_final": 1622447.45,
+      "median_final": 1524483.07,
+      "p5": 916723.1,
+      "p25": 1226101.19,
+      "p75": 1945079.69,
+      "p95": 2580344.98,
+      "prob_profit": 99.0,
+      "prob_double": 59.0,
+      "exp_ret": 8.25,
+      "exp_vol": 10.25
+    },
+    "aggressive": {
+      "name": "进取配置",
+      "mean_final": 2052511.78,
+      "median_final": 1876812.91,
+      "p5": 923645.6,
+      "p25": 1381303.41,
+      "p75": 2526909.34,
+      "p95": 3864970.16,
+      "prob_profit": 98.2,
+      "prob_double": 72.6,
+      "exp_ret": 10.51,
+      "exp_vol": 14.33
+    }
+  },
+  "market_info": {
+    "data_sources": {
+      "fund_info": "https://fund.eastmoney.com/",
+      "market_index": "https://quote.eastmoney.com/",
+      "qdii_premium": "手动监控或爬虫获取",
+      "us_market": "Yahoo Finance API"
+    },
+    "collected_at": "2026-06-23 03:15:55",
+    "notes": "框架已搭建，后续可接入真实数据源替换模拟数据"
+  }
+}
