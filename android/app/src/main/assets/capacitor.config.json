@@ -10,7 +10,7 @@
 	"plugins": {
 		"CapacitorUpdater": {
 			"autoUpdate": true,
-			"updateUrl": "https://capgo.app/api/v2/updates",
+			"updateUrl": "https://jivon-update.your-subdomain.workers.dev/api/update",
 			"appReadyTimeout": 10000,
 			"autoDeleteFailed": true,
 			"autoDeletePrevious": true,
