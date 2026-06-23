@@ -16,7 +16,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'npm'
 
       - name: Setup JDK
         uses: actions/setup-java@v4
@@ -27,16 +26,21 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Install dependencies
-        run: npm install
+      - name: Accept Android SDK licenses
+        run: yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
 
-      - name: Sync Capacitor
-        run: npx cap sync android
+      - name: Install dependencies
+        run: |
+          npm install
+          npx cap sync android
+
+      - name: Make gradlew executable
+        run: chmod +x android/gradlew
 
       - name: Build APK
         run: |
           cd android
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --no-daemon
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
@@ -44,7 +48,7 @@ jobs:
           name: app-debug
           path: android/app/build/outputs/apk/debug/app-debug.apk
 
-      - name: Upload to Release
+      - name: Create Release
         if: github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
         with:
