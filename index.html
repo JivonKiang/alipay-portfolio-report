@@ -480,6 +480,88 @@
       padding-left: 10px;
       border-left: 3px solid var(--blue);
     }
+
+    /* SIP plan item */
+    .sip-plan-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sip-plan-item:last-child { border-bottom: none; }
+
+    .sip-plan-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.3;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .sip-plan-info {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .sip-plan-right {
+      text-align: right;
+      flex-shrink: 0;
+      margin-left: 12px;
+    }
+
+    .sip-plan-amount {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .sip-plan-detail {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    /* Yesterday return detail row */
+    .yesterday-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .yesterday-row:last-child { border-bottom: none; }
+
+    .yesterday-label {
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    .yesterday-value {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .yesterday-value.up { color: var(--green); }
+    .yesterday-value.down { color: var(--red); }
+
+    /* Pending orders badge */
+    .pending-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      background: rgba(234, 179, 8, 0.1);
+      border: 1px solid rgba(234, 179, 8, 0.2);
+      color: var(--yellow);
+    }
   </style>
 </head>
 <body>
@@ -512,6 +594,23 @@
         <div class="hero-stat-label">累计收益</div>
         <div class="hero-stat-value" style="color:var(--green)">+¥7,487</div>
         <div class="hero-stat-change up">+1.06%</div>
+      </div>
+    </div>
+
+    <!-- Yesterday Return Detail -->
+    <div class="card">
+      <div class="card-title">&#x1F4B0; 昨日收益明细</div>
+      <div class="yesterday-row">
+        <div class="yesterday-label">稳健理财（债券）</div>
+        <div class="yesterday-value up">+¥396.21</div>
+      </div>
+      <div class="yesterday-row">
+        <div class="yesterday-label">灵活取用（货币）</div>
+        <div class="yesterday-value up">+¥2.73</div>
+      </div>
+      <div class="yesterday-row">
+        <div class="yesterday-label">进阶理财（QDII）</div>
+        <div class="yesterday-value up">+¥233.71</div>
       </div>
     </div>
 
@@ -553,6 +652,14 @@
           <div style="font-size:20px;font-weight:700;color:var(--blue)">~5万</div>
           <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">月均定投</div>
         </div>
+      </div>
+    </div>
+
+    <!-- Pending Orders -->
+    <div class="card">
+      <div class="card-title">&#x23F3; 进行中订单</div>
+      <div style="display:flex;align-items:center;justify-content:center;padding:8px 0;">
+        <div class="pending-badge">34笔+ 订单进行中</div>
       </div>
     </div>
 
@@ -628,6 +735,16 @@
           <div class="fund-return up">+0.52%</div>
         </div>
       </div>
+      <div class="fund-item">
+        <div>
+          <div class="fund-name">易方达中短期美元债债券(QDII)A</div>
+          <span class="fund-tag bond">QDII债券</span>
+        </div>
+        <div class="fund-right">
+          <div class="fund-amount">¥20.00</div>
+          <div class="fund-return">0.00%</div>
+        </div>
+      </div>
     </div>
 
     <div class="section-title">灵活取用（货币）</div>
@@ -662,7 +779,7 @@
           <span class="fund-tag qdii">全球科技</span>
         </div>
         <div class="fund-right">
-          <div class="fund-amount">¥1,112</div>
+          <div class="fund-amount">¥1,111.51</div>
           <div class="fund-return up">+12.30%</div>
         </div>
       </div>
@@ -672,7 +789,7 @@
           <span class="fund-tag qdii">全球精选</span>
         </div>
         <div class="fund-right">
-          <div class="fund-amount">¥901</div>
+          <div class="fund-amount">¥900.87</div>
           <div class="fund-return up">+7.83%</div>
         </div>
       </div>
@@ -682,11 +799,210 @@
           <span class="fund-tag qdii">纳指100</span>
         </div>
         <div class="fund-right">
-          <div class="fund-amount">¥804</div>
+          <div class="fund-amount">¥803.64</div>
           <div class="fund-return up">+1.46%</div>
         </div>
       </div>
-      <div class="scroll-hint">下滑查看全部 23 支 QDII 基金</div>
+      <div class="fund-item">
+        <div>
+          <div class="fund-name">银华海外数字经济量化混合(QDII)A</div>
+          <span class="fund-tag qdii">全球科技</span>
+        </div>
+        <div class="fund-right">
+          <div class="fund-amount">¥800.00</div>
+          <div class="fund-return">0.00%</div>
+        </div>
+      </div>
+      <div class="fund-item">
+        <div>
+          <div class="fund-name">南方纳斯达克100指数(QDII)A</div>
+          <span class="fund-tag qdii">纳指100</span>
+        </div>
+        <div class="fund-right">
+          <div class="fund-amount">¥709.50</div>
+          <div class="fund-return up">+1.58%</div>
+        </div>
+      </div>
+      <div class="fund-item">
+        <div>
+          <div class="fund-name">华宝致远混合(QDII)A</div>
+          <span class="fund-tag qdii">全球科技</span>
+        </div>
+        <div class="fund-right">
+          <div class="fund-amount">¥645.90</div>
+          <div class="fund-return up">+7.65%</div>
+        </div>
+      </div>
+      <div class="fund-item">
+        <div>
+          <div class="fund-name">建信纳斯达克100指数(QDII)A</div>
+          <span class="fund-tag qdii">纳指100</span>
+        </div>
+        <div class="fund-right">
+          <div class="fund-amount">¥607.29</div>
+          <div class="fund-return up">+1.46%</div>
+        </div>
+      </div>
+      <div class="fund-item">
+        <div>
+          <div class="fund-name">汇添富纳斯达克100ETF联接(QDII)A</div>
+          <span class="fund-tag qdii">纳指100</span>
+        </div>
+        <div class="fund-right">
+          <div class="fund-amount">¥606.95</div>
+          <div class="fund-return up">+1.39%</div>
+        </div>
+      </div>
+      <div class="fund-item">
+        <div>
+          <div class="fund-name">嘉实全球产业升级股票(QDII)A</div>
+          <span class="fund-tag qdii">全球科技</span>
+        </div>
+        <div class="fund-right">
+          <div class="fund-amount">¥554.44</div>
+          <div class="fund-return up">+10.89%</div>
+        </div>
+      </div>
+      <div class="fund-item">
+        <div>
+          <div class="fund-name">国富全球科技互联混合(QDII)A</div>
+          <span class="fund-tag qdii">全球科技</span>
+        </div>
+        <div class="fund-right">
+          <div class="fund-amount">¥538.43</div>
+          <div class="fund-return up">+7.69%</div>
+        </div>
+      </div>
+      <div class="fund-item">
+        <div>
+          <div class="fund-name">摩根纳斯达克100指数(QDII)A</div>
+          <span class="fund-tag qdii">纳指100</span>
+        </div>
+        <div class="fund-right">
+          <div class="fund-amount">¥531.94</div>
+          <div class="fund-return up">+0.37%</div>
+        </div>
+      </div>
+      <div class="fund-item">
+        <div>
+          <div class="fund-name">华夏全球科技先锋混合(QDII)A</div>
+          <span class="fund-tag qdii">全球科技</span>
+        </div>
+        <div class="fund-right">
+          <div class="fund-amount">¥500.00</div>
+          <div class="fund-return">0.00%</div>
+        </div>
+      </div>
+      <div class="fund-item">
+        <div>
+          <div class="fund-name">宝盈纳斯达克100指数(QDII)A</div>
+          <span class="fund-tag qdii">纳指100</span>
+        </div>
+        <div class="fund-right">
+          <div class="fund-amount">¥344.48</div>
+          <div class="fund-return up">+1.40%</div>
+        </div>
+      </div>
+      <div class="fund-item">
+        <div>
+          <div class="fund-name">招商纳斯达克100ETF联接(QDII)A</div>
+          <span class="fund-tag qdii">纳指100</span>
+        </div>
+        <div class="fund-right">
+          <div class="fund-amount">¥343.96</div>
+          <div class="fund-return up">+1.24%</div>
+        </div>
+      </div>
+      <div class="fund-item">
+        <div>
+          <div class="fund-name">大成纳斯达克100ETF联接(QDII)A</div>
+          <span class="fund-tag qdii">纳指100</span>
+        </div>
+        <div class="fund-right">
+          <div class="fund-amount">¥209.13</div>
+          <div class="fund-return down">-0.46%</div>
+        </div>
+      </div>
+      <div class="fund-item">
+        <div>
+          <div class="fund-name">易方达全球成长精选混合(QDII)A</div>
+          <span class="fund-tag qdii">全球科技</span>
+        </div>
+        <div class="fund-right">
+          <div class="fund-amount">¥197.28</div>
+          <div class="fund-return up">+12.35%</div>
+        </div>
+      </div>
+      <div class="fund-item">
+        <div>
+          <div class="fund-name">易方达全球成长精选混合(QDII)C</div>
+          <span class="fund-tag qdii">全球科技</span>
+        </div>
+        <div class="fund-right">
+          <div class="fund-amount">¥151.14</div>
+          <div class="fund-return up">+11.14%</div>
+        </div>
+      </div>
+      <div class="fund-item">
+        <div>
+          <div class="fund-name">摩根标普500指数(QDII)A</div>
+          <span class="fund-tag qdii">标普500</span>
+        </div>
+        <div class="fund-right">
+          <div class="fund-amount">¥148.99</div>
+          <div class="fund-return down">-0.78%</div>
+        </div>
+      </div>
+      <div class="fund-item">
+        <div>
+          <div class="fund-name">华安纳斯达克100ETF联接(QDII)A</div>
+          <span class="fund-tag qdii">纳指100</span>
+        </div>
+        <div class="fund-right">
+          <div class="fund-amount">¥90.63</div>
+          <div class="fund-return up">+0.90%</div>
+        </div>
+      </div>
+      <div class="fund-item">
+        <div>
+          <div class="fund-name">广发纳斯达克100ETF联接(QDII)A</div>
+          <span class="fund-tag qdii">纳指100</span>
+        </div>
+        <div class="fund-right">
+          <div class="fund-amount">¥90.50</div>
+          <div class="fund-return up">+0.71%</div>
+        </div>
+      </div>
+      <div class="fund-item">
+        <div>
+          <div class="fund-name">华泰柏瑞纳斯达克100ETF联接(QDII)A</div>
+          <span class="fund-tag qdii">纳指100</span>
+        </div>
+        <div class="fund-right">
+          <div class="fund-amount">¥70.72</div>
+          <div class="fund-return up">+1.44%</div>
+        </div>
+      </div>
+      <div class="fund-item">
+        <div>
+          <div class="fund-name">建信新兴市场优选混合(QDII)A</div>
+          <span class="fund-tag qdii">新兴市场</span>
+        </div>
+        <div class="fund-right">
+          <div class="fund-amount">¥65.53</div>
+          <div class="fund-return up">+9.22%</div>
+        </div>
+      </div>
+      <div class="fund-item">
+        <div>
+          <div class="fund-name">广发纳斯达克100ETF联接(QDII)C</div>
+          <span class="fund-tag qdii">纳指100</span>
+        </div>
+        <div class="fund-right">
+          <div class="fund-amount">¥60.73</div>
+          <div class="fund-return up">+1.47%</div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -888,6 +1204,240 @@
         <canvas id="mcChart"></canvas>
       </div>
       <div style="font-size:11px;color:var(--text-muted);text-align:center;margin-top:4px;">基于1000次随机模拟的预期终值分布</div>
+    </div>
+
+    <!-- My SIP Plans -->
+    <div class="section-title">我的定投计划</div>
+
+    <!-- 海外QDII定投 -->
+    <div class="card" style="padding:0 16px;">
+      <div style="padding:12px 0 6px;font-size:14px;font-weight:700;color:var(--orange);">海外QDII定投（21支）</div>
+
+      <div style="padding:6px 0 4px;font-size:12px;font-weight:600;color:var(--text-dim);">纳斯达克100指数系列（12支）</div>
+      <div class="sip-plan-item">
+        <div class="sip-plan-name">万家纳斯达克100指数(QDII)A<div class="sip-plan-info">日定投</div></div>
+        <div class="sip-plan-right">
+          <div class="sip-plan-amount">500元/次</div>
+          <div class="sip-plan-detail">已投7期 累计¥800</div>
+        </div>
+      </div>
+      <div class="sip-plan-item">
+        <div class="sip-plan-name">南方纳斯达克100指数(QDII)A<div class="sip-plan-info">日定投</div></div>
+        <div class="sip-plan-right">
+          <div class="sip-plan-amount">200元/次</div>
+          <div class="sip-plan-detail">已投7期 累计¥700</div>
+        </div>
+      </div>
+      <div class="sip-plan-item">
+        <div class="sip-plan-name">建信纳斯达克100指数(QDII)A<div class="sip-plan-info">日定投</div></div>
+        <div class="sip-plan-right">
+          <div class="sip-plan-amount">100元/次</div>
+          <div class="sip-plan-detail">已投6期 累计¥600</div>
+        </div>
+      </div>
+      <div class="sip-plan-item">
+        <div class="sip-plan-name">汇添富纳斯达克100ETF联接(QDII)A<div class="sip-plan-info">日定投</div></div>
+        <div class="sip-plan-right">
+          <div class="sip-plan-amount">100元/次</div>
+          <div class="sip-plan-detail">已投6期 累计¥600</div>
+        </div>
+      </div>
+      <div class="sip-plan-item">
+        <div class="sip-plan-name">摩根纳斯达克100指数(QDII)A<div class="sip-plan-info">日定投</div></div>
+        <div class="sip-plan-right">
+          <div class="sip-plan-amount">10元/次</div>
+          <div class="sip-plan-detail">已投8期 累计¥530</div>
+        </div>
+      </div>
+      <div class="sip-plan-item">
+        <div class="sip-plan-name">招商纳斯达克100ETF联接(QDII)A<div class="sip-plan-info">日定投</div></div>
+        <div class="sip-plan-right">
+          <div class="sip-plan-amount">10元/次</div>
+          <div class="sip-plan-detail">已投7期 累计¥340</div>
+        </div>
+      </div>
+      <div class="sip-plan-item">
+        <div class="sip-plan-name">宝盈纳斯达克100指数(QDII)A<div class="sip-plan-info">日定投</div></div>
+        <div class="sip-plan-right">
+          <div class="sip-plan-amount">10元/次</div>
+          <div class="sip-plan-detail">已投7期 累计¥340</div>
+        </div>
+      </div>
+      <div class="sip-plan-item">
+        <div class="sip-plan-name">大成纳斯达克100ETF联接(QDII)A<div class="sip-plan-info">日定投</div></div>
+        <div class="sip-plan-right">
+          <div class="sip-plan-amount">50元/次</div>
+          <div class="sip-plan-detail">已投9期 累计¥210</div>
+        </div>
+      </div>
+      <div class="sip-plan-item">
+        <div class="sip-plan-name">华安纳斯达克100ETF联接(QDII)A<div class="sip-plan-info">日定投</div></div>
+        <div class="sip-plan-right">
+          <div class="sip-plan-amount">10元/次</div>
+          <div class="sip-plan-detail">已投9期 累计¥90</div>
+        </div>
+      </div>
+      <div class="sip-plan-item">
+        <div class="sip-plan-name">广发纳斯达克100ETF联接(QDII)A<div class="sip-plan-info">日定投</div></div>
+        <div class="sip-plan-right">
+          <div class="sip-plan-amount">10元/次</div>
+          <div class="sip-plan-detail">已投9期 累计¥90</div>
+        </div>
+      </div>
+      <div class="sip-plan-item">
+        <div class="sip-plan-name">华泰柏瑞纳斯达克100ETF联接(QDII)A<div class="sip-plan-info">日定投</div></div>
+        <div class="sip-plan-right">
+          <div class="sip-plan-amount">10元/次</div>
+          <div class="sip-plan-detail">已投7期 累计¥70</div>
+        </div>
+      </div>
+      <div class="sip-plan-item">
+        <div class="sip-plan-name">广发纳斯达克100ETF联接(QDII)C<div class="sip-plan-info">日定投</div></div>
+        <div class="sip-plan-right">
+          <div class="sip-plan-amount">10元/次</div>
+          <div class="sip-plan-detail">尚未扣款</div>
+        </div>
+      </div>
+
+      <div style="padding:12px 0 4px;font-size:12px;font-weight:600;color:var(--text-dim);">全球科技/成长混合（7支）</div>
+      <div class="sip-plan-item">
+        <div class="sip-plan-name">易方达全球优质企业混合(QDII)A<div class="sip-plan-info">日定投</div></div>
+        <div class="sip-plan-right">
+          <div class="sip-plan-amount">500元/次</div>
+          <div class="sip-plan-detail">已投2期 累计¥550</div>
+        </div>
+      </div>
+      <div class="sip-plan-item">
+        <div class="sip-plan-name">华夏全球科技先锋混合(QDII)A<div class="sip-plan-info">日定投</div></div>
+        <div class="sip-plan-right">
+          <div class="sip-plan-amount">200元/次</div>
+          <div class="sip-plan-detail">已投1期 累计¥500</div>
+        </div>
+      </div>
+      <div class="sip-plan-item">
+        <div class="sip-plan-name">银华海外数字经济量化选股混合(QDII)A<div class="sip-plan-info">日定投</div></div>
+        <div class="sip-plan-right">
+          <div class="sip-plan-amount">200元/次</div>
+          <div class="sip-plan-detail">已投0期</div>
+        </div>
+      </div>
+      <div class="sip-plan-item">
+        <div class="sip-plan-name">广发全球精选股票(QDII)A<div class="sip-plan-info">日定投</div></div>
+        <div class="sip-plan-right">
+          <div class="sip-plan-amount">100元/次</div>
+          <div class="sip-plan-detail">已投9期 累计¥850</div>
+        </div>
+      </div>
+      <div class="sip-plan-item">
+        <div class="sip-plan-name">国富全球科技互联混合(QDII)A<div class="sip-plan-info">日定投</div></div>
+        <div class="sip-plan-right">
+          <div class="sip-plan-amount">100元/次</div>
+          <div class="sip-plan-detail">已投0期</div>
+        </div>
+      </div>
+      <div class="sip-plan-item">
+        <div class="sip-plan-name">易方达全球成长精选混合(QDII)A<div class="sip-plan-info">日定投</div></div>
+        <div class="sip-plan-right">
+          <div class="sip-plan-amount">20元/次</div>
+          <div class="sip-plan-detail">已投9期 累计¥180</div>
+        </div>
+      </div>
+      <div class="sip-plan-item">
+        <div class="sip-plan-name">易方达全球成长精选混合(QDII)C<div class="sip-plan-info">日定投</div></div>
+        <div class="sip-plan-right">
+          <div class="sip-plan-amount">20元/次</div>
+          <div class="sip-plan-detail">已投7期 累计¥140</div>
+        </div>
+      </div>
+
+      <div style="padding:12px 0 4px;font-size:12px;font-weight:600;color:var(--text-dim);">其他海外（2支）</div>
+      <div class="sip-plan-item">
+        <div class="sip-plan-name">摩根标普500指数(QDII)A<div class="sip-plan-info">日定投</div></div>
+        <div class="sip-plan-right">
+          <div class="sip-plan-amount">100元/次</div>
+          <div class="sip-plan-detail">已投6期 累计¥150</div>
+        </div>
+      </div>
+      <div class="sip-plan-item">
+        <div class="sip-plan-name">建信新兴市场优选混合(QDII)A<div class="sip-plan-info">日定投</div></div>
+        <div class="sip-plan-right">
+          <div class="sip-plan-amount">30元/次</div>
+          <div class="sip-plan-detail">已投0期</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- A股指数增强定投 -->
+    <div class="card" style="padding:0 16px;">
+      <div style="padding:12px 0 6px;font-size:14px;font-weight:700;color:var(--purple);">A股指数增强定投（3支）</div>
+      <div class="sip-plan-item">
+        <div class="sip-plan-name">易方达沪深300指数精选增强C<div class="sip-plan-info">智能日定投</div></div>
+        <div class="sip-plan-right">
+          <div class="sip-plan-amount">300元/次</div>
+          <div class="sip-plan-detail">智能定投</div>
+        </div>
+      </div>
+      <div class="sip-plan-item">
+        <div class="sip-plan-name">万家中证500指数增强C<div class="sip-plan-info">智能周定投（周四）</div></div>
+        <div class="sip-plan-right">
+          <div class="sip-plan-amount">250~1,000元</div>
+          <div class="sip-plan-detail">智能定投</div>
+        </div>
+      </div>
+      <div class="sip-plan-item">
+        <div class="sip-plan-name">长信中证科创创业50指数增强C<div class="sip-plan-info">智能周定投（周四）</div></div>
+        <div class="sip-plan-right">
+          <div class="sip-plan-amount">100~400元</div>
+          <div class="sip-plan-detail">智能定投</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 债券定投 -->
+    <div class="card" style="padding:0 16px;">
+      <div style="padding:12px 0 6px;font-size:14px;font-weight:700;color:var(--green);">债券定投（1支）</div>
+      <div class="sip-plan-item">
+        <div class="sip-plan-name">易方达中短期美元债债券(QDII)A<div class="sip-plan-info">日定投</div></div>
+        <div class="sip-plan-right">
+          <div class="sip-plan-amount">20元/次</div>
+          <div class="sip-plan-detail">已投1期 累计¥20</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 定投汇总 -->
+    <div class="card">
+      <div class="card-title">&#x1F4CA; 定投汇总</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div style="padding:10px;background:var(--bg);border-radius:10px;">
+          <div style="font-size:11px;color:var(--text-muted);">每日固定扣款</div>
+          <div style="font-size:18px;font-weight:700;margin-top:4px;">~2,280元</div>
+        </div>
+        <div style="padding:10px;background:var(--bg);border-radius:10px;">
+          <div style="font-size:11px;color:var(--text-muted);">智能日定投</div>
+          <div style="font-size:18px;font-weight:700;margin-top:4px;">~300元/日</div>
+        </div>
+        <div style="padding:10px;background:var(--bg);border-radius:10px;">
+          <div style="font-size:11px;color:var(--text-muted);">每周智能定投（周四）</div>
+          <div style="font-size:18px;font-weight:700;margin-top:4px;">~350~1,400元</div>
+        </div>
+        <div style="padding:10px;background:var(--bg);border-radius:10px;">
+          <div style="font-size:11px;color:var(--text-muted);">每月合计</div>
+          <div style="font-size:18px;font-weight:700;color:var(--blue);margin-top:4px;">~5.8万~6.2万</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;padding:10px;background:var(--bg);border-radius:10px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div style="font-size:11px;color:var(--text-muted);">6月进度</div>
+            <div style="font-size:14px;font-weight:600;margin-top:2px;">2.09万 / 3.82万</div>
+          </div>
+          <div style="font-size:20px;font-weight:700;color:var(--green);">54.7%</div>
+        </div>
+        <div style="margin-top:8px;height:6px;background:var(--border);border-radius:3px;overflow:hidden;">
+          <div style="width:54.7%;height:100%;background:linear-gradient(90deg,var(--green),var(--blue));border-radius:3px;"></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
