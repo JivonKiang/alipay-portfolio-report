@@ -35,12 +35,6 @@
       --yellow-dim: rgba(234,179,8,0.12);
       --radius: 16px;
       --radius-sm: 12px;
-      /* Capacitor SystemBars plugin injects these CSS variables on Android */
-      /* Fallback chain: injected value -> env() -> fixed estimate */
-      --sat: var(--safe-area-inset-top, env(safe-area-inset-top, 44px));
-      --sab: var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 24px));
-      --sal: var(--safe-area-inset-left, env(safe-area-inset-left, 0px));
-      --sar: var(--safe-area-inset-right, env(safe-area-inset-right, 0px));
     }
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     html { scroll-behavior: smooth; }
@@ -48,9 +42,8 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif;
       background: var(--bg); color: var(--text); min-height: 100vh;
       -webkit-font-smoothing: antialiased; overflow-x: hidden;
-      /* Use Capacitor injected safe area insets */
-      padding-top: var(--sat);
-      padding-bottom: calc(72px + var(--sab));
+      /* safe-area plugin handles insets automatically on Android */
+      padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
     }
 
     /* Header - safe area for notch/dynamic island */
@@ -59,8 +52,8 @@
       background: rgba(11,15,25,0.92); backdrop-filter: blur(20px) saturate(1.8);
       -webkit-backdrop-filter: blur(20px) saturate(1.8);
       border-bottom: 1px solid var(--border);
-      /* Add extra padding for status bar / super island */
-      padding: calc(12px + var(--sat)) 16px 10px;
+      /* safe-area plugin adds padding automatically, just add content padding */
+      padding: 12px 16px 10px;
     }
     .app-header-inner { display: flex; align-items: center; justify-content: space-between; }
     .app-header h1 { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; }
@@ -77,8 +70,7 @@
     .sidebar {
       position: fixed; top: 0; left: -280px; width: 280px; height: 100%;
       background: var(--bg-elevated); z-index: 200; transition: left 0.3s ease;
-      border-right: 1px solid var(--border); padding-top: calc(60px + var(--sat));
-      padding-bottom: var(--sab);
+      border-right: 1px solid var(--border); padding-top: 60px;
       overflow-y: auto;
     }
     .sidebar.open { left: 0; }
@@ -220,8 +212,8 @@
       background: rgba(11,15,25,0.95); backdrop-filter: blur(20px) saturate(1.8);
       -webkit-backdrop-filter: blur(20px) saturate(1.8);
       border-top: 1px solid var(--border);
-      /* Add safe area padding for gesture navigation bar */
-      padding-bottom: calc(6px + var(--sab));
+      /* safe-area plugin handles bottom inset automatically */
+      padding-bottom: 6px;
       display: flex; justify-content: space-around; padding-top: 6px;
     }
     .nav-item {
@@ -856,7 +848,7 @@
 
 <script>
 // ==================== Cache Buster & OTA Auto Update ====================
-const APP_VERSION = '3.2.2';
+const APP_VERSION = '3.3.0';
 const CACHE_KEY = 'portfolio_version';
 const UPDATE_CHECK_INTERVAL = 60 * 60 * 1000; // 每小时检查一次
 
@@ -872,46 +864,44 @@ function checkVersion() {
 }
 checkVersion();
 
-// OTA Auto Update using Capacitor Updater plugin
+// OTA Auto Update - Check GitHub Releases for new APK
 async function checkOTAUpdate() {
   try {
     // Only run in Capacitor native app
-    if (typeof Capacitor === 'undefined') return;
+    if (typeof Capacitor === 'undefined' || !Capacitor.isNativePlatform()) return;
 
-    const { CapacitorUpdater } = await import('@capgo/capacitor-updater');
-
-    // Check for update from GitHub Pages
-    const resp = await fetch('https://jivonkiang.github.io/alipay-portfolio-report/updates.json?v=' + Date.now(), {
-      cache: 'no-store'
+    // Fetch latest release from GitHub API
+    const resp = await fetch('https://api.github.com/repos/JivonKiang/alipay-portfolio-report/releases/latest', {
+      cache: 'no-store',
+      headers: { 'Accept': 'application/vnd.github.v3+json' }
     });
     if (!resp.ok) return;
 
-    const updateInfo = await resp.json();
-    console.log('[OTA] Remote version:', updateInfo.version, 'Current:', APP_VERSION);
+    const release = await resp.json();
+    const latestTag = release.tag_name; // e.g. "v15"
+    const latestVersion = latestTag.replace(/^v/, '');
 
-    // Compare versions (simple string comparison for semver)
-    if (updateInfo.version && updateInfo.version !== APP_VERSION) {
-      console.log('[OTA] New version available:', updateInfo.version);
+    console.log('[OTA] Remote version:', latestVersion, 'Current:', APP_VERSION);
+
+    // Compare versions
+    if (latestVersion && latestVersion !== APP_VERSION) {
+      console.log('[OTA] New version available:', latestVersion);
+
+      // Find APK asset
+      const apkAsset = release.assets?.find(a => a.name.endsWith('.apk'));
+      const apkUrl = apkAsset?.browser_download_url || '';
 
       // Show update banner
       const banner = document.getElementById('cacheBanner');
-      banner.textContent = '发现新版本 ' + updateInfo.version + '，点击更新 ↻';
+      banner.textContent = '发现新版本 ' + latestVersion + '，点击下载更新 ↻';
       banner.classList.add('show');
       banner.onclick = async () => {
-        banner.textContent = '正在下载更新...';
-        try {
-          // Download and install the new bundle
-          await CapacitorUpdater.download({
-            url: updateInfo.url,
-            version: updateInfo.version
-          });
-          banner.textContent = '更新已下载，重启应用生效';
-          setTimeout(() => {
-            CapacitorUpdater.set({ version: updateInfo.version });
-          }, 1500);
-        } catch (err) {
-          console.error('[OTA] Download failed:', err);
-          banner.textContent = '更新失败，请重试';
+        if (apkUrl) {
+          // Open browser to download APK
+          const { Browser } = await import('@capacitor/browser');
+          await Browser.open({ url: apkUrl });
+        } else {
+          banner.textContent = '未找到APK下载链接';
         }
       };
     }
@@ -920,9 +910,9 @@ async function checkOTAUpdate() {
   }
 }
 
-// 启动时和每小时检查一次更新
+// 启动时和每天检查一次更新
 checkOTAUpdate();
-setInterval(checkOTAUpdate, UPDATE_CHECK_INTERVAL);
+setInterval(checkOTAUpdate, 24 * 60 * 60 * 1000); // 每天检查一次
 
 // ==================== Navigation ====================
 function goPage(name) {

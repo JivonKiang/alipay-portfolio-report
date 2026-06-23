@@ -1,5 +1,13 @@
 [
 	{
+		"pkg": "@capacitor-community/safe-area",
+		"classpath": "com.getcapacitor.community.safearea.SafeAreaPlugin"
+	},
+	{
+		"pkg": "@capacitor/browser",
+		"classpath": "com.capacitorjs.plugins.browser.BrowserPlugin"
+	},
+	{
 		"pkg": "@capgo/capacitor-updater",
 		"classpath": "ee.forgr.capacitor_updater.CapacitorUpdaterPlugin"
 	}

@@ -8,10 +8,6 @@
 		"cleartext": true
 	},
 	"plugins": {
-		"SystemBars": {
-			"insetsHandling": "css",
-			"style": "DARK"
-		},
 		"CapacitorUpdater": {
 			"autoUpdate": false,
 			"appReadyTimeout": 10000
