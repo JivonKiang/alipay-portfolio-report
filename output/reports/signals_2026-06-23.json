@@ -1,0 +1,74 @@
+[
+  {
+    "code": "110020",
+    "name": "易方达沪深300ETF联接A",
+    "strategy": "MA60-120",
+    "signal_type": "BUY",
+    "reason": "MA60上穿MA120",
+    "nav": 1.594,
+    "date": "2025-07-09",
+    "is_primary": true,
+    "should_execute": true,
+    "filter_reason": "通过"
+  },
+  {
+    "code": "110020",
+    "name": "易方达沪深300ETF联接A",
+    "strategy": "Turtle-55-20",
+    "signal_type": "BUY",
+    "reason": "突破55日高点2.0394",
+    "nav": 2.0394,
+    "date": "2026-06-22",
+    "is_primary": false,
+    "should_execute": true,
+    "filter_reason": "通过"
+  },
+  {
+    "code": "160119",
+    "name": "南方中证500ETF联接A",
+    "strategy": "MA60-120",
+    "signal_type": "BUY",
+    "reason": "MA60上穿MA120",
+    "nav": 1.7508,
+    "date": "2025-07-22",
+    "is_primary": true,
+    "should_execute": true,
+    "filter_reason": "通过"
+  },
+  {
+    "code": "160119",
+    "name": "南方中证500ETF联接A",
+    "strategy": "Turtle-55-20",
+    "signal_type": "BUY",
+    "reason": "突破55日高点2.4874",
+    "nav": 2.4874,
+    "date": "2026-06-22",
+    "is_primary": false,
+    "should_execute": true,
+    "filter_reason": "通过"
+  },
+  {
+    "code": "001593",
+    "name": "天弘创业板ETF联接C",
+    "strategy": "MA60-120",
+    "signal_type": "BUY",
+    "reason": "MA60上穿MA120",
+    "nav": 0.9402,
+    "date": "2025-07-25",
+    "is_primary": true,
+    "should_execute": true,
+    "filter_reason": "通过"
+  },
+  {
+    "code": "001593",
+    "name": "天弘创业板ETF联接C",
+    "strategy": "Turtle-55-20",
+    "signal_type": "BUY",
+    "reason": "突破55日高点1.6327",
+    "nav": 1.6327,
+    "date": "2026-06-17",
+    "is_primary": false,
+    "should_execute": true,
+    "filter_reason": "通过"
+  }
+]
