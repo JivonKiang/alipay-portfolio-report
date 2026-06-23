@@ -35,12 +35,11 @@
       --yellow-dim: rgba(234,179,8,0.12);
       --radius: 16px;
       --radius-sm: 12px;
-      --safe-bottom: env(safe-area-inset-bottom, 0px);
-      --safe-top: env(safe-area-inset-top, 32px);
-    }
-    /* Android WebView fallback for safe-area-inset-top */
-    @supports not (padding-top: env(safe-area-inset-top)) {
-      :root { --safe-top: 32px; }
+      /* Use injected values from MainActivity, fallback to env() or 0 */
+      --safe-bottom: var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px));
+      --safe-top: var(--safe-area-inset-top, env(safe-area-inset-top, 0px));
+      --status-bar-h: var(--status-bar-height, var(--safe-top, 32px));
+      --nav-bar-h: var(--navigation-bar-height, var(--safe-bottom, 0px));
     }
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     html { scroll-behavior: smooth; }
@@ -48,8 +47,8 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif;
       background: var(--bg); color: var(--text); min-height: 100vh;
       -webkit-font-smoothing: antialiased; overflow-x: hidden;
-      padding-bottom: calc(72px + var(--safe-bottom));
-      padding-top: var(--safe-top);
+      padding-bottom: calc(72px + var(--nav-bar-h));
+      padding-top: var(--status-bar-h);
     }
 
     /* Header - safe area for notch/dynamic island */
@@ -58,10 +57,9 @@
       background: rgba(11,15,25,0.92); backdrop-filter: blur(20px) saturate(1.8);
       -webkit-backdrop-filter: blur(20px) saturate(1.8);
       border-bottom: 1px solid var(--border);
-      padding: calc(14px + var(--safe-top)) 16px 10px;
+      /* Use injected status bar height + content padding */
+      padding: calc(12px + var(--status-bar-h, 32px)) 16px 10px;
     }
-    /* Extra top padding for Android notch/hole-punch devices */
-    .app-header { padding-top: calc(14px + max(var(--safe-top), 28px)); }
     .app-header-inner { display: flex; align-items: center; justify-content: space-between; }
     .app-header h1 { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; }
     .app-header .subtitle { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
@@ -219,7 +217,9 @@
       position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
       background: rgba(11,15,25,0.95); backdrop-filter: blur(20px) saturate(1.8);
       -webkit-backdrop-filter: blur(20px) saturate(1.8);
-      border-top: 1px solid var(--border); padding-bottom: var(--safe-bottom);
+      border-top: 1px solid var(--border);
+      /* Use injected navigation bar height */
+      padding-bottom: calc(6px + var(--nav-bar-h, 0px));
       display: flex; justify-content: space-around; padding-top: 6px;
     }
     .nav-item {

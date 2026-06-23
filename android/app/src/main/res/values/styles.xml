@@ -13,10 +13,15 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:background">@null</item>
+        <!-- Enable display cutout (notch/punch-hole) support -->
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+        <!-- Disable system default fitsSystemWindows so we handle insets manually -->
+        <item name="android:fitsSystemWindows">false</item>
     </style>
-
 
     <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
         <item name="android:background">@drawable/splash</item>
+        <!-- Enable display cutout support for splash screen too -->
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
     </style>
 </resources>
