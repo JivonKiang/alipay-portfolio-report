@@ -235,6 +235,13 @@
       margin: 20px 0 10px; padding-left: 10px; border-left: 3px solid var(--blue);
     }
 
+    /* Detail panel (advice page accordion) */
+    .detail-panel { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+    .detail-panel.open { max-height: 2000px; }
+    .toggle-btn { cursor: pointer; user-select: none; }
+    .toggle-btn::after { content: ' \25BC'; font-size: 10px; }
+    .toggle-btn.open::after { content: ' \25B2'; }
+
     /* Warning */
     .warning-box {
       background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2);
@@ -632,364 +639,490 @@
 <div class="tab-panel" id="page-advice">
   <div class="content">
 
-    <!-- ====== 短线策略（7-30天） ====== -->
-    <div class="section-title">&#x1F3AF; 短线策略（7-30天）</div>
+    <!-- ====== 1. 今日操作指令 ====== -->
+    <div class="card" style="background: var(--bg-card); border: 1px solid rgba(34,197,94,0.3); border-radius: var(--radius); padding: 16px; margin-bottom: 12px;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
+        <span style="font-size:18px;">&#x1F4CB;</span>
+        <div style="font-size:15px; font-weight:700; color:var(--text);">今日操作指令</div>
+        <span style="font-size:11px; color:var(--text-muted); margin-left:auto;">6月23日 周一</span>
+      </div>
 
-    <!-- 策略卡片1：可转债打新套利 -->
-    <div class="card" style="background: var(--bg-card); border-left: 3px solid var(--green);">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <div style="font-size:14px; font-weight:700; color:var(--green)">&#x1F4B0; 可转债打新套利</div>
-        <span style="font-size:11px; font-weight:700; padding:2px 8px; background:rgba(34,197,94,0.15); color:var(--green); border-radius:4px;">胜率 95.7%</span>
+      <!-- 操作项1：买入华峰转债 -->
+      <div style="background:rgba(34,197,94,0.06); border:1px solid rgba(34,197,94,0.15); border-radius:10px; padding:12px; margin-bottom:10px;">
+        <div style="display:flex; align-items:center; gap:6px; margin-bottom:8px;">
+          <span style="font-size:13px; font-weight:700; color:var(--green);">&#x2705; 买入：华峰转债(118071)</span>
+        </div>
+        <div style="font-size:12px; color:var(--text-dim); line-height:1.9; padding-left:2px;">
+          金额：1000元（顶格申购）<br>
+          持有：7-14天<br>
+          <span style="color:var(--green);">胜率：95.7%</span> | <span style="color:var(--green);">预期：+50~80元</span>
+        </div>
+        <div class="toggle-btn" onclick="toggleDetail(this)" style="font-size:11px; color:var(--blue); margin-top:8px; padding:4px 0;">展开详情</div>
+        <div class="detail-panel" style="margin-top:6px;">
+          <div style="font-size:11px; color:var(--text-dim); line-height:1.8; padding:10px; background:rgba(0,0,0,0.2); border-radius:8px;">
+            <strong>理论依据：</strong>2026年再融资规则优化，可转债发行提速（Q1同比+260%），存量仅5031亿元创近年新低，供需缺口推动估值修复。华峰转债属半导体赛道，转股价值121.36元，小盘债弹性充足。<br><br>
+            <strong>操作步骤：</strong><br>
+            1. 申购日通过券商APP参与可转债打新，顶格申购（10000张）<br>
+            2. 中签后缴款约1000元（中签率约10%）<br>
+            3. 上市首日择机卖出，持有周期7-14天<br>
+            4. 年化收益率约180%-520%<br><br>
+            <strong>手续费：</strong>0元（打新免费）<br>
+            <strong>统计验证：</strong>2026年Q1新上市可转债首日破发率仅4.3%（2/47），Wilson置信区间: 93.2%-97.8%<br>
+            <strong>风险提示：</strong>极端市场环境下可能破发，最大回撤约-15%，但概率极低。
+          </div>
+        </div>
       </div>
-      <div style="font-size:12px; color:var(--text-dim); line-height:1.8; margin-bottom:10px;">
-        <strong>逻辑：</strong>2026年再融资规则优化，可转债发行提速（Q1同比+260%），存量仅5031亿元创近年新低，供需缺口推动估值修复。<br>
-        <strong>标的：</strong>华峰转债(118071) — 半导体赛道，转股价值121.36元，小盘债弹性充足。
+
+      <!-- 操作项2：买入中欧稳添 -->
+      <div style="background:rgba(34,197,94,0.06); border:1px solid rgba(34,197,94,0.15); border-radius:10px; padding:12px; margin-bottom:10px;">
+        <div style="display:flex; align-items:center; gap:6px; margin-bottom:8px;">
+          <span style="font-size:13px; font-weight:700; color:var(--green);">&#x2705; 买入：中欧稳添90天C</span>
+        </div>
+        <div style="font-size:12px; color:var(--text-dim); line-height:1.9; padding-left:2px;">
+          金额：50000元<br>
+          持有：7-14天<br>
+          <span style="color:var(--green);">胜率：100%</span> | <span style="color:var(--green);">预期：+150~250元</span>
+        </div>
+        <div class="toggle-btn" onclick="toggleDetail(this)" style="font-size:11px; color:var(--blue); margin-top:8px; padding:4px 0;">展开详情</div>
+        <div class="detail-panel" style="margin-top:6px;">
+          <div style="font-size:11px; color:var(--text-dim); line-height:1.8; padding:10px; background:rgba(0,0,0,0.2); border-radius:8px;">
+            <strong>理论依据：</strong>6月末跨季窗口，DR007通常上行20-40BP，季末后回落。逆回购+短债基金可在跨季前后赚取价差。C类份额持有满7天免赎回费。<br><br>
+            <strong>操作步骤：</strong><br>
+            1. 季末前3-5天买入短债基金C类份额<br>
+            2. 持有至季末后2-3天赎回，总持有期7-14天<br>
+            3. 年化收益率约6%-10%<br>
+            4. 注意选择持有满7天免赎回费的C类份额<br><br>
+            <strong>手续费：</strong>约15元（5万元C类销售服务费）<br>
+            <strong>统计验证：</strong>2024-2025年4个跨季窗口，短债基金平均超额收益0.35%（t=3.2, p=0.008, FDR校正后p=0.016）<br>
+            <strong>风险提示：</strong>最大回撤仅-0.05%，几乎无本金风险。
+          </div>
+        </div>
       </div>
-      <table style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:10px;">
-        <tr style="background:rgba(0,0,0,0.2);">
-          <th style="padding:6px; text-align:left; border-bottom:1px solid rgba(255,255,255,0.05);">指标</th>
-          <th style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.05);">数值</th>
-        </tr>
-        <tr>
-          <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">预期收益率</td>
-          <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">3% - 8%</td>
-        </tr>
-        <tr style="background:rgba(0,0,0,0.1);">
-          <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">历史胜率</td>
-          <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">95.7%</td>
-        </tr>
-        <tr>
-          <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">夏普比率</td>
-          <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">2.85</td>
-        </tr>
-        <tr style="background:rgba(0,0,0,0.1);">
-          <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">最大回撤</td>
-          <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--red);">-15%（极端值）</td>
-        </tr>
-        <tr>
-          <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">手续费</td>
-          <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">0元</td>
-        </tr>
-        <tr style="background:rgba(0,0,0,0.1);">
-          <td style="padding:6px;">净利润（1万本金）</td>
-          <td style="padding:6px; text-align:right; color:var(--green);">50 - 80元</td>
-        </tr>
-      </table>
-      <div style="font-size:11px; color:var(--text-dim); line-height:1.8; margin-bottom:8px;">
-        <strong>操作说明：</strong><br>
-        1. 申购日通过券商APP参与可转债打新，顶格申购（10000张）<br>
-        2. 中签后缴款约1000元（中签率约10%）<br>
-        3. 上市首日择机卖出，持有周期7-14天<br>
-        4. 年化收益率约180%-520%
+
+      <!-- 操作项3：观望广发纳指 -->
+      <div style="background:rgba(234,179,8,0.06); border:1px solid rgba(234,179,8,0.15); border-radius:10px; padding:12px; margin-bottom:10px;">
+        <div style="display:flex; align-items:center; gap:6px; margin-bottom:8px;">
+          <span style="font-size:13px; font-weight:700; color:var(--yellow);">&#x23F8; 观望：广发纳指100ETF联接A</span>
+        </div>
+        <div style="font-size:12px; color:var(--text-dim); line-height:1.9; padding-left:2px;">
+          原因：等待回调至PE 30x以下
+        </div>
+        <div class="toggle-btn" onclick="toggleDetail(this)" style="font-size:11px; color:var(--blue); margin-top:8px; padding:4px 0;">展开详情</div>
+        <div class="detail-panel" style="margin-top:6px;">
+          <div style="font-size:11px; color:var(--text-dim); line-height:1.8; padding:10px; background:rgba(0,0,0,0.2); border-radius:8px;">
+            <strong>理论依据：</strong>美股长期向上但波动较大，当前纳指100估值处于历史中位偏高水平。定投平滑成本，叠加波段操作增厚收益。<br><br>
+            <strong>触发条件：</strong>纳指100 PE 回落至 30x 以下时分批建仓，或单日跌幅超3%时加仓。<br><br>
+            <strong>手续费：</strong>0.15%（申购费）<br>
+            <strong>风险提示：</strong>QDII基金存在汇率风险和溢价风险，最大回撤约-8%。
+          </div>
+        </div>
       </div>
-      <div style="padding:8px; background:rgba(34,197,94,0.08); border-radius:8px; font-size:11px; color:var(--green);">
-        <strong>统计验证：</strong>2026年Q1新上市可转债首日破发率仅4.3%（2/47），Wilson置信区间: 93.2%-97.8%
+
+      <!-- 今日组合预期 -->
+      <div style="background:rgba(59,130,246,0.08); border:1px solid rgba(59,130,246,0.2); border-radius:10px; padding:12px;">
+        <div style="font-size:13px; font-weight:700; color:var(--blue); margin-bottom:8px;">&#x1F4CA; 今日组合预期</div>
+        <div style="font-size:12px; color:var(--text-dim); line-height:1.9;">
+          投入：<span style="color:var(--text); font-weight:600;">51000元</span> | 预期利润：<span style="color:var(--green); font-weight:600;">200~330元</span><br>
+          综合胜率：<span style="color:var(--green); font-weight:700;">97.9%</span>
+        </div>
       </div>
     </div>
 
-    <!-- 策略卡片2：跨季资金面套利 -->
-    <div class="card" style="background: var(--bg-card); border-left: 3px solid var(--blue);">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <div style="font-size:14px; font-weight:700; color:var(--blue)">&#x1F4B0; 跨季资金面套利</div>
-        <span style="font-size:11px; font-weight:700; padding:2px 8px; background:rgba(59,130,246,0.15); color:var(--blue); border-radius:4px;">胜率 100%</span>
+    <!-- ====== 2. 每日市场速报 ====== -->
+    <div class="card" style="background: var(--bg-card); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 12px;">
+      <div style="display:flex; align-items:center; gap:6px; margin-bottom:10px;">
+        <span style="font-size:14px;">&#x1F4C8;</span>
+        <div style="font-size:13px; font-weight:700; color:var(--text);">每日市场速报</div>
       </div>
-      <div style="font-size:12px; color:var(--text-dim); line-height:1.8; margin-bottom:10px;">
-        <strong>逻辑：</strong>6月末跨季窗口，DR007通常上行20-40BP，季末后回落。逆回购+短债基金可在跨季前后赚取价差。<br>
-        <strong>标的：</strong>中欧稳添90天A等短债基金，C类份额持有满7天免赎回费。
-      </div>
-      <table style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:10px;">
-        <tr style="background:rgba(0,0,0,0.2);">
-          <th style="padding:6px; text-align:left; border-bottom:1px solid rgba(255,255,255,0.05);">指标</th>
-          <th style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.05);">数值</th>
-        </tr>
-        <tr>
-          <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">预期收益率</td>
-          <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">0.3% - 0.5%</td>
-        </tr>
-        <tr style="background:rgba(0,0,0,0.1);">
-          <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">历史胜率</td>
-          <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">100%</td>
-        </tr>
-        <tr>
-          <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">夏普比率</td>
-          <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">3.12</td>
-        </tr>
-        <tr style="background:rgba(0,0,0,0.1);">
-          <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">最大回撤</td>
-          <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">-0.05%</td>
-        </tr>
-        <tr>
-          <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">手续费（5万）</td>
-          <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">15元</td>
-        </tr>
-        <tr style="background:rgba(0,0,0,0.1);">
-          <td style="padding:6px;">净利润（5万本金）</td>
-          <td style="padding:6px; text-align:right; color:var(--green);">150 - 250元</td>
-        </tr>
-      </table>
-      <div style="font-size:11px; color:var(--text-dim); line-height:1.8; margin-bottom:8px;">
-        <strong>操作说明：</strong><br>
-        1. 季末前3-5天买入短债基金C类份额<br>
-        2. 持有至季末后2-3天赎回，总持有期7-14天<br>
-        3. 年化收益率约6%-10%<br>
-        4. 注意选择持有满7天免赎回费的C类份额
-      </div>
-      <div style="padding:8px; background:rgba(59,130,246,0.08); border-radius:8px; font-size:11px; color:var(--blue);">
-        <strong>统计验证：</strong>2024-2025年4个跨季窗口，短债基金平均超额收益0.35%（t=3.2, p=0.008, FDR校正后p=0.016）
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px 16px; font-size:12px; color:var(--text-dim); line-height:1.8;">
+        <div>上证指数：<span style="color:var(--text); font-weight:500;">3,352.18</span> <span style="color:var(--green); font-size:11px;">+0.42%</span></div>
+        <div>深证成指：<span style="color:var(--text); font-weight:500;">10,876.35</span> <span style="color:var(--red); font-size:11px;">-0.18%</span></div>
+        <div>纳指100：<span style="color:var(--text); font-weight:500;">21,458.72</span> <span style="color:var(--green); font-size:11px;">+0.85%</span></div>
+        <div>10年国债：<span style="color:var(--text); font-weight:500;">1.6825%</span> <span style="color:var(--red); font-size:11px;">-1.2BP</span></div>
+        <div style="grid-column: span 2;">人民币汇率：<span style="color:var(--text); font-weight:500;">7.1826</span> <span style="color:var(--red); font-size:11px;">+0.08%</span></div>
       </div>
     </div>
 
-    <!-- ====== 中线策略（1-6个月） ====== -->
-    <div class="section-title">&#x1F3AF; 中线策略（1-6个月）</div>
-
-    <!-- 策略卡片3：可转债基金波段 -->
-    <div class="card" style="background: var(--bg-card); border-left: 3px solid var(--purple);">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <div style="font-size:14px; font-weight:700; color:var(--purple)">&#x1F4B0; 可转债基金波段</div>
-        <span style="font-size:11px; font-weight:700; padding:2px 8px; background:rgba(168,85,247,0.15); color:var(--purple); border-radius:4px;">胜率 78%</span>
+    <!-- ====== 3. 策略总览 ====== -->
+    <div class="card" style="background: var(--bg-card); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 12px;">
+      <div style="display:flex; align-items:center; gap:6px; margin-bottom:12px;">
+        <span style="font-size:14px;">&#x1F3AF;</span>
+        <div style="font-size:13px; font-weight:700; color:var(--text);">策略总览</div>
       </div>
-      <div style="font-size:12px; color:var(--text-dim); line-height:1.8; margin-bottom:10px;">
-        <strong>逻辑：</strong>可转债兼具债底保护和股性弹性，在利率下行周期中估值修复空间大，适合波段操作。<br>
-        <strong>标的：</strong>兴全可转债、汇添富可转债等优质可转债基金。
-      </div>
-      <table style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:10px;">
-        <tr style="background:rgba(0,0,0,0.2);">
-          <th style="padding:6px; text-align:left; border-bottom:1px solid rgba(255,255,255,0.05);">指标</th>
-          <th style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.05);">数值</th>
-        </tr>
-        <tr>
-          <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">预期收益率</td>
-          <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">2% - 5%</td>
-        </tr>
-        <tr style="background:rgba(0,0,0,0.1);">
-          <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">历史胜率</td>
-          <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">78%</td>
-        </tr>
-        <tr>
-          <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">夏普比率</td>
-          <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">1.45</td>
-        </tr>
-        <tr style="background:rgba(0,0,0,0.1);">
-          <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">最大回撤</td>
-          <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--red);">-3.5%</td>
-        </tr>
-        <tr>
-          <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">手续费</td>
-          <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">0.1%</td>
-        </tr>
-        <tr style="background:rgba(0,0,0,0.1);">
-          <td style="padding:6px;">净利润（10万本金）</td>
-          <td style="padding:6px; text-align:right; color:var(--green);">1,900 - 4,900元</td>
-        </tr>
-      </table>
-      <div style="font-size:11px; color:var(--text-dim); line-height:1.8; margin-bottom:8px;">
-        <strong>操作说明：</strong><br>
-        1. 在可转债指数处于120点以下时分批建仓<br>
-        2. 持有1-3个月，目标收益2%-5%<br>
-        3. 达到目标收益或持有满6个月时止盈<br>
-        4. 年化收益率约8%-20%
-      </div>
-    </div>
-
-    <!-- 策略卡片4：QDII定投+波段 -->
-    <div class="card" style="background: var(--bg-card); border-left: 3px solid var(--orange);">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <div style="font-size:14px; font-weight:700; color:var(--orange)">&#x1F4B0; QDII定投+波段</div>
-        <span style="font-size:11px; font-weight:700; padding:2px 8px; background:rgba(249,115,22,0.15); color:var(--orange); border-radius:4px;">胜率 65%</span>
-      </div>
-      <div style="font-size:12px; color:var(--text-dim); line-height:1.8; margin-bottom:10px;">
-        <strong>逻辑：</strong>美股长期向上但波动较大，定投平滑成本，叠加波段操作增厚收益。当前纳指100估值处于历史中位，具备配置价值。<br>
-        <strong>标的：</strong>广发纳指100、嘉实美国成长等QDII基金。
-      </div>
-      <table style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:10px;">
-        <tr style="background:rgba(0,0,0,0.2);">
-          <th style="padding:6px; text-align:left; border-bottom:1px solid rgba(255,255,255,0.05);">指标</th>
-          <th style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.05);">数值</th>
-        </tr>
-        <tr>
-          <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">预期收益率</td>
-          <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">5% - 15%</td>
-        </tr>
-        <tr style="background:rgba(0,0,0,0.1);">
-          <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">历史胜率</td>
-          <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">65%</td>
-        </tr>
-        <tr>
-          <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">盈亏比</td>
-          <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">2.8 : 1</td>
-        </tr>
-        <tr style="background:rgba(0,0,0,0.1);">
-          <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">最大回撤</td>
-          <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--red);">-8%</td>
-        </tr>
-        <tr>
-          <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">手续费</td>
-          <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">0.15%</td>
-        </tr>
-        <tr style="background:rgba(0,0,0,0.1);">
-          <td style="padding:6px;">净利润（5万本金）</td>
-          <td style="padding:6px; text-align:right; color:var(--green);">2,400 - 7,400元</td>
-        </tr>
-      </table>
-      <div style="font-size:11px; color:var(--text-dim); line-height:1.8; margin-bottom:8px;">
-        <strong>操作说明：</strong><br>
-        1. 每月定投3000-5000元，平滑建仓成本<br>
-        2. 当纳指100回撤超5%时加仓1-2份<br>
-        3. 持有1-6个月，目标收益5%-15%<br>
-        4. 年化收益率约10%-30%
+      <div style="overflow-x:auto; -webkit-overflow-scrolling:touch;">
+        <table style="width:100%; border-collapse:collapse; font-size:11px; min-width:520px;">
+          <tr style="background:rgba(0,0,0,0.25);">
+            <th style="padding:8px 6px; text-align:left; border-bottom:1px solid rgba(255,255,255,0.06); font-weight:600; color:var(--text-muted);">策略</th>
+            <th style="padding:8px 6px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.06); font-weight:600; color:var(--text-muted);">类型</th>
+            <th style="padding:8px 6px; text-align:left; border-bottom:1px solid rgba(255,255,255,0.06); font-weight:600; color:var(--text-muted);">标的</th>
+            <th style="padding:8px 6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.06); font-weight:600; color:var(--text-muted);">金额</th>
+            <th style="padding:8px 6px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.06); font-weight:600; color:var(--text-muted);">持有期</th>
+            <th style="padding:8px 6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.06); font-weight:600; color:var(--text-muted);">胜率</th>
+            <th style="padding:8px 6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.06); font-weight:600; color:var(--text-muted);">预期收益</th>
+            <th style="padding:8px 6px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.06); font-weight:600; color:var(--text-muted);">状态</th>
+          </tr>
+          <tr>
+            <td style="padding:8px 6px; border-bottom:1px solid rgba(255,255,255,0.03);">可转债打新</td>
+            <td style="padding:8px 6px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.03);"><span style="font-size:10px; padding:1px 5px; background:var(--green-dim); color:var(--green); border-radius:3px;">短线</span></td>
+            <td style="padding:8px 6px; border-bottom:1px solid rgba(255,255,255,0.03);">华峰转债</td>
+            <td style="padding:8px 6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">1000元</td>
+            <td style="padding:8px 6px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.03);">7-14天</td>
+            <td style="padding:8px 6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">95.7%</td>
+            <td style="padding:8px 6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">+50-80元</td>
+            <td style="padding:8px 6px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.03);"><span style="font-size:10px; padding:1px 5px; background:var(--green-dim); color:var(--green); border-radius:3px; font-weight:600;">买入</span></td>
+          </tr>
+          <tr style="background:rgba(0,0,0,0.08);">
+            <td style="padding:8px 6px; border-bottom:1px solid rgba(255,255,255,0.03);">跨季套利</td>
+            <td style="padding:8px 6px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.03);"><span style="font-size:10px; padding:1px 5px; background:var(--green-dim); color:var(--green); border-radius:3px;">短线</span></td>
+            <td style="padding:8px 6px; border-bottom:1px solid rgba(255,255,255,0.03);">中欧稳添C</td>
+            <td style="padding:8px 6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">5万元</td>
+            <td style="padding:8px 6px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.03);">7-14天</td>
+            <td style="padding:8px 6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">100%</td>
+            <td style="padding:8px 6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">+150-250元</td>
+            <td style="padding:8px 6px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.03);"><span style="font-size:10px; padding:1px 5px; background:var(--green-dim); color:var(--green); border-radius:3px; font-weight:600;">买入</span></td>
+          </tr>
+          <tr>
+            <td style="padding:8px 6px; border-bottom:1px solid rgba(255,255,255,0.03);">可转债基金</td>
+            <td style="padding:8px 6px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.03);"><span style="font-size:10px; padding:1px 5px; background:var(--purple-dim); color:var(--purple); border-radius:3px;">中线</span></td>
+            <td style="padding:8px 6px; border-bottom:1px solid rgba(255,255,255,0.03);">中欧可转债A</td>
+            <td style="padding:8px 6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">-</td>
+            <td style="padding:8px 6px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.03);">1-3月</td>
+            <td style="padding:8px 6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">78%</td>
+            <td style="padding:8px 6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">+2%-5%</td>
+            <td style="padding:8px 6px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.03);"><span style="font-size:10px; padding:1px 5px; background:var(--yellow-dim); color:var(--yellow); border-radius:3px; font-weight:600;">等待</span></td>
+          </tr>
+          <tr style="background:rgba(0,0,0,0.08);">
+            <td style="padding:8px 6px; border-bottom:1px solid rgba(255,255,255,0.03);">QDII波段</td>
+            <td style="padding:8px 6px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.03);"><span style="font-size:10px; padding:1px 5px; background:var(--purple-dim); color:var(--purple); border-radius:3px;">中线</span></td>
+            <td style="padding:8px 6px; border-bottom:1px solid rgba(255,255,255,0.03);">广发纳指100</td>
+            <td style="padding:8px 6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">-</td>
+            <td style="padding:8px 6px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.03);">3-6月</td>
+            <td style="padding:8px 6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--orange);">65%</td>
+            <td style="padding:8px 6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">+5%-15%</td>
+            <td style="padding:8px 6px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.03);"><span style="font-size:10px; padding:1px 5px; background:var(--yellow-dim); color:var(--yellow); border-radius:3px; font-weight:600;">等待</span></td>
+          </tr>
+          <tr>
+            <td style="padding:8px 6px; border-bottom:1px solid rgba(255,255,255,0.03);">债券底仓</td>
+            <td style="padding:8px 6px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.03);"><span style="font-size:10px; padding:1px 5px; background:var(--blue-dim); color:var(--blue); border-radius:3px;">长线</span></td>
+            <td style="padding:8px 6px; border-bottom:1px solid rgba(255,255,255,0.03);">景顺+西部利得</td>
+            <td style="padding:8px 6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">37万</td>
+            <td style="padding:8px 6px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.03);">6月+</td>
+            <td style="padding:8px 6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">99.2%</td>
+            <td style="padding:8px 6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">+3%-5%</td>
+            <td style="padding:8px 6px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.03);"><span style="font-size:10px; padding:1px 5px; background:var(--blue-dim); color:var(--blue); border-radius:3px; font-weight:600;">持有</span></td>
+          </tr>
+          <tr style="background:rgba(0,0,0,0.08);">
+            <td style="padding:8px 6px;">QDII定投</td>
+            <td style="padding:8px 6px; text-align:center;"><span style="font-size:10px; padding:1px 5px; background:var(--blue-dim); color:var(--blue); border-radius:3px;">长线</span></td>
+            <td style="padding:8px 6px;">广发全球精选</td>
+            <td style="padding:8px 6px; text-align:right;">9万</td>
+            <td style="padding:8px 6px; text-align:center;">12月+</td>
+            <td style="padding:8px 6px; text-align:right; color:var(--green);">85%</td>
+            <td style="padding:8px 6px; text-align:right; color:var(--green);">+10%-20%</td>
+            <td style="padding:8px 6px; text-align:center;"><span style="font-size:10px; padding:1px 5px; background:var(--blue-dim); color:var(--blue); border-radius:3px; font-weight:600;">定投</span></td>
+          </tr>
+        </table>
       </div>
     </div>
 
-    <!-- ====== 长线策略（6个月+） ====== -->
-    <div class="section-title">&#x1F3AF; 长线策略（6个月+）</div>
+    <!-- ====== 4. 详细分析（折叠面板） ====== -->
+    <div class="section-title">&#x1F50D; 详细分析</div>
 
-    <!-- 策略卡片5：债券基金底仓 -->
-    <div class="card" style="background: var(--bg-card); border-left: 3px solid var(--green);">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <div style="font-size:14px; font-weight:700; color:var(--green)">&#x1F4B0; 债券基金底仓</div>
-        <span style="font-size:11px; font-weight:700; padding:2px 8px; background:rgba(34,197,94,0.15); color:var(--green); border-radius:4px;">胜率 99.2%</span>
+    <!-- 详细分析1：可转债打新 -->
+    <div class="card" style="background: var(--bg-card); border-left: 3px solid var(--green); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px;">
+      <div class="toggle-btn" onclick="toggleDetail(this)" style="display:flex; justify-content:space-between; align-items:center; font-size:14px; font-weight:700; color:var(--green);">
+        <span>&#x1F4B0; 可转债打新套利</span>
+        <span style="font-size:11px; font-weight:600; padding:2px 8px; background:rgba(34,197,94,0.15); color:var(--green); border-radius:4px;">胜率 95.7%</span>
       </div>
-      <div style="font-size:12px; color:var(--text-dim); line-height:1.8; margin-bottom:10px;">
-        <strong>逻辑：</strong>纯债基金作为组合压舱石，提供稳定票息收益。在利率下行周期中，长久期债券资本利得增厚收益。<br>
-        <strong>标的：</strong>景顺长城景颐双利、西部利得汇享等优质纯债基金。
-      </div>
-      <table style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:10px;">
-        <tr style="background:rgba(0,0,0,0.2);">
-          <th style="padding:6px; text-align:left; border-bottom:1px solid rgba(255,255,255,0.05);">指标</th>
-          <th style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.05);">数值</th>
-        </tr>
-        <tr>
-          <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">预期收益率</td>
-          <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">3% - 5%</td>
-        </tr>
-        <tr style="background:rgba(0,0,0,0.1);">
-          <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">历史胜率</td>
-          <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">99.2%</td>
-        </tr>
-        <tr>
-          <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">夏普比率</td>
-          <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">1.85</td>
-        </tr>
-        <tr style="background:rgba(0,0,0,0.1);">
-          <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">最大回撤</td>
-          <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">-1.5%</td>
-        </tr>
-        <tr>
-          <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">手续费</td>
-          <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">0元</td>
-        </tr>
-        <tr style="background:rgba(0,0,0,0.1);">
-          <td style="padding:6px;">净利润（50万本金）</td>
-          <td style="padding:6px; text-align:right; color:var(--green);">15,000 - 25,000元</td>
-        </tr>
-      </table>
-      <div style="font-size:11px; color:var(--text-dim); line-height:1.8; margin-bottom:8px;">
-        <strong>操作说明：</strong><br>
-        1. 将50万资金作为底仓长期持有<br>
-        2. 选择A类份额，持有满1年免赎回费<br>
-        3. 每季度审视一次，根据利率环境调整久期<br>
-        4. 年化收益率约3%-5%
+      <div class="detail-panel">
+        <div style="margin-top:12px;">
+          <div style="font-size:12px; color:var(--text-dim); line-height:1.8; margin-bottom:12px;">
+            <strong>理论依据：</strong>2026年再融资规则优化，可转债发行提速（Q1同比+260%），存量仅5031亿元创近年新低，供需缺口推动估值修复。华峰转债(118071)属半导体赛道，转股价值121.36元，小盘债弹性充足。
+          </div>
+          <table style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:12px;">
+            <tr style="background:rgba(0,0,0,0.2);">
+              <th style="padding:6px; text-align:left; border-bottom:1px solid rgba(255,255,255,0.05);">指标</th>
+              <th style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.05);">数值</th>
+            </tr>
+            <tr>
+              <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">预期收益率</td>
+              <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">3% - 8%</td>
+            </tr>
+            <tr style="background:rgba(0,0,0,0.1);">
+              <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">历史胜率</td>
+              <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">95.7%</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">夏普比率</td>
+              <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">2.85</td>
+            </tr>
+            <tr style="background:rgba(0,0,0,0.1);">
+              <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">最大回撤</td>
+              <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--red);">-15%（极端值）</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">手续费</td>
+              <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">0元</td>
+            </tr>
+            <tr style="background:rgba(0,0,0,0.1);">
+              <td style="padding:6px;">净利润（1万本金）</td>
+              <td style="padding:6px; text-align:right; color:var(--green);">50 - 80元</td>
+            </tr>
+          </table>
+          <div style="padding:8px; background:rgba(34,197,94,0.08); border-radius:8px; font-size:11px; color:var(--green); margin-bottom:8px;">
+            <strong>统计验证：</strong>2026年Q1新上市可转债首日破发率仅4.3%（2/47），Wilson置信区间: 93.2%-97.8%
+          </div>
+          <div style="padding:8px; background:rgba(239,68,68,0.06); border-radius:8px; font-size:11px; color:var(--red);">
+            <strong>风险提示：</strong>极端市场环境下可能破发，最大回撤约-15%，但历史概率极低（<5%）。
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- 策略卡片6：QDII长期定投 -->
-    <div class="card" style="background: var(--bg-card); border-left: 3px solid var(--blue);">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <div style="font-size:14px; font-weight:700; color:var(--blue)">&#x1F4B0; QDII长期定投</div>
-        <span style="font-size:11px; font-weight:700; padding:2px 8px; background:rgba(59,130,246,0.15); color:var(--blue); border-radius:4px;">胜率 85%</span>
+    <!-- 详细分析2：跨季套利 -->
+    <div class="card" style="background: var(--bg-card); border-left: 3px solid var(--blue); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px;">
+      <div class="toggle-btn" onclick="toggleDetail(this)" style="display:flex; justify-content:space-between; align-items:center; font-size:14px; font-weight:700; color:var(--blue);">
+        <span>&#x1F4B0; 跨季资金面套利</span>
+        <span style="font-size:11px; font-weight:600; padding:2px 8px; background:rgba(59,130,246,0.15); color:var(--blue); border-radius:4px;">胜率 100%</span>
       </div>
-      <div style="font-size:12px; color:var(--text-dim); line-height:1.8; margin-bottom:10px;">
-        <strong>逻辑：</strong>美股长期年化收益约10%，定投策略在波动市场中自动实现低买高卖，长期胜率极高。<br>
-        <strong>标的：</strong>标普500指数基金、纳指100指数基金等宽基QDII。
-      </div>
-      <table style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:10px;">
-        <tr style="background:rgba(0,0,0,0.2);">
-          <th style="padding:6px; text-align:left; border-bottom:1px solid rgba(255,255,255,0.05);">指标</th>
-          <th style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.05);">数值</th>
-        </tr>
-        <tr>
-          <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">预期收益率</td>
-          <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">10% - 20%</td>
-        </tr>
-        <tr style="background:rgba(0,0,0,0.1);">
-          <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">历史胜率</td>
-          <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">85%</td>
-        </tr>
-        <tr>
-          <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">夏普比率</td>
-          <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">0.95</td>
-        </tr>
-        <tr style="background:rgba(0,0,0,0.1);">
-          <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">最大回撤</td>
-          <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--red);">-15%</td>
-        </tr>
-        <tr>
-          <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">手续费</td>
-          <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">0.15%/年</td>
-        </tr>
-        <tr style="background:rgba(0,0,0,0.1);">
-          <td style="padding:6px;">净利润（10万本金）</td>
-          <td style="padding:6px; text-align:right; color:var(--green);">10,000 - 20,000元</td>
-        </tr>
-      </table>
-      <div style="font-size:11px; color:var(--text-dim); line-height:1.8; margin-bottom:8px;">
-        <strong>操作说明：</strong><br>
-        1. 每月定投2000-3000元，坚持6个月以上<br>
-        2. 设置自动扣款，避免情绪干扰<br>
-        3. 持有满1年后根据市场情况部分止盈<br>
-        4. 年化收益率约10%-20%
+      <div class="detail-panel">
+        <div style="margin-top:12px;">
+          <div style="font-size:12px; color:var(--text-dim); line-height:1.8; margin-bottom:12px;">
+            <strong>理论依据：</strong>6月末跨季窗口，DR007通常上行20-40BP，季末后回落。逆回购+短债基金可在跨季前后赚取价差。中欧稳添90天C类份额持有满7天免赎回费。
+          </div>
+          <table style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:12px;">
+            <tr style="background:rgba(0,0,0,0.2);">
+              <th style="padding:6px; text-align:left; border-bottom:1px solid rgba(255,255,255,0.05);">指标</th>
+              <th style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.05);">数值</th>
+            </tr>
+            <tr>
+              <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">预期收益率</td>
+              <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">0.3% - 0.5%</td>
+            </tr>
+            <tr style="background:rgba(0,0,0,0.1);">
+              <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">历史胜率</td>
+              <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">100%</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">夏普比率</td>
+              <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">3.12</td>
+            </tr>
+            <tr style="background:rgba(0,0,0,0.1);">
+              <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">最大回撤</td>
+              <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">-0.05%</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">手续费（5万）</td>
+              <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">15元</td>
+            </tr>
+            <tr style="background:rgba(0,0,0,0.1);">
+              <td style="padding:6px;">净利润（5万本金）</td>
+              <td style="padding:6px; text-align:right; color:var(--green);">150 - 250元</td>
+            </tr>
+          </table>
+          <div style="padding:8px; background:rgba(59,130,246,0.08); border-radius:8px; font-size:11px; color:var(--blue); margin-bottom:8px;">
+            <strong>统计验证：</strong>2024-2025年4个跨季窗口，短债基金平均超额收益0.35%（t=3.2, p=0.008, FDR校正后p=0.016）
+          </div>
+          <div style="padding:8px; background:rgba(239,68,68,0.06); border-radius:8px; font-size:11px; color:var(--red);">
+            <strong>风险提示：</strong>最大回撤仅-0.05%，几乎无本金风险。需注意C类份额持有满7天方可免赎回费。
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- ====== 资金分配汇总表 ====== -->
-    <div class="section-title">&#x1F4CB; 资金分配汇总表</div>
-
-    <div class="card" style="background: var(--bg-card); border-left: 3px solid var(--yellow);">
-      <div style="font-size:14px; font-weight:700; margin-bottom:12px; color:var(--yellow)">&#x1F4B0; 总资金：62.7万元</div>
-      <table style="width:100%; border-collapse:collapse; font-size:11px;">
-        <tr style="background:rgba(0,0,0,0.2);">
-          <th style="padding:8px; text-align:left; border-bottom:1px solid rgba(255,255,255,0.05);">策略类型</th>
-          <th style="padding:8px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.05);">分配比例</th>
-          <th style="padding:8px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.05);">分配金额</th>
-          <th style="padding:8px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.05);">预期年化</th>
-          <th style="padding:8px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.05);">胜率</th>
-          <th style="padding:8px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.05);">风险等级</th>
-        </tr>
-        <tr>
-          <td style="padding:8px; border-bottom:1px solid rgba(255,255,255,0.03);">短线策略（7-30天）</td>
-          <td style="padding:8px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">8.0%</td>
-          <td style="padding:8px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">5.0万</td>
-          <td style="padding:8px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">6%-520%</td>
-          <td style="padding:8px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">97.9%</td>
-          <td style="padding:8px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.03);"><span style="color:var(--green);">低</span></td>
-        </tr>
-        <tr style="background:rgba(0,0,0,0.1);">
-          <td style="padding:8px; border-bottom:1px solid rgba(255,255,255,0.03);">中线策略（1-6个月）</td>
-          <td style="padding:8px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">23.9%</td>
-          <td style="padding:8px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">15.0万</td>
-          <td style="padding:8px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">8%-30%</td>
-          <td style="padding:8px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">71.5%</td>
-          <td style="padding:8px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.03);"><span style="color:var(--orange);">中</span></td>
-        </tr>
-        <tr>
-          <td style="padding:8px; border-bottom:1px solid rgba(255,255,255,0.03);">长线策略（6个月+）</td>
-          <td style="padding:8px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">68.1%</td>
-          <td style="padding:8px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">42.7万</td>
-          <td style="padding:8px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">3%-20%</td>
-          <td style="padding:8px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">92.1%</td>
-          <td style="padding:8px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.03);"><span style="color:var(--blue);">中低</span></td>
-        </tr>
-        <tr style="background:rgba(0,0,0,0.2); font-weight:700;">
-          <td style="padding:8px;">合计</td>
-          <td style="padding:8px; text-align:right;">100%</td>
-          <td style="padding:8px; text-align:right;">62.7万</td>
-          <td style="padding:8px; text-align:right; color:var(--green);">4.5%-12%</td>
-          <td style="padding:8px; text-align:right; color:var(--green);">87.2%</td>
-          <td style="padding:8px; text-align:center;">—</td>
-        </tr>
-      </table>
+    <!-- 详细分析3：可转债基金波段 -->
+    <div class="card" style="background: var(--bg-card); border-left: 3px solid var(--purple); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px;">
+      <div class="toggle-btn" onclick="toggleDetail(this)" style="display:flex; justify-content:space-between; align-items:center; font-size:14px; font-weight:700; color:var(--purple);">
+        <span>&#x1F4B0; 可转债基金波段</span>
+        <span style="font-size:11px; font-weight:600; padding:2px 8px; background:rgba(168,85,247,0.15); color:var(--purple); border-radius:4px;">胜率 78%</span>
+      </div>
+      <div class="detail-panel">
+        <div style="margin-top:12px;">
+          <div style="font-size:12px; color:var(--text-dim); line-height:1.8; margin-bottom:12px;">
+            <strong>理论依据：</strong>可转债兼具债底保护和股性弹性，在利率下行周期中估值修复空间大，适合波段操作。标的：兴全可转债、汇添富可转债等优质可转债基金。
+          </div>
+          <table style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:12px;">
+            <tr style="background:rgba(0,0,0,0.2);">
+              <th style="padding:6px; text-align:left; border-bottom:1px solid rgba(255,255,255,0.05);">指标</th>
+              <th style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.05);">数值</th>
+            </tr>
+            <tr>
+              <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">预期收益率</td>
+              <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">2% - 5%</td>
+            </tr>
+            <tr style="background:rgba(0,0,0,0.1);">
+              <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">历史胜率</td>
+              <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">78%</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">夏普比率</td>
+              <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">1.45</td>
+            </tr>
+            <tr style="background:rgba(0,0,0,0.1);">
+              <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">最大回撤</td>
+              <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--red);">-3.5%</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">手续费</td>
+              <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">0.1%</td>
+            </tr>
+            <tr style="background:rgba(0,0,0,0.1);">
+              <td style="padding:6px;">净利润（10万本金）</td>
+              <td style="padding:6px; text-align:right; color:var(--green);">1,900 - 4,900元</td>
+            </tr>
+          </table>
+          <div style="padding:8px; background:rgba(239,68,68,0.06); border-radius:8px; font-size:11px; color:var(--red);">
+            <strong>风险提示：</strong>可转债基金受股市波动影响较大，最大回撤-3.5%，建议在可转债指数120点以下建仓以降低风险。
+          </div>
+        </div>
+      </div>
     </div>
 
+    <!-- 详细分析4：QDII波段 -->
+    <div class="card" style="background: var(--bg-card); border-left: 3px solid var(--orange); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px;">
+      <div class="toggle-btn" onclick="toggleDetail(this)" style="display:flex; justify-content:space-between; align-items:center; font-size:14px; font-weight:700; color:var(--orange);">
+        <span>&#x1F4B0; QDII定投+波段</span>
+        <span style="font-size:11px; font-weight:600; padding:2px 8px; background:rgba(249,115,22,0.15); color:var(--orange); border-radius:4px;">胜率 65%</span>
+      </div>
+      <div class="detail-panel">
+        <div style="margin-top:12px;">
+          <div style="font-size:12px; color:var(--text-dim); line-height:1.8; margin-bottom:12px;">
+            <strong>理论依据：</strong>美股长期向上但波动较大，定投平滑成本，叠加波段操作增厚收益。当前纳指100估值处于历史中位，具备配置价值。标的：广发纳指100、嘉实美国成长等QDII基金。
+          </div>
+          <table style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:12px;">
+            <tr style="background:rgba(0,0,0,0.2);">
+              <th style="padding:6px; text-align:left; border-bottom:1px solid rgba(255,255,255,0.05);">指标</th>
+              <th style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.05);">数值</th>
+            </tr>
+            <tr>
+              <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">预期收益率</td>
+              <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">5% - 15%</td>
+            </tr>
+            <tr style="background:rgba(0,0,0,0.1);">
+              <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">历史胜率</td>
+              <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">65%</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">盈亏比</td>
+              <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">2.8 : 1</td>
+            </tr>
+            <tr style="background:rgba(0,0,0,0.1);">
+              <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">最大回撤</td>
+              <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--red);">-8%</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">手续费</td>
+              <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">0.15%</td>
+            </tr>
+            <tr style="background:rgba(0,0,0,0.1);">
+              <td style="padding:6px;">净利润（5万本金）</td>
+              <td style="padding:6px; text-align:right; color:var(--green);">2,400 - 7,400元</td>
+            </tr>
+          </table>
+          <div style="padding:8px; background:rgba(239,68,68,0.06); border-radius:8px; font-size:11px; color:var(--red);">
+            <strong>风险提示：</strong>QDII基金存在汇率风险和溢价风险，美股短期波动可能较大，最大回撤约-8%。建议分批建仓，控制仓位。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 详细分析5：债券底仓 -->
+    <div class="card" style="background: var(--bg-card); border-left: 3px solid var(--green); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px;">
+      <div class="toggle-btn" onclick="toggleDetail(this)" style="display:flex; justify-content:space-between; align-items:center; font-size:14px; font-weight:700; color:var(--green);">
+        <span>&#x1F4B0; 债券基金底仓</span>
+        <span style="font-size:11px; font-weight:600; padding:2px 8px; background:rgba(34,197,94,0.15); color:var(--green); border-radius:4px;">胜率 99.2%</span>
+      </div>
+      <div class="detail-panel">
+        <div style="margin-top:12px;">
+          <div style="font-size:12px; color:var(--text-dim); line-height:1.8; margin-bottom:12px;">
+            <strong>理论依据：</strong>纯债基金作为组合压舱石，提供稳定票息收益。在利率下行周期中，长久期债券资本利得增厚收益。标的：景顺长城景颐双利、西部利得汇享等优质纯债基金。
+          </div>
+          <table style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:12px;">
+            <tr style="background:rgba(0,0,0,0.2);">
+              <th style="padding:6px; text-align:left; border-bottom:1px solid rgba(255,255,255,0.05);">指标</th>
+              <th style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.05);">数值</th>
+            </tr>
+            <tr>
+              <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">预期收益率</td>
+              <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">3% - 5%</td>
+            </tr>
+            <tr style="background:rgba(0,0,0,0.1);">
+              <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">历史胜率</td>
+              <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">99.2%</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">夏普比率</td>
+              <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">1.85</td>
+            </tr>
+            <tr style="background:rgba(0,0,0,0.1);">
+              <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">最大回撤</td>
+              <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">-1.5%</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">手续费</td>
+              <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">0元</td>
+            </tr>
+            <tr style="background:rgba(0,0,0,0.1);">
+              <td style="padding:6px;">净利润（50万本金）</td>
+              <td style="padding:6px; text-align:right; color:var(--green);">15,000 - 25,000元</td>
+            </tr>
+          </table>
+          <div style="padding:8px; background:rgba(239,68,68,0.06); border-radius:8px; font-size:11px; color:var(--red);">
+            <strong>风险提示：</strong>利率上行周期中可能出现阶段性回撤（最大-1.5%），但长期持有即可恢复。建议选择A类份额持有满1年免赎回费。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 详细分析6：QDII长期定投 -->
+    <div class="card" style="background: var(--bg-card); border-left: 3px solid var(--blue); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px;">
+      <div class="toggle-btn" onclick="toggleDetail(this)" style="display:flex; justify-content:space-between; align-items:center; font-size:14px; font-weight:700; color:var(--blue);">
+        <span>&#x1F4B0; QDII长期定投</span>
+        <span style="font-size:11px; font-weight:600; padding:2px 8px; background:rgba(59,130,246,0.15); color:var(--blue); border-radius:4px;">胜率 85%</span>
+      </div>
+      <div class="detail-panel">
+        <div style="margin-top:12px;">
+          <div style="font-size:12px; color:var(--text-dim); line-height:1.8; margin-bottom:12px;">
+            <strong>理论依据：</strong>美股长期年化收益约10%，定投策略在波动市场中自动实现低买高卖，长期胜率极高。标的：标普500指数基金、纳指100指数基金等宽基QDII。
+          </div>
+          <table style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:12px;">
+            <tr style="background:rgba(0,0,0,0.2);">
+              <th style="padding:6px; text-align:left; border-bottom:1px solid rgba(255,255,255,0.05);">指标</th>
+              <th style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.05);">数值</th>
+            </tr>
+            <tr>
+              <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">预期收益率</td>
+              <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">10% - 20%</td>
+            </tr>
+            <tr style="background:rgba(0,0,0,0.1);">
+              <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">历史胜率</td>
+              <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--green);">85%</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">夏普比率</td>
+              <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">0.95</td>
+            </tr>
+            <tr style="background:rgba(0,0,0,0.1);">
+              <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">最大回撤</td>
+              <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--red);">-15%</td>
+            </tr>
+            <tr>
+              <td style="padding:6px; border-bottom:1px solid rgba(255,255,255,0.03);">手续费</td>
+              <td style="padding:6px; text-align:right; border-bottom:1px solid rgba(255,255,255,0.03);">0.15%/年</td>
+            </tr>
+            <tr style="background:rgba(0,0,0,0.1);">
+              <td style="padding:6px;">净利润（10万本金）</td>
+              <td style="padding:6px; text-align:right; color:var(--green);">10,000 - 20,000元</td>
+            </tr>
+          </table>
+          <div style="padding:8px; background:rgba(239,68,68,0.06); border-radius:8px; font-size:11px; color:var(--red);">
+            <strong>风险提示：</strong>QDII长期定投需坚持至少12个月以上，期间最大回撤可能达-15%。设置自动扣款避免情绪干扰，持有满1年后根据市场情况部分止盈。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 风险提示 -->
     <div class="warning-box" style="margin-top:12px;">
       <strong style="color:var(--yellow)">&#x26A0; 风险提示</strong><br>
       本报告基于历史数据模拟回测，仅供参考，不构成投资建议。市场有风险，投资需谨慎。过往业绩不代表未来表现。请根据自身的风险承受能力和投资目标做出独立判断。
@@ -1079,7 +1212,7 @@
 
 <script>
 // ==================== Cache Buster & Update Check ====================
-const APP_VERSION = '3.4.3';
+const APP_VERSION = '3.5.0';
 const CACHE_KEY = 'portfolio_version';
 
 function checkVersion() {
@@ -1174,6 +1307,12 @@ function toggleExpand(el) {
     content.classList.toggle('open');
     arrow.classList.toggle('open');
   }
+}
+
+function toggleDetail(btn) {
+  const panel = btn.nextElementSibling;
+  btn.classList.toggle('open');
+  panel.classList.toggle('open');
 }
 
 // ==================== Swipe (disabled - causes accidental page switching) ====================
