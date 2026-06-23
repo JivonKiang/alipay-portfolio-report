@@ -83,9 +83,9 @@
 </main>
 <nav class="nav"><button class="active" onclick="showPage('goal',this)"><b>◎</b><span>目标</span></button><button onclick="showPage('current',this)"><b>⌂</b><span>当前</span></button><button onclick="showPage('target',this)"><b>◉</b><span>理想</span></button><button onclick="showPage('action',this)"><b>↗</b><span>执行</span></button></nav>
 <script>
-const APP_VERSION='4.2.1';
+const APP_VERSION='4.2.2';
 function showPage(name,btn){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+name).classList.add('active');document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
 async function copyTemplate(){const el=document.getElementById('copyTemplate');const status=document.getElementById('copyStatus');try{await navigator.clipboard.writeText(el.value);status.textContent='已复制，可直接粘贴给元宝。';status.style.color='var(--green)';}catch(e){el.select();document.execCommand('copy');status.textContent='已复制，可直接粘贴给元宝。';status.style.color='var(--green)';}}
-if('serviceWorker'in navigator){navigator.serviceWorker.register('sw.js?v=421').catch(()=>{});}
+if('serviceWorker'in navigator){navigator.serviceWorker.register('sw.js?v=422').catch(()=>{});}
 </script>
 </body></html>

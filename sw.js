@@ -1,7 +1,5 @@
-const CACHE_NAME = 'portfolio-v1';
+const CACHE_NAME = 'portfolio-v5';
 const ASSETS = [
-  '/alipay-portfolio-report/',
-  '/alipay-portfolio-report/index.html',
   '/alipay-portfolio-report/manifest.json',
   '/alipay-portfolio-report/icon-192.png',
   '/alipay-portfolio-report/icon-512.png'
@@ -13,11 +11,25 @@ self.addEventListener('install', e => {
 });
 
 self.addEventListener('activate', e => {
-  e.waitUntil(self.clients.claim());
+  e.waitUntil(
+    caches.keys()
+      .then(keys => Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))))
+      .then(() => self.clients.claim())
+  );
 });
 
 self.addEventListener('fetch', e => {
-  e.respondWith(
-    caches.match(e.request).then(r => r || fetch(e.request))
-  );
+  const req = e.request;
+  const accept = req.headers.get('accept') || '';
+
+  // HTML 页面必须网络优先，避免旧资产配置方案被离线缓存长期顶住
+  if (req.mode === 'navigate' || accept.includes('text/html')) {
+    e.respondWith(
+      fetch(req, { cache: 'no-store' })
+        .catch(() => caches.match('/alipay-portfolio-report/index.html'))
+    );
+    return;
+  }
+
+  e.respondWith(caches.match(req).then(r => r || fetch(req)));
 });
