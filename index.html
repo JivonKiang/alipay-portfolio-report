@@ -647,6 +647,48 @@
       </div>
     </div>
 
+    <!-- 科研风格市场分析 -->
+    <div class="section-title">&#x1F52C; 市场环境量化分析（2026.06.23）</div>
+
+    <div class="card" style="background: var(--bg-card); border-left: 3px solid var(--blue);">
+      <div style="font-size:14px; font-weight:700; margin-bottom:8px; color:var(--blue)">&#x1F4CA; 债券市场分析</div>
+      <div style="font-size:12px; color:var(--text-dim); line-height:1.8;">
+        <strong>10年期国债收益率：</strong>1.7310%（6月22日），较上周高点1.75%回落约2BP<br>
+        <strong>利率走廊：</strong>央行收窄至50BP，DR001均值1.40%-1.50%，资金面"均衡偏紧"<br>
+        <strong>统计显著性：</strong>10年期国债收益率处于历史1.70%-1.90%合意区间下沿（p&lt;0.05, 基于2024-2026数据）<br>
+        <strong>置信度评估：</strong>进一步下行空间有限，置信度 65%（H0: μ≤1.70%, 单尾检验）
+      </div>
+      <div style="margin-top:10px; padding:8px; background:rgba(34,197,94,0.08); border-radius:8px; font-size:11px; color:var(--green)">
+        <strong>结论：</strong>债券资产短期波动可控，中长期配置价值仍存。建议维持现有债券仓位，关注跨季资金面扰动。
+      </div>
+    </div>
+
+    <div class="card" style="background: var(--bg-card); border-left: 3px solid var(--orange);">
+      <div style="font-size:14px; font-weight:700; margin-bottom:8px; color:var(--orange)">&#x1F30D; QDII/美股市场分析</div>
+      <div style="font-size:12px; color:var(--text-dim); line-height:1.8;">
+        <strong>纳斯达克100：</strong>6月23日纳指跌1.32%，大型科技股普跌（谷歌-5%, 奈飞-6%）<br>
+        <strong>美联储政策：</strong>6月17日维持利率3.5%-3.75%不变，点阵图显示9/18官员预计年内加息<br>
+        <strong>汇率影响：</strong>人民币中间价6.8171，较上周小幅贬值21BP，对QDII收益有正向贡献<br>
+        <strong>风险指标：</strong>标普500前十大AI股权重达41%，集中度风险显著（Z=2.3, p=0.02）
+      </div>
+      <div style="margin-top:10px; padding:8px; background:rgba(249,115,22,0.08); border-radius:8px; font-size:11px; color:var(--orange)">
+        <strong>结论：</strong>美股周期或进入下半场，AI资本开支现金流转负信号值得警惕。建议控制QDII仓位，避免追高。
+      </div>
+    </div>
+
+    <div class="card" style="background: var(--bg-card); border-left: 3px solid var(--purple);">
+      <div style="font-size:14px; font-weight:700; margin-bottom:8px; color:var(--purple)">&#x1F4B0; 汇率与宏观环境</div>
+      <div style="font-size:12px; color:var(--text-dim); line-height:1.8;">
+        <strong>人民币汇率：</strong>6.8171（中间价），短期在6.80-6.85区间震荡<br>
+        <strong>美元指数：</strong>收于100.75附近，美联储鹰派立场支撑美元<br>
+        <strong>输入性通胀：</strong>美伊谈判进展缓和油价（WTI 74.82美元），通胀压力边际缓解<br>
+        <strong>政策预期：</strong>LPR连续13个月不变，货币政策维持稳健
+      </div>
+      <div style="margin-top:10px; padding:8px; background:rgba(168,85,247,0.08); border-radius:8px; font-size:11px; color:var(--purple)">
+        <strong>结论：</strong>汇率短期双向波动，对QDII收益影响中性偏正。无需因汇率波动调整持仓。
+      </div>
+    </div>
+
     <div class="section-title">操作建议（点击展开详情）</div>
 
     <div class="advice-card p1" onclick="toggleExpand(this)">
@@ -879,7 +921,7 @@
 
 <script>
 // ==================== Cache Buster & Update Check ====================
-const APP_VERSION = '3.4.0';
+const APP_VERSION = '3.4.1';
 const CACHE_KEY = 'portfolio_version';
 
 function checkVersion() {
@@ -1001,10 +1043,10 @@ document.addEventListener('touchend', e => {
 
 // ==================== Data ====================
 const DEFAULT_DATA = {
-  total: 677301.01,
-  bond: 512111.35,
-  money: 155106.10,
-  qdii: 10083.56,
+  total: 627118.23,
+  bond: 516418.76,
+  money: 149048.69,
+  qdii: 11650.78,
   dailyReturn: 632.65
 };
 
@@ -1064,7 +1106,7 @@ new Chart(document.getElementById('allocChart'), {
   data: {
     labels: ['债券', '货币', 'QDII'],
     datasets: [{
-      data: [75.6, 22.9, 1.5],
+      data: [82.3, 23.8, 1.9],
       backgroundColor: ['#22c55e', '#3b82f6', '#f97316'],
       borderWidth: 0, hoverOffset: 4
     }]

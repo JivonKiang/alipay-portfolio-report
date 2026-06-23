@@ -1,6 +1,6 @@
 {
   "name": "jivon-portfolio-app",
-  "version": "3.4.0",
+  "version": "3.4.1",
   "description": "Jivon综合资产面板 - 支付宝投资组合分析App",
   "scripts": {
     "sync": "npx cap sync android",
