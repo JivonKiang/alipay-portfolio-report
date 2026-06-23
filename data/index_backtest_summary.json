@@ -1,0 +1,57 @@
+{
+  "000016_上证50": {
+    "fund_code": "110003",
+    "fund_name": "易方达上证50ETF联接A",
+    "years": 22.5,
+    "trades": 22,
+    "win_rate": 36.4,
+    "total_net%": 395.1,
+    "avg_hold_days": 193.0,
+    "bh_total%": 197.9,
+    "bh_annual%": 5.0
+  },
+  "000300_沪深300": {
+    "fund_code": "110020",
+    "fund_name": "易方达沪深300ETF联接A",
+    "years": 24.5,
+    "trades": 23,
+    "win_rate": 34.8,
+    "total_net%": 342.3,
+    "avg_hold_days": 192.0,
+    "bh_total%": 284.3,
+    "bh_annual%": 5.7
+  },
+  "000688_科创50": {
+    "fund_code": "011608",
+    "fund_name": "易方达科创板50ETF联接A",
+    "years": 6.5,
+    "trades": 5,
+    "win_rate": 20.0,
+    "total_net%": 14.1,
+    "avg_hold_days": 169.0,
+    "bh_total%": 91.1,
+    "bh_annual%": 10.5
+  },
+  "000905_中证500": {
+    "fund_code": "160119",
+    "fund_name": "南方中证500ETF联接A",
+    "years": 21.5,
+    "trades": 25,
+    "win_rate": 48.0,
+    "total_net%": 465.3,
+    "avg_hold_days": 178.0,
+    "bh_total%": 798.6,
+    "bh_annual%": 10.8
+  },
+  "399006_创业板指": {
+    "fund_code": "001592",
+    "fund_name": "天弘创业板ETF联接A",
+    "years": 16.1,
+    "trades": 19,
+    "win_rate": 26.3,
+    "total_net%": 115.1,
+    "avg_hold_days": 153.0,
+    "bh_total%": 347.9,
+    "bh_annual%": 9.8
+  }
+}
