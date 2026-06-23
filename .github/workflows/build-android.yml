@@ -26,10 +26,6 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Install Android SDK components
-        run: |
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "platforms;android-36" "build-tools;36.0.0" --sdk_root=$ANDROID_HOME || true
-
       - name: Install dependencies
         run: |
           npm install
@@ -42,8 +38,18 @@ jobs:
         run: |
           cd android
           export ANDROID_HOME=$ANDROID_HOME
-          export GRADLE_OPTS="-Dorg.gradle.daemon=false -Dorg.gradle.parallel=false"
-          ./gradlew assembleDebug --stacktrace
+          export ANDROID_SDK_ROOT=$ANDROID_HOME
+          echo "=== ANDROID_HOME ==="
+          echo $ANDROID_HOME
+          echo "=== SDK directories ==="
+          ls -la $ANDROID_HOME/ || echo "ANDROID_HOME not found"
+          echo "=== Platforms ==="
+          ls $ANDROID_HOME/platforms/ 2>/dev/null || echo "no platforms dir"
+          echo "=== Build tools ==="
+          ls $ANDROID_HOME/build-tools/ 2>/dev/null || echo "no build-tools dir"
+          echo "=== Starting Gradle build ==="
+          ./gradlew assembleDebug --no-daemon --stacktrace 2>&1
+          echo "=== Build exit code: $? ==="
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
