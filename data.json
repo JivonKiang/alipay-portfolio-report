@@ -169,5 +169,198 @@
       "title": "今天不手动买入任何A股科技基金",
       "detail": "PCB/CPO放量暴跌，半导体设备相对抗跌但未到买点，等缩量止跌信号"
     }
-  ]
+  ],
+  "allocation_plan": {
+    "updated": "2026-06-23",
+    "title": "10%回撤约束配置方案",
+    "total_asset": 677301,
+    "emergency_cash": 30000,
+    "investable_asset": 647301,
+    "target_weights": {
+      "bond": 0.5,
+      "broad": 0.14,
+      "tech": 0.06,
+      "gold": 0.08,
+      "cash": 0.22
+    },
+    "target_amounts": {
+      "emergency": 30000,
+      "bond": 323650.0,
+      "broad": 90622.0,
+      "tech": 38838.0,
+      "gold": 51784.0,
+      "cash": 142406.0
+    },
+    "expected": {
+      "base_ann_return": "5%–7%",
+      "upside_ann_return": "7%–9%",
+      "risk_limit": "优先把最大回撤压在10%以内",
+      "note": "不是收益承诺，实际结果受市场、费率、买入节奏和执行纪律影响"
+    },
+    "comparison": {
+      "收益版": {
+        "weights": {
+          "bond": 0.35,
+          "broad": 0.25,
+          "tech": 0.15,
+          "gold": 0.08,
+          "cash": 0.17
+        },
+        "backtest": {
+          "total_return": 71.61,
+          "ann_return": 11.41,
+          "ann_vol": 7.83,
+          "max_drawdown": -9.36,
+          "sharpe": 1.2,
+          "final_value": 1110812.0
+        },
+        "monte_carlo": {
+          "exp_return": 6.32,
+          "exp_vol": 7.91,
+          "median_final": 1182616.0,
+          "p10_final": 861765.0,
+          "p90_final": 1631144.0,
+          "median_ann": 6.21,
+          "prob_ann_8": 24.4,
+          "prob_ann_10": 8.1,
+          "prob_dd_within_10": 10.2,
+          "p90_drawdown": -20.93,
+          "median_drawdown": -14.24
+        }
+      },
+      "均衡版": {
+        "weights": {
+          "bond": 0.45,
+          "broad": 0.17,
+          "tech": 0.08,
+          "gold": 0.08,
+          "cash": 0.22
+        },
+        "backtest": {
+          "total_return": 50.15,
+          "ann_return": 8.47,
+          "ann_vol": 5.24,
+          "max_drawdown": -5.98,
+          "sharpe": 1.23,
+          "final_value": 971949.0
+        },
+        "monte_carlo": {
+          "exp_return": 5.06,
+          "exp_vol": 5.3,
+          "median_final": 1060127.0,
+          "p10_final": 857466.0,
+          "p90_final": 1315166.0,
+          "median_ann": 5.06,
+          "prob_ann_8": 5.1,
+          "prob_ann_10": 0.3,
+          "prob_dd_within_10": 65.0,
+          "p90_drawdown": -13.08,
+          "median_drawdown": -8.97
+        }
+      },
+      "风控版": {
+        "weights": {
+          "bond": 0.5,
+          "broad": 0.14,
+          "tech": 0.06,
+          "gold": 0.08,
+          "cash": 0.22
+        },
+        "backtest": {
+          "total_return": 44.25,
+          "ann_return": 7.6,
+          "ann_vol": 4.48,
+          "max_drawdown": -4.97,
+          "sharpe": 1.25,
+          "final_value": 933747.0
+        },
+        "monte_carlo": {
+          "exp_return": 4.69,
+          "exp_vol": 4.53,
+          "median_final": 1024782.0,
+          "p10_final": 854676.0,
+          "p90_final": 1232330.0,
+          "median_ann": 4.7,
+          "prob_ann_8": 1.9,
+          "prob_ann_10": 0.0,
+          "prob_dd_within_10": 85.2,
+          "p90_drawdown": -10.75,
+          "median_drawdown": -7.43
+        }
+      }
+    },
+    "backtest": {
+      "total_return": 44.25,
+      "ann_return": 7.6,
+      "ann_vol": 4.48,
+      "max_drawdown": -4.97,
+      "sharpe": 1.25,
+      "final_value": 933747.0
+    },
+    "monte_carlo": {
+      "exp_return": 4.69,
+      "exp_vol": 4.53,
+      "median_final": 1023873.0,
+      "p10_final": 855110.0,
+      "p90_final": 1227023.0,
+      "median_ann": 4.69,
+      "prob_ann_8": 1.5,
+      "prob_ann_10": 0.1,
+      "prob_dd_within_10": 86.4,
+      "p90_drawdown": -10.57,
+      "median_drawdown": -7.27
+    },
+    "purchase_plan": [
+      {
+        "week": "第1周",
+        "amount": 60000,
+        "items": {
+          "中短债/纯债": 25000,
+          "A500/沪深300": 12000,
+          "中证500/1000": 8000,
+          "纳指/全球科技": 5000,
+          "黄金": 10000
+        }
+      },
+      {
+        "week": "第2周",
+        "amount": 60000,
+        "items": {
+          "中短债/纯债": 25000,
+          "A500/沪深300": 10000,
+          "中证500/1000": 8000,
+          "标普500/全球宽基": 7000,
+          "半导体/AI/科创50": 4000,
+          "黄金": 6000
+        }
+      },
+      {
+        "week": "第3周",
+        "amount": 50000,
+        "items": {
+          "中短债/纯债": 20000,
+          "宽基指数": 12000,
+          "科技成长": 8000,
+          "黄金": 10000
+        }
+      },
+      {
+        "week": "第4周",
+        "amount": 40000,
+        "items": {
+          "中短债/纯债": 15000,
+          "宽基指数": 10000,
+          "科技成长": 6000,
+          "黄金": 9000
+        }
+      }
+    ],
+    "alipay_rules": [
+      "工作日15:00前下单按当天净值，15:00后按下一个交易日净值。",
+      "核心仓尽量持有6个月以上，避免7天内赎回费。",
+      "长期核心仓优先看A类或低费率联接；半年内可能调整的战术仓优先比较C类。",
+      "QDII基金净值更新慢、额度可能限制，不做短线交易。",
+      "每季度检查一次，偏离目标5%以上再调仓。"
+    ]
+  }
 }

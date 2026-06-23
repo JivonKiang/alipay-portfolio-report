@@ -242,6 +242,37 @@
     .toggle-btn::after { content: ' \25BC'; font-size: 10px; }
     .toggle-btn.open::after { content: ' \25B2'; }
 
+
+    /* Allocation plan */
+    .plan-hero {
+      background: linear-gradient(135deg, rgba(59,130,246,0.18) 0%, rgba(34,197,94,0.08) 55%, rgba(168,85,247,0.08) 100%);
+      border: 1px solid rgba(59,130,246,0.22);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 12px;
+    }
+    .plan-kicker { font-size: 11px; color: var(--blue); font-weight: 700; letter-spacing: .4px; margin-bottom: 6px; }
+    .plan-title { font-size: 22px; font-weight: 800; line-height: 1.2; letter-spacing: -0.5px; margin-bottom: 8px; }
+    .plan-note { font-size: 12px; color: var(--text-dim); line-height: 1.7; }
+    .metric-row { display:grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 12px 0; }
+    .metric-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px; text-align:center; }
+    .metric-box .num { font-size: 20px; font-weight: 800; line-height: 1.1; }
+    .metric-box .label { font-size: 10px; color: var(--text-muted); margin-top: 5px; line-height: 1.35; }
+    .plan-grid { display:grid; grid-template-columns: repeat(2, 1fr); gap:10px; }
+    .alloc-card { background: var(--bg-card); border:1px solid var(--border); border-radius: var(--radius-sm); padding: 12px; }
+    .alloc-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+    .alloc-name { font-size: 13px; font-weight: 700; }
+    .alloc-pct { font-size: 13px; font-weight: 800; color: var(--blue); }
+    .alloc-amt { font-size: 18px; font-weight: 800; margin-bottom: 6px; }
+    .mini-bar { height: 6px; border-radius: 99px; background: var(--bg); overflow:hidden; }
+    .mini-bar span { display:block; height:100%; border-radius:99px; }
+    .plan-table { width:100%; border-collapse: collapse; font-size: 11px; }
+    .plan-table th, .plan-table td { padding: 8px 6px; border-bottom:1px solid var(--border); text-align:left; vertical-align:top; }
+    .plan-table th { color: var(--text-muted); font-weight:700; background: var(--bg-elevated); }
+    .tag-pill { display:inline-block; font-size:10px; font-weight:700; padding:2px 7px; border-radius:99px; background:rgba(59,130,246,0.13); color:var(--blue); }
+    .warning-soft { background: rgba(234,179,8,0.08); border:1px solid rgba(234,179,8,0.22); color: var(--text-dim); border-radius: var(--radius-sm); padding: 12px; font-size: 12px; line-height: 1.8; }
+
+
     /* Warning */
     .warning-box {
       background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2);
@@ -332,6 +363,9 @@
   </div>
   <div class="sidebar-item" onclick="goPage('advice'); toggleSidebar()">
     <span class="sidebar-icon">&#x2B50;</span> 投资建议
+  </div>
+  <div class="sidebar-item" onclick="goPage('plan'); toggleSidebar()">
+    <span class="sidebar-icon">&#x1F4BC;</span> 配置方案
   </div>
   <div class="sidebar-item" onclick="goPage('update'); toggleSidebar()">
     <span class="sidebar-icon">&#x270F;</span> 更新数据
@@ -1146,6 +1180,105 @@
   </div>
 </div>
 
+
+<!-- ==================== PAGE: PLAN ==================== -->
+<div class="tab-panel" id="page-plan">
+  <div class="content">
+    <div class="plan-hero">
+      <div class="plan-kicker">10%回撤约束版 · 支付宝执行</div>
+      <div class="plan-title">先控回撤，再争取收益</div>
+      <div class="plan-note">基于当前总资产67.73万，单独保留3万应急金，剩余64.73万做投资配置。结论很明确：如果把最大回撤压在10%以内放在第一位，长期目标年化应设为5%–7%，顺风年份争取7%–9%；再高就要牺牲回撤控制。</div>
+    </div>
+
+    <div class="metric-row">
+      <div class="metric-box"><div class="num" style="color:var(--green)">5%–7%</div><div class="label">基础年化目标</div></div>
+      <div class="metric-box"><div class="num" style="color:var(--blue)">≤10%</div><div class="label">优先控制回撤</div></div>
+      <div class="metric-box"><div class="num" style="color:var(--orange)">64.73万</div><div class="label">可投资资金</div></div>
+    </div>
+
+    <div class="warning-soft" style="margin-bottom:12px;">
+      <strong style="color:var(--yellow)">关键判断：</strong>40%权益仓的“收益版”在5年路径里能跑出11.4%年化，但压力测试显示回撤超过10%的概率偏高；真正适合你“回撤10%以内”的主方案是20%权益仓的“风控版”。
+    </div>
+
+    <div class="section-title">目标配置金额</div>
+    <div class="plan-grid">
+      <div class="alloc-card">
+        <div class="alloc-head"><span class="alloc-name">中短债/纯债</span><span class="alloc-pct">50%</span></div>
+        <div class="alloc-amt">¥323,650</div><div class="mini-bar"><span style="width:50%; background:var(--green)"></span></div>
+      </div>
+      <div class="alloc-card">
+        <div class="alloc-head"><span class="alloc-name">机动现金</span><span class="alloc-pct">22%</span></div>
+        <div class="alloc-amt">¥142,406</div><div class="mini-bar"><span style="width:22%; background:var(--blue)"></span></div>
+      </div>
+      <div class="alloc-card">
+        <div class="alloc-head"><span class="alloc-name">宽基指数</span><span class="alloc-pct">14%</span></div>
+        <div class="alloc-amt">¥90,622</div><div class="mini-bar"><span style="width:14%; background:var(--purple)"></span></div>
+      </div>
+      <div class="alloc-card">
+        <div class="alloc-head"><span class="alloc-name">黄金</span><span class="alloc-pct">8%</span></div>
+        <div class="alloc-amt">¥51,784</div><div class="mini-bar"><span style="width:8%; background:var(--yellow)"></span></div>
+      </div>
+      <div class="alloc-card">
+        <div class="alloc-head"><span class="alloc-name">科技成长</span><span class="alloc-pct">6%</span></div>
+        <div class="alloc-amt">¥38,838</div><div class="mini-bar"><span style="width:6%; background:var(--orange)"></span></div>
+      </div>
+      <div class="alloc-card">
+        <div class="alloc-head"><span class="alloc-name">应急金</span><span class="alloc-pct">单列</span></div>
+        <div class="alloc-amt">¥30,000</div><div class="mini-bar"><span style="width:100%; background:var(--text-muted)"></span></div>
+      </div>
+    </div>
+
+    <div class="section-title">回测与压力测试</div>
+    <div class="card">
+      <div class="card-title">&#x1F4CA; 三套方案收益/回撤取舍</div>
+      <div class="chart-wrap"><canvas id="planCompareChart"></canvas></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">&#x1F6E1; 10年蒙特卡洛压力测试</div>
+      <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:10px;">
+        <div><div style="font-size:11px;color:var(--text-muted)">中位年化</div><div style="font-size:18px;font-weight:800;color:var(--green)">4.69%</div></div>
+        <div><div style="font-size:11px;color:var(--text-muted)">中位回撤</div><div style="font-size:18px;font-weight:800;color:var(--blue)">-7.27%</div></div>
+        <div><div style="font-size:11px;color:var(--text-muted)">10年中位终值</div><div style="font-size:18px;font-weight:800">¥102.39万</div></div>
+        <div><div style="font-size:11px;color:var(--text-muted)">回撤≤10%概率</div><div style="font-size:18px;font-weight:800;color:var(--yellow)">86.4%</div></div>
+      </div>
+      <div style="font-size:11px;color:var(--text-muted);line-height:1.8;margin-top:12px;">说明：这里是参数化压力测试，不是收益承诺。它用资产大类的期望收益、波动率和相关性模拟未来路径，目的在于检验“10%回撤约束”是否现实。</div>
+    </div>
+
+    <div class="section-title">4周买入计划</div>
+    <div class="card" style="padding:0; overflow:hidden;">
+      <table class="plan-table">
+        <thead><tr><th>周期</th><th>金额</th><th>支付宝搜索方向</th></tr></thead>
+        <tbody>
+          <tr><td><span class="tag-pill">第1周</span></td><td>¥60,000</td><td>中短债/纯债2.5万；A500/沪深300 1.2万；中证500/1000 0.8万；纳指/全球科技0.5万；黄金1万</td></tr>
+          <tr><td><span class="tag-pill">第2周</span></td><td>¥60,000</td><td>中短债/纯债2.5万；A500/沪深300 1万；中证500/1000 0.8万；标普500/全球宽基0.7万；半导体/AI/科创50 0.4万；黄金0.6万</td></tr>
+          <tr><td><span class="tag-pill">第3周</span></td><td>¥50,000</td><td>中短债/纯债2万；宽基指数1.2万；科技成长0.8万；黄金1万</td></tr>
+          <tr><td><span class="tag-pill">第4周</span></td><td>¥40,000</td><td>中短债/纯债1.5万；宽基指数1万；科技成长0.6万；黄金0.9万</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-title">支付宝购买清单</div>
+    <div class="card" style="padding:0 16px;">
+      <div class="fund-item"><div><div class="fund-name">中短债/纯债</div><div class="sip-detail">搜索：中短债、纯债、短债、同业存单指数</div></div><div class="fund-right"><div class="fund-amount">目标¥32.37万</div><div class="fund-return up">核心稳压</div></div></div>
+      <div class="fund-item"><div><div class="fund-name">宽基指数</div><div class="sip-detail">搜索：A500、沪深300、中证500、中证1000、标普500</div></div><div class="fund-right"><div class="fund-amount">目标¥9.06万</div><div class="fund-return up">收益主仓</div></div></div>
+      <div class="fund-item"><div><div class="fund-name">科技成长</div><div class="sip-detail">搜索：纳斯达克100、全球科技、人工智能、半导体、科创50</div></div><div class="fund-right"><div class="fund-amount">目标¥3.88万</div><div class="fund-return" style="color:var(--orange)">增强弹性</div></div></div>
+      <div class="fund-item"><div><div class="fund-name">黄金</div><div class="sip-detail">搜索：黄金ETF联接、黄金基金</div></div><div class="fund-right"><div class="fund-amount">目标¥5.18万</div><div class="fund-return" style="color:var(--yellow)">风险对冲</div></div></div>
+      <div class="fund-item"><div><div class="fund-name">机动现金</div><div class="sip-detail">余额宝/货币基金/短债，等待回撤补仓</div></div><div class="fund-right"><div class="fund-amount">目标¥14.24万</div><div class="fund-return">补仓子弹</div></div></div>
+    </div>
+
+    <div class="section-title">执行规则</div>
+    <div class="card">
+      <div style="font-size:12px;color:var(--text-dim);line-height:1.9;">
+        <strong style="color:var(--text)">再平衡：</strong>每季度检查一次，单类资产偏离目标5%以上再调；权益合计超过25%先减，低于15%再补。<br>
+        <strong style="color:var(--text)">补仓：</strong>组合回撤5%时动用机动现金20%，回撤8%再动用20%，接近10%停止主动加仓，等企稳。<br>
+        <strong style="color:var(--text)">费用：</strong>不要7天内卖出；核心仓尽量持有6个月以上；QDII不做短线；长期核心仓优先比较A类总成本，战术仓再看C类。<br>
+        <strong style="color:var(--text)">15:00规则：</strong>支付宝基金工作日15:00前下单按当天净值，15:00后按下一个交易日净值。
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ==================== PAGE: UPDATE ==================== -->
 <div class="tab-panel" id="page-update">
   <div class="content">
@@ -1221,6 +1354,9 @@
   <button class="nav-item" onclick="goPage('advice')">
     <div class="nav-icon">&#x2B50;</div><span>建议</span>
   </button>
+  <button class="nav-item" onclick="goPage('plan')">
+    <div class="nav-icon">&#x1F4BC;</div><span>方案</span>
+  </button>
   <button class="nav-item" onclick="goPage('update')">
     <div class="nav-icon">&#x270F;</div><span>更新</span>
   </button>
@@ -1228,7 +1364,7 @@
 
 <script>
 // ==================== Cache Buster & Update Check ====================
-const APP_VERSION = '3.5.1';
+const APP_VERSION = '3.6.0';
 const CACHE_KEY = 'portfolio_version';
 
 function checkVersion() {
@@ -1296,7 +1432,7 @@ function goPage(name) {
 
   // Update nav
   const navItems = document.querySelectorAll('.nav-item');
-  const pageNames = ['overview','holdings','backtest','sip','advice','update'];
+  const pageNames = ['overview','holdings','backtest','sip','advice','plan','update'];
   const idx = pageNames.indexOf(name);
   if (idx >= 0 && navItems[idx]) navItems[idx].classList.add('active');
 
@@ -1452,6 +1588,35 @@ new Chart(document.getElementById('drawdownChart'), {
     plugins: { legend: { labels: { boxWidth:10, font:{size:11} } } }
   }
 });
+
+
+
+// Plan Compare Chart
+const planCompareEl = document.getElementById('planCompareChart');
+if (planCompareEl) {
+  new Chart(planCompareEl, {
+    type: 'bar',
+    data: {
+      labels: ['收益版', '均衡版', '风控版'],
+      datasets: [
+        { label: '5年年化收益', data: [11.41, 8.47, 7.60], backgroundColor:'rgba(34,197,94,0.72)', borderRadius:5 },
+        { label: '5年最大回撤', data: [9.36, 5.98, 4.97], backgroundColor:'rgba(59,130,246,0.72)', borderRadius:5 },
+        { label: '压力测试P90回撤', data: [20.93, 13.08, 10.57], backgroundColor:'rgba(239,68,68,0.72)', borderRadius:5 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: {
+        y: { grid:{color:'#1f2937'}, ticks:{color:'#64748b', callback:v=>v+'%'} },
+        x: { grid:{display:false}, ticks:{color:'#94a3b8'} }
+      },
+      plugins: {
+        legend: { labels: { boxWidth:10, font:{size:11} } },
+        tooltip: { callbacks: { label: (c) => `${c.dataset.label}: ${c.raw}%` } }
+      }
+    }
+  });
+}
 
 // Init
 loadSavedData();
