@@ -1,0 +1,71 @@
+# 支付宝基金趋势交易系统 - 配置文件
+# 监控基金列表（可自行增减）
+
+funds:
+  - code: "110020"
+    name: "易方达沪深300ETF联接A"
+    type: "index"
+    enabled: true
+  - code: "160119"
+    name: "南方中证500ETF联接A"
+    type: "index"
+    enabled: true
+  - code: "001593"
+    name: "天弘创业板ETF联接C"
+    type: "index"
+    enabled: true
+  - code: "001717"
+    name: "工银前沿医疗股票A"
+    type: "sector"
+    enabled: false  # 行业基金趋势策略效果差，默认关闭
+  - code: "110022"
+    name: "易方达消费行业股票"
+    type: "sector"
+    enabled: false
+
+# 数据库配置
+database:
+  path: "./data/fund_system.db"
+  type: "sqlite"
+
+# 策略配置
+strategy:
+  primary: "MA60-120"
+  params:
+    ma_fast: 60
+    ma_slow: 120
+  auxiliary:
+    - name: "Turtle-55-20"
+      params:
+        entry_period: 55
+        exit_period: 20
+    - name: "Momentum-60"
+      params:
+        period: 60
+        threshold: 0.05
+
+# 费用配置（支付宝基金标准费率）
+fee:
+  buy_rate: 0.0015  # 申购费 0.15%
+  sell_tiers:
+    - days: 7
+      rate: 0.015   # <7天 1.5%
+    - days: 30
+      rate: 0.0075  # 7-30天 0.75%
+    - days: 365
+      rate: 0.005   # 30-365天 0.5%
+    - days: 730
+      rate: 0.0025  # 365-730天 0.25%
+  min_hold_days: 7  # 最短持有天数
+
+# 回测配置
+backtest:
+  initial_capital: 100000
+  start_date: "2019-01-01"
+  end_date: "2026-12-31"
+
+# 通知配置
+notify:
+  schedule: "18:00"  # 每个交易日18:00
+  channels:
+    - "marvis"       # Marvis自定义任务推送
