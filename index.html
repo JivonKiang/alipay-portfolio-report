@@ -36,7 +36,11 @@
       --radius: 16px;
       --radius-sm: 12px;
       --safe-bottom: env(safe-area-inset-bottom, 0px);
-      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-top: env(safe-area-inset-top, 32px);
+    }
+    /* Android WebView fallback for safe-area-inset-top */
+    @supports not (padding-top: env(safe-area-inset-top)) {
+      :root { --safe-top: 32px; }
     }
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     html { scroll-behavior: smooth; }
@@ -54,8 +58,10 @@
       background: rgba(11,15,25,0.92); backdrop-filter: blur(20px) saturate(1.8);
       -webkit-backdrop-filter: blur(20px) saturate(1.8);
       border-bottom: 1px solid var(--border);
-      padding: calc(10px + var(--safe-top)) 16px 10px;
+      padding: calc(14px + var(--safe-top)) 16px 10px;
     }
+    /* Extra top padding for Android notch/hole-punch devices */
+    .app-header { padding-top: calc(14px + max(var(--safe-top), 28px)); }
     .app-header-inner { display: flex; align-items: center; justify-content: space-between; }
     .app-header h1 { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; }
     .app-header .subtitle { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
@@ -847,8 +853,33 @@
 </nav>
 
 <script>
+// ==================== Safe Area Detection for Android Notch/Hole-punch ====================
+(function() {
+  // Detect status bar height for Android devices (Xiaomi 15, etc.)
+  const isCapacitor = typeof Capacitor !== 'undefined';
+  const isAndroid = /Android/.test(navigator.userAgent);
+
+  if (isAndroid) {
+    // Try to get status bar height from Capacitor StatusBar plugin or fallback
+    const statusBarHeight = window.StatusBar?.height || 0;
+    const estimatedHeight = Math.max(statusBarHeight, 32); // minimum 32px for notch devices
+
+    // Apply dynamic padding if env() is not working
+    const testEl = document.createElement('div');
+    testEl.style.cssText = 'padding-top:env(safe-area-inset-top);position:fixed;';
+    document.body.appendChild(testEl);
+    const computed = parseInt(getComputedStyle(testEl).paddingTop) || 0;
+    document.body.removeChild(testEl);
+
+    if (computed < 20) {
+      // env() not working properly, use fallback
+      document.documentElement.style.setProperty('--safe-top', estimatedHeight + 'px');
+    }
+  }
+})();
+
 // ==================== Cache Buster & Auto Update ====================
-const APP_VERSION = '3.1.0';
+const APP_VERSION = '3.2.0';
 const CACHE_KEY = 'portfolio_version';
 const UPDATE_CHECK_INTERVAL = 24 * 60 * 60 * 1000; // 每天检查一次
 
@@ -1082,6 +1113,21 @@ loadSavedData();
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js?v=3').catch(() => {});
 }
+
+// ==================== Capacitor Updater - Notify App Ready ====================
+// This tells the native plugin that the JS bundle loaded successfully.
+// If not called within 10 seconds, the plugin will auto-rollback to previous version.
+(async function notifyAppReady() {
+  try {
+    if (typeof Capacitor !== 'undefined') {
+      const { CapacitorUpdater } = await import('@capgo/capacitor-updater');
+      await CapacitorUpdater.notifyAppReady();
+      console.log('[Updater] App ready notified');
+    }
+  } catch (e) {
+    console.log('[Updater] Plugin not available (web mode)');
+  }
+})();
 </script>
 </body>
 </html>

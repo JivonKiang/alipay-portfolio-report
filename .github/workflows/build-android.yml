@@ -1,9 +1,13 @@
-name: Build Android APK
+name: Build Android APK & OTA Bundle
 
 on:
   push:
     branches: [ main ]
   workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
 
 jobs:
   build:
@@ -32,22 +36,25 @@ jobs:
       - name: Sync Capacitor
         run: npx cap sync android
 
-      - name: Debug Environment
+      - name: Build OTA Update Bundle
         run: |
-          echo "=== JAVA ==="
-          java -version
-          echo "=== ANDROID_HOME ==="
-          echo "$ANDROID_HOME"
-          echo "=== SDK directories ==="
-          ls -la "$ANDROID_HOME/" 2>/dev/null || echo "ANDROID_HOME not accessible"
-          echo "=== Platforms ==="
-          ls "$ANDROID_HOME/platforms/" 2>/dev/null || echo "no platforms dir"
-          echo "=== Build Tools ==="
-          ls "$ANDROID_HOME/build-tools/" 2>/dev/null || echo "no build-tools dir"
-          echo "=== Gradle ==="
-          ls -la android/gradlew
-          echo "=== android dir ==="
-          ls -la android/
+          VERSION=$(node -p "require('./package.json').version")
+          echo "Building OTA bundle v$VERSION"
+          mkdir -p updates
+          cd www
+          zip -r "../updates/bundle-${VERSION}.zip" .
+          cd ..
+          CHECKSUM=$(sha256sum "updates/bundle-${VERSION}.zip" | awk '{print $1}')
+          echo "Checksum: $CHECKSUM"
+          cat > updates/updates.json << EOF
+          {
+            "version": "${VERSION}",
+            "url": "https://jivonkiang.github.io/alipay-portfolio-report/updates/bundle-${VERSION}.zip",
+            "checksum": "${CHECKSUM}",
+            "message": "OTA update v${VERSION}"
+          }
+          EOF
+          cat updates/updates.json
 
       - name: Build with Gradle
         run: |
@@ -70,13 +77,30 @@ jobs:
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: warn
 
+      - name: Upload OTA Bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: ota-bundle
+          path: updates/
+          if-no-files-found: warn
+
+      - name: Commit OTA updates to repo
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add updates/
+          git diff --cached --quiet || git commit -m "chore: update OTA bundle v$(node -p "require('./package.json').version")"
+          git push || echo "Nothing to push"
+
       - name: Create Release
         if: success()
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ github.run_number }}
           name: Release v${{ github.run_number }}
-          files: android/app/build/outputs/apk/debug/app-debug.apk
+          files: |
+            android/app/build/outputs/apk/debug/app-debug.apk
+            updates/bundle-*.zip
           make_latest: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
