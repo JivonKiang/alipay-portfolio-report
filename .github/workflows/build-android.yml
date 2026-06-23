@@ -46,10 +46,11 @@ jobs:
           cd ..
           CHECKSUM=$(sha256sum "updates/bundle-${VERSION}.zip" | awk '{print $1}')
           echo "Checksum: $CHECKSUM"
+          # Create updates.json pointing to GitHub Release assets
           cat > updates/updates.json << EOF
           {
             "version": "${VERSION}",
-            "url": "https://jivonkiang.github.io/alipay-portfolio-report/updates/bundle-${VERSION}.zip",
+            "url": "https://github.com/JivonKiang/alipay-portfolio-report/releases/download/latest/bundle-${VERSION}.zip",
             "checksum": "${CHECKSUM}",
             "message": "OTA update v${VERSION}"
           }
@@ -77,22 +78,7 @@ jobs:
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: warn
 
-      - name: Upload OTA Bundle
-        uses: actions/upload-artifact@v4
-        with:
-          name: ota-bundle
-          path: updates/
-          if-no-files-found: warn
-
-      - name: Commit OTA updates to repo
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git add updates/
-          git diff --cached --quiet || git commit -m "chore: update OTA bundle v$(node -p "require('./package.json').version")"
-          git push || echo "Nothing to push"
-
-      - name: Create Release
+      - name: Create Release with APK and OTA bundle
         if: success()
         uses: softprops/action-gh-release@v2
         with:
@@ -101,6 +87,7 @@ jobs:
           files: |
             android/app/build/outputs/apk/debug/app-debug.apk
             updates/bundle-*.zip
+            updates/updates.json
           make_latest: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
