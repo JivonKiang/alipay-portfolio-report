@@ -1,292 +1,90 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#0b0f19">
-  <title>Jivon 资产执行面板</title>
-  <style>
-    :root {
-      --bg:#0b0f19; --panel:#111827; --card:#1a2236; --card2:#202a41;
-      --text:#f1f5f9; --muted:#94a3b8; --soft:#64748b; --line:#263244;
-      --blue:#3b82f6; --green:#22c55e; --orange:#f97316; --yellow:#eab308;
-      --red:#ef4444; --purple:#a855f7; --radius:18px; --radius-sm:12px;
-    }
-    * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
-    body {
-      min-height:100vh; background:var(--bg); color:var(--text);
-      font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'PingFang SC','Microsoft YaHei',sans-serif;
-      padding-bottom:78px; line-height:1.55;
-    }
-    .top {
-      position:sticky; top:0; z-index:10; background:rgba(11,15,25,.94);
-      backdrop-filter: blur(18px); border-bottom:1px solid var(--line);
-      padding:14px 16px 12px;
-    }
-    .top h1 { font-size:18px; letter-spacing:-.3px; }
-    .top p { font-size:11px; color:var(--muted); margin-top:2px; }
-    .page { display:none; padding:14px 16px 22px; }
-    .page.active { display:block; animation:fade .22s ease; }
-    @keyframes fade { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
-    .hero {
-      border:1px solid rgba(59,130,246,.24); border-radius:var(--radius);
-      padding:18px; margin-bottom:12px;
-      background:linear-gradient(135deg,rgba(59,130,246,.18),rgba(34,197,94,.08) 60%,rgba(168,85,247,.08));
-    }
-    .kicker { color:var(--blue); font-size:11px; font-weight:800; letter-spacing:.4px; margin-bottom:6px; }
-    .hero h2 { font-size:25px; line-height:1.15; letter-spacing:-.7px; margin-bottom:8px; }
-    .hero .desc { color:var(--muted); font-size:12px; line-height:1.75; }
-    .card {
-      background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
-      padding:16px; margin-bottom:12px;
-    }
-    .card-title { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
-    .card-title strong { font-size:15px; }
-    .card-title span { font-size:11px; color:var(--muted); }
-    .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-    .grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
-    .metric {
-      background:var(--card); border:1px solid var(--line); border-radius:var(--radius-sm);
-      padding:13px; text-align:center; min-height:76px;
-    }
-    .metric .num { font-size:20px; font-weight:850; line-height:1.1; }
-    .metric .label { font-size:10px; color:var(--muted); margin-top:6px; line-height:1.35; }
-    .section { font-size:13px; font-weight:850; padding-left:10px; border-left:3px solid var(--blue); margin:20px 0 10px; }
-    .row { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 0; border-bottom:1px solid var(--line); }
-    .row:last-child { border-bottom:none; }
-    .row .name { font-size:13px; font-weight:700; }
-    .row .sub { font-size:11px; color:var(--muted); margin-top:2px; line-height:1.5; }
-    .row .amt { font-size:15px; font-weight:800; text-align:right; }
-    .row .tag { font-size:10px; margin-top:3px; color:var(--muted); text-align:right; }
-    .bar { height:9px; background:#0e1422; border-radius:99px; overflow:hidden; margin-top:9px; }
-    .bar i { display:block; height:100%; border-radius:99px; }
-    .warn {
-      background:rgba(234,179,8,.08); border:1px solid rgba(234,179,8,.22);
-      border-radius:var(--radius-sm); padding:12px; color:var(--muted); font-size:12px; line-height:1.75; margin-bottom:12px;
-    }
-    .ok {
-      background:rgba(34,197,94,.08); border:1px solid rgba(34,197,94,.22);
-      border-radius:var(--radius-sm); padding:12px; color:var(--muted); font-size:12px; line-height:1.75; margin-bottom:12px;
-    }
-    .danger {
-      background:rgba(239,68,68,.08); border:1px solid rgba(239,68,68,.22);
-      border-radius:var(--radius-sm); padding:12px; color:var(--muted); font-size:12px; line-height:1.75; margin-bottom:12px;
-    }
-    .pill { display:inline-block; padding:2px 7px; border-radius:99px; font-size:10px; font-weight:800; background:rgba(59,130,246,.14); color:var(--blue); }
-    .plan-step { border-left:3px solid var(--blue); padding:0 0 0 12px; margin:14px 0; }
-    .plan-step h3 { font-size:14px; margin-bottom:5px; }
-    .plan-step p { font-size:12px; color:var(--muted); line-height:1.7; }
-    details {
-      background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
-      margin-bottom:12px; overflow:hidden;
-    }
-    summary {
-      list-style:none; cursor:pointer; padding:15px 16px; font-size:14px; font-weight:800;
-      display:flex; justify-content:space-between; align-items:center;
-    }
-    summary::-webkit-details-marker { display:none; }
-    summary:after { content:'展开'; color:var(--blue); font-size:11px; font-weight:800; }
-    details[open] summary:after { content:'收起'; }
-    .detail-body { padding:0 16px 16px; color:var(--muted); font-size:12px; line-height:1.8; }
-    table { width:100%; border-collapse:collapse; font-size:11px; color:var(--muted); }
-    th,td { padding:8px 6px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; }
-    th { background:var(--panel); color:var(--text); }
-    .nav {
-      position:fixed; left:0; right:0; bottom:0; z-index:20; display:flex;
-      background:rgba(11,15,25,.96); backdrop-filter:blur(18px); border-top:1px solid var(--line);
-      padding:6px 4px max(6px, env(safe-area-inset-bottom));
-    }
-    .nav button {
-      flex:1; border:0; background:transparent; color:var(--soft); padding:7px 4px;
-      font-size:11px; font-weight:700; display:flex; flex-direction:column; align-items:center; gap:3px;
-    }
-    .nav button b { font-size:20px; line-height:1; font-weight:400; }
-    .nav button.active { color:var(--blue); }
-    .small { font-size:11px; color:var(--muted); line-height:1.65; }
-    @media (max-width:370px) { .grid3 { grid-template-columns:1fr; } .hero h2{font-size:22px;} }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0b0f19">
+<title>Jivon 资产执行面板</title>
+<style>
+:root{--bg:#0b0f19;--panel:#111827;--card:#1a2236;--card2:#202a41;--text:#f1f5f9;--muted:#94a3b8;--soft:#64748b;--line:#263244;--blue:#3b82f6;--green:#22c55e;--orange:#f97316;--yellow:#eab308;--red:#ef4444;--purple:#a855f7;--radius:18px;--radius-sm:12px}*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}body{min-height:100vh;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'PingFang SC','Microsoft YaHei',sans-serif;padding-bottom:80px;line-height:1.55}.top{position:sticky;top:0;z-index:10;background:rgba(11,15,25,.94);backdrop-filter:blur(18px);border-bottom:1px solid var(--line);padding:14px 16px 12px}.top h1{font-size:18px;letter-spacing:-.3px}.top p{font-size:11px;color:var(--muted);margin-top:2px}.page{display:none;padding:14px 16px 22px}.page.active{display:block;animation:fade .22s ease}@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}.hero{border:1px solid rgba(59,130,246,.24);border-radius:var(--radius);padding:18px;margin-bottom:12px;background:linear-gradient(135deg,rgba(59,130,246,.18),rgba(34,197,94,.08) 60%,rgba(168,85,247,.08))}.kicker{color:var(--blue);font-size:11px;font-weight:800;letter-spacing:.4px;margin-bottom:6px}.hero h2{font-size:25px;line-height:1.15;letter-spacing:-.7px;margin-bottom:8px}.hero .desc{color:var(--muted);font-size:12px;line-height:1.75}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:12px}.card-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.card-title strong{font-size:15px}.card-title span{font-size:11px;color:var(--muted)}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.metric{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-sm);padding:13px;text-align:center;min-height:76px}.metric .num{font-size:20px;font-weight:850;line-height:1.1}.metric .label{font-size:10px;color:var(--muted);margin-top:6px;line-height:1.35}.section{font-size:13px;font-weight:850;padding-left:10px;border-left:3px solid var(--blue);margin:20px 0 10px}.row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.row:last-child{border-bottom:none}.row .name{font-size:13px;font-weight:700}.row .sub{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.5}.row .amt{font-size:15px;font-weight:800;text-align:right}.row .tag{font-size:10px;margin-top:3px;color:var(--muted);text-align:right}.bar{height:9px;background:#0e1422;border-radius:99px;overflow:hidden;margin-top:9px}.bar i{display:block;height:100%;border-radius:99px}.progress-block{margin:14px 0}.progress-head{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px}.progress-head span:last-child{font-weight:800}.warn,.ok,.danger{border-radius:var(--radius-sm);padding:12px;color:var(--muted);font-size:12px;line-height:1.75;margin-bottom:12px}.warn{background:rgba(234,179,8,.08);border:1px solid rgba(234,179,8,.22)}.ok{background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.22)}.danger{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.22)}.pill{display:inline-block;padding:2px 7px;border-radius:99px;font-size:10px;font-weight:800;background:rgba(59,130,246,.14);color:var(--blue)}.plan-step{border-left:3px solid var(--blue);padding:0 0 0 12px;margin:14px 0}.plan-step h3{font-size:14px;margin-bottom:5px}.plan-step p{font-size:12px;color:var(--muted);line-height:1.75}.buy-list{margin-top:8px;background:rgba(0,0,0,.13);border-radius:10px;padding:9px 10px;font-size:12px;color:var(--muted);line-height:1.8}details{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:12px;overflow:hidden}summary{list-style:none;cursor:pointer;padding:15px 16px;font-size:14px;font-weight:800;display:flex;justify-content:space-between;align-items:center}summary::-webkit-details-marker{display:none}summary:after{content:'展开';color:var(--blue);font-size:11px;font-weight:800}details[open] summary:after{content:'收起'}.detail-body{padding:0 16px 16px;color:var(--muted);font-size:12px;line-height:1.8}table{width:100%;border-collapse:collapse;font-size:11px;color:var(--muted)}th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{background:var(--panel);color:var(--text)}.copybox{width:100%;min-height:220px;background:#0e1422;border:1px solid var(--line);border-radius:12px;color:var(--text);font-size:12px;line-height:1.55;padding:12px;resize:vertical}.copybtn{width:100%;border:0;border-radius:12px;background:var(--blue);color:white;font-size:14px;font-weight:800;padding:12px;margin-top:10px}.nav{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;background:rgba(11,15,25,.96);backdrop-filter:blur(18px);border-top:1px solid var(--line);padding:6px 4px max(6px,env(safe-area-inset-bottom))}.nav button{flex:1;border:0;background:transparent;color:var(--soft);padding:7px 4px;font-size:11px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:3px}.nav button b{font-size:19px;line-height:1;font-weight:400}.nav button.active{color:var(--blue)}.small{font-size:11px;color:var(--muted);line-height:1.65}@media(max-width:370px){.grid3{grid-template-columns:1fr}.hero h2{font-size:22px}.nav button{font-size:10px}}
+</style>
 </head>
 <body>
-  <header class="top">
-    <h1>Jivon 资产执行面板</h1>
-    <p>目标：回撤优先控制在10%以内，长期争取5%–7%，顺风年份争取7%–9%</p>
-  </header>
+<header class="top"><h1>Jivon 资产执行面板</h1><p>核心目标：回撤优先控制在10%以内，按计划逐步提高长期收益弹性</p></header>
+<main>
+<section class="page active" id="page-goal">
+<div class="hero"><div class="kicker">整体目标</div><h2>从“保守持仓”推进到“风控增值组合”</h2><div class="desc">最新录入总资产为627,118.23元。页面以你的核心诉求为准：先守住10%以内回撤，再逐步建立宽基、黄金和少量科技仓位。注意：你提供的大类金额合计为677,118.23元，和总资产差5万元，下一次需要用截图重新校准。</div></div>
+<div class="grid3"><div class="metric"><div class="num" style="color:var(--green)">≤10%</div><div class="label">第一目标：控制回撤</div></div><div class="metric"><div class="num" style="color:var(--blue)">5%–7%</div><div class="label">基础年化目标</div></div><div class="metric"><div class="num" style="color:var(--yellow)">7%–9%</div><div class="label">顺风年份争取</div></div></div>
+<div class="section">推进进度</div>
+<div class="card">
+<div class="progress-block"><div class="progress-head"><span>安全底仓达成度</span><span style="color:var(--green)">已超额</span></div><div class="bar"><i style="width:100%;background:var(--green)"></i></div><div class="small">债券/固收当前约51.64万，目标约29.86万，安全底仓充足，下一步不是继续买债，而是降低超配。</div></div>
+<div class="progress-block"><div class="progress-head"><span>增值仓落实度</span><span style="color:var(--orange)">约7%</span></div><div class="bar"><i style="width:7%;background:var(--orange)"></i></div><div class="small">目标宽基+科技+黄金合计约16.72万，目前可确认成长仓约1.17万，宽基和黄金仍需建立。</div></div>
+<div class="progress-block"><div class="progress-head"><span>执行阶段</span><span style="color:var(--blue)">第0步：校准数据</span></div><div class="bar"><i style="width:12%;background:var(--blue)"></i></div><div class="small">当前报告内“总资产”和“大类合计”不一致，先通过模板重新提取支付宝截图，再执行大额调仓。</div></div>
+</div>
+<div class="warn"><strong style="color:var(--yellow)">当下最重要：</strong>先校准支付宝数据；在没有校准前，不做超过3万元的单笔权益买入。可以先按小额执行宽基/黄金底仓，科技只试探性建仓。</div>
+<details open><summary>支付宝截图提取模板（一键复制）</summary><div class="detail-body"><textarea id="copyTemplate" class="copybox" readonly>请根据我最新提供的支付宝总资产概览截图和基金持仓详情截图，更新我的资产配置报告。请按以下固定格式输出，金额保留2位小数，缺失项请标注“未识别”，不要自行脑补。
 
-  <main>
-    <section class="page active" id="page-current">
-      <div class="hero">
-        <div class="kicker">当前持仓</div>
-        <h2>现在的问题不是亏损，而是资产太保守</h2>
-        <div class="desc">你的总资产约67.73万，其中债券和货币占比接近98.5%，回撤低，但长期收益弹性不足。接下来要做的是：保留安全垫，把部分资金有节奏地迁移到宽基、少量科技和黄金。</div>
-      </div>
+【支付宝资产配置报告】
+更新日期：YYYY年MM月DD日
+数据来源：支付宝APP总资产页 & 基金持仓详情页
 
-      <div class="grid3">
-        <div class="metric"><div class="num">¥67.73万</div><div class="label">总资产</div></div>
-        <div class="metric"><div class="num" style="color:var(--green)">98.5%</div><div class="label">债券+货币</div></div>
-        <div class="metric"><div class="num" style="color:var(--orange)">1.5%</div><div class="label">成长仓</div></div>
-      </div>
+一、总资产概览
+总资产： 元
+昨日总收益： 元
+稳健理财（债券/固收）： 元，占比 %，昨日收益： 元
+灵活取用（余额宝/货币/短债）： 元，占比 %，昨日收益： 元
+进阶理财（QDII/权益/主题）： 元，占比 %，昨日收益： 元
+其他资产： 元，占比 %
 
-      <div class="section">当前资产结构</div>
-      <div class="card">
-        <div class="row">
-          <div><div class="name">稳健理财（债券/固收）</div><div class="sub">当前最大底仓，安全性高但收益弹性有限</div></div>
-          <div><div class="amt">¥512,111</div><div class="tag">75.6%</div></div>
-        </div>
-        <div class="bar"><i style="width:75.6%;background:var(--green)"></i></div>
-        <div class="row">
-          <div><div class="name">灵活取用（货币）</div><div class="sub">流动性充足，后续承担应急金和机动现金功能</div></div>
-          <div><div class="amt">¥155,106</div><div class="tag">22.9%</div></div>
-        </div>
-        <div class="bar"><i style="width:22.9%;background:var(--blue)"></i></div>
-        <div class="row">
-          <div><div class="name">成长/QDII</div><div class="sub">当前太低，无法支撑长期收益目标</div></div>
-          <div><div class="amt">¥10,084</div><div class="tag">1.5%</div></div>
-        </div>
-        <div class="bar"><i style="width:1.5%;background:var(--orange)"></i></div>
-      </div>
+二、稳健理财明细
+请逐只列出：基金名称、金额、持有收益、收益率、是否有持有期/封闭期、是否可赎回。
 
-      <div class="warn"><strong style="color:var(--yellow)">结论：</strong>当前组合适合保值，不适合“长期增值”。但你要求回撤控制在10%以内，所以不能直接大幅加科技仓，必须从“债券稳压 + 宽基核心 + 少量科技 + 黄金 + 机动现金”开始。</div>
+三、灵活取用明细
+请逐项列出：余额宝、货币基金、短债/同业存单、其他可快速取用资金的金额和昨日收益。
 
-      <details>
-        <summary>查看当前持仓诊断详情</summary>
-        <div class="detail-body">
-          <p>当前组合最大优势是波动低，最大问题是收益来源单一。债券和货币能降低回撤，但当权益仓只有1.5%时，即使科技或宽基上涨，对总资产贡献也很小。</p>
-          <p>因此，优化不是“卖光债券去追科技”，而是从过多的稳健资产中转出一部分，建立20%左右的权益仓，同时保留足够现金以应对回撤。</p>
-        </div>
-      </details>
-    </section>
+四、进阶理财明细
+请逐只列出：基金名称、金额、持有收益、收益率，并按类型归类：纳斯达克100、全球科技/成长、标普500、A股宽基、半导体/AI/科创、黄金、新兴市场、其他。
 
-    <section class="page" id="page-target">
-      <div class="hero">
-        <div class="kicker">理想方案</div>
-        <h2>风控版目标持仓</h2>
-        <div class="desc">这不是收益最高的方案，而是更符合你“最大回撤尽量压在10%以内”的方案。权益仓控制在20%，黄金8%，剩下由债券和现金稳住波动。</div>
-      </div>
+五、定投计划
+请列出：进行中定投数量、每月预计扣款、本月已扣款、每只定投基金名称、频率、单次金额、累计金额、是否建议保留/暂停/合并。
 
-      <div class="grid3">
-        <div class="metric"><div class="num" style="color:var(--green)">5%–7%</div><div class="label">基础年化目标</div></div>
-        <div class="metric"><div class="num" style="color:var(--blue)">20%</div><div class="label">权益仓上限</div></div>
-        <div class="metric"><div class="num" style="color:var(--yellow)">86.4%</div><div class="label">压力测试回撤≤10%概率</div></div>
-      </div>
+六、近期交易动态
+请列出最近7天买入、卖出、赎回到账、交易中订单。
 
-      <div class="section">目标配置</div>
-      <div class="card">
-        <div class="row"><div><div class="name">中短债/纯债</div><div class="sub">核心稳压仓，控制组合波动</div></div><div><div class="amt">¥323,650</div><div class="tag">50%</div></div></div>
-        <div class="bar"><i style="width:50%;background:var(--green)"></i></div>
-        <div class="row"><div><div class="name">机动现金</div><div class="sub">回撤时补仓，不等同于生活应急金</div></div><div><div class="amt">¥142,406</div><div class="tag">22%</div></div></div>
-        <div class="bar"><i style="width:22%;background:var(--blue)"></i></div>
-        <div class="row"><div><div class="name">宽基指数</div><div class="sub">A500/沪深300/中证500/标普500，收益主仓</div></div><div><div class="amt">¥90,622</div><div class="tag">14%</div></div></div>
-        <div class="bar"><i style="width:14%;background:var(--purple)"></i></div>
-        <div class="row"><div><div class="name">黄金</div><div class="sub">风险对冲，不追涨，按目标慢慢补齐</div></div><div><div class="amt">¥51,784</div><div class="tag">8%</div></div></div>
-        <div class="bar"><i style="width:8%;background:var(--yellow)"></i></div>
-        <div class="row"><div><div class="name">科技成长</div><div class="sub">纳指/全球科技/AI/半导体，小仓位增强弹性</div></div><div><div class="amt">¥38,838</div><div class="tag">6%</div></div></div>
-        <div class="bar"><i style="width:6%;background:var(--orange)"></i></div>
-        <div class="row"><div><div class="name">支付宝应急金</div><div class="sub">生活安全垫，放余额宝/货币基金，不参与补仓</div></div><div><div class="amt">¥30,000</div><div class="tag">单列</div></div></div>
-      </div>
+七、数据校验
+请检查：总资产是否等于各大类合计；如不一致，请列出差额和可能原因。
 
-      <details>
-        <summary>查看回测和方案取舍</summary>
-        <div class="detail-body">
-          <table>
-            <thead><tr><th>方案</th><th>权益仓</th><th>5年模拟年化</th><th>5年最大回撤</th><th>压力测试回撤≤10%</th></tr></thead>
-            <tbody>
-              <tr><td>收益版</td><td>40%</td><td>11.41%</td><td>-9.36%</td><td>10.2%</td></tr>
-              <tr><td>均衡版</td><td>25%</td><td>8.47%</td><td>-5.98%</td><td>65.0%</td></tr>
-              <tr><td>风控版</td><td>20%</td><td>7.60%</td><td>-4.97%</td><td>86.4%</td></tr>
-            </tbody>
-          </table>
-          <p style="margin-top:10px">解释：收益版看起来更诱人，但压力测试下回撤守住10%的概率太低。风控版更符合你当前“10%回撤以内”的第一诉求。</p>
-        </div>
-      </details>
+八、给资产面板使用的JSON摘要
+请输出：total、daily_return、steady、flexible、growth、other、funds_top、sip_count、monthly_sip_amount、pending_orders。</textarea><button class="copybtn" onclick="copyTemplate()">复制模板</button><p id="copyStatus" class="small" style="margin-top:8px"></p></div></details>
+</section>
 
-      <details>
-        <summary>查看支付宝购买方向</summary>
-        <div class="detail-body">
-          <p><strong style="color:var(--text)">债券：</strong>搜索“中短债、纯债、短债、同业存单指数”。优先低波动、规模较大、费率低、无过长持有期的产品。</p>
-          <p><strong style="color:var(--text)">宽基：</strong>搜索“A500、沪深300、中证500、中证1000、标普500”。宽基是权益主仓，不追单一主题。</p>
-          <p><strong style="color:var(--text)">科技：</strong>搜索“纳斯达克100、全球科技、人工智能、半导体、科创50”。近期波动大，只小仓位建底仓。</p>
-          <p><strong style="color:var(--text)">黄金：</strong>搜索“黄金ETF联接、黄金基金”。近期黄金震荡，慢慢补，不一次性打满。</p>
-        </div>
-      </details>
-    </section>
+<section class="page" id="page-current">
+<div class="hero"><div class="kicker">当前持仓</div><h2>债券和货币太多，增值仓太少</h2><div class="desc">按你提供的明细，大类合计为67.71万；按总资产截图为62.71万，二者差5万。方向判断不受影响：当前明显偏保守，长期收益弹性不足。</div></div>
+<div class="grid3"><div class="metric"><div class="num">¥62.71万</div><div class="label">总资产截图</div></div><div class="metric"><div class="num" style="color:var(--yellow)">¥67.71万</div><div class="label">大类合计</div></div><div class="metric"><div class="num" style="color:var(--red)">¥5万</div><div class="label">待校准差额</div></div></div>
+<div class="section">当前大类结构</div><div class="card"><div class="row"><div><div class="name">稳健理财（债券为主）</div><div class="sub">景顺、西部利得等为主；安全但超配</div></div><div><div class="amt">¥516,418.76</div><div class="tag">约82.3%</div></div></div><div class="bar"><i style="width:82%;background:var(--green)"></i></div><div class="row"><div><div class="name">灵活取用（货币）</div><div class="sub">余额宝+兴全天添益货币A等</div></div><div><div class="amt">¥149,048.69</div><div class="tag">约23.8%</div></div></div><div class="bar"><i style="width:24%;background:var(--blue)"></i></div><div class="row"><div><div class="name">进阶理财（QDII为主）</div><div class="sub">23支QDII，金额小且同质化</div></div><div><div class="amt">¥11,650.78</div><div class="tag">约1.9%</div></div></div><div class="bar"><i style="width:2%;background:var(--orange)"></i></div></div>
+<details><summary>当前持仓诊断</summary><div class="detail-body"><p>优点：流动性充裕、债券底仓扎实、整体波动低。</p><p>问题：权益/黄金/宽基太少，长期收益主要靠债券和货币，很难满足“长期增值”的目标。</p><p>处理：不继续新增债券；等债券可赎回或资金到账后，逐步转向宽基、黄金和少量科技。</p></div></details>
+</section>
 
-    <section class="page" id="page-action">
-      <div class="hero">
-        <div class="kicker">分步执行</div>
-        <h2>路线不变，节奏跟着市场温度微调</h2>
-        <div class="desc">近期科技成长方向波动加大，A股CPO/PCB有获利了结，美股科技也出现明显回调；黄金同样不是单边强势。因此本周不追科技，先执行债券、宽基和黄金的基础仓，科技只建小底仓。</div>
-      </div>
+<section class="page" id="page-target">
+<div class="hero"><div class="kicker">理想方案</div><h2>目标仓位：20%权益 + 8%黄金 + 现金债券稳压</h2><div class="desc">以627,118.23元总资产为准，单列3万元应急金，剩余59.71万做投资配置。</div></div>
+<div class="section">目标金额</div><div class="card"><div class="row"><div><div class="name">中短债/纯债</div><div class="sub">核心稳压，不再继续大额新增</div></div><div><div class="amt">¥298,559</div><div class="tag">50%</div></div></div><div class="row"><div><div class="name">机动现金</div><div class="sub">回撤时补仓，放余额宝/货币/短债</div></div><div><div class="amt">¥131,366</div><div class="tag">22%</div></div></div><div class="row"><div><div class="name">宽基指数</div><div class="sub">A500/沪深300/中证500/标普500</div></div><div><div class="amt">¥83,597</div><div class="tag">14%</div></div></div><div class="row"><div><div class="name">黄金</div><div class="sub">黄金ETF联接/黄金基金</div></div><div><div class="amt">¥47,769</div><div class="tag">8%</div></div></div><div class="row"><div><div class="name">科技成长</div><div class="sub">纳指/全球科技/AI/半导体/科创，小仓位</div></div><div><div class="amt">¥35,827</div><div class="tag">6%</div></div></div><div class="row"><div><div class="name">应急金</div><div class="sub">生活安全垫，不参与投资补仓</div></div><div><div class="amt">¥30,000</div><div class="tag">单列</div></div></div></div>
+<details><summary>回测和方案取舍</summary><div class="detail-body"><table><thead><tr><th>方案</th><th>权益仓</th><th>5年模拟年化</th><th>5年回撤</th><th>压力测试回撤≤10%</th></tr></thead><tbody><tr><td>收益版</td><td>40%</td><td>11.41%</td><td>-9.36%</td><td>10.2%</td></tr><tr><td>均衡版</td><td>25%</td><td>8.47%</td><td>-5.98%</td><td>65.0%</td></tr><tr><td>风控版</td><td>20%</td><td>7.60%</td><td>-4.97%</td><td>86.4%</td></tr></tbody></table><p style="margin-top:10px">主方案采用风控版，因为它最符合“回撤10%以内”的第一目标。</p></div></details>
+</section>
 
-      <div class="danger"><strong style="color:var(--red)">今日节奏：</strong>不要追买CPO/PCB/半导体大额仓位；纳指/全球科技只按计划小额建仓；优先把债券、宽基、黄金的第一阶段仓位搭起来。</div>
-
-      <div class="section">4周执行路径</div>
-      <div class="card">
-        <div class="plan-step">
-          <h3>第1周：先搭骨架，买入约6万</h3>
-          <p>中短债/纯债2.5万；A500/沪深300 1.2万；中证500/1000 0.8万；纳指/全球科技0.5万；黄金1万。</p>
-        </div>
-        <div class="plan-step">
-          <h3>第2周：继续补稳压和宽基，买入约6万</h3>
-          <p>中短债/纯债2.5万；A500/沪深300 1万；中证500/1000 0.8万；标普500/全球宽基0.7万；半导体/AI/科创50 0.4万；黄金0.6万。</p>
-        </div>
-        <div class="plan-step">
-          <h3>第3周：看市场温度补科技和黄金，买入约5万</h3>
-          <p>中短债/纯债2万；宽基指数1.2万；科技成长0.8万；黄金1万。若科技继续放量下跌，科技0.8万顺延到第4周。</p>
-        </div>
-        <div class="plan-step">
-          <h3>第4周：补齐目标仓位，买入约4万</h3>
-          <p>中短债/纯债1.5万；宽基指数1万；科技成长0.6万；黄金0.9万。若市场反弹过快，只补债券和现金，不追涨科技。</p>
-        </div>
-      </div>
-
-      <div class="section">触发规则</div>
-      <div class="card">
-        <div class="row"><div><div class="name">组合回撤到5%</div><div class="sub">动用机动现金20%，优先补宽基，不急着补主题科技</div></div><div><span class="pill">补仓1</span></div></div>
-        <div class="row"><div><div class="name">组合回撤到8%</div><div class="sub">再动用机动现金20%，若科技缩量企稳，可补少量科技</div></div><div><span class="pill">补仓2</span></div></div>
-        <div class="row"><div><div class="name">接近10%回撤</div><div class="sub">停止主动加仓，等待市场企稳；不加杠杆，不扩大主题仓</div></div><div><span class="pill">刹车</span></div></div>
-        <div class="row"><div><div class="name">权益仓超过25%</div><div class="sub">季度检查时减回20%左右，保护回撤目标</div></div><div><span class="pill">再平衡</span></div></div>
-      </div>
-
-      <details>
-        <summary>查看市场判断依据</summary>
-        <div class="detail-body">
-          <p>A股方面，6月23日前后科技赛道出现高位波动，CPO、PCB、半导体等方向有明显回调；你的数据面板里PCB为“avoid”，CPO为“watch”，中证500和半导体设备仍可小额定投。</p>
-          <p>美股方面，纳斯达克和AI相关科技股也出现回调，说明全球科技风险偏好正在降温。因此科技仓不取消，但不做大额追买。</p>
-          <p>黄金方面，近期也有震荡回调，不适合一次性打满，只按目标仓位慢慢补齐。</p>
-        </div>
-      </details>
-
-      <details>
-        <summary>查看支付宝费用规则</summary>
-        <div class="detail-body">
-          <p>1. 工作日15:00前下单按当天净值，15:00后按下一个交易日净值。</p>
-          <p>2. 不要7天内卖出，很多基金短期赎回费很高。</p>
-          <p>3. 长期核心仓优先比较A类总成本；半年内可能调整的仓位再比较C类。</p>
-          <p>4. QDII基金净值更新慢、额度可能限制，不适合短线操作。</p>
-          <p>5. 每季度检查一次即可，偏离目标5%以上再调整。</p>
-        </div>
-      </details>
-    </section>
-  </main>
-
-  <nav class="nav">
-    <button class="active" onclick="showPage('current', this)"><b>⌂</b><span>当前</span></button>
-    <button onclick="showPage('target', this)"><b>◉</b><span>理想</span></button>
-    <button onclick="showPage('action', this)"><b>↗</b><span>执行</span></button>
-  </nav>
-
-  <script>
-    const APP_VERSION = '4.0.0';
-    function showPage(name, btn) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById('page-' + name).classList.add('active');
-      document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      window.scrollTo({top:0, behavior:'smooth'});
-    }
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js?v=4').catch(() => {});
-    }
-  </script>
-</body>
-</html>
+<section class="page" id="page-action">
+<div class="hero"><div class="kicker">执行路线</div><h2>先校准，再用债券超配资金逐步建立增值仓</h2><div class="desc">近期科技/AI/半导体波动偏大，CPO/PCB不追；宽基小步买，黄金慢慢补，科技只建小底仓。下面金额是“新增买入目标”，资金来源优先为可赎回债券或赎回到账资金。</div></div>
+<div class="danger"><strong style="color:var(--red)">当下规则：</strong>未校准5万元差额前，单日权益买入不超过1万元，单周权益+黄金买入不超过3万元。</div>
+<div class="section">第一阶段：完成约15.6万增值仓建设</div><div class="card"><div class="plan-step"><h3>第0步：今天先做数据校准</h3><p>用“目标页”的模板让元宝从支付宝截图提取最新资产。确认总资产、大类金额、赎回到账、封闭期和交易中订单。</p><div class="buy-list">动作：不买大额；只允许小额试单宽基/黄金，各≤3000元。</div></div><div class="plan-step"><h3>第1周：新增约3.1万</h3><p>买入方式：一次性小额买入，不设日定投。</p><div class="buy-list">宽基指数2.0万：A500/沪深300 1.2万，中证500/1000 0.8万。<br>黄金0.8万。<br>科技成长0.3万：优先纳指/全球科技，不买CPO/PCB主题。</div></div><div class="plan-step"><h3>第2周：新增约3.9万</h3><p>买入方式：宽基和黄金一次性买入；科技用周定投或小额买入。</p><div class="buy-list">宽基指数2.0万。<br>黄金1.2万。<br>科技成长0.7万。</div></div><div class="plan-step"><h3>第3周：新增约4.1万</h3><p>买入方式：如果科技仍放量下跌，科技部分顺延到现金。</p><div class="buy-list">宽基指数2.2万。<br>黄金1.2万。<br>科技成长0.7万。</div></div><div class="plan-step"><h3>第4周：新增约4.46万</h3><p>买入方式：补齐目标，不追涨。若市场大涨，只买黄金和宽基一半，其余留现金。</p><div class="buy-list">宽基指数2.16万。<br>黄金1.58万。<br>科技成长0.72万。</div></div></div>
+<div class="section">定投怎么改</div><div class="card"><div class="row"><div><div class="name">QDII日定投</div><div class="sub">从21支压缩到3–5支，避免纳指重复</div></div><div><span class="pill">合并</span></div></div><div class="row"><div><div class="name">宽基定投</div><div class="sub">A500/沪深300/中证500保留周定投，金额小而稳定</div></div><div><span class="pill">保留</span></div></div><div class="row"><div><div class="name">科技主题</div><div class="sub">只保留1–2支，近期不提高频率</div></div><div><span class="pill">降频</span></div></div></div>
+<details><summary>市场判断与微调规则</summary><div class="detail-body"><p>A股科技、CPO、PCB、半导体近期波动加大，所以不追主题。中证500和宽基可小步执行，因为它们比单一赛道更适合作为权益主仓。</p><p>美股科技也有回调，纳指/全球科技保留但小仓位买入。黄金近期震荡，不一次性买满。</p></div></details>
+<details><summary>支付宝费用规则</summary><div class="detail-body"><p>工作日15:00前下单按当天净值，15:00后按下个交易日净值。不要7天内卖出。长期核心仓优先比较A类总成本；半年内可能调整的仓位再看C类。QDII净值更新慢，不短线操作。</p></div></details>
+</section>
+</main>
+<nav class="nav"><button class="active" onclick="showPage('goal',this)"><b>◎</b><span>目标</span></button><button onclick="showPage('current',this)"><b>⌂</b><span>当前</span></button><button onclick="showPage('target',this)"><b>◉</b><span>理想</span></button><button onclick="showPage('action',this)"><b>↗</b><span>执行</span></button></nav>
+<script>
+const APP_VERSION='4.1.0';
+function showPage(name,btn){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+name).classList.add('active');document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+async function copyTemplate(){const el=document.getElementById('copyTemplate');const status=document.getElementById('copyStatus');try{await navigator.clipboard.writeText(el.value);status.textContent='已复制，可直接粘贴给元宝。';status.style.color='var(--green)';}catch(e){el.select();document.execCommand('copy');status.textContent='已复制，可直接粘贴给元宝。';status.style.color='var(--green)';}}
+if('serviceWorker'in navigator){navigator.serviceWorker.register('sw.js?v=410').catch(()=>{});}
+</script>
+</body></html>
