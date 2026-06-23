@@ -1,24 +1,13 @@
 {
-  "name": "资产配置报告",
-  "short_name": "资产配置",
-  "description": "支付宝资产配置分析与回测报告",
-  "start_url": "/alipay-portfolio-report/",
+  "name": "Jivon 综合资产面板",
+  "short_name": "资产面板",
+  "description": "Jivon 综合资产配置面板 - 整合板块监控、纳指定投、操作建议",
+  "start_url": ".",
   "display": "standalone",
   "background_color": "#0b0f19",
-  "theme_color": "#0f172a",
-  "orientation": "portrait",
+  "theme_color": "#0b0f19",
   "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png"}
   ]
 }
