@@ -48,12 +48,13 @@
       padding-top: var(--safe-top);
     }
 
-    /* Header */
+    /* Header - safe area for notch/dynamic island */
     .app-header {
       position: sticky; top: 0; z-index: 50;
       background: rgba(11,15,25,0.92); backdrop-filter: blur(20px) saturate(1.8);
       -webkit-backdrop-filter: blur(20px) saturate(1.8);
-      border-bottom: 1px solid var(--border); padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+      padding: calc(10px + var(--safe-top)) 16px 10px;
     }
     .app-header-inner { display: flex; align-items: center; justify-content: space-between; }
     .app-header h1 { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; }
@@ -71,6 +72,7 @@
       position: fixed; top: 0; left: -280px; width: 280px; height: 100%;
       background: var(--bg-elevated); z-index: 200; transition: left 0.3s ease;
       border-right: 1px solid var(--border); padding-top: calc(60px + var(--safe-top));
+      padding-bottom: var(--safe-bottom);
       overflow-y: auto;
     }
     .sidebar.open { left: 0; }
@@ -845,9 +847,10 @@
 </nav>
 
 <script>
-// ==================== Cache Buster ====================
-const APP_VERSION = '3.0.1';
+// ==================== Cache Buster & Auto Update ====================
+const APP_VERSION = '3.1.0';
 const CACHE_KEY = 'portfolio_version';
+const UPDATE_CHECK_INTERVAL = 24 * 60 * 60 * 1000; // 每天检查一次
 
 function checkVersion() {
   const saved = localStorage.getItem(CACHE_KEY);
@@ -860,6 +863,36 @@ function checkVersion() {
   }
 }
 checkVersion();
+
+// 自动检测远程更新（检查 GitHub Pages 上的最新版本）
+async function checkRemoteUpdate() {
+  try {
+    const resp = await fetch('index.html?v=' + Date.now(), { method: 'HEAD', cache: 'no-store' });
+    if (!resp.ok) return;
+    // 通过比较 ETag 或 Last-Modified 判断是否有更新
+    const lastModified = resp.headers.get('last-modified');
+    const savedLM = localStorage.getItem('portfolio_last_modified');
+    if (savedLM && savedLM !== lastModified) {
+      // 有更新，显示提示
+      const banner = document.getElementById('cacheBanner');
+      banner.textContent = '检测到新版本，点击更新 \u21bb';
+      banner.classList.add('show');
+      banner.onclick = () => {
+        localStorage.setItem('portfolio_last_modified', lastModified);
+        localStorage.setItem(CACHE_KEY, APP_VERSION);
+        location.reload(true);
+      };
+    } else {
+      localStorage.setItem('portfolio_last_modified', lastModified);
+    }
+  } catch (e) {
+    // 离线或网络错误，静默忽略
+  }
+}
+
+// 启动时和每天检查一次更新
+checkRemoteUpdate();
+setInterval(checkRemoteUpdate, UPDATE_CHECK_INTERVAL);
 
 // ==================== Navigation ====================
 function goPage(name) {
