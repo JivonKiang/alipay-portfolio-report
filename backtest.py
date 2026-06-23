@@ -11,9 +11,24 @@
 import pandas as pd
 import numpy as np
 import json
+import os
 from datetime import datetime, timedelta
 import warnings
 warnings.filterwarnings('ignore')
+
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+REPORT_FILE = os.path.join(SCRIPT_DIR, "report_data.json")
+RISK_FREE_RATE = 0.02
+TRADING_DAYS = 252
+
+# 与 data.json 当前面板保持一致
+CURRENT_PORTFOLIO = {
+    'bond': 512111.00,
+    'money': 155106.00,
+    'qdii': 10084.00,
+}
+CURRENT_TOTAL = sum(CURRENT_PORTFOLIO.values())
+CURRENT_ALLOC = {k: v / CURRENT_TOTAL for k, v in CURRENT_PORTFOLIO.items()}
 
 # ============ 资产参数（基于真实市场统计）============
 ASSET_PARAMS = {
@@ -26,14 +41,65 @@ ASSET_PARAMS = {
     'qdii_em':     {'ret': 0.070, 'vol': 0.180, 'desc': '新兴市场'},
 }
 
+# 类别内部的资产权重，避免用简单平均稀释真实配置含义
+CLASS_WEIGHTS = {
+    'bond': {'bond_china': 0.85, 'bond_usd': 0.15},
+    'money': {'money': 1.00},
+    'qdii': {'qdii_nasdaq': 0.45, 'qdii_tech': 0.43, 'qdii_sp500': 0.10, 'qdii_em': 0.02},
+}
+
+# 资产大类之间的相关系数假设，用于蒙特卡洛组合波动率
+CLASS_CORR = pd.DataFrame(
+    [
+        [1.00, 0.25, 0.15],
+        [0.25, 1.00, 0.05],
+        [0.15, 0.05, 1.00],
+    ],
+    index=['bond', 'money', 'qdii'],
+    columns=['bond', 'money', 'qdii'],
+)
+
 # ============ 配置方案 ============
 SCENARIOS = {
-    'current':      {'name': '当前配置',    'desc': '债券72.4% + 货币26.2% + QDII 1.4%',     'alloc': {'bond': 0.724, 'money': 0.262, 'qdii': 0.014}},
+    'current':      {'name': '当前配置',    'desc': '债券75.6% + 货币22.9% + QDII 1.5%',     'alloc': CURRENT_ALLOC},
     'conservative': {'name': '保守优化',    'desc': '债券65% + 货币25% + QDII 10%',         'alloc': {'bond': 0.65,  'money': 0.25,  'qdii': 0.10}},
     'balanced':     {'name': '平衡配置',    'desc': '债券50% + 货币20% + QDII 30%',         'alloc': {'bond': 0.50,  'money': 0.20,  'qdii': 0.30}},
     'growth':       {'name': '成长配置',    'desc': '债券35% + 货币15% + QDII 50%',         'alloc': {'bond': 0.35,  'money': 0.15,  'qdii': 0.50}},
     'aggressive':   {'name': '进取配置',    'desc': '债券20% + 货币10% + QDII 70%',         'alloc': {'bond': 0.20,  'money': 0.10,  'qdii': 0.70}},
 }
+
+
+def normalize_weights(weights):
+    """归一化权重，防止输入权重合计不是1导致收益被放大或缩小"""
+    s = sum(weights.values())
+    if s <= 0:
+        raise ValueError("权重合计必须大于0")
+    return {k: v / s for k, v in weights.items()}
+
+
+def class_expected_return_and_vol(asset_weights):
+    """按类别内部权重计算年化期望收益和年化波动率"""
+    weights = normalize_weights(asset_weights)
+    ret = sum(weights[k] * ASSET_PARAMS[k]['ret'] for k in weights)
+    # 同一大类内部通常相关性较高，用加权波动率避免低估风险
+    vol = sum(weights[k] * ASSET_PARAMS[k]['vol'] for k in weights)
+    return ret, vol
+
+
+def build_class_covariance(classes):
+    """基于类别波动率和相关系数构造协方差矩阵"""
+    vols = pd.Series({c: class_expected_return_and_vol(CLASS_WEIGHTS[c])[1] for c in classes})
+    corr = CLASS_CORR.reindex(index=classes, columns=classes).fillna(0)
+    np.fill_diagonal(corr.values, 1.0)
+    return corr.mul(vols, axis=0).mul(vols, axis=1)
+
+
+def annualized_return(port):
+    """用几何收益率计算年化收益，避免算术平均高估"""
+    if len(port) == 0:
+        return 0
+    total = float((1 + port).prod())
+    return total ** (TRADING_DAYS / len(port)) - 1
 
 # ============ 模拟数据生成 ============
 def generate_prices(start, end, seed=42):
@@ -74,21 +140,25 @@ class Engine:
         if len(df) == 0: return None
 
         cls = {}
-        for c in ['bond', 'money', 'qdii']:
-            cols = [k for k in df.columns if k.startswith(c) or (c=='bond' and k in ['bond_china','bond_usd'])]
-            if cols: cls[c] = df[cols].mean(axis=1)
+        for c, weights in CLASS_WEIGHTS.items():
+            usable = {k: w for k, w in weights.items() if k in df.columns}
+            if usable:
+                w_inner = pd.Series(normalize_weights(usable))
+                cls[c] = df[w_inner.index].mul(w_inner, axis=1).sum(axis=1)
 
         cdf = pd.DataFrame(cls)
         w = pd.Series(self.alloc).reindex(cdf.columns).fillna(0)
         w = w / w.sum()
         port = (cdf * w).sum(axis=1)
         cum = (1 + port).cumprod()
+        ann_ret = annualized_return(port)
+        ann_vol = port.std() * np.sqrt(TRADING_DAYS)
 
         return {
             'total_return': cum.iloc[-1] - 1,
-            'ann_return': (1 + port.mean())**252 - 1,
-            'ann_vol': port.std() * np.sqrt(252),
-            'sharpe': ((1 + port.mean())**252 - 1 - 0.02) / (port.std() * np.sqrt(252)) if port.std() > 0 else 0,
+            'ann_return': ann_ret,
+            'ann_vol': ann_vol,
+            'sharpe': (ann_ret - RISK_FREE_RATE) / ann_vol if ann_vol > 0 else 0,
             'max_dd': ((cum - cum.expanding().max()) / cum.expanding().max()).min(),
             'win_rate': (port > 0).mean(),
             'days': len(port),
@@ -124,27 +194,19 @@ def sip_backtest(prices, key, monthly=50000, years=3):
     }
 
 # ============ 蒙特卡洛 ============
-def monte_carlo(alloc, initial=707301, years=10, n=1000):
-    days = years * 252
-    port_ret = 0
-    port_var = 0
+def monte_carlo(alloc, initial=CURRENT_TOTAL, years=10, n=1000):
+    days = years * TRADING_DAYS
+    alloc = normalize_weights(alloc)
+    classes = [c for c in alloc if c in CLASS_WEIGHTS]
+    w = pd.Series({c: alloc[c] for c in classes})
 
-    for c, w in alloc.items():
-        if c == 'bond':
-            ar = ASSET_PARAMS['bond_china']['ret']*0.6 + ASSET_PARAMS['bond_usd']['ret']*0.1 + ASSET_PARAMS['money']['ret']*0.3
-            av = ASSET_PARAMS['bond_china']['vol']*0.6 + ASSET_PARAMS['bond_usd']['vol']*0.1 + ASSET_PARAMS['money']['vol']*0.3
-        elif c == 'money':
-            ar, av = ASSET_PARAMS['money']['ret'], ASSET_PARAMS['money']['vol']
-        elif c == 'qdii':
-            ar = ASSET_PARAMS['qdii_nasdaq']['ret']*0.45 + ASSET_PARAMS['qdii_tech']['ret']*0.43 + ASSET_PARAMS['qdii_sp500']['ret']*0.10 + ASSET_PARAMS['qdii_em']['ret']*0.02
-            av = ASSET_PARAMS['qdii_nasdaq']['vol']*0.45 + ASSET_PARAMS['qdii_tech']['vol']*0.43 + ASSET_PARAMS['qdii_sp500']['vol']*0.10 + ASSET_PARAMS['qdii_em']['vol']*0.02
-        else:
-            continue
-        port_ret += w * ar
-        port_var += (w * av)**2
+    class_rets = pd.Series({c: class_expected_return_and_vol(CLASS_WEIGHTS[c])[0] for c in classes})
+    class_cov = build_class_covariance(classes)
 
-    pv = np.sqrt(port_var)
-    dr, dv = port_ret/252, pv/np.sqrt(252)
+    port_ret = float(w.dot(class_rets))
+    port_var = float(w.T.dot(class_cov).dot(w))
+    pv = np.sqrt(max(port_var, 0))
+    dr, dv = port_ret / TRADING_DAYS, pv / np.sqrt(TRADING_DAYS)
 
     finals = []
     for _ in range(n):
@@ -233,8 +295,12 @@ def main():
     report = {
         'generated_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         'portfolio': {
-            'total': 707301.01,
-            'alloc': {'bond': {'v': 512111.35, 'r': 72.4}, 'money': {'v': 185106.10, 'r': 26.2}, 'qdii': {'v': 10083.56, 'r': 1.4}}
+            'total': round(CURRENT_TOTAL, 2),
+            'alloc': {
+                'bond': {'v': CURRENT_PORTFOLIO['bond'], 'r': round(CURRENT_ALLOC['bond'] * 100, 1)},
+                'money': {'v': CURRENT_PORTFOLIO['money'], 'r': round(CURRENT_ALLOC['money'] * 100, 1)},
+                'qdii': {'v': CURRENT_PORTFOLIO['qdii'], 'r': round(CURRENT_ALLOC['qdii'] * 100, 1)}
+            }
         },
         'scenarios': {},
         'sip': sip,
@@ -259,10 +325,10 @@ def main():
     for k, r in mc.items():
         report['monte_carlo'][k] = {'name': SCENARIOS[k]['name'], **r}
 
-    with open('/data/user/work/repo/data.json', 'w', encoding='utf-8') as f:
+    with open(REPORT_FILE, 'w', encoding='utf-8') as f:
         json.dump(report, f, ensure_ascii=False, indent=2)
 
-    print("\n[6] 报告已保存到 data.json")
+    print(f"\n[6] 报告已保存到 {REPORT_FILE}")
     return report
 
 if __name__ == '__main__':

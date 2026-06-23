@@ -111,26 +111,40 @@ def determine_signal(change_pct, dist_ma10, vol_ratio):
     if dist_ma10 is None:
         return "avoid", "数据缺失，手动判断"
 
-    # 放量暴跌 → avoid
-    if change_pct < -3 and vol_ratio and vol_ratio > 0.8:
+    volume = vol_ratio if vol_ratio is not None else 1.0
+
+    # 放量或正常量能的大跌，先规避，避免把下跌中继误判为买点
+    if change_pct <= -3 and volume >= 0.8:
         return "avoid", f"放量暴跌{change_pct}%，等缩量止跌"
-    
-    # 缩量暴跌 → watch (恐慌盘减少)
-    if change_pct < -3 and vol_ratio and vol_ratio < 0.7:
+
+    # 缩量大跌可以观察，但不直接给定投信号
+    if change_pct <= -3 and volume < 0.8:
         return "watch", f"缩量回调{change_pct}%，接近买点，盯缩量止跌"
-    
+
+    # 中等跌幅但明显放量，通常说明分歧扩大，先等跌幅收窄
+    if -3 < change_pct <= -2 and volume >= 1.2:
+        return "avoid", f"放量下跌{change_pct}%，先等跌幅收窄"
+
+    # 中等跌幅即使未放量，也不应因为站上10日线就直接给定投信号
+    if -3 < change_pct <= -2:
+        return "watch", f"回调{change_pct}%，观察是否缩量企稳"
+
     # 大幅远离10日线 → avoid
     if dist_ma10 < -5:
         return "avoid", f"远离10日线{dist_ma10:.1f}%，趋势破坏"
-    
-    # 接近10日线且缩量 → watch
+
+    # 轻微跌破10日线但跌幅很小，长期宽基定投可继续
+    if -1.5 <= dist_ma10 < 0 and change_pct > -1:
+        return "dca", f"距10日线{dist_ma10:.1f}%，小幅回调，定投正常执行"
+
+    # 接近10日线但仍在下方，先观察支撑是否有效
     if -3 < dist_ma10 < 0 and change_pct > -2:
         return "watch", f"距10日线{dist_ma10:.1f}%，接近支撑"
-    
+
     # 站上10日线 → dca
     if dist_ma10 > 0:
         return "dca", f"站上10日线+{dist_ma10:.1f}%，定投正常执行"
-    
+
     return "watch", f"距10日线{dist_ma10:.1f}%，观望"
 
 
