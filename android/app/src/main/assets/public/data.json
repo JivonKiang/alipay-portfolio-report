@@ -1,0 +1,171 @@
+{
+  "updated": "2026-06-23T12:16:52+08:00",
+  "portfolio": {
+    "total": 677301,
+    "steady": 512111,
+    "flexible": 155106,
+    "growth": 10084
+  },
+  "sectors": {
+    "semiconductor": {
+      "name": "半导体设备",
+      "index": "科创50",
+      "index_code": "000688",
+      "current": 1245.6,
+      "ma10": 1268.3,
+      "ma20": 1182.5,
+      "change_pct": -2.27,
+      "distance_ma10": -1.79,
+      "signal": "watch",
+      "signal_text": "观望（距10日线-1.8%，等缩量）",
+      "funds": [
+        {
+          "code": "017811",
+          "name": "东方人工智能主题混合C",
+          "note": "重仓半导体设备，今年+104%"
+        },
+        {
+          "code": "020357",
+          "name": "华夏半导体材料设备ETF联接C",
+          "note": "被动跟踪，费率更低"
+        }
+      ],
+      "action": {
+        "type": "auto_dca",
+        "detail": "设每周四定投 200-500元",
+        "path": "支付宝 → 理财 → 基金 → 搜代码 → 定投"
+      }
+    },
+    "pcb": {
+      "name": "PCB/HDI板",
+      "index": "PCB概念",
+      "index_code": "BK0877",
+      "current": 5798,
+      "ma10": 6380,
+      "ma20": 5480,
+      "change_pct": -3.75,
+      "distance_ma10": -9.12,
+      "volume_ratio": 0.56,
+      "signal": "avoid",
+      "signal_text": "观望（放量暴跌-9.1%远离10日线，等缩量止跌）",
+      "funds": [
+        {
+          "code": "017811",
+          "name": "东方人工智能主题混合C",
+          "note": "替代方案-覆盖PCB上游设备"
+        },
+        {
+          "code": "006373",
+          "name": "国富全球科技互联混合",
+          "note": "QDII-含美股PCB龙头"
+        }
+      ],
+      "action": {
+        "type": "wait",
+        "detail": "等成交额缩至今日60%且跌幅收窄至1%以内再考虑",
+        "trigger": "PCB成交额 < 1400亿 且 日跌幅 < 1%"
+      }
+    },
+    "cpo": {
+      "name": "CPO/光模块",
+      "index": "CPO概念",
+      "index_code": "CPO",
+      "current": 1327.1,
+      "ma10": 1244.7,
+      "ma20": -1,
+      "change_pct": -3.99,
+      "distance_ma10": 6.63,
+      "volume_ratio": 0.6,
+      "signal": "watch",
+      "signal_text": "缩量回调-3.99%，接近买点，盯缩量止跌 (中际旭创代理)",
+      "funds": [
+        {
+          "code": "017811",
+          "name": "东方人工智能主题混合C",
+          "note": "替代-科创50成分含CPO龙头"
+        },
+        {
+          "code": "006373",
+          "name": "国富全球科技互联混合",
+          "note": "QDII-含英伟达链"
+        }
+      ],
+      "action": {
+        "type": "wait",
+        "detail": "接近支撑位，盯缩量止跌信号",
+        "trigger": "天孚通信/中际旭创 日跌幅 < 2% 且成交额缩至前日50%",
+        "path": null
+      }
+    },
+    "a500": {
+      "name": "中证500",
+      "index": "中证500",
+      "index_code": "000905",
+      "current": 5980,
+      "ma10": 6020,
+      "ma20": 5890,
+      "change_pct": -0.8,
+      "distance_ma10": -0.66,
+      "signal": "dca",
+      "signal_text": "定投正常执行（距10日线仅-0.7%）",
+      "funds": [
+        {
+          "code": "001557",
+          "name": "万家中证500增强C",
+          "note": "已设智能定投（周四）"
+        }
+      ],
+      "action": {
+        "type": "auto_dca",
+        "detail": "检查智能定投是否激活（历史累计为0）",
+        "path": "支付宝 → 理财 → 基金 → 我的定投 → 检查状态"
+      }
+    }
+  },
+  "nasdaq": {
+    "ndx_price": 30347,
+    "ma20": 29907,
+    "ma20_direction": "up",
+    "drawdown_pct": 1.02,
+    "weekly_change_pct": 2.4,
+    "signal": "buy",
+    "signal_text": "定投照常扣款（纳指MA20向上，回调即买入机会）",
+    "funds": [
+      {
+        "code": "006373",
+        "name": "国富全球科技互联混合",
+        "note": "纳指+全球科技"
+      },
+      {
+        "code": "018230",
+        "name": "易方达全球优质企业混合",
+        "note": "全球配置，含美股"
+      }
+    ]
+  },
+  "today_actions": [
+    {
+      "priority": 1,
+      "title": "检查3支A股智能定投是否激活",
+      "detail": "沪深300/中证500/科创创业50 累计扣款均为0，需确认计划状态",
+      "path": "支付宝 → 理财 → 基金 → 我的定投"
+    },
+    {
+      "priority": 2,
+      "title": "设东方人工智能C(017811)周四定投",
+      "detail": "半导体设备方向，200-500元/周，扣款日周四",
+      "path": "支付宝 → 理财 → 基金 → 搜017811 → 定投"
+    },
+    {
+      "priority": 3,
+      "title": "暂停5支10元级纳指定投",
+      "detail": "合并到主力基金，减少碎片化",
+      "path": "支付宝 → 理财 → 基金 → 我的定投 → 逐个暂停"
+    },
+    {
+      "priority": 4,
+      "title": "今天不手动买入任何A股科技基金",
+      "detail": "PCB/CPO放量暴跌，半导体设备相对抗跌但未到买点，等缩量止跌信号"
+    }
+  ]
+}
