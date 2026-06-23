@@ -878,10 +878,10 @@
   }
 })();
 
-// ==================== Cache Buster & Auto Update ====================
-const APP_VERSION = '3.2.0';
+// ==================== Cache Buster & OTA Auto Update ====================
+const APP_VERSION = '3.2.1';
 const CACHE_KEY = 'portfolio_version';
-const UPDATE_CHECK_INTERVAL = 24 * 60 * 60 * 1000; // 每天检查一次
+const UPDATE_CHECK_INTERVAL = 60 * 60 * 1000; // 每小时检查一次
 
 function checkVersion() {
   const saved = localStorage.getItem(CACHE_KEY);
@@ -895,35 +895,57 @@ function checkVersion() {
 }
 checkVersion();
 
-// 自动检测远程更新（检查 GitHub Pages 上的最新版本）
-async function checkRemoteUpdate() {
+// OTA Auto Update using Capacitor Updater plugin
+async function checkOTAUpdate() {
   try {
-    const resp = await fetch('index.html?v=' + Date.now(), { method: 'HEAD', cache: 'no-store' });
+    // Only run in Capacitor native app
+    if (typeof Capacitor === 'undefined') return;
+
+    const { CapacitorUpdater } = await import('@capgo/capacitor-updater');
+
+    // Check for update from GitHub Pages
+    const resp = await fetch('https://jivonkiang.github.io/alipay-portfolio-report/updates.json?v=' + Date.now(), {
+      cache: 'no-store'
+    });
     if (!resp.ok) return;
-    // 通过比较 ETag 或 Last-Modified 判断是否有更新
-    const lastModified = resp.headers.get('last-modified');
-    const savedLM = localStorage.getItem('portfolio_last_modified');
-    if (savedLM && savedLM !== lastModified) {
-      // 有更新，显示提示
+
+    const updateInfo = await resp.json();
+    console.log('[OTA] Remote version:', updateInfo.version, 'Current:', APP_VERSION);
+
+    // Compare versions (simple string comparison for semver)
+    if (updateInfo.version && updateInfo.version !== APP_VERSION) {
+      console.log('[OTA] New version available:', updateInfo.version);
+
+      // Show update banner
       const banner = document.getElementById('cacheBanner');
-      banner.textContent = '检测到新版本，点击更新 \u21bb';
+      banner.textContent = '发现新版本 ' + updateInfo.version + '，点击更新 ↻';
       banner.classList.add('show');
-      banner.onclick = () => {
-        localStorage.setItem('portfolio_last_modified', lastModified);
-        localStorage.setItem(CACHE_KEY, APP_VERSION);
-        location.reload(true);
+      banner.onclick = async () => {
+        banner.textContent = '正在下载更新...';
+        try {
+          // Download and install the new bundle
+          await CapacitorUpdater.download({
+            url: updateInfo.url,
+            version: updateInfo.version
+          });
+          banner.textContent = '更新已下载，重启应用生效';
+          setTimeout(() => {
+            CapacitorUpdater.set({ version: updateInfo.version });
+          }, 1500);
+        } catch (err) {
+          console.error('[OTA] Download failed:', err);
+          banner.textContent = '更新失败，请重试';
+        }
       };
-    } else {
-      localStorage.setItem('portfolio_last_modified', lastModified);
     }
   } catch (e) {
-    // 离线或网络错误，静默忽略
+    console.log('[OTA] Check failed:', e.message);
   }
 }
 
-// 启动时和每天检查一次更新
-checkRemoteUpdate();
-setInterval(checkRemoteUpdate, UPDATE_CHECK_INTERVAL);
+// 启动时和每小时检查一次更新
+checkOTAUpdate();
+setInterval(checkOTAUpdate, UPDATE_CHECK_INTERVAL);
 
 // ==================== Navigation ====================
 function goPage(name) {

@@ -15,16 +15,12 @@
 			"androidScaleType": "CENTER_CROP"
 		},
 		"CapacitorUpdater": {
-			"autoUpdate": true,
-			"updateUrl": "https://jivonkiang.github.io/alipay-portfolio-report/updates.json",
-			"statsUrl": "",
-			"channelUrl": "",
+			"autoUpdate": false,
 			"appReadyTimeout": 10000,
 			"responseTimeout": 20,
 			"autoDeleteFailed": true,
 			"autoDeletePrevious": true,
-			"resetWhenUpdate": true,
-			"periodCheckDelay": 3600
+			"resetWhenUpdate": true
 		}
 	},
 	"android": {}
