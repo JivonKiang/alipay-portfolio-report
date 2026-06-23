@@ -8,19 +8,13 @@
     "cleartext": true
   },
   "plugins": {
-    "SplashScreen": {
-      "launchShowDuration": 2000,
-      "launchAutoHide": true,
-      "backgroundColor": "#0b0f19",
-      "androidScaleType": "CENTER_CROP"
+    "SystemBars": {
+      "insetsHandling": "css",
+      "style": "DARK"
     },
     "CapacitorUpdater": {
       "autoUpdate": false,
-      "appReadyTimeout": 10000,
-      "responseTimeout": 20,
-      "autoDeleteFailed": true,
-      "autoDeletePrevious": true,
-      "resetWhenUpdate": true
+      "appReadyTimeout": 10000
     }
   },
   "android": {
