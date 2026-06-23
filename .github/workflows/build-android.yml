@@ -17,11 +17,14 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Setup JDK
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
@@ -31,25 +34,11 @@ jobs:
           npm install
           npx cap sync android
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x android/gradlew
-
       - name: Build APK
         run: |
           cd android
-          export ANDROID_HOME=$ANDROID_HOME
-          export ANDROID_SDK_ROOT=$ANDROID_HOME
-          echo "=== ANDROID_HOME ==="
-          echo $ANDROID_HOME
-          echo "=== SDK directories ==="
-          ls -la $ANDROID_HOME/ || echo "ANDROID_HOME not found"
-          echo "=== Platforms ==="
-          ls $ANDROID_HOME/platforms/ 2>/dev/null || echo "no platforms dir"
-          echo "=== Build tools ==="
-          ls $ANDROID_HOME/build-tools/ 2>/dev/null || echo "no build-tools dir"
-          echo "=== Starting Gradle build ==="
-          ./gradlew assembleDebug --no-daemon --stacktrace 2>&1
-          echo "=== Build exit code: $? ==="
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
