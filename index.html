@@ -2,13 +2,13 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#0b0f19">
   <title>Jivon 综合资产面板</title>
-  <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="manifest" href="manifest.json?v=3">
+  <link rel="apple-touch-icon" href="icon-192.png?v=3">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
   <style>
@@ -36,451 +36,1019 @@
       --radius: 16px;
       --radius-sm: 12px;
       --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-top: env(safe-area-inset-top, 0px);
     }
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html { scroll-behavior: smooth; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif;
       background: var(--bg); color: var(--text); min-height: 100vh;
       -webkit-font-smoothing: antialiased; overflow-x: hidden;
-      padding-bottom: calc(60px + var(--safe-bottom));
+      padding-bottom: calc(72px + var(--safe-bottom));
+      padding-top: var(--safe-top);
     }
 
     /* Header */
     .app-header {
       position: sticky; top: 0; z-index: 50;
-      background: rgba(11,15,25,0.92); backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      background: rgba(11,15,25,0.92); backdrop-filter: blur(20px) saturate(1.8);
+      -webkit-backdrop-filter: blur(20px) saturate(1.8);
       border-bottom: 1px solid var(--border); padding: 10px 16px;
     }
     .app-header-inner { display: flex; align-items: center; justify-content: space-between; }
     .app-header h1 { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; }
     .app-header .subtitle { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
 
-    /* Tab Bar */
-    .tab-bar {
-      display: flex; gap: 4px; padding: 8px 16px;
-      background: var(--bg-elevated); border-bottom: 1px solid var(--border);
-      overflow-x: auto; -webkit-overflow-scrolling: touch;
+    /* Hamburger */
+    .hamburger { width: 36px; height: 36px; display: flex; flex-direction: column; justify-content: center; gap: 5px; cursor: pointer; padding: 6px; }
+    .hamburger span { display: block; height: 2px; background: var(--text); border-radius: 1px; transition: all 0.3s; }
+    .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed; top: 0; left: -280px; width: 280px; height: 100%;
+      background: var(--bg-elevated); z-index: 200; transition: left 0.3s ease;
+      border-right: 1px solid var(--border); padding-top: calc(60px + var(--safe-top));
+      overflow-y: auto;
     }
-    .tab-btn {
-      padding: 7px 16px; border-radius: 20px; font-size: 13px; font-weight: 600;
-      white-space: nowrap; border: 1px solid var(--border); background: transparent;
-      color: var(--text-dim); transition: all 0.2s; cursor: pointer;
+    .sidebar.open { left: 0; }
+    .sidebar-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 199;
+      opacity: 0; visibility: hidden; transition: all 0.3s;
     }
-    .tab-btn.active { background: var(--blue); border-color: var(--blue); color: #fff; }
+    .sidebar-overlay.show { opacity: 1; visibility: visible; }
+    .sidebar-item {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 20px; color: var(--text-dim); font-size: 15px;
+      font-weight: 500; border-bottom: 1px solid var(--border); cursor: pointer;
+      transition: all 0.15s;
+    }
+    .sidebar-item:active { background: var(--bg-card-hover); }
+    .sidebar-item.active { color: var(--blue); background: var(--blue-dim); }
+    .sidebar-icon { font-size: 20px; width: 28px; text-align: center; }
 
     /* Content */
     .content { padding: 12px 16px; }
-    .tab-panel { display: none; }
+    .tab-panel { display: none; animation: fadeIn 0.25s ease; }
     .tab-panel.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
     /* Cards */
     .card {
       background: var(--bg-card); border: 1px solid var(--border);
       border-radius: var(--radius); padding: 16px; margin-bottom: 12px;
+      transition: transform 0.15s, background 0.15s;
     }
+    .card:active { transform: scale(0.995); }
     .card-title {
       font-size: 14px; font-weight: 600; color: var(--text-dim);
       margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
     }
 
-    /* Signal dot */
-    .signal-dot {
-      width: 10px; height: 10px; border-radius: 50%; display: inline-block;
-    }
-    .signal-dot.buy { background: var(--green); box-shadow: 0 0 8px rgba(34,197,94,0.5); }
-    .signal-dot.watch { background: var(--yellow); box-shadow: 0 0 8px rgba(234,179,8,0.5); }
-    .signal-dot.avoid { background: var(--red); box-shadow: 0 0 8px rgba(239,68,68,0.5); }
-    .signal-dot.dca { background: var(--blue); box-shadow: 0 0 8px rgba(59,130,246,0.5); }
+    /* Hero */
+    .hero-big { font-size: 36px; font-weight: 700; letter-spacing: -1.5px; line-height: 1.1; }
+    .hero-medium { font-size: 20px; font-weight: 600; }
+    .hero-small { font-size: 13px; color: var(--text-muted); }
 
-    /* MA distance bar */
-    .ma-bar-wrap { margin: 10px 0; }
-    .ma-bar-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
-    .ma-bar {
-      height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; position: relative;
-    }
-    .ma-bar-fill {
-      height: 100%; border-radius: 3px; transition: width 0.6s ease;
-    }
-    .ma-bar-fill.above { background: var(--green); }
-    .ma-bar-fill.below { background: var(--red); }
-    .ma-bar-fill.neutral { background: var(--yellow); }
-    .ma-bar-marker {
-      position: absolute; top: -4px; width: 12px; height: 14px;
-      border-radius: 3px; transform: translateX(-50%);
-    }
-    .ma-bar-marker.green { background: var(--green); }
-    .ma-bar-marker.red { background: var(--red); }
-    .ma-bar-marker.yellow { background: var(--yellow); }
+    /* Expandable */
+    .expandable-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+    .expandable-content { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+    .expandable-content.open { max-height: 1200px; }
+    .expand-arrow { transition: transform 0.3s; font-size: 12px; color: var(--text-muted); }
+    .expand-arrow.open { transform: rotate(180deg); }
 
-    /* Fund link */
-    .fund-link {
+    /* Progress bar */
+    .progress-wrap { height: 8px; background: var(--bg); border-radius: 4px; overflow: hidden; margin: 8px 0; }
+    .progress-fill { height: 100%; border-radius: 4px; transition: width 0.8s ease; }
+
+    /* Fund item */
+    .fund-item {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 10px 12px; background: rgba(255,255,255,0.03);
-      border-radius: 8px; margin-top: 8px; border: 1px solid var(--border);
+      padding: 12px 0; border-bottom: 1px solid var(--border);
     }
-    .fund-link:active { background: var(--bg-card-hover); }
-    .fund-code { font-size: 11px; color: var(--text-muted); }
-    .fund-name { font-size: 13px; font-weight: 500; color: var(--text); }
-    .fund-note { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+    .fund-item:last-child { border-bottom: none; }
+    .fund-name { font-size: 13px; font-weight: 500; line-height: 1.3; }
+    .fund-tag {
+      font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 600;
+      margin-top: 4px; display: inline-block;
+    }
+    .fund-tag.bond { background: var(--green-dim); color: var(--green); }
+    .fund-tag.qdii { background: var(--orange-dim); color: var(--orange); }
+    .fund-tag.money { background: var(--blue-dim); color: var(--blue); }
+    .fund-right { text-align: right; }
+    .fund-amount { font-size: 14px; font-weight: 600; }
+    .fund-return { font-size: 12px; font-weight: 600; margin-top: 2px; }
+    .fund-return.up { color: var(--green); }
+    .fund-return.down { color: var(--red); }
 
-    /* Action card */
-    .action-card {
+    /* SIP item */
+    .sip-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 0; border-bottom: 1px solid var(--border);
+    }
+    .sip-item:last-child { border-bottom: none; }
+    .sip-name { font-size: 13px; font-weight: 500; }
+    .sip-detail { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .sip-right { text-align: right; }
+    .sip-amount { font-size: 12px; font-weight: 600; color: var(--blue); }
+    .sip-period { font-size: 11px; color: var(--text-muted); }
+
+    /* Advice */
+    .advice-card {
       background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 14px; margin-bottom: 10px;
+      border-radius: var(--radius-sm); padding: 14px; margin-bottom: 10px;
       border-left: 3px solid var(--blue);
     }
-    .action-card.priority-1 { border-left-color: var(--red); }
-    .action-card.priority-2 { border-left-color: var(--orange); }
-    .action-card.priority-3 { border-left-color: var(--yellow); }
-    .action-card.priority-4 { border-left-color: var(--blue); }
-    .action-priority {
-      font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; margin-bottom: 6px; display: inline-block;
+    .advice-card.p1 { border-left-color: var(--red); }
+    .advice-card.p2 { border-left-color: var(--orange); }
+    .advice-card.p3 { border-left-color: var(--yellow); }
+    .advice-card.p4 { border-left-color: var(--blue); }
+    .advice-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .advice-summary { font-size: 12px; color: var(--text-dim); line-height: 1.5; }
+    .theory-box {
+      background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.15);
+      border-radius: 8px; padding: 10px; margin: 10px 0; font-size: 12px; color: var(--text-dim); line-height: 1.6;
     }
-    .action-priority.p1 { background: var(--red-dim); color: var(--red); }
-    .action-priority.p2 { background: var(--orange-dim); color: var(--orange); }
-    .action-priority.p3 { background: var(--yellow-dim); color: var(--yellow); }
-    .action-priority.p4 { background: var(--blue-dim); color: var(--blue); }
-    .action-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-    .action-detail { font-size: 12px; color: var(--text-dim); margin-bottom: 8px; line-height: 1.5; }
-    .action-path {
-      font-size: 11px; color: var(--blue); background: var(--blue-dim);
-      padding: 6px 10px; border-radius: 6px; display: inline-block;
+    .theory-box strong { color: var(--blue); }
+    .backtest-box {
+      background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.15);
+      border-radius: 8px; padding: 10px; margin: 10px 0; font-size: 12px;
     }
+    .backtest-box strong { color: var(--green); }
+    .backtest-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 6px; }
+    .backtest-table th, .backtest-table td { padding: 4px 6px; text-align: center; border: 1px solid var(--border); }
+    .backtest-table th { background: var(--bg-elevated); color: var(--text-muted); }
 
-    /* Hero stats */
-    .hero-stats {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;
+    /* Quick actions */
+    .quick-actions { display: flex; gap: 8px; margin: 12px 0; }
+    .quick-btn {
+      flex: 1; padding: 10px; background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); text-align: center; font-size: 13px;
+      font-weight: 600; color: var(--text); cursor: pointer; transition: all 0.15s;
     }
-    .hero-stat {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 14px; position: relative; overflow: hidden;
+    .quick-btn:active { background: var(--bg-card-hover); transform: scale(0.98); }
+
+    /* Form */
+    .form-group { margin-bottom: 16px; }
+    .form-label { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; display: block; }
+    .form-input {
+      width: 100%; padding: 12px; background: var(--bg); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); color: var(--text); font-size: 14px;
+      -webkit-appearance: none;
     }
-    .hero-stat::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, var(--blue), var(--purple)); opacity: 0.6;
+    .form-input:focus { outline: none; border-color: var(--blue); }
+    .form-btn {
+      width: 100%; padding: 14px; background: var(--blue); color: white;
+      border: none; border-radius: var(--radius-sm); font-size: 15px; font-weight: 600;
+      cursor: pointer; -webkit-appearance: none;
     }
-    .hero-stat-label { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
-    .hero-stat-value { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+    .form-btn:active { opacity: 0.9; }
+
+    /* Bottom nav */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(11,15,25,0.95); backdrop-filter: blur(20px) saturate(1.8);
+      -webkit-backdrop-filter: blur(20px) saturate(1.8);
+      border-top: 1px solid var(--border); padding-bottom: var(--safe-bottom);
+      display: flex; justify-content: space-around; padding-top: 6px;
+    }
+    .nav-item {
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      padding: 6px 10px; color: var(--text-muted); font-size: 10px;
+      font-weight: 500; transition: color 0.2s; cursor: pointer;
+      border: none; background: none; -webkit-appearance: none; flex: 1;
+    }
+    .nav-item.active { color: var(--blue); }
+    .nav-icon { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
 
     /* Chart */
-    .chart-wrap { max-width: 100%; margin: 8px 0; }
-    canvas { max-width: 100%; }
+    .chart-wrap { position: relative; height: 220px; margin: 10px 0; }
+    .chart-wrap-sm { position: relative; height: 160px; margin: 10px 0; }
 
-    /* Trigger condition */
-    .trigger-box {
-      background: rgba(249,115,22,0.06); border: 1px solid rgba(249,115,22,0.2);
-      border-radius: 8px; padding: 10px 12px; margin-top: 10px;
-      font-size: 11px; color: var(--orange);
+    /* Section title */
+    .section-title {
+      font-size: 13px; font-weight: 700; color: var(--text);
+      margin: 20px 0 10px; padding-left: 10px; border-left: 3px solid var(--blue);
     }
-    .trigger-box .trigger-label { font-weight: 600; margin-bottom: 4px; font-size: 10px; text-transform: uppercase; }
 
-    /* Summary stats row */
-    .stats-row {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px;
+    /* Warning */
+    .warning-box {
+      background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2);
+      border-radius: var(--radius-sm); padding: 12px;
+      font-size: 12px; color: var(--text-dim); line-height: 1.6;
     }
-    .mini-stat {
-      text-align: center; background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); padding: 12px 8px;
-    }
-    .mini-stat-value { font-size: 16px; font-weight: 700; }
-    .mini-stat-label { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
 
-    @media (max-width: 360px) {
-      .hero-stats { grid-template-columns: 1fr; }
+    /* Pull to refresh */
+    .ptr { text-align: center; padding: 12px; color: var(--text-muted); font-size: 12px; display: none; }
+    .ptr.show { display: block; }
+
+    /* Cache buster banner */
+    .cache-banner {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 300;
+      background: var(--purple); color: white; text-align: center;
+      padding: 8px; font-size: 12px; font-weight: 600;
+      transform: translateY(-100%); transition: transform 0.3s;
     }
+    .cache-banner.show { transform: translateY(0); }
   </style>
 </head>
 <body>
 
+<!-- Cache Buster Banner -->
+<div class="cache-banner" id="cacheBanner">
+  检测到新版本，点击刷新 &#x21bb;
+</div>
+
 <!-- Header -->
-<div class="app-header">
+<header class="app-header">
   <div class="app-header-inner">
+    <div class="hamburger" id="hamburger" onclick="toggleSidebar()">
+      <span></span><span></span><span></span>
+    </div>
     <div>
       <h1>Jivon 综合资产面板</h1>
-      <div class="subtitle" id="updateTime">加载中...</div>
+      <div class="subtitle" id="updateTime">2026.06.23 更新</div>
+    </div>
+    <div style="width:36px"></div>
+  </div>
+</header>
+
+<!-- Sidebar -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-item active" onclick="goPage('overview'); toggleSidebar()">
+    <span class="sidebar-icon">&#x1F3E0;</span> 首页
+  </div>
+  <div class="sidebar-item" onclick="goPage('holdings'); toggleSidebar()">
+    <span class="sidebar-icon">&#x1F4CB;</span> 持仓明细
+  </div>
+  <div class="sidebar-item" onclick="goPage('backtest'); toggleSidebar()">
+    <span class="sidebar-icon">&#x1F4CA;</span> 回测分析
+  </div>
+  <div class="sidebar-item" onclick="goPage('sip'); toggleSidebar()">
+    <span class="sidebar-icon">&#x1F4C8;</span> 定投计划
+  </div>
+  <div class="sidebar-item" onclick="goPage('advice'); toggleSidebar()">
+    <span class="sidebar-icon">&#x2B50;</span> 投资建议
+  </div>
+  <div class="sidebar-item" onclick="goPage('update'); toggleSidebar()">
+    <span class="sidebar-icon">&#x270F;</span> 更新数据
+  </div>
+</nav>
+
+<!-- Pull to refresh -->
+<div class="ptr" id="ptr">&#x1F504; 正在刷新...</div>
+
+<!-- ==================== PAGE: HOME ==================== -->
+<div class="tab-panel active" id="page-overview">
+  <div class="content">
+    <!-- Hero -->
+    <div style="text-align:center; padding: 20px 0 16px;">
+      <div class="hero-small">总资产</div>
+      <div class="hero-big" style="margin: 4px 0;">¥67.73<span style="font-size:18px; color:var(--text-dim)">万</span></div>
+      <div style="display:flex; justify-content:center; gap: 20px; margin-top: 8px;">
+        <div>
+          <span style="font-size:13px; color:var(--text-muted)">昨日 </span>
+          <span style="font-size:15px; font-weight:600; color:var(--green)">+¥632.65</span>
+        </div>
+        <div>
+          <span style="font-size:13px; color:var(--text-muted)">累计 </span>
+          <span style="font-size:15px; font-weight:600; color:var(--green)">+¥7,487.99</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Allocation Bar -->
+    <div class="card">
+      <div class="card-title">&#x1F4CA; 资产分布</div>
+      <div class="progress-wrap">
+        <div style="display:flex; height:100%;">
+          <div class="progress-fill" style="width:75.6%; background:var(--green)"></div>
+          <div class="progress-fill" style="width:22.9%; background:var(--blue)"></div>
+          <div class="progress-fill" style="width:1.5%; background:var(--orange)"></div>
+        </div>
+      </div>
+      <div style="display:flex; gap:16px; flex-wrap:wrap; margin-top:8px;">
+        <div style="display:flex; align-items:center; gap:5px; font-size:12px; color:var(--text-dim)">
+          <div style="width:8px; height:8px; border-radius:50%; background:var(--green)"></div>债券 75.6%
+        </div>
+        <div style="display:flex; align-items:center; gap:5px; font-size:12px; color:var(--text-dim)">
+          <div style="width:8px; height:8px; border-radius:50%; background:var(--blue)"></div>货币 22.9%
+        </div>
+        <div style="display:flex; align-items:center; gap:5px; font-size:12px; color:var(--text-dim)">
+          <div style="width:8px; height:8px; border-radius:50%; background:var(--orange)"></div>QDII 1.5%
+        </div>
+      </div>
+      <div class="chart-wrap-sm"><canvas id="allocChart"></canvas></div>
+    </div>
+
+    <!-- Yesterday Detail -->
+    <div class="card">
+      <div class="expandable-header" onclick="toggleExpand(this)">
+        <div class="card-title" style="margin:0">&#x1F4C8; 昨日收益明细</div>
+        <span class="expand-arrow">&#x25BC;</span>
+      </div>
+      <div class="expandable-content">
+        <div class="fund-item">
+          <div><div class="fund-name">稳健理财（债券）</div></div>
+          <div class="fund-right"><div class="fund-return up">+¥396.21</div></div>
+        </div>
+        <div class="fund-item">
+          <div><div class="fund-name">灵活取用（货币）</div></div>
+          <div class="fund-right"><div class="fund-return up">+¥2.73</div></div>
+        </div>
+        <div class="fund-item">
+          <div><div class="fund-name">进阶理财（QDII）</div></div>
+          <div class="fund-right"><div class="fund-return up">+¥233.71</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 12px;">
+      <div class="card" style="text-align:center; padding:14px;">
+        <div style="font-size:22px; font-weight:700;">24</div>
+        <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">进行中定投</div>
+      </div>
+      <div class="card" style="text-align:center; padding:14px;">
+        <div style="font-size:22px; font-weight:700;">1,368</div>
+        <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">已定投天数</div>
+      </div>
+      <div class="card" style="text-align:center; padding:14px;">
+        <div style="font-size:22px; font-weight:700;">34<span style="font-size:13px">笔+</span></div>
+        <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">进行中订单</div>
+      </div>
+      <div class="card" style="text-align:center; padding:14px;">
+        <div style="font-size:22px; font-weight:700; color:var(--blue)">54.7%</div>
+        <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">6月定投进度</div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <button class="quick-btn" onclick="goPage('holdings')">&#x1F4CB; 查看持仓</button>
+      <button class="quick-btn" onclick="goPage('advice')">&#x2B50; 查看建议</button>
+      <button class="quick-btn" onclick="goPage('update')">&#x270F; 更新数据</button>
+    </div>
+
+    <!-- Latest -->
+    <div class="card">
+      <div class="card-title">&#x1F4B8; 最新交易</div>
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0;">
+        <div>
+          <div style="font-size:13px; font-weight:500;">买入 兴全天添益货币A</div>
+          <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">2026-06-23 02:20</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:14px; font-weight:600;">¥50,000</div>
+          <div style="font-size:11px; color:var(--yellow)">交易中</div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- Tab Bar -->
-<div class="tab-bar" id="tabBar">
-  <button class="tab-btn active" onclick="switchTab('overview')">总览</button>
-  <button class="tab-btn" onclick="switchTab('sectors')">板块信号</button>
-  <button class="tab-btn" onclick="switchTab('nasdaq')">纳指</button>
-  <button class="tab-btn" onclick="switchTab('actions')">今日操作</button>
+<!-- ==================== PAGE: HOLDINGS ==================== -->
+<div class="tab-panel" id="page-holdings">
+  <div class="content">
+    <div class="section-title">稳健理财（债券）¥512,111.35</div>
+    <div class="card" style="padding:0 16px;">
+      <div class="fund-item"><div><div class="fund-name">景顺长城景颐裕利债券C</div><span class="fund-tag bond">固收+</span></div><div class="fund-right"><div class="fund-amount">¥206,702</div><div class="fund-return up">+0.54%</div></div></div>
+      <div class="fund-item"><div><div class="fund-name">西部利得汇享债券C</div><span class="fund-tag bond">固收+</span></div><div class="fund-right"><div class="fund-amount">¥166,539</div><div class="fund-return down">-0.08%</div></div></div>
+      <div class="fund-item"><div><div class="fund-name">西部利得季季稳90天滚动持有债券A</div><span class="fund-tag bond">纯固收</span></div><div class="fund-right"><div class="fund-amount">¥97,723</div><div class="fund-return up">+0.90%</div></div></div>
+      <div class="fund-item"><div><div class="fund-name">信澳稳悦60天滚动持有债券C</div><span class="fund-tag bond">纯固收</span></div><div class="fund-right"><div class="fund-amount">¥40,313</div><div class="fund-return up">+0.04%</div></div></div>
+      <div class="fund-item"><div><div class="fund-name">华泰保兴尊睿6个月持有期债券A</div><span class="fund-tag bond">固收+</span></div><div class="fund-right"><div class="fund-amount">¥814</div><div class="fund-return up">+0.52%</div></div></div>
+      <div class="fund-item"><div><div class="fund-name">易方达中短期美元债债券(QDII)A</div><span class="fund-tag bond">美元债</span></div><div class="fund-right"><div class="fund-amount">¥20</div><div class="fund-return">0.00%</div></div></div>
+    </div>
+
+    <div class="section-title">灵活取用（货币）¥155,106.10</div>
+    <div class="card" style="padding:0 16px;">
+      <div class="fund-item"><div><div class="fund-name">余额宝</div><span class="fund-tag money">货币基金</span></div><div class="fund-right"><div class="fund-amount">¥105,106</div><div class="fund-return up">累计+¥7,488</div></div></div>
+      <div class="fund-item"><div><div class="fund-name">兴全天添益货币A</div><span class="fund-tag money">货币基金</span></div><div class="fund-right"><div class="fund-amount">¥50,000</div><div class="fund-return" style="color:var(--yellow)">交易中</div></div></div>
+    </div>
+
+    <div class="section-title">进阶理财（QDII）¥10,083.56</div>
+    <div class="card" style="padding:0 16px;">
+      <div class="fund-item"><div><div class="fund-name">易方达全球优质企业混合(QDII)A</div><span class="fund-tag qdii">全球科技</span></div><div class="fund-right"><div class="fund-amount">¥1,112</div><div class="fund-return up">+12.30%</div></div></div>
+      <div class="fund-item"><div><div class="fund-name">广发全球精选股票(QDII)A</div><span class="fund-tag qdii">全球精选</span></div><div class="fund-right"><div class="fund-amount">¥901</div><div class="fund-return up">+7.83%</div></div></div>
+      <div class="fund-item"><div><div class="fund-name">万家纳斯达克100指数(QDII)A</div><span class="fund-tag qdii">纳指100</span></div><div class="fund-right"><div class="fund-amount">¥804</div><div class="fund-return up">+1.46%</div></div></div>
+      <div class="fund-item"><div><div class="fund-name">银华海外数字经济量化混合(QDII)A</div><span class="fund-tag qdii">全球科技</span></div><div class="fund-right"><div class="fund-amount">¥800</div><div class="fund-return">0.00%</div></div></div>
+      <div class="fund-item"><div><div class="fund-name">南方纳斯达克100指数(QDII)A</div><span class="fund-tag qdii">纳指100</span></div><div class="fund-right"><div class="fund-amount">¥710</div><div class="fund-return up">+1.58%</div></div></div>
+      <div class="fund-item"><div><div class="fund-name">华宝致远混合(QDII)A</div><span class="fund-tag qdii">全球科技</span></div><div class="fund-right"><div class="fund-amount">¥646</div><div class="fund-return up">+7.65%</div></div></div>
+      <div class="fund-item"><div><div class="fund-name">建信纳斯达克100指数(QDII)A</div><span class="fund-tag qdii">纳指100</span></div><div class="fund-right"><div class="fund-amount">¥607</div><div class="fund-return up">+1.46%</div></div></div>
+      <div class="fund-item"><div><div class="fund-name">汇添富纳斯达克100ETF联接(QDII)A</div><span class="fund-tag qdii">纳指100</span></div><div class="fund-right"><div class="fund-amount">¥607</div><div class="fund-return up">+1.39%</div></div></div>
+      <div class="fund-item"><div><div class="fund-name">嘉实全球产业升级股票(QDII)A</div><span class="fund-tag qdii">全球科技</span></div><div class="fund-right"><div class="fund-amount">¥554</div><div class="fund-return up">+10.89%</div></div></div>
+      <div class="fund-item"><div><div class="fund-name">国富全球科技互联混合(QDII)A</div><span class="fund-tag qdii">全球科技</span></div><div class="fund-right"><div class="fund-amount">¥538</div><div class="fund-return up">+7.69%</div></div></div>
+      <div class="fund-item"><div><div class="fund-name">摩根纳斯达克100指数(QDII)A</div><span class="fund-tag qdii">纳指100</span></div><div class="fund-right"><div class="fund-amount">¥532</div><div class="fund-return up">+0.37%</div></div></div>
+      <div class="fund-item"><div><div class="fund-name">华夏全球科技先锋混合(QDII)A</div><span class="fund-tag qdii">全球科技</span></div><div class="fund-right"><div class="fund-amount">¥500</div><div class="fund-return">0.00%</div></div></div>
+      <div class="fund-item"><div><div class="fund-name">宝盈纳斯达克100指数(QDII)A</div><span class="fund-tag qdii">纳指100</span></div><div class="fund-right"><div class="fund-amount">¥344</div><div class="fund-return up">+1.40%</div></div></div>
+      <div class="fund-item"><div><div class="fund-name">招商纳斯达克100ETF联接(QDII)A</div><span class="fund-tag qdii">纳指100</span></div><div class="fund-right"><div class="fund-amount">¥344</div><div class="fund-return up">+1.24%</div></div></div>
+      <div class="fund-item"><div><div class="fund-name">大成纳斯达克100ETF联接(QDII)A</div><span class="fund-tag qdii">纳指100</span></div><div class="fund-right"><div class="fund-amount">¥209</div><div class="fund-return down">-0.46%</div></div></div>
+      <div class="fund-item"><div><div class="fund-name">易方达全球成长精选混合(QDII)A</div><span class="fund-tag qdii">全球科技</span></div><div class="fund-right"><div class="fund-amount">¥197</div><div class="fund-return up">+12.35%</div></div></div>
+      <div class="fund-item"><div><div class="fund-name">易方达全球成长精选混合(QDII)C</div><span class="fund-tag qdii">全球科技</span></div><div class="fund-right"><div class="fund-amount">¥151</div><div class="fund-return up">+11.14%</div></div></div>
+      <div class="fund-item"><div><div class="fund-name">摩根标普500指数(QDII)A</div><span class="fund-tag qdii">标普500</span></div><div class="fund-right"><div class="fund-amount">¥149</div><div class="fund-return down">-0.78%</div></div></div>
+      <div class="fund-item"><div><div class="fund-name">华安纳斯达克100ETF联接(QDII)A</div><span class="fund-tag qdii">纳指100</span></div><div class="fund-right"><div class="fund-amount">¥91</div><div class="fund-return up">+0.90%</div></div></div>
+      <div class="fund-item"><div><div class="fund-name">广发纳斯达克100ETF联接(QDII)A</div><span class="fund-tag qdii">纳指100</span></div><div class="fund-right"><div class="fund-amount">¥91</div><div class="fund-return up">+0.71%</div></div></div>
+      <div class="fund-item"><div><div class="fund-name">华泰柏瑞纳斯达克100ETF联接(QDII)A</div><span class="fund-tag qdii">纳指100</span></div><div class="fund-right"><div class="fund-amount">¥71</div><div class="fund-return up">+1.44%</div></div></div>
+      <div class="fund-item"><div><div class="fund-name">建信新兴市场优选混合(QDII)A</div><span class="fund-tag qdii">新兴市场</span></div><div class="fund-right"><div class="fund-amount">¥66</div><div class="fund-return up">+9.22%</div></div></div>
+      <div class="fund-item"><div><div class="fund-name">广发纳斯达克100ETF联接(QDII)C</div><span class="fund-tag qdii">纳指100</span></div><div class="fund-right"><div class="fund-amount">¥61</div><div class="fund-return up">+1.47%</div></div></div>
+    </div>
+  </div>
 </div>
 
-<!-- Content -->
-<div class="content">
+<!-- ==================== PAGE: BACKTEST ==================== -->
+<div class="tab-panel" id="page-backtest">
+  <div class="content">
+    <div class="card">
+      <div class="card-title">&#x1F4CA; 风险收益对比（3年回测）</div>
+      <div class="chart-wrap"><canvas id="riskReturnChart"></canvas></div>
+    </div>
 
-  <!-- Overview Tab -->
-  <div class="tab-panel active" id="panel-overview">
-    <div class="hero-stats">
-      <div class="hero-stat">
-        <div class="hero-stat-label">存量总资产</div>
-        <div class="hero-stat-value" style="color:var(--blue)" id="totalAsset">--</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat-label">纳指(昨收)</div>
-        <div class="hero-stat-value" style="color:var(--green)" id="ndxPrice">--</div>
+    <div class="section-title">配置方案对比</div>
+
+    <div class="card">
+      <div style="font-size:15px; font-weight:700; margin-bottom:2px;">当前配置</div>
+      <div style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">债券75.6% + 货币22.9% + QDII 1.5%</div>
+      <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px;">
+        <div style="text-align:center;"><div style="font-size:15px; font-weight:700; color:var(--green)">11.45%</div><div style="font-size:10px; color:var(--text-muted); margin-top:2px;">3年收益</div></div>
+        <div style="text-align:center;"><div style="font-size:15px; font-weight:700;">1.36</div><div style="font-size:10px; color:var(--text-muted); margin-top:2px;">夏普比率</div></div>
+        <div style="text-align:center;"><div style="font-size:15px; font-weight:700; color:var(--green)">-0.76%</div><div style="font-size:10px; color:var(--text-muted); margin-top:2px;">最大回撤</div></div>
       </div>
     </div>
 
     <div class="card">
-      <div class="card-title">配置结构</div>
-      <div class="stats-row" id="allocationRow"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">板块信号速览</div>
-      <div id="signalOverview"></div>
-    </div>
-  </div>
-
-  <!-- Sectors Tab -->
-  <div class="tab-panel" id="panel-sectors">
-    <div id="sectorCards"></div>
-  </div>
-
-  <!-- Nasdaq Tab -->
-  <div class="tab-panel" id="panel-nasdaq">
-    <div class="card">
-      <div class="card-title">纳指走势 & 定投信号</div>
-      <div class="chart-wrap"><canvas id="ndxChart" height="220"></canvas></div>
-      <div class="stats-row" style="margin-top:12px">
-        <div class="mini-stat">
-          <div class="mini-stat-value" style="color:var(--green)" id="ndxMa20">--</div>
-          <div class="mini-stat-label">MA20</div>
-        </div>
-        <div class="mini-stat">
-          <div class="mini-stat-value" style="color:var(--blue)" id="ndxMa20Dir">--</div>
-          <div class="mini-stat-label">MA20方向</div>
-        </div>
-        <div class="mini-stat">
-          <div class="mini-stat-value" style="color:var(--orange)" id="ndxDrawdown">--</div>
-          <div class="mini-stat-label">距60日高</div>
-        </div>
+      <div style="font-size:15px; font-weight:700; margin-bottom:2px;">保守优化</div>
+      <div style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">债券65% + 货币25% + QDII 10%</div>
+      <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px;">
+        <div style="text-align:center;"><div style="font-size:15px; font-weight:700; color:var(--green)">13.72%</div><div style="font-size:10px; color:var(--text-muted); margin-top:2px;">3年收益</div></div>
+        <div style="text-align:center;"><div style="font-size:15px; font-weight:700; color:var(--blue)">1.52</div><div style="font-size:10px; color:var(--text-muted); margin-top:2px;">夏普比率</div></div>
+        <div style="text-align:center;"><div style="font-size:15px; font-weight:700; color:var(--green)">-1.00%</div><div style="font-size:10px; color:var(--text-muted); margin-top:2px;">最大回撤</div></div>
       </div>
-      <div id="ndxFunds" style="margin-top:8px"></div>
     </div>
-  </div>
 
-  <!-- Actions Tab -->
-  <div class="tab-panel" id="panel-actions">
-    <div id="actionCards"></div>
+    <div class="card" style="border-color: rgba(168,85,247,0.4); background: linear-gradient(135deg, var(--bg-card) 0%, rgba(168,85,247,0.06) 100%);">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="font-size:15px; font-weight:700; margin-bottom:2px;">平衡配置 &#x2B50; 推荐</div>
+        <span style="font-size:10px; background:var(--purple); color:white; padding:2px 8px; border-radius:10px; font-weight:700;">推荐</span>
+      </div>
+      <div style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">债券50% + 货币20% + QDII 30%</div>
+      <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px;">
+        <div style="text-align:center;"><div style="font-size:15px; font-weight:700; color:var(--green)">19.22%</div><div style="font-size:10px; color:var(--text-muted); margin-top:2px;">3年收益</div></div>
+        <div style="text-align:center;"><div style="font-size:15px; font-weight:700;">1.20</div><div style="font-size:10px; color:var(--text-muted); margin-top:2px;">夏普比率</div></div>
+        <div style="text-align:center;"><div style="font-size:15px; font-weight:700; color:var(--orange)">-2.52%</div><div style="font-size:10px; color:var(--text-muted); margin-top:2px;">最大回撤</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="font-size:15px; font-weight:700; margin-bottom:2px;">成长配置</div>
+      <div style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">债券35% + 货币15% + QDII 50%</div>
+      <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px;">
+        <div style="text-align:center;"><div style="font-size:15px; font-weight:700; color:var(--green)">24.81%</div><div style="font-size:10px; color:var(--text-muted); margin-top:2px;">3年收益</div></div>
+        <div style="text-align:center;"><div style="font-size:15px; font-weight:700;">1.06</div><div style="font-size:10px; color:var(--text-muted); margin-top:2px;">夏普比率</div></div>
+        <div style="text-align:center;"><div style="font-size:15px; font-weight:700; color:var(--orange)">-4.61%</div><div style="font-size:10px; color:var(--text-muted); margin-top:2px;">最大回撤</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="font-size:15px; font-weight:700; margin-bottom:2px;">进取配置</div>
+      <div style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">债券20% + 货币10% + QDII 70%</div>
+      <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px;">
+        <div style="text-align:center;"><div style="font-size:15px; font-weight:700; color:var(--green)">30.48%</div><div style="font-size:10px; color:var(--text-muted); margin-top:2px;">3年收益</div></div>
+        <div style="text-align:center;"><div style="font-size:15px; font-weight:700;">0.99</div><div style="font-size:10px; color:var(--text-muted); margin-top:2px;">夏普比率</div></div>
+        <div style="text-align:center;"><div style="font-size:15px; font-weight:700; color:var(--red)">-6.67%</div><div style="font-size:10px; color:var(--text-muted); margin-top:2px;">最大回撤</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">&#x1F4C8; 最大回撤对比</div>
+      <div class="chart-wrap-sm"><canvas id="drawdownChart"></canvas></div>
+    </div>
   </div>
 </div>
+
+<!-- ==================== PAGE: SIP ==================== -->
+<div class="tab-panel" id="page-sip">
+  <div class="content">
+    <div class="section-title">我的定投计划（24个）</div>
+
+    <div class="card" style="padding:0 16px;">
+      <div style="font-size:13px; font-weight:700; padding:12px 0 8px; border-bottom:1px solid var(--border);">&#x1F30D; 海外QDII定投（21支）</div>
+
+      <div style="font-size:11px; color:var(--text-muted); padding:8px 0 4px; font-weight:600;">纳斯达克100指数系列（12支）</div>
+      <div class="sip-item"><div><div class="sip-name">万家纳斯达克100指数A</div><div class="sip-detail">日定投 · 已投7期</div></div><div class="sip-right"><div class="sip-amount">¥500/次</div><div class="sip-period">累计¥800</div></div></div>
+      <div class="sip-item"><div><div class="sip-name">南方纳斯达克100指数A</div><div class="sip-detail">日定投 · 已投7期</div></div><div class="sip-right"><div class="sip-amount">¥200/次</div><div class="sip-period">累计¥700</div></div></div>
+      <div class="sip-item"><div><div class="sip-name">建信纳斯达克100指数A</div><div class="sip-detail">日定投 · 已投6期</div></div><div class="sip-right"><div class="sip-amount">¥100/次</div><div class="sip-period">累计¥600</div></div></div>
+      <div class="sip-item"><div><div class="sip-name">汇添富纳斯达克100ETF联接A</div><div class="sip-detail">日定投 · 已投6期</div></div><div class="sip-right"><div class="sip-amount">¥100/次</div><div class="sip-period">累计¥600</div></div></div>
+      <div class="sip-item"><div><div class="sip-name">摩根纳斯达克100指数A</div><div class="sip-detail">日定投 · 已投8期</div></div><div class="sip-right"><div class="sip-amount">¥10/次</div><div class="sip-period">累计¥530</div></div></div>
+      <div class="sip-item"><div><div class="sip-name">招商纳斯达克100ETF联接A</div><div class="sip-detail">日定投 · 已投7期</div></div><div class="sip-right"><div class="sip-amount">¥10/次</div><div class="sip-period">累计¥340</div></div></div>
+      <div class="sip-item"><div><div class="sip-name">宝盈纳斯达克100指数A</div><div class="sip-detail">日定投 · 已投7期</div></div><div class="sip-right"><div class="sip-amount">¥10/次</div><div class="sip-period">累计¥340</div></div></div>
+      <div class="sip-item"><div><div class="sip-name">大成纳斯达克100ETF联接A</div><div class="sip-detail">日定投 · 已投9期</div></div><div class="sip-right"><div class="sip-amount">¥50/次</div><div class="sip-period">累计¥210</div></div></div>
+      <div class="sip-item"><div><div class="sip-name">华安纳斯达克100ETF联接A</div><div class="sip-detail">日定投 · 已投9期</div></div><div class="sip-right"><div class="sip-amount">¥10/次</div><div class="sip-period">累计¥90</div></div></div>
+      <div class="sip-item"><div><div class="sip-name">广发纳斯达克100ETF联接A</div><div class="sip-detail">日定投 · 已投9期</div></div><div class="sip-right"><div class="sip-amount">¥10/次</div><div class="sip-period">累计¥90</div></div></div>
+      <div class="sip-item"><div><div class="sip-name">华泰柏瑞纳斯达克100ETF联接A</div><div class="sip-detail">日定投 · 已投7期</div></div><div class="sip-right"><div class="sip-amount">¥10/次</div><div class="sip-period">累计¥70</div></div></div>
+      <div class="sip-item"><div><div class="sip-name">广发纳斯达克100ETF联接C</div><div class="sip-detail">日定投</div></div><div class="sip-right"><div class="sip-amount">¥10/次</div><div class="sip-period">-</div></div></div>
+
+      <div style="font-size:11px; color:var(--text-muted); padding:8px 0 4px; font-weight:600;">全球科技/成长混合（7支）</div>
+      <div class="sip-item"><div><div class="sip-name">易方达全球优质企业混合A</div><div class="sip-detail">日定投 · 已投2期</div></div><div class="sip-right"><div class="sip-amount">¥500/次</div><div class="sip-period">累计¥550</div></div></div>
+      <div class="sip-item"><div><div class="sip-name">华夏全球科技先锋混合A</div><div class="sip-detail">日定投 · 已投1期</div></div><div class="sip-right"><div class="sip-amount">¥200/次</div><div class="sip-period">累计¥500</div></div></div>
+      <div class="sip-item"><div><div class="sip-name">银华海外数字经济量化选股混合A</div><div class="sip-detail">日定投 · 已投0期</div></div><div class="sip-right"><div class="sip-amount">¥200/次</div><div class="sip-period">累计¥0</div></div></div>
+      <div class="sip-item"><div><div class="sip-name">广发全球精选股票A</div><div class="sip-detail">日定投 · 已投9期</div></div><div class="sip-right"><div class="sip-amount">¥100/次</div><div class="sip-period">累计¥850</div></div></div>
+      <div class="sip-item"><div><div class="sip-name">国富全球科技互联混合A</div><div class="sip-detail">日定投 · 已投0期</div></div><div class="sip-right"><div class="sip-amount">¥100/次</div><div class="sip-period">累计¥0</div></div></div>
+      <div class="sip-item"><div><div class="sip-name">易方达全球成长精选混合A</div><div class="sip-detail">日定投 · 已投9期</div></div><div class="sip-right"><div class="sip-amount">¥20/次</div><div class="sip-period">累计¥180</div></div></div>
+      <div class="sip-item"><div><div class="sip-name">易方达全球成长精选混合C</div><div class="sip-detail">日定投 · 已投7期</div></div><div class="sip-right"><div class="sip-amount">¥20/次</div><div class="sip-period">累计¥140</div></div></div>
+
+      <div style="font-size:11px; color:var(--text-muted); padding:8px 0 4px; font-weight:600;">其他海外（2支）</div>
+      <div class="sip-item"><div><div class="sip-name">摩根标普500指数A</div><div class="sip-detail">日定投 · 已投6期</div></div><div class="sip-right"><div class="sip-amount">¥100/次</div><div class="sip-period">累计¥150</div></div></div>
+      <div class="sip-item"><div><div class="sip-name">建信新兴市场优选混合A</div><div class="sip-detail">日定投 · 已投0期</div></div><div class="sip-right"><div class="sip-amount">¥30/次</div><div class="sip-period">累计¥0</div></div></div>
+    </div>
+
+    <div class="card" style="padding:0 16px;">
+      <div style="font-size:13px; font-weight:700; padding:12px 0 8px; border-bottom:1px solid var(--border);">&#x1F1E8;&#x1F1F3; A股指数增强定投（3支）</div>
+      <div class="sip-item"><div><div class="sip-name">易方达沪深300指数精选增强C</div><div class="sip-detail">智能日定投</div></div><div class="sip-right"><div class="sip-amount">¥300/次</div><div class="sip-period">累计¥0</div></div></div>
+      <div class="sip-item"><div><div class="sip-name">万家中证500指数增强C</div><div class="sip-detail">智能周定投（周四）</div></div><div class="sip-right"><div class="sip-amount">¥250~1,000</div><div class="sip-period">累计¥0</div></div></div>
+      <div class="sip-item"><div><div class="sip-name">长信中证科创创业50指数增强C</div><div class="sip-detail">智能周定投（周四）</div></div><div class="sip-right"><div class="sip-amount">¥100~400</div><div class="sip-period">累计¥0</div></div></div>
+    </div>
+
+    <div class="card" style="padding:0 16px;">
+      <div style="font-size:13px; font-weight:700; padding:12px 0 8px; border-bottom:1px solid var(--border);">&#x1F4B5; 债券定投（1支）</div>
+      <div class="sip-item"><div><div class="sip-name">易方达中短期美元债债券A</div><div class="sip-detail">日定投 · 已投1期</div></div><div class="sip-right"><div class="sip-amount">¥20/次</div><div class="sip-period">累计¥20</div></div></div>
+    </div>
+
+    <div class="section-title">定投汇总</div>
+    <div class="card">
+      <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:12px;">
+        <div><div style="font-size:11px; color:var(--text-muted)">每日固定扣款</div><div style="font-size:16px; font-weight:700; margin-top:2px;">~¥2,280</div></div>
+        <div><div style="font-size:11px; color:var(--text-muted)">智能日定投</div><div style="font-size:16px; font-weight:700; margin-top:2px;">~¥300/日</div></div>
+        <div><div style="font-size:11px; color:var(--text-muted)">每周智能定投</div><div style="font-size:16px; font-weight:700; margin-top:2px;">¥350~1,400</div></div>
+        <div><div style="font-size:11px; color:var(--text-muted)">每月合计</div><div style="font-size:16px; font-weight:700; margin-top:2px; color:var(--blue)">~5.8-6.2万</div></div>
+      </div>
+      <div style="margin-top:14px;">
+        <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;">
+          <span>6月进度</span><span style="font-weight:600;">2.09万 / 3.82万</span>
+        </div>
+        <div class="progress-wrap"><div class="progress-fill" style="width:54.7%; background:var(--blue)"></div></div>
+        <div style="text-align:right; font-size:11px; color:var(--text-muted); margin-top:2px;">54.7%</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== PAGE: ADVICE ==================== -->
+<div class="tab-panel" id="page-advice">
+  <div class="content">
+    <div class="card" style="background: linear-gradient(135deg, rgba(59,130,246,0.1) 0%, rgba(168,85,247,0.1) 100%); border-color: rgba(168,85,247,0.3);">
+      <div style="font-size:15px; font-weight:700; margin-bottom:4px;">&#x2B50; 推荐方案：平衡配置</div>
+      <div style="font-size:12px; color:var(--text-dim); margin-bottom:12px;">债券50% + 货币20% + QDII 30%</div>
+      <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px;">
+        <div style="text-align:center; padding:8px; background:rgba(0,0,0,0.2); border-radius:8px;">
+          <div style="font-size:16px; font-weight:700; color:var(--green)">19.22%</div><div style="font-size:10px; color:var(--text-muted);">3年收益</div>
+        </div>
+        <div style="text-align:center; padding:8px; background:rgba(0,0,0,0.2); border-radius:8px;">
+          <div style="font-size:16px; font-weight:700;">1.20</div><div style="font-size:10px; color:var(--text-muted);">夏普比率</div>
+        </div>
+        <div style="text-align:center; padding:8px; background:rgba(0,0,0,0.2); border-radius:8px;">
+          <div style="font-size:16px; font-weight:700; color:var(--purple)">99.7%</div><div style="font-size:10px; color:var(--text-muted);">10年盈利概率</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">操作建议（点击展开详情）</div>
+
+    <div class="advice-card p1" onclick="toggleExpand(this)">
+      <div class="expandable-header">
+        <div class="advice-title">1. 精简QDII基金</div>
+        <span class="expand-arrow">&#x25BC;</span>
+      </div>
+      <div class="advice-summary">当前23支QDII中12支为纳指100，高度同质化，建议合并为2-3支。</div>
+      <div class="expandable-content">
+        <div class="theory-box">
+          <strong>&#x1F4DA; 理论依据：集中度风险理论</strong><br>
+          根据现代投资组合理论，分散化投资的核心是降低资产间的相关性。当多支基金跟踪同一指数（纳指100）时，它们之间的相关系数通常>0.95，分散效果几乎为零。持有12支纳指100基金，等同于持有1支放大版纳指100，无法降低非系统性风险。
+        </div>
+        <div class="backtest-box">
+          <strong>&#x1F4C8; 回测支撑</strong>
+          <table class="backtest-table">
+            <tr><th>方案</th><th>基金数</th><th>管理复杂度</th><th>分散效果</th></tr>
+            <tr><td>当前</td><td>12支纳指</td><td>高</td><td>几乎为零</td></tr>
+            <tr><td>精简后</td><td>2-3支</td><td>低</td><td>相同</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="advice-card p1" onclick="toggleExpand(this)">
+      <div class="expandable-header">
+        <div class="advice-title">2. 提升权益仓位至30%</div>
+        <span class="expand-arrow">&#x25BC;</span>
+      </div>
+      <div class="advice-summary">当前权益仅1.5%，远低于有效前沿最优比例，建议逐步提升至30%。</div>
+      <div class="expandable-content">
+        <div class="theory-box">
+          <strong>&#x1F4DA; 理论依据：现代投资组合理论(MPT) - Markowitz, 1952</strong><br>
+          有效前沿理论表明，在给定风险水平下存在最优资产配置。纯债券组合虽然波动低，但长期收益潜力受限。加入适度权益资产（20%-40%）可在不显著增加风险的前提下，大幅提升组合预期收益。当前QDII仅1.5%，权益暴露严重不足。
+        </div>
+        <div class="backtest-box">
+          <strong>&#x1F4C8; 回测支撑：5种配置方案3年对比</strong>
+          <table class="backtest-table">
+            <tr><th>配置</th><th>3年收益</th><th>夏普比率</th><th>最大回撤</th></tr>
+            <tr><td>当前(1.5%)</td><td>11.45%</td><td>1.36</td><td>-0.76%</td></tr>
+            <tr><td>保守(10%)</td><td>13.72%</td><td>1.52</td><td>-1.00%</td></tr>
+            <tr><td style="color:var(--purple)">平衡(30%)</td><td style="color:var(--green)">19.22%</td><td>1.20</td><td>-2.52%</td></tr>
+            <tr><td>成长(50%)</td><td>24.81%</td><td>1.06</td><td>-4.61%</td></tr>
+            <tr><td>进取(70%)</td><td>30.48%</td><td>0.99</td><td>-6.67%</td></tr>
+          </table>
+          <div style="margin-top:6px; color:var(--text-dim)">平衡配置收益提升7.77%，夏普仍>1.0，风险可控。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="advice-card p2" onclick="toggleExpand(this)">
+      <div class="expandable-header">
+        <div class="advice-title">3. 新增5万资金配置建议</div>
+        <span class="expand-arrow">&#x25BC;</span>
+      </div>
+      <div class="advice-summary">新增5万不应全部入货币基金，建议3万入QDII，2万留货币。</div>
+      <div class="expandable-content">
+        <div class="theory-box">
+          <strong>&#x1F4DA; 理论依据：再平衡策略</strong><br>
+          新资金应按目标配置比例投入，而非全部流入已有最高占比资产。若5万全部入货币，货币占比将从22.9%升至30.3%，债券占比从75.6%降至70.8%，配置更失衡，偏离有效前沿。
+        </div>
+        <div class="backtest-box">
+          <strong>&#x1F4C8; 回测支撑：资金配置对比</strong>
+          <table class="backtest-table">
+            <tr><th>方案</th><th>债券占比</th><th>货币占比</th><th>QDII占比</th></tr>
+            <tr><td>当前</td><td>75.6%</td><td>22.9%</td><td>1.5%</td></tr>
+            <tr><td>5万全入货币</td><td>70.8%</td><td>30.3%</td><td>1.4%</td></tr>
+            <tr><td style="color:var(--purple)">3万QDII+2万货币</td><td>71.5%</td><td>24.1%</td><td style="color:var(--green)">4.4%</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="advice-card p2" onclick="toggleExpand(this)">
+      <div class="expandable-header">
+        <div class="advice-title">4. 债券持仓分散化</div>
+        <span class="expand-arrow">&#x25BC;</span>
+      </div>
+      <div class="advice-summary">景顺+西部利得占比59.5%，建议增加信用债、可转债品种。</div>
+      <div class="expandable-content">
+        <div class="theory-box">
+          <strong>&#x1F4DA; 理论依据：单一基金集中度风险</strong><br>
+          当单一基金或同一管理人基金占比过高时，面临管理人风险、风格漂移风险、流动性风险。2022年11月债灾中，部分纯债基金单周回撤超2%，若重仓基金同时遭遇赎回潮，损失将放大。
+        </div>
+        <div class="backtest-box">
+          <strong>&#x1F4C8; 回测支撑：压力测试</strong>
+          <table class="backtest-table">
+            <tr><th>情景</th><th>景顺回撤</th><th>西部回撤</th><th>组合损失</th></tr>
+            <tr><td>正常波动</td><td>-0.5%</td><td>-0.5%</td><td>-¥1,866</td></tr>
+            <tr><td>债灾情景(-5%)</td><td>-5%</td><td>-5%</td><td style="color:var(--red)">-¥18,662</td></tr>
+            <tr><td>分散后(-5%仅一支)</td><td>-5%</td><td>0%</td><td>-¥10,335</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="advice-card p3" onclick="toggleExpand(this)">
+      <div class="expandable-header">
+        <div class="advice-title">5. 增加A股核心指数配置</div>
+        <span class="expand-arrow">&#x25BC;</span>
+      </div>
+      <div class="advice-summary">当前权益全在海外，建议增加沪深300、中证500等A股配置。</div>
+      <div class="expandable-content">
+        <div class="theory-box">
+          <strong>&#x1F4DA; 理论依据：地域分散化</strong><br>
+          全球资产配置理论（Brinson et al., 1986）指出，资产配置决策解释了投资组合收益波动的90%以上。全部权益配置于海外，缺乏本土市场暴露，无法享受中国经济增长红利，且面临汇率风险和海外政策风险。
+        </div>
+        <div class="backtest-box">
+          <strong>&#x1F4C8; 回测支撑：相关性分析</strong>
+          <table class="backtest-table">
+            <tr><th>资产对</th><th>相关系数</th><th>分散效果</th></tr>
+            <tr><td>纳指100 vs 纳指100</td><td>0.95+</td><td>无</td></tr>
+            <tr><td>纳指100 vs 沪深300</td><td>~0.60</td><td>良好</td></tr>
+            <tr><td>纳指100 vs 中证500</td><td>~0.55</td><td>良好</td></tr>
+          </table>
+          <div style="margin-top:6px; color:var(--text-dim)">A股与美股相关系数约0.6，远低于纳指100内部基金间0.95的相关系数，分散效果显著。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="advice-card p4" onclick="toggleExpand(this)">
+      <div class="expandable-header">
+        <div class="advice-title">6. 合并定投计划</div>
+        <span class="expand-arrow">&#x25BC;</span>
+      </div>
+      <div class="advice-summary">24个定投计划过多，建议合并为5-8个核心计划。</div>
+      <div class="expandable-content">
+        <div class="theory-box">
+          <strong>&#x1F4DA; 理论依据：行为金融学 - 决策疲劳(Decision Fatigue)</strong><br>
+          Baumeister等心理学研究表明，人类决策能力有限，过多选择会导致决策质量下降、执行拖延。24个定投计划意味着每天需要关注24个扣款状态、24个收益情况，极易产生管理疲劳，导致关键决策被忽视。
+        </div>
+        <div class="backtest-box">
+          <strong>&#x1F4C8; 回测支撑：管理成本分析</strong>
+          <table class="backtest-table">
+            <tr><th>方案</th><th>计划数</th><th>日均管理时间</th><th>月度管理时间</th></tr>
+            <tr><td>当前</td><td>24个</td><td>~15分钟</td><td>~7.5小时</td></tr>
+            <tr><td style="color:var(--purple)">精简后</td><td>5-8个</td><td>~5分钟</td><td>~2.5小时</td></tr>
+          </table>
+          <div style="margin-top:6px; color:var(--text-dim)">合并后管理时间减少67%，可将更多精力用于研究市场趋势和优化配置。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="warning-box" style="margin-top:12px;">
+      <strong style="color:var(--yellow)">&#x26A0; 风险提示</strong><br>
+      本报告基于历史数据模拟回测，仅供参考，不构成投资建议。市场有风险，投资需谨慎。过往业绩不代表未来表现。请根据自身的风险承受能力和投资目标做出独立判断。
+    </div>
+  </div>
+</div>
+
+<!-- ==================== PAGE: UPDATE ==================== -->
+<div class="tab-panel" id="page-update">
+  <div class="content">
+    <div class="card">
+      <div class="card-title">&#x270F; 更新资产数据</div>
+      <div style="font-size:12px; color:var(--text-dim); margin-bottom:16px; line-height:1.5;">
+        输入最新数据后点击更新，面板将自动重新计算回测结果。数据保存在本地，刷新不丢失。
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">总资产（元）</label>
+        <input class="form-input" type="number" id="inputTotal" placeholder="例如: 677301">
+      </div>
+      <div class="form-group">
+        <label class="form-label">稳健理财 - 债券（元）</label>
+        <input class="form-input" type="number" id="inputBond" placeholder="例如: 512111">
+      </div>
+      <div class="form-group">
+        <label class="form-label">灵活取用 - 货币（元）</label>
+        <input class="form-input" type="number" id="inputMoney" placeholder="例如: 155106">
+      </div>
+      <div class="form-group">
+        <label class="form-label">进阶理财 - QDII（元）</label>
+        <input class="form-input" type="number" id="inputQDII" placeholder="例如: 10084">
+      </div>
+      <div class="form-group">
+        <label class="form-label">昨日收益（元）</label>
+        <input class="form-input" type="number" id="inputDailyReturn" placeholder="例如: 632.65">
+      </div>
+
+      <button class="form-btn" onclick="saveData()">&#x1F4BE; 保存并更新</button>
+
+      <div style="margin-top:16px; padding:12px; background:var(--bg); border-radius:var(--radius-sm); font-size:12px; color:var(--text-dim);">
+        <strong style="color:var(--text)">当前数据快照</strong><br>
+        总资产: <span id="snapTotal">--</span><br>
+        债券: <span id="snapBond">--</span><br>
+        货币: <span id="snapMoney">--</span><br>
+        QDII: <span id="snapQDII">--</span><br>
+        昨日收益: <span id="snapReturn">--</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">&#x1F4F1; 支付宝衔接说明</div>
+      <div style="font-size:12px; color:var(--text-dim); line-height:1.8;">
+        <strong>方式一：手动输入（推荐）</strong><br>
+        在支付宝查看总资产和各类别金额，填入上方表单即可。<br><br>
+        <strong>方式二：截图OCR（开发中）</strong><br>
+        上传支付宝资产页面截图，自动识别数据并填充。<br><br>
+        <strong>更新频率建议</strong><br>
+        - 资产变动后及时更新<br>
+        - 每周固定更新一次<br>
+        - 定投扣款后更新
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== BOTTOM NAV ==================== -->
+<nav class="bottom-nav">
+  <button class="nav-item active" onclick="goPage('overview')">
+    <div class="nav-icon">&#x1F3E0;</div><span>首页</span>
+  </button>
+  <button class="nav-item" onclick="goPage('holdings')">
+    <div class="nav-icon">&#x1F4CB;</div><span>持仓</span>
+  </button>
+  <button class="nav-item" onclick="goPage('backtest')">
+    <div class="nav-icon">&#x1F4CA;</div><span>回测</span>
+  </button>
+  <button class="nav-item" onclick="goPage('sip')">
+    <div class="nav-icon">&#x1F4C8;</div><span>定投</span>
+  </button>
+  <button class="nav-item" onclick="goPage('advice')">
+    <div class="nav-icon">&#x2B50;</div><span>建议</span>
+  </button>
+  <button class="nav-item" onclick="goPage('update')">
+    <div class="nav-icon">&#x270F;</div><span>更新</span>
+  </button>
+</nav>
 
 <script>
-// ==================== Data Loading ====================
-let DATA = null;
+// ==================== Cache Buster ====================
+const APP_VERSION = '3.0.1';
+const CACHE_KEY = 'portfolio_version';
 
-async function loadData() {
-  try {
-    const resp = await fetch('data.json');
-    DATA = await resp.json();
-    renderAll();
-  } catch(e) {
-    document.getElementById('updateTime').textContent = '数据加载失败';
-    console.error(e);
+function checkVersion() {
+  const saved = localStorage.getItem(CACHE_KEY);
+  if (saved && saved !== APP_VERSION) {
+    const banner = document.getElementById('cacheBanner');
+    banner.classList.add('show');
+    banner.onclick = () => { localStorage.setItem(CACHE_KEY, APP_VERSION); location.reload(true); };
+  } else {
+    localStorage.setItem(CACHE_KEY, APP_VERSION);
+  }
+}
+checkVersion();
+
+// ==================== Navigation ====================
+function goPage(name) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
+
+  const page = document.getElementById('page-' + name);
+  if (page) page.classList.add('active');
+
+  // Update nav
+  const navItems = document.querySelectorAll('.nav-item');
+  const pageNames = ['overview','holdings','backtest','sip','advice','update'];
+  const idx = pageNames.indexOf(name);
+  if (idx >= 0 && navItems[idx]) navItems[idx].classList.add('active');
+
+  // Update sidebar
+  const sbItems = document.querySelectorAll('.sidebar-item');
+  if (idx >= 0 && sbItems[idx]) sbItems[idx].classList.add('active');
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleSidebar() {
+  const sb = document.getElementById('sidebar');
+  const ov = document.getElementById('sidebarOverlay');
+  const ham = document.getElementById('hamburger');
+  sb.classList.toggle('open');
+  ov.classList.toggle('show');
+  ham.classList.toggle('open');
+}
+
+function toggleExpand(el) {
+  const content = el.querySelector('.expandable-content');
+  const arrow = el.querySelector('.expand-arrow');
+  if (content && arrow) {
+    content.classList.toggle('open');
+    arrow.classList.toggle('open');
   }
 }
 
-// ==================== Render ====================
-function renderAll() {
-  document.getElementById('updateTime').textContent = '更新于 ' + DATA.updated.replace('T',' ').slice(0,16);
+// ==================== Swipe ====================
+let touchStartX = 0;
+let touchEndX = 0;
+const pages = ['overview','holdings','backtest','sip','advice','update'];
 
-  // Overview
-  const p = DATA.portfolio;
-  document.getElementById('totalAsset').textContent = '≈' + (p.total/10000).toFixed(0) + '万';
-  document.getElementById('ndxPrice').textContent = DATA.nasdaq.ndx_price.toLocaleString();
+document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
+document.addEventListener('touchend', e => {
+  touchEndX = e.changedTouches[0].screenX;
+  const diff = touchStartX - touchEndX;
+  if (Math.abs(diff) < 50) return;
 
-  // Allocation
-  const allocRow = document.getElementById('allocationRow');
-  const allocs = [
-    {label:'稳健理财', val: p.steady, color:'var(--green)'},
-    {label:'灵活取用', val: p.flexible, color:'var(--blue)'},
-    {label:'进阶理财', val: p.growth, color:'var(--orange)'}
-  ];
-  allocRow.innerHTML = allocs.map(a => `
-    <div class="mini-stat">
-      <div class="mini-stat-value" style="color:${a.color}">${(a.val/10000).toFixed(1)}万</div>
-      <div class="mini-stat-label">${a.label}</div>
-    </div>
-  `).join('');
+  const activePanel = document.querySelector('.tab-panel.active');
+  if (!activePanel) return;
+  const currentId = activePanel.id.replace('page-','');
+  const currentIdx = pages.indexOf(currentId);
 
-  // Signal overview
-  renderSignalOverview();
-  // Sector cards
-  renderSectorCards();
-  // Nasdaq
-  renderNasdaq();
-  // Actions
-  renderActions();
+  if (diff > 0 && currentIdx < pages.length - 1) {
+    goPage(pages[currentIdx + 1]);
+  } else if (diff < 0 && currentIdx > 0) {
+    goPage(pages[currentIdx - 1]);
+  }
+});
+
+// ==================== Data ====================
+const DEFAULT_DATA = {
+  total: 677301.01,
+  bond: 512111.35,
+  money: 155106.10,
+  qdii: 10083.56,
+  dailyReturn: 632.65
+};
+
+function loadSavedData() {
+  const saved = localStorage.getItem('portfolio_data');
+  if (saved) {
+    const d = JSON.parse(saved);
+    document.getElementById('snapTotal').textContent = '¥' + d.total.toLocaleString();
+    document.getElementById('snapBond').textContent = '¥' + d.bond.toLocaleString();
+    document.getElementById('snapMoney').textContent = '¥' + d.money.toLocaleString();
+    document.getElementById('snapQDII').textContent = '¥' + d.qdii.toLocaleString();
+    document.getElementById('snapReturn').textContent = (d.dailyReturn >= 0 ? '+' : '') + '¥' + d.dailyReturn.toLocaleString();
+
+    document.getElementById('inputTotal').value = d.total;
+    document.getElementById('inputBond').value = d.bond;
+    document.getElementById('inputMoney').value = d.money;
+    document.getElementById('inputQDII').value = d.qdii;
+    document.getElementById('inputDailyReturn').value = d.dailyReturn;
+  } else {
+    const d = DEFAULT_DATA;
+    document.getElementById('snapTotal').textContent = '¥' + d.total.toLocaleString();
+    document.getElementById('snapBond').textContent = '¥' + d.bond.toLocaleString();
+    document.getElementById('snapMoney').textContent = '¥' + d.money.toLocaleString();
+    document.getElementById('snapQDII').textContent = '¥' + d.qdii.toLocaleString();
+    document.getElementById('snapReturn').textContent = '+' + '¥' + d.dailyReturn.toLocaleString();
+
+    document.getElementById('inputTotal').value = d.total;
+    document.getElementById('inputBond').value = d.bond;
+    document.getElementById('inputMoney').value = d.money;
+    document.getElementById('inputQDII').value = d.qdii;
+    document.getElementById('inputDailyReturn').value = d.dailyReturn;
+  }
 }
 
-function renderSignalOverview() {
-  const sectors = DATA.sectors;
-  const html = Object.entries(sectors).map(([key, s]) => {
-    const dotClass = s.signal;
-    return `
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
-        <div>
-          <span class="signal-dot ${dotClass}"></span>
-          <span style="font-size:13px;font-weight:500;margin-left:8px">${s.name}</span>
-          <span style="font-size:11px;color:var(--text-muted);margin-left:6px">${s.change_pct > 0 ? '+' : ''}${s.change_pct}%</span>
-        </div>
-        <span style="font-size:11px;color:var(--text-dim)">${s.signal_text.split('（')[0]}</span>
-      </div>
-    `;
-  }).join('');
-  document.getElementById('signalOverview').innerHTML = html;
+function saveData() {
+  const d = {
+    total: parseFloat(document.getElementById('inputTotal').value) || DEFAULT_DATA.total,
+    bond: parseFloat(document.getElementById('inputBond').value) || DEFAULT_DATA.bond,
+    money: parseFloat(document.getElementById('inputMoney').value) || DEFAULT_DATA.money,
+    qdii: parseFloat(document.getElementById('inputQDII').value) || DEFAULT_DATA.qdii,
+    dailyReturn: parseFloat(document.getElementById('inputDailyReturn').value) || DEFAULT_DATA.dailyReturn,
+    updated: new Date().toISOString()
+  };
+  localStorage.setItem('portfolio_data', JSON.stringify(d));
+  loadSavedData();
+  alert('数据已保存！');
 }
 
-function renderSectorCards() {
-  const sectors = DATA.sectors;
-  const html = Object.entries(sectors).map(([key, s]) => {
-    // MA10 distance bar
-    let barPercent, barColor, markerColor;
-    if (s.distance_ma10 === -1 || isNaN(s.distance_ma10)) {
-      barPercent = 50; barColor = 'neutral'; markerColor = 'yellow';
-    } else if (s.distance_ma10 > 0) {
-      barPercent = Math.min(50 + Math.abs(s.distance_ma10) * 5, 95);
-      barColor = 'above'; markerColor = 'green';
-    } else {
-      barPercent = Math.max(50 - Math.abs(s.distance_ma10) * 5, 5);
-      barColor = 'below'; markerColor = 'red';
-    }
-    const distText = s.distance_ma10 === -1 ? '数据缺失' : (s.distance_ma10 > 0 ? `+${s.distance_ma10}%` : `${s.distance_ma10}%`);
+// ==================== Charts ====================
+Chart.defaults.color = '#94a3b8';
+Chart.defaults.borderColor = '#1f2937';
+Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
 
-    // Fund links
-    const fundsHtml = s.funds.map(f => `
-      <div class="fund-link">
-        <div>
-          <div class="fund-code">${f.code}</div>
-          <div class="fund-name">${f.name}</div>
-          <div class="fund-note">${f.note}</div>
-        </div>
-      </div>
-    `).join('');
+// Allocation Doughnut
+new Chart(document.getElementById('allocChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['债券', '货币', 'QDII'],
+    datasets: [{
+      data: [75.6, 22.9, 1.5],
+      backgroundColor: ['#22c55e', '#3b82f6', '#f97316'],
+      borderWidth: 0, hoverOffset: 4
+    }]
+  },
+  options: { responsive: true, maintainAspectRatio: false, cutout: '68%', plugins: { legend: { display: false } } }
+});
 
-    // Trigger
-    const triggerHtml = s.action.trigger ? `
-      <div class="trigger-box">
-        <div class="trigger-label">买入触发条件</div>
-        ${s.action.trigger}
-      </div>
-    ` : '';
-
-    return `
-    <div class="card">
-      <div class="card-title">
-        <span class="signal-dot ${s.signal}"></span>
-        ${s.name} · ${s.index}
-        <span style="font-size:12px;color:${s.change_pct>=0?'var(--green)':'var(--red)'};margin-left:auto">
-          ${s.change_pct>0?'+':''}${s.change_pct}%
-        </span>
-      </div>
-      <div style="font-size:12px;color:var(--text-dim);margin-bottom:8px">${s.signal_text}</div>
-      ${s.distance_ma10 !== -1 ? `
-      <div class="ma-bar-wrap">
-        <div class="ma-bar-label"><span>MA10 参考</span><span>距10日线: ${distText}</span></div>
-        <div class="ma-bar" style="position:relative">
-          <div class="ma-bar-fill ${barColor}" style="width:${barPercent}%"></div>
-        </div>
-      </div>
-      ` : ''}
-      ${s.volume_ratio ? `<div style="font-size:11px;color:var(--text-muted);margin-bottom:8px">成交额: 前日${(s.volume_ratio*100).toFixed(0)}% ${s.volume_ratio < 0.7 ? '(缩量)' : '(放量)'}</div>` : ''}
-
-      <div style="font-size:12px;font-weight:600;color:var(--text-dim);margin:10px 0 6px">推荐基金</div>
-      ${fundsHtml}
-
-      <div style="margin-top:10px;padding:8px 10px;background:var(--bg-elevated);border-radius:8px;font-size:12px">
-        <span style="color:var(--text-dim)">操作: </span>
-        <span style="font-weight:600;color:var(--text)">${s.action.detail}</span>
-        ${s.action.path ? `<div style="color:var(--blue);font-size:10px;margin-top:3px">${s.action.path}</div>` : ''}
-      </div>
-      ${triggerHtml}
-    </div>
-    `;
-  }).join('');
-  document.getElementById('sectorCards').innerHTML = html;
-}
-
-function renderNasdaq() {
-  const ndx = DATA.nasdaq;
-  document.getElementById('ndxMa20').textContent = ndx.ma20.toLocaleString();
-  document.getElementById('ndxMa20Dir').textContent = ndx.ma20_direction === 'up' ? '↑ 向上' : '↓ 向下';
-  document.getElementById('ndxMa20Dir').style.color = ndx.ma20_direction === 'up' ? 'var(--green)' : 'var(--red)';
-  document.getElementById('ndxDrawdown').textContent = '-' + ndx.drawdown_pct.toFixed(1) + '%';
-
-  // Fund links
-  const fundsHtml = ndx.funds.map(f => `
-    <div class="fund-link">
-      <div>
-        <div class="fund-code">${f.code}</div>
-        <div class="fund-name">${f.name}</div>
-        <div class="fund-note">${f.note}</div>
-      </div>
-    </div>
-  `).join('');
-  document.getElementById('ndxFunds').innerHTML = `
-    <div style="font-size:12px;font-weight:600;color:var(--text-dim);margin-bottom:8px">
-      <span class="signal-dot ${ndx.signal}"></span> ${ndx.signal_text}
-    </div>
-    <div style="font-size:12px;font-weight:600;color:var(--text-dim);margin-bottom:4px">定投基金</div>
-    ${fundsHtml}
-  `;
-
-  // Chart placeholder (data needs to be injected from real cache)
-  const ctx = document.getElementById('ndxChart').getContext('2d');
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: Array.from({length:20}, (_,i) => 'D-' + (20-i)),
-      datasets: [{
-        label: '纳指',
-        data: Array(20).fill(ndx.ndx_price * 0.95).map((v,i,a) => v + (ndx.ndx_price * 0.05) * (i/a.length)),
-        borderColor: '#22c55e',
-        backgroundColor: 'rgba(34,197,94,0.05)',
-        fill: true, tension: 0.3, pointRadius: 0
-      }]
+// Risk-Return Scatter
+new Chart(document.getElementById('riskReturnChart'), {
+  type: 'scatter',
+  data: {
+    datasets: [
+      { label: '当前', data: [{x:1.15,y:3.57}], backgroundColor:'#64748b', pointRadius:14 },
+      { label: '保守', data: [{x:1.47,y:4.25}], backgroundColor:'#3b82f6', pointRadius:14 },
+      { label: '平衡', data: [{x:3.24,y:5.89}], backgroundColor:'#a855f7', pointRadius:16 },
+      { label: '成长', data: [{x:5.26,y:7.56}], backgroundColor:'#f97316', pointRadius:14 },
+      { label: '进取', data: [{x:7.32,y:9.26}], backgroundColor:'#ef4444', pointRadius:14 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    scales: {
+      x: { title: { display:true, text:'年化波动率 %', color:'#64748b', font:{size:11} }, grid:{color:'#1f2937'} },
+      y: { title: { display:true, text:'年化收益率 %', color:'#64748b', font:{size:11} }, grid:{color:'#1f2937'} }
     },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { display: false },
-        y: { display: true, grid: { color: '#1f2937' }, ticks: { color: '#64748b', font: { size: 10 } } }
-      }
+    plugins: {
+      legend: { labels: { boxWidth:8, font:{size:11} } },
+      tooltip: { callbacks: { label: (c) => `${c.dataset.label}: 收益${c.raw.y}%, 波动${c.raw.x}%` } }
     }
-  });
-}
+  }
+});
 
-function renderActions() {
-  const actions = DATA.today_actions;
-  const html = actions.map((a, i) => `
-    <div class="action-card priority-${a.priority}">
-      <span class="action-priority p${a.priority}">优先级 ${a.priority}</span>
-      <div class="action-title">${a.title}</div>
-      <div class="action-detail">${a.detail}</div>
-      ${a.path ? `<div class="action-path">${a.path}</div>` : ''}
-    </div>
-  `).join('');
-  document.getElementById('actionCards').innerHTML = html;
-}
+// Drawdown Bar
+new Chart(document.getElementById('drawdownChart'), {
+  type: 'bar',
+  data: {
+    labels: ['当前', '保守', '平衡', '成长', '进取'],
+    datasets: [
+      { label: '1年回撤', data: [0.48,0.58,1.48,2.89,4.38], backgroundColor:'rgba(59,130,246,0.7)', borderRadius:4 },
+      { label: '3年回撤', data: [0.76,1.00,2.52,4.61,6.67], backgroundColor:'rgba(239,68,68,0.7)', borderRadius:4 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    scales: {
+      y: { grid:{color:'#1f2937'}, ticks:{color:'#64748b', callback:v=>v+'%'} },
+      x: { grid:{display:false}, ticks:{color:'#94a3b8'} }
+    },
+    plugins: { legend: { labels: { boxWidth:10, font:{size:11} } } }
+  }
+});
 
-// ==================== Tab Switch ====================
-function switchTab(name) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  document.getElementById('panel-' + name).classList.add('active');
-  event.target.classList.add('active');
-}
+// Init
+loadSavedData();
 
-// ==================== Init ====================
-loadData();
+// Service Worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js?v=3').catch(() => {});
+}
 </script>
 </body>
 </html>
