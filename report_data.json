@@ -1,0 +1,1372 @@
+{
+  "generated_at": "2026-06-23 02:32:45",
+  "portfolio_summary": {
+    "total_asset": 707301.01,
+    "current_allocation": {
+      "bond": {
+        "value": 512111.35,
+        "ratio": 72.4
+      },
+      "money": {
+        "value": 185106.1,
+        "ratio": 26.2
+      },
+      "qdii": {
+        "value": 10083.56,
+        "ratio": 1.4
+      }
+    }
+  },
+  "backtest_scenarios": {
+    "current": {
+      "name": "当前配置",
+      "description": "债券72.4% + 货币26.2% + QDII 1.4%",
+      "allocation": {
+        "bond": 0.724,
+        "money": 0.262,
+        "qdii": 0.014
+      },
+      "1y_metrics": {
+        "total_return": 4.65,
+        "annualized_return": 4.5,
+        "annualized_volatility": 1.22,
+        "sharpe_ratio": 2.043,
+        "max_drawdown": -0.48,
+        "calmar_ratio": 9.43,
+        "sortino_ratio": 3.162,
+        "win_rate": 60.15,
+        "var_95": -0.113,
+        "trading_days": 261
+      },
+      "3y_metrics": {
+        "total_return": 11.45,
+        "annualized_return": 3.57,
+        "annualized_volatility": 1.15,
+        "sharpe_ratio": 1.364,
+        "max_drawdown": -0.76,
+        "calmar_ratio": 4.69,
+        "sortino_ratio": 2.437,
+        "win_rate": 56.08,
+        "var_95": -0.103,
+        "trading_days": 781
+      },
+      "5y_metrics": {
+        "total_return": 18.45,
+        "annualized_return": 3.34,
+        "annualized_volatility": 1.13,
+        "sharpe_ratio": 1.178,
+        "max_drawdown": -0.96,
+        "calmar_ratio": 3.462,
+        "sortino_ratio": 2.1,
+        "win_rate": 55.72,
+        "var_95": -0.107,
+        "trading_days": 1303
+      }
+    },
+    "conservative": {
+      "name": "保守优化",
+      "description": "债券65% + 货币25% + QDII 10%",
+      "allocation": {
+        "bond": 0.65,
+        "money": 0.25,
+        "qdii": 0.1
+      },
+      "1y_metrics": {
+        "total_return": 5.39,
+        "annualized_return": 5.21,
+        "annualized_volatility": 1.55,
+        "sharpe_ratio": 2.072,
+        "max_drawdown": -0.58,
+        "calmar_ratio": 8.986,
+        "sortino_ratio": 3.476,
+        "win_rate": 56.7,
+        "var_95": -0.138,
+        "trading_days": 261
+      },
+      "3y_metrics": {
+        "total_return": 13.72,
+        "annualized_return": 4.25,
+        "annualized_volatility": 1.47,
+        "sharpe_ratio": 1.524,
+        "max_drawdown": -1.0,
+        "calmar_ratio": 4.243,
+        "sortino_ratio": 2.683,
+        "win_rate": 57.23,
+        "var_95": -0.14,
+        "trading_days": 781
+      },
+      "5y_metrics": {
+        "total_return": 20.23,
+        "annualized_return": 3.64,
+        "annualized_volatility": 1.48,
+        "sharpe_ratio": 1.104,
+        "max_drawdown": -1.25,
+        "calmar_ratio": 2.901,
+        "sortino_ratio": 1.917,
+        "win_rate": 55.95,
+        "var_95": -0.145,
+        "trading_days": 1303
+      }
+    },
+    "balanced": {
+      "name": "平衡配置",
+      "description": "债券50% + 货币20% + QDII 30%",
+      "allocation": {
+        "bond": 0.5,
+        "money": 0.2,
+        "qdii": 0.3
+      },
+      "1y_metrics": {
+        "total_return": 7.18,
+        "annualized_return": 6.99,
+        "annualized_volatility": 3.3,
+        "sharpe_ratio": 1.512,
+        "max_drawdown": -1.48,
+        "calmar_ratio": 4.714,
+        "sortino_ratio": 2.632,
+        "win_rate": 55.94,
+        "var_95": -0.311,
+        "trading_days": 261
+      },
+      "3y_metrics": {
+        "total_return": 19.22,
+        "annualized_return": 5.89,
+        "annualized_volatility": 3.24,
+        "sharpe_ratio": 1.199,
+        "max_drawdown": -2.52,
+        "calmar_ratio": 2.342,
+        "sortino_ratio": 2.127,
+        "win_rate": 51.98,
+        "var_95": -0.304,
+        "trading_days": 781
+      },
+      "5y_metrics": {
+        "total_return": 24.56,
+        "annualized_return": 4.4,
+        "annualized_volatility": 3.4,
+        "sharpe_ratio": 0.706,
+        "max_drawdown": -4.19,
+        "calmar_ratio": 1.049,
+        "sortino_ratio": 1.213,
+        "win_rate": 52.95,
+        "var_95": -0.333,
+        "trading_days": 1303
+      }
+    },
+    "growth": {
+      "name": "成长配置",
+      "description": "债券35% + 货币15% + QDII 50%",
+      "allocation": {
+        "bond": 0.35,
+        "money": 0.15,
+        "qdii": 0.5
+      },
+      "1y_metrics": {
+        "total_return": 8.96,
+        "annualized_return": 8.79,
+        "annualized_volatility": 5.3,
+        "sharpe_ratio": 1.281,
+        "max_drawdown": -2.89,
+        "calmar_ratio": 3.046,
+        "sortino_ratio": 2.124,
+        "win_rate": 54.79,
+        "var_95": -0.516,
+        "trading_days": 261
+      },
+      "3y_metrics": {
+        "total_return": 24.81,
+        "annualized_return": 7.56,
+        "annualized_volatility": 5.26,
+        "sharpe_ratio": 1.057,
+        "max_drawdown": -4.61,
+        "calmar_ratio": 1.64,
+        "sortino_ratio": 1.852,
+        "win_rate": 50.45,
+        "var_95": -0.508,
+        "trading_days": 781
+      },
+      "5y_metrics": {
+        "total_return": 28.71,
+        "annualized_return": 5.16,
+        "annualized_volatility": 5.56,
+        "sharpe_ratio": 0.57,
+        "max_drawdown": -8.5,
+        "calmar_ratio": 0.608,
+        "sortino_ratio": 0.973,
+        "win_rate": 52.26,
+        "var_95": -0.555,
+        "trading_days": 1303
+      }
+    },
+    "aggressive": {
+      "name": "进取配置",
+      "description": "债券20% + 货币10% + QDII 70%",
+      "allocation": {
+        "bond": 0.2,
+        "money": 0.1,
+        "qdii": 0.7
+      },
+      "1y_metrics": {
+        "total_return": 10.71,
+        "annualized_return": 10.62,
+        "annualized_volatility": 7.35,
+        "sharpe_ratio": 1.173,
+        "max_drawdown": -4.38,
+        "calmar_ratio": 2.425,
+        "sortino_ratio": 1.906,
+        "win_rate": 54.41,
+        "var_95": -0.737,
+        "trading_days": 261
+      },
+      "3y_metrics": {
+        "total_return": 30.48,
+        "annualized_return": 9.26,
+        "annualized_volatility": 7.32,
+        "sharpe_ratio": 0.991,
+        "max_drawdown": -6.67,
+        "calmar_ratio": 1.388,
+        "sortino_ratio": 1.727,
+        "win_rate": 49.81,
+        "var_95": -0.7,
+        "trading_days": 781
+      },
+      "5y_metrics": {
+        "total_return": 32.66,
+        "annualized_return": 5.94,
+        "annualized_volatility": 7.76,
+        "sharpe_ratio": 0.507,
+        "max_drawdown": -13.4,
+        "calmar_ratio": 0.443,
+        "sortino_ratio": 0.864,
+        "win_rate": 52.03,
+        "var_95": -0.776,
+        "trading_days": 1303
+      }
+    }
+  },
+  "sip_analysis": {
+    "qdii_nasdaq100": {
+      "asset": "qdii_nasdaq100",
+      "total_invested": 1850000.0,
+      "final_value": 2020624.84,
+      "total_return": 9.22,
+      "annualized_return": 2.98,
+      "records": [
+        {
+          "date": "2023-06-30",
+          "price": 83.1803189425956,
+          "shares": 601.1037302526574,
+          "total_shares": 601.1037302526574,
+          "total_invested": 50000.0,
+          "current_value": 50000.0,
+          "return": 0.0
+        },
+        {
+          "date": "2023-07-31",
+          "price": 75.8395734357749,
+          "shares": 659.2864085969937,
+          "total_shares": 1260.390138849651,
+          "total_invested": 100000.0,
+          "current_value": 95587.45049301462,
+          "return": -0.04412549506985379
+        },
+        {
+          "date": "2023-08-31",
+          "price": 79.20291417421662,
+          "shares": 631.2899029197184,
+          "total_shares": 1891.6800417693694,
+          "total_invested": 150000.0,
+          "current_value": 149826.57199333786,
+          "return": -0.0011561867110809543
+        },
+        {
+          "date": "2023-09-30",
+          "price": 79.16747224069647,
+          "shares": 631.5725206936344,
+          "total_shares": 2523.252562463004,
+          "total_invested": 200000.0,
+          "current_value": 199759.5271950561,
+          "return": -0.0012023640247195726
+        },
+        {
+          "date": "2023-10-31",
+          "price": 79.67466317730913,
+          "shares": 627.552072466617,
+          "total_shares": 3150.804634929621,
+          "total_invested": 250000.0,
+          "current_value": 251039.298025522,
+          "return": 0.0041571921020880104
+        },
+        {
+          "date": "2023-11-30",
+          "price": 73.43903702081464,
+          "shares": 680.8368141568717,
+          "total_shares": 3831.6414490864927,
+          "total_invested": 300000.0,
+          "current_value": 281392.0582299508,
+          "return": -0.062026472566830734
+        },
+        {
+          "date": "2023-12-31",
+          "price": 64.17082490399176,
+          "shares": 779.1702861044216,
+          "total_shares": 4610.811735190914,
+          "total_invested": 350000.0,
+          "current_value": 295879.59252420656,
+          "return": -0.1546297356451241
+        },
+        {
+          "date": "2024-01-31",
+          "price": 57.07492749323082,
+          "shares": 876.0414107565898,
+          "total_shares": 5486.853145947503,
+          "total_invested": 400000.0,
+          "current_value": 313161.74547095917,
+          "return": -0.21709563632260206
+        },
+        {
+          "date": "2024-02-29",
+          "price": 56.34729267547688,
+          "shares": 887.3540790675945,
+          "total_shares": 6374.207225015098,
+          "total_invested": 450000.0,
+          "current_value": 359169.320082065,
+          "return": -0.20184595537318886
+        },
+        {
+          "date": "2024-03-31",
+          "price": 53.891152215296536,
+          "shares": 927.7960842300924,
+          "total_shares": 7302.00330924519,
+          "total_invested": 500000.0,
+          "current_value": 393513.37181513157,
+          "return": -0.21297325636973685
+        },
+        {
+          "date": "2024-04-30",
+          "price": 58.754576310611625,
+          "shares": 850.9975416326768,
+          "total_shares": 8153.000850877867,
+          "total_invested": 550000.0,
+          "current_value": 479026.11065338517,
+          "return": -0.12904343517566333
+        },
+        {
+          "date": "2024-05-31",
+          "price": 65.31020366459653,
+          "shares": 765.5771563166031,
+          "total_shares": 8918.57800719447,
+          "total_invested": 600000.0,
+          "current_value": 582474.1460484623,
+          "return": -0.029209756585896248
+        },
+        {
+          "date": "2024-06-30",
+          "price": 66.9032242098772,
+          "shares": 747.3481374103686,
+          "total_shares": 9665.926144604839,
+          "total_invested": 650000.0,
+          "current_value": 646681.6240486114,
+          "return": -0.005105193771367105
+        },
+        {
+          "date": "2024-07-31",
+          "price": 72.57154127929459,
+          "shares": 688.9753079319746,
+          "total_shares": 10354.901452536813,
+          "total_invested": 700000.0,
+          "current_value": 751471.1582058029,
+          "return": 0.07353022600828986
+        },
+        {
+          "date": "2024-08-31",
+          "price": 71.78088840845798,
+          "shares": 696.5642402680053,
+          "total_shares": 11051.465692804819,
+          "total_invested": 750000.0,
+          "current_value": 793284.0256451245,
+          "return": 0.05771203419349932
+        },
+        {
+          "date": "2024-09-30",
+          "price": 87.17846949841837,
+          "shares": 573.53610688138,
+          "total_shares": 11625.001799686199,
+          "total_invested": 800000.0,
+          "current_value": 1013449.864813002,
+          "return": 0.2668123310162524
+        },
+        {
+          "date": "2024-10-31",
+          "price": 85.6279825659544,
+          "shares": 583.9212661759002,
+          "total_shares": 12208.923065862098,
+          "total_invested": 850000.0,
+          "current_value": 1045425.4514327182,
+          "return": 0.22991229580319789
+        },
+        {
+          "date": "2024-11-30",
+          "price": 84.81757243308148,
+          "shares": 589.5004839881323,
+          "total_shares": 12798.423549850231,
+          "total_invested": 900000.0,
+          "current_value": 1085531.2164686779,
+          "return": 0.20614579607630873
+        },
+        {
+          "date": "2024-12-31",
+          "price": 86.4042805724673,
+          "shares": 578.675034022938,
+          "total_shares": 13377.098583873169,
+          "total_invested": 950000.0,
+          "current_value": 1155838.5792865322,
+          "return": 0.21667218872266553
+        },
+        {
+          "date": "2025-01-31",
+          "price": 87.9719078709372,
+          "shares": 568.3632560675454,
+          "total_shares": 13945.461839940714,
+          "total_invested": 1000000.0,
+          "current_value": 1226808.8842009348,
+          "return": 0.22680888420093478
+        },
+        {
+          "date": "2025-02-28",
+          "price": 81.88280743938195,
+          "shares": 610.6287945368157,
+          "total_shares": 14556.090634477529,
+          "total_invested": 1050000.0,
+          "current_value": 1191893.5664931145,
+          "return": 0.13513672999344234
+        },
+        {
+          "date": "2025-03-31",
+          "price": 82.10858037173048,
+          "shares": 608.9497562086059,
+          "total_shares": 15165.040390686134,
+          "total_invested": 1100000.0,
+          "current_value": 1245179.9377591915,
+          "return": 0.131981761599265
+        },
+        {
+          "date": "2025-04-30",
+          "price": 79.01853660237096,
+          "shares": 632.7629205740029,
+          "total_shares": 15797.803311260137,
+          "total_invested": 1150000.0,
+          "current_value": 1248319.2991878663,
+          "return": 0.08549504277205763
+        },
+        {
+          "date": "2025-05-31",
+          "price": 78.42916867683289,
+          "shares": 637.5179138519857,
+          "total_shares": 16435.321225112122,
+          "total_invested": 1200000.0,
+          "current_value": 1289008.5806222504,
+          "return": 0.07417381718520871
+        },
+        {
+          "date": "2025-06-30",
+          "price": 81.58365746754798,
+          "shares": 612.8678408404135,
+          "total_shares": 17048.189065952534,
+          "total_invested": 1250000.0,
+          "current_value": 1390853.6171986682,
+          "return": 0.11268289375893455
+        },
+        {
+          "date": "2025-07-31",
+          "price": 82.44539238156551,
+          "shares": 606.4620296619489,
+          "total_shares": 17654.651095614485,
+          "total_invested": 1300000.0,
+          "current_value": 1455544.6369375717,
+          "return": 0.119649720721209
+        },
+        {
+          "date": "2025-08-31",
+          "price": 84.85369454894257,
+          "shares": 589.2495343400824,
+          "total_shares": 18243.900629954565,
+          "total_invested": 1350000.0,
+          "current_value": 1548062.3714354257,
+          "return": 0.14671286772994496
+        },
+        {
+          "date": "2025-09-30",
+          "price": 96.23360824694541,
+          "shares": 519.5690041227055,
+          "total_shares": 18763.46963407727,
+          "total_invested": 1400000.0,
+          "current_value": 1805676.3861192483,
+          "return": 0.28976884722803453
+        },
+        {
+          "date": "2025-10-31",
+          "price": 95.32120265698197,
+          "shares": 524.5422697815454,
+          "total_shares": 19288.011903858816,
+          "total_invested": 1450000.0,
+          "current_value": 1838556.4915380068,
+          "return": 0.26796999416414263
+        },
+        {
+          "date": "2025-11-30",
+          "price": 93.62320976847704,
+          "shares": 534.05560569485,
+          "total_shares": 19822.067509553668,
+          "total_invested": 1500000.0,
+          "current_value": 1855805.5844918564,
+          "return": 0.23720372299457093
+        },
+        {
+          "date": "2025-12-31",
+          "price": 96.21171172067817,
+          "shares": 519.6872512273765,
+          "total_shares": 20341.754760781045,
+          "total_invested": 1550000.0,
+          "current_value": 1957115.0449369985,
+          "return": 0.2626548677012894
+        },
+        {
+          "date": "2026-01-31",
+          "price": 98.7584321150611,
+          "shares": 506.28588292841863,
+          "total_shares": 20848.040643709464,
+          "total_invested": 1600000.0,
+          "current_value": 2058919.8066438157,
+          "return": 0.2868248791523848
+        },
+        {
+          "date": "2026-02-28",
+          "price": 94.14229100791434,
+          "shares": 531.1109328728426,
+          "total_shares": 21379.151576582306,
+          "total_invested": 1650000.0,
+          "current_value": 2012682.309224922,
+          "return": 0.21980746013631636
+        },
+        {
+          "date": "2026-03-31",
+          "price": 82.33025229047593,
+          "shares": 607.3101758948948,
+          "total_shares": 21986.4617524772,
+          "total_invested": 1700000.0,
+          "current_value": 1810150.9430563473,
+          "return": 0.06479467238608666
+        },
+        {
+          "date": "2026-04-30",
+          "price": 74.44848760212057,
+          "shares": 671.6053154392866,
+          "total_shares": 22658.067067916487,
+          "total_invested": 1750000.0,
+          "current_value": 1686858.8251937968,
+          "return": -0.036080671317830416
+        },
+        {
+          "date": "2026-05-31",
+          "price": 81.06564783785734,
+          "shares": 616.7840674018545,
+          "total_shares": 23274.851135318342,
+          "total_invested": 1800000.0,
+          "current_value": 1886790.8856142708,
+          "return": 0.0482171586745949
+        },
+        {
+          "date": "2026-06-30",
+          "price": 84.66755928999585,
+          "shares": 590.5449551078284,
+          "total_shares": 23865.39609042617,
+          "total_invested": 1850000.0,
+          "current_value": 2020624.8384653928,
+          "return": 0.09222964241372585
+        }
+      ]
+    },
+    "qdii_global_tech": {
+      "asset": "qdii_global_tech",
+      "total_invested": 1850000.0,
+      "final_value": 2369952.86,
+      "total_return": 28.11,
+      "annualized_return": 8.61,
+      "records": [
+        {
+          "date": "2023-06-30",
+          "price": 93.541293662898,
+          "shares": 534.5232895772093,
+          "total_shares": 534.5232895772093,
+          "total_invested": 50000.0,
+          "current_value": 50000.0,
+          "return": 0.0
+        },
+        {
+          "date": "2023-07-31",
+          "price": 95.88262611836494,
+          "shares": 521.470906921929,
+          "total_shares": 1055.9941964991383,
+          "total_invested": 100000.0,
+          "current_value": 101251.49672609007,
+          "return": 0.012514967260900739
+        },
+        {
+          "date": "2023-08-31",
+          "price": 99.73705477526123,
+          "shares": 501.3181922472609,
+          "total_shares": 1557.3123887463992,
+          "total_invested": 150000.0,
+          "current_value": 155321.75101859253,
+          "return": 0.03547834012395023
+        },
+        {
+          "date": "2023-09-30",
+          "price": 95.6174720450756,
+          "shares": 522.9169829592357,
+          "total_shares": 2080.229371705635,
+          "total_invested": 200000.0,
+          "current_value": 198906.27379640873,
+          "return": -0.0054686310179563585
+        },
+        {
+          "date": "2023-10-31",
+          "price": 98.9823350310055,
+          "shares": 505.14063933062255,
+          "total_shares": 2585.3700110362574,
+          "total_invested": 250000.0,
+          "current_value": 255905.96061150523,
+          "return": 0.02362384244602092
+        },
+        {
+          "date": "2023-11-30",
+          "price": 92.53617279255742,
+          "shares": 540.3292408914219,
+          "total_shares": 3125.699251927679,
+          "total_invested": 300000.0,
+          "current_value": 289240.2460739472,
+          "return": -0.035865846420176095
+        },
+        {
+          "date": "2023-12-31",
+          "price": 96.58083800392467,
+          "shares": 517.7010371143,
+          "total_shares": 3643.4002890419792,
+          "total_invested": 350000.0,
+          "current_value": 351882.6530994157,
+          "return": 0.00537900885547345
+        },
+        {
+          "date": "2024-01-31",
+          "price": 95.70296076504545,
+          "shares": 522.449876161637,
+          "total_shares": 4165.850165203617,
+          "total_invested": 400000.0,
+          "current_value": 398684.1949135398,
+          "return": -0.003289512716150493
+        },
+        {
+          "date": "2024-02-29",
+          "price": 98.34055786996022,
+          "shares": 508.43722145767225,
+          "total_shares": 4674.287386661289,
+          "total_invested": 450000.0,
+          "current_value": 459672.02924878965,
+          "return": 0.02149339833064367
+        },
+        {
+          "date": "2024-03-31",
+          "price": 98.43082426269622,
+          "shares": 507.9709570099499,
+          "total_shares": 5182.258343671239,
+          "total_invested": 500000.0,
+          "current_value": 510093.96030979493,
+          "return": 0.02018792061958986
+        },
+        {
+          "date": "2024-04-30",
+          "price": 108.5403624282413,
+          "shares": 460.6581264463368,
+          "total_shares": 5642.916470117576,
+          "total_invested": 550000.0,
+          "current_value": 612484.1988188537,
+          "return": 0.11360763421609765
+        },
+        {
+          "date": "2024-05-31",
+          "price": 111.99547688670964,
+          "shares": 446.4466011478133,
+          "total_shares": 6089.363071265389,
+          "total_invested": 600000.0,
+          "current_value": 681981.1211026862,
+          "return": 0.13663520183781025
+        },
+        {
+          "date": "2024-06-30",
+          "price": 105.79592800193551,
+          "shares": 472.6079816520468,
+          "total_shares": 6561.971052917436,
+          "total_invested": 650000.0,
+          "current_value": 694229.817065238,
+          "return": 0.0680458724080585
+        },
+        {
+          "date": "2024-07-31",
+          "price": 102.72295778943823,
+          "shares": 486.7461089125775,
+          "total_shares": 7048.7171618300135,
+          "total_invested": 700000.0,
+          "current_value": 724065.0754843534,
+          "return": 0.03437867926336193
+        },
+        {
+          "date": "2024-08-31",
+          "price": 106.84325190388877,
+          "shares": 467.9752732065632,
+          "total_shares": 7516.692435036577,
+          "total_invested": 750000.0,
+          "current_value": 803107.8633206681,
+          "return": 0.07081048442755748
+        },
+        {
+          "date": "2024-09-30",
+          "price": 119.41930829129004,
+          "shares": 418.6927617939217,
+          "total_shares": 7935.385196830499,
+          "total_invested": 800000.0,
+          "current_value": 947638.2112304406,
+          "return": 0.18454776403805082
+        },
+        {
+          "date": "2024-10-31",
+          "price": 120.49209857989321,
+          "shares": 414.9649693987786,
+          "total_shares": 8350.350166229278,
+          "total_invested": 850000.0,
+          "current_value": 1006151.2154059259,
+          "return": 0.18370731224226575
+        },
+        {
+          "date": "2024-11-30",
+          "price": 130.41099288296863,
+          "shares": 383.403261447984,
+          "total_shares": 8733.753427677262,
+          "total_invested": 900000.0,
+          "current_value": 1138977.4560984224,
+          "return": 0.2655305067760249
+        },
+        {
+          "date": "2024-12-31",
+          "price": 118.00028157077314,
+          "shares": 423.72780246300897,
+          "total_shares": 9157.48123014027,
+          "total_invested": 950000.0,
+          "current_value": 1080585.363635622,
+          "return": 0.137458277511181
+        },
+        {
+          "date": "2025-01-31",
+          "price": 124.94202707584296,
+          "shares": 400.1855994352384,
+          "total_shares": 9557.66682957551,
+          "total_invested": 1000000.0,
+          "current_value": 1194154.2678027095,
+          "return": 0.19415426780270947
+        },
+        {
+          "date": "2025-02-28",
+          "price": 124.47262803627925,
+          "shares": 401.69474035228706,
+          "total_shares": 9959.361569927796,
+          "total_invested": 1050000.0,
+          "current_value": 1239667.9081724368,
+          "return": 0.18063610302136834
+        },
+        {
+          "date": "2025-03-31",
+          "price": 122.39614154590022,
+          "shares": 408.5096096043952,
+          "total_shares": 10367.87117953219,
+          "total_invested": 1100000.0,
+          "current_value": 1268987.4284196815,
+          "return": 0.15362493492698318
+        },
+        {
+          "date": "2025-04-30",
+          "price": 116.54958563070139,
+          "shares": 429.0019542277038,
+          "total_shares": 10796.873133759895,
+          "total_invested": 1150000.0,
+          "current_value": 1258371.0898469682,
+          "return": 0.09423573030171147
+        },
+        {
+          "date": "2025-05-31",
+          "price": 113.77842998721574,
+          "shares": 439.4506059331109,
+          "total_shares": 11236.323739693005,
+          "total_invested": 1200000.0,
+          "current_value": 1278451.2739303508,
+          "return": 0.06537606160862565
+        },
+        {
+          "date": "2025-06-30",
+          "price": 113.53213875588773,
+          "shares": 440.403929212573,
+          "total_shares": 11676.727668905578,
+          "total_invested": 1250000.0,
+          "current_value": 1325683.8659209015,
+          "return": 0.06054709273672122
+        },
+        {
+          "date": "2025-07-31",
+          "price": 109.42279576943548,
+          "shares": 456.9431775930391,
+          "total_shares": 12133.670846498617,
+          "total_invested": 1300000.0,
+          "current_value": 1327700.1869699715,
+          "return": 0.02130783613074732
+        },
+        {
+          "date": "2025-08-31",
+          "price": 102.45949298763462,
+          "shares": 487.99773004961366,
+          "total_shares": 12621.66857654823,
+          "total_invested": 1350000.0,
+          "current_value": 1293209.7630110916,
+          "return": -0.04206684221400621
+        },
+        {
+          "date": "2025-09-30",
+          "price": 109.90955231335514,
+          "shares": 454.9195128868202,
+          "total_shares": 13076.58808943505,
+          "total_invested": 1400000.0,
+          "current_value": 1437241.9426959583,
+          "return": 0.02660138763997022
+        },
+        {
+          "date": "2025-10-31",
+          "price": 110.91234884336309,
+          "shares": 450.80642977467664,
+          "total_shares": 13527.394519209727,
+          "total_invested": 1450000.0,
+          "current_value": 1500355.0998563871,
+          "return": 0.03472765507337043
+        },
+        {
+          "date": "2025-11-30",
+          "price": 107.14151115948276,
+          "shares": 466.67252924567936,
+          "total_shares": 13994.067048455407,
+          "total_invested": 1500000.0,
+          "current_value": 1499345.490838635,
+          "return": -0.00043633944090999043
+        },
+        {
+          "date": "2025-12-31",
+          "price": 110.36844514811189,
+          "shares": 453.02803652711754,
+          "total_shares": 14447.095084982524,
+          "total_invested": 1550000.0,
+          "current_value": 1594503.4214364504,
+          "return": 0.028711884797709964
+        },
+        {
+          "date": "2026-01-31",
+          "price": 115.41940349455464,
+          "shares": 433.20272403209003,
+          "total_shares": 14880.297809014613,
+          "total_invested": 1600000.0,
+          "current_value": 1717475.0969377952,
+          "return": 0.07342193558612198
+        },
+        {
+          "date": "2026-02-28",
+          "price": 123.28769518302497,
+          "shares": 405.5554767714103,
+          "total_shares": 15285.853285786025,
+          "total_invested": 1650000.0,
+          "current_value": 1884557.620510428,
+          "return": 0.14215613364268362
+        },
+        {
+          "date": "2026-03-31",
+          "price": 128.05444396723416,
+          "shares": 390.45892083834053,
+          "total_shares": 15676.312206624365,
+          "total_invested": 1700000.0,
+          "current_value": 2007421.4430760487,
+          "return": 0.18083614298591102
+        },
+        {
+          "date": "2026-04-30",
+          "price": 143.1604537529384,
+          "shares": 349.25846271965827,
+          "total_shares": 16025.570669344022,
+          "total_invested": 1750000.0,
+          "current_value": 2294227.968673071,
+          "return": 0.3109874106703262
+        },
+        {
+          "date": "2026-05-31",
+          "price": 136.44269616678477,
+          "shares": 366.45420681867074,
+          "total_shares": 16392.024876162694,
+          "total_invested": 1800000.0,
+          "current_value": 2236572.069736644,
+          "return": 0.2425400387425801
+        },
+        {
+          "date": "2026-06-30",
+          "price": 141.52936455831878,
+          "shares": 353.28357585748176,
+          "total_shares": 16745.308452020174,
+          "total_invested": 1850000.0,
+          "current_value": 2369952.86454746,
+          "return": 0.2810556024580864
+        }
+      ]
+    },
+    "bond_china_bond": {
+      "asset": "bond_china_bond",
+      "total_invested": 1850000.0,
+      "final_value": 2061103.41,
+      "total_return": 11.41,
+      "annualized_return": 3.67,
+      "records": [
+        {
+          "date": "2023-06-30",
+          "price": 106.96128155896415,
+          "shares": 467.458871764141,
+          "total_shares": 467.458871764141,
+          "total_invested": 50000.0,
+          "current_value": 50000.0,
+          "return": 0.0
+        },
+        {
+          "date": "2023-07-31",
+          "price": 106.34290582539478,
+          "shares": 470.17710877766854,
+          "total_shares": 937.6359805418095,
+          "total_invested": 100000.0,
+          "current_value": 99710.93477725935,
+          "return": -0.0028906522274065355
+        },
+        {
+          "date": "2023-08-31",
+          "price": 106.44025829555659,
+          "shares": 469.7470750321101,
+          "total_shares": 1407.3830555739196,
+          "total_invested": 150000.0,
+          "current_value": 149802.21595607768,
+          "return": -0.0013185602928154792
+        },
+        {
+          "date": "2023-09-30",
+          "price": 107.18745960099876,
+          "shares": 466.4724790206158,
+          "total_shares": 1873.8555345945354,
+          "total_invested": 200000.0,
+          "current_value": 200853.8144124597,
+          "return": 0.00426907206229851
+        },
+        {
+          "date": "2023-10-31",
+          "price": 107.82526792759374,
+          "shares": 463.71319970728695,
+          "total_shares": 2337.568734301822,
+          "total_invested": 250000.0,
+          "current_value": 252048.97507526015,
+          "return": 0.008195900301040615
+        },
+        {
+          "date": "2023-11-30",
+          "price": 108.96307568653461,
+          "shares": 458.8710412675959,
+          "total_shares": 2796.439775569418,
+          "total_invested": 300000.0,
+          "current_value": 304708.67891820637,
+          "return": 0.015695596394021218
+        },
+        {
+          "date": "2023-12-31",
+          "price": 109.16510208748073,
+          "shares": 458.02183155503224,
+          "total_shares": 3254.4616071244504,
+          "total_invested": 350000.0,
+          "current_value": 355273.6335815272,
+          "return": 0.015067524518649194
+        },
+        {
+          "date": "2024-01-31",
+          "price": 108.91895374682514,
+          "shares": 459.0569251722861,
+          "total_shares": 3713.5185322967363,
+          "total_invested": 400000.0,
+          "current_value": 404472.5532572062,
+          "return": 0.011181383143015556
+        },
+        {
+          "date": "2024-02-29",
+          "price": 109.1505369433966,
+          "shares": 458.08295039289686,
+          "total_shares": 4171.6014826896335,
+          "total_invested": 450000.0,
+          "current_value": 455332.54174944287,
+          "return": 0.011850092776539709
+        },
+        {
+          "date": "2024-03-31",
+          "price": 109.04784243481626,
+          "shares": 458.5143445629168,
+          "total_shares": 4630.11582725255,
+          "total_invested": 500000.0,
+          "current_value": 504904.141185185,
+          "return": 0.009808282370369998
+        },
+        {
+          "date": "2024-04-30",
+          "price": 109.04688259686377,
+          "shares": 458.5183804368381,
+          "total_shares": 5088.634207689388,
+          "total_invested": 550000.0,
+          "current_value": 554899.6970242895,
+          "return": 0.008908540044162762
+        },
+        {
+          "date": "2024-05-31",
+          "price": 109.33249962436733,
+          "shares": 457.320560416935,
+          "total_shares": 5545.954768106323,
+          "total_invested": 600000.0,
+          "current_value": 606353.0976007428,
+          "return": 0.010588496001238042
+        },
+        {
+          "date": "2024-06-30",
+          "price": 110.61430648904225,
+          "shares": 452.0210955257685,
+          "total_shares": 5997.975863632091,
+          "total_invested": 650000.0,
+          "current_value": 663461.940493678,
+          "return": 0.020710677682581502
+        },
+        {
+          "date": "2024-07-31",
+          "price": 110.69754767798075,
+          "shares": 451.6811894103566,
+          "total_shares": 6449.657053042448,
+          "total_invested": 700000.0,
+          "current_value": 713961.2191357912,
+          "return": 0.01994459876541597
+        },
+        {
+          "date": "2024-08-31",
+          "price": 111.87801513189275,
+          "shares": 446.91532953150005,
+          "total_shares": 6896.572382573948,
+          "total_invested": 750000.0,
+          "current_value": 771574.8293758018,
+          "return": 0.02876643916773579
+        },
+        {
+          "date": "2024-09-30",
+          "price": 112.21429990665797,
+          "shares": 445.576009845367,
+          "total_shares": 7342.148392419314,
+          "total_invested": 800000.0,
+          "current_value": 823894.0416661276,
+          "return": 0.02986755208265953
+        },
+        {
+          "date": "2024-10-31",
+          "price": 113.41925022716597,
+          "shares": 440.8422723643088,
+          "total_shares": 7782.990664783623,
+          "total_invested": 850000.0,
+          "current_value": 882740.9657247906,
+          "return": 0.03851878320563598
+        },
+        {
+          "date": "2024-11-30",
+          "price": 116.15987881559772,
+          "shares": 430.44122040945257,
+          "total_shares": 8213.431885193077,
+          "total_invested": 900000.0,
+          "current_value": 954071.2524441942,
+          "return": 0.06007916938243796
+        },
+        {
+          "date": "2024-12-31",
+          "price": 117.718179202967,
+          "shares": 424.7432328509868,
+          "total_shares": 8638.175118044064,
+          "total_invested": 950000.0,
+          "current_value": 1016870.2465325217,
+          "return": 0.07038973319212809
+        },
+        {
+          "date": "2025-01-31",
+          "price": 117.5826426165244,
+          "shares": 425.232831031587,
+          "total_shares": 9063.407949075652,
+          "total_invested": 1000000.0,
+          "current_value": 1065699.4577639287,
+          "return": 0.06569945776392869
+        },
+        {
+          "date": "2025-02-28",
+          "price": 118.73611891138327,
+          "shares": 421.10185559725653,
+          "total_shares": 9484.509804672909,
+          "total_invested": 1050000.0,
+          "current_value": 1126153.883983823,
+          "return": 0.07252750855602191
+        },
+        {
+          "date": "2025-03-31",
+          "price": 118.28921082046658,
+          "shares": 422.6928191776297,
+          "total_shares": 9907.202623850539,
+          "total_invested": 1100000.0,
+          "current_value": 1171915.1798137361,
+          "return": 0.06537743619430557
+        },
+        {
+          "date": "2025-04-30",
+          "price": 118.98926299250472,
+          "shares": 420.2059811325124,
+          "total_shares": 10327.408604983051,
+          "total_invested": 1150000.0,
+          "current_value": 1228850.7385293846,
+          "return": 0.06856585959076922
+        },
+        {
+          "date": "2025-05-31",
+          "price": 121.34544204726296,
+          "shares": 412.0467910160601,
+          "total_shares": 10739.455395999112,
+          "total_invested": 1200000.0,
+          "current_value": 1303183.9623743757,
+          "return": 0.08598663531197973
+        },
+        {
+          "date": "2025-06-30",
+          "price": 121.8064162113985,
+          "shares": 410.48740743856695,
+          "total_shares": 11149.942803437678,
+          "total_invested": 1250000.0,
+          "current_value": 1358134.5738488173,
+          "return": 0.0865076590790538
+        },
+        {
+          "date": "2025-07-31",
+          "price": 122.00921997818826,
+          "shares": 409.8050951308316,
+          "total_shares": 11559.74789856851,
+          "total_invested": 1300000.0,
+          "current_value": 1410395.8242488448,
+          "return": 0.08491986480680366
+        },
+        {
+          "date": "2025-08-31",
+          "price": 122.88967011448145,
+          "shares": 406.86902286759374,
+          "total_shares": 11966.616921436103,
+          "total_invested": 1350000.0,
+          "current_value": 1470573.6058616543,
+          "return": 0.0893137821197439
+        },
+        {
+          "date": "2025-09-30",
+          "price": 123.87596224268755,
+          "shares": 403.62955891348906,
+          "total_shares": 12370.246480349593,
+          "total_invested": 1400000.0,
+          "current_value": 1532376.1859325247,
+          "return": 0.09455441852323196
+        },
+        {
+          "date": "2025-10-31",
+          "price": 126.42819111461594,
+          "shares": 395.48141564939044,
+          "total_shares": 12765.727895998984,
+          "total_invested": 1450000.0,
+          "current_value": 1613947.8861525436,
+          "return": 0.11306750769140937
+        },
+        {
+          "date": "2025-11-30",
+          "price": 125.99072532557491,
+          "shares": 396.8546087086497,
+          "total_shares": 13162.582504707632,
+          "total_invested": 1500000.0,
+          "current_value": 1658363.3169258372,
+          "return": 0.10557554461722479
+        },
+        {
+          "date": "2025-12-31",
+          "price": 126.93006828636769,
+          "shares": 393.91769558647604,
+          "total_shares": 13556.50020029411,
+          "total_invested": 1550000.0,
+          "current_value": 1720727.4961474885,
+          "return": 0.11014677170805708
+        },
+        {
+          "date": "2026-01-31",
+          "price": 126.99797738888674,
+          "shares": 393.7070576084259,
+          "total_shares": 13950.207257902535,
+          "total_invested": 1600000.0,
+          "current_value": 1771648.10590939,
+          "return": 0.10728006619336869
+        },
+        {
+          "date": "2026-02-28",
+          "price": 127.14426965586334,
+          "shares": 393.2540580502223,
+          "total_shares": 14343.461315952758,
+          "total_invested": 1650000.0,
+          "current_value": 1823688.9133539419,
+          "return": 0.1052660080932981
+        },
+        {
+          "date": "2026-03-31",
+          "price": 128.81423918918466,
+          "shares": 388.1558460828765,
+          "total_shares": 14731.617162035634,
+          "total_invested": 1700000.0,
+          "current_value": 1897642.056753956,
+          "return": 0.11626003338468001
+        },
+        {
+          "date": "2026-04-30",
+          "price": 128.39107913009286,
+          "shares": 389.43515654492836,
+          "total_shares": 15121.052318580563,
+          "total_invested": 1750000.0,
+          "current_value": 1941408.2247651513,
+          "return": 0.1093761284372293
+        },
+        {
+          "date": "2026-05-31",
+          "price": 129.05438139779505,
+          "shares": 387.4335722541712,
+          "total_shares": 15508.485890834734,
+          "total_invested": 1800000.0,
+          "current_value": 2001438.0530581092,
+          "return": 0.11191002947672736
+        },
+        {
+          "date": "2026-06-30",
+          "price": 129.67761152889162,
+          "shares": 385.5715679098563,
+          "total_shares": 15894.05745874459,
+          "total_invested": 1850000.0,
+          "current_value": 2061103.4087529632,
+          "return": 0.11410995067727739
+        }
+      ]
+    }
+  },
+  "monte_carlo": {
+    "current": {
+      "name": "当前配置",
+      "mean_final": 932858.69,
+      "median_final": 931247.2,
+      "percentile_5": 863353.57,
+      "percentile_25": 902841.98,
+      "percentile_75": 962034.87,
+      "percentile_95": 1005384.09,
+      "prob_profit": 100.0,
+      "prob_double": 0.0,
+      "expected_annual_return": 2.79,
+      "expected_volatility": 1.47
+    },
+    "conservative": {
+      "name": "保守优化",
+      "mean_final": 1025780.08,
+      "median_final": 1024339.25,
+      "percentile_5": 903725.8,
+      "percentile_25": 971079.48,
+      "percentile_75": 1078856.44,
+      "percentile_95": 1155445.85,
+      "prob_profit": 100.0,
+      "prob_double": 0.0,
+      "expected_annual_return": 3.75,
+      "expected_volatility": 2.42
+    },
+    "balanced": {
+      "name": "平衡配置",
+      "mean_final": 1289296.82,
+      "median_final": 1268381.31,
+      "percentile_5": 920726.75,
+      "percentile_25": 1107931.57,
+      "percentile_75": 1435079.97,
+      "percentile_95": 1751249.45,
+      "prob_profit": 99.7,
+      "prob_double": 26.9,
+      "expected_annual_return": 6.0,
+      "expected_volatility": 6.22
+    },
+    "growth": {
+      "name": "成长配置",
+      "mean_final": 1621306.3,
+      "median_final": 1528171.17,
+      "percentile_5": 908814.73,
+      "percentile_25": 1247057.13,
+      "percentile_75": 1938469.43,
+      "percentile_95": 2638646.16,
+      "prob_profit": 99.0,
+      "prob_double": 59.9,
+      "expected_annual_return": 8.25,
+      "expected_volatility": 10.25
+    },
+    "aggressive": {
+      "name": "进取配置",
+      "mean_final": 2050521.59,
+      "median_final": 1856128.65,
+      "percentile_5": 909268.44,
+      "percentile_25": 1386716.28,
+      "percentile_75": 2499160.24,
+      "percentile_95": 3818856.34,
+      "prob_profit": 98.6,
+      "prob_double": 73.5,
+      "expected_annual_return": 10.51,
+      "expected_volatility": 14.33
+    }
+  },
+  "recommendations": [
+    {
+      "type": "sharpe",
+      "title": "最佳风险调整后收益配置",
+      "scenario": "保守优化",
+      "value": 1.524,
+      "description": "夏普比率最高(1.524)，单位风险收益最优"
+    },
+    {
+      "type": "return",
+      "title": "最高收益配置",
+      "scenario": "进取配置",
+      "value": 9.26,
+      "description": "年化收益最高(9.26%)，适合风险承受能力强的投资者"
+    },
+    {
+      "type": "drawdown",
+      "title": "最稳健配置",
+      "scenario": "当前配置",
+      "value": 0.76,
+      "description": "最大回撤最小(0.76%)，适合保守型投资者"
+    },
+    {
+      "type": "montecarlo",
+      "title": "最高盈利概率配置（10年）",
+      "scenario": "当前配置",
+      "value": 100.0,
+      "description": "10年盈利概率最高(100.0%)"
+    }
+  ]
+}
