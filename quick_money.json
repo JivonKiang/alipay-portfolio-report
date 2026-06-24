@@ -1,0 +1,26 @@
+{
+  "updated": "2026-06-24T00:00:00+08:00",
+  "is_trading_day": true,
+  "scan_time": "--",
+  "total_flexible": 96000,
+  "max_position": 20000,
+  "boards_scanned": 0,
+  "signals": [],
+  "summary": {
+    "total_signals": 0,
+    "actionable_signals": 0,
+    "suggested_position_today": 0,
+    "available_cash": 95000,
+    "fee_reminder": "C类持有≥30天赎回费为0；7天内1.5%罚息，7-30天0.5%"
+  },
+  "fee_schedule": {
+    "0-6天": "1.5% 赎回费 ❌ 绝对禁止",
+    "7-29天": "0.5% 赎回费 ⚠️ 仅预期涨幅>2%可考虑",
+    "30天+": "0% ✅ 自由进出"
+  },
+  "rule_reminder": {
+    "timing": "支付宝T日15:00前下单按当日净值，15:00后按次交易日净值",
+    "settlement": "T+1确认份额，T+2可赎回",
+    "nav_update": "基金净值每晚约20:00更新，日内数据为板块指数估算"
+  }
+}
