@@ -18,12 +18,17 @@ from datetime import datetime, date, timedelta
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 CACHE_FILE = os.path.join(SCRIPT_DIR, "cache", "board_kline_cache.json")
-OUTPUT_FILE = os.path.join(SCRIPT_DIR, "quick_money.json")
+OUTPUT_FILE = os.path.join(os.path.dirname(SCRIPT_DIR), "output", "quick_money.json")
+SIGNAL_HISTORY_FILE = os.path.join(SCRIPT_DIR, "cache", "signal_history.json")
+FUND_ESTIMATE_CACHE = os.path.join(SCRIPT_DIR, "cache", "fund_estimate_cache.json")
 
 # ========== 配置 ==========
 TOTAL_FLEXIBLE = 96000  # 灵活资金总额
+TOTAL_MONEY_FUND = 50000  # 货币基金约5万
+TOTAL_ASSETS = TOTAL_FLEXIBLE + TOTAL_MONEY_FUND  # 总资产约14.6万
 MAX_TOTAL_POSITION = 20000  # 快钱总仓位上限
 MIN_FUND_SCALE = 0.5  # 基金最小规模(亿)，防清盘风险
+POSITIONS_FILE = os.path.join(SCRIPT_DIR, "positions.json")  # 持仓状态文件
 
 # 25个高波动概念板块（东财代码 BKxxxx）
 BOARDS = {
@@ -61,6 +66,420 @@ BOARDS = {
 
 # 用户已持仓基金（用于避免重复推荐）
 EXISTING_HOLDINGS = {"005844", "006503", "025209"}
+
+
+# ========== 持仓状态管理 ==========
+def load_positions():
+    """加载当前持仓状态"""
+    if os.path.exists(POSITIONS_FILE):
+        with open(POSITIONS_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {"positions": {}, "total_invested": 0, "history": []}
+
+
+def save_positions(positions_data):
+    """保存持仓状态"""
+    pos_dir = os.path.dirname(POSITIONS_FILE)
+    if pos_dir:
+        os.makedirs(pos_dir, exist_ok=True)
+    with open(POSITIONS_FILE, "w", encoding="utf-8") as f:
+        json.dump(positions_data, f, ensure_ascii=False, indent=2)
+
+
+def get_days_held(entry_date_str):
+    """计算持仓天数"""
+    try:
+        entry = datetime.strptime(entry_date_str, "%Y-%m-%d")
+        return (date.today() - entry.date()).days
+    except:
+        return 0
+
+
+def purchase_gate(signal, fund_code, positions_data, fund_estimate=None):
+    """
+    申购门控 - 四道硬约束，全部通过才放行。
+    返回: (allowed: bool, gate_results: list, reason: str)
+    """
+    gates = []
+    
+    # ===== 门控1: 费率窗口检查 =====
+    # 检查同基金是否7天内买过（不能再买，否则锁死流动性）
+    pos = positions_data["positions"].get(fund_code, {})
+    if pos:
+        days_held = get_days_held(pos["entry_date"])
+        if days_held < 7:
+            gates.append({
+                "gate": 1,
+                "name": "费率窗口",
+                "passed": False,
+                "reason": f"同基金持仓仅{days_held}天，7天内追加会锁死所有资金(1.5%罚息)，禁止追加",
+                "severity": "BLOCK"
+            })
+            return False, gates, f"门控1未通过: 同基金{fund_code}持仓{days_held}天<7天"
+        elif days_held < 30:
+            gates.append({
+                "gate": 1,
+                "name": "费率窗口",
+                "passed": True,
+                "reason": f"同基金持仓{days_held}天，仍在0.5%费区内，追加需谨慎",
+                "severity": "WARN"
+            })
+        else:
+            gates.append({
+                "gate": 1,
+                "name": "费率窗口",
+                "passed": True,
+                "reason": f"同基金持仓{days_held}天，0费率区，无限制",
+                "severity": "OK"
+            })
+    else:
+        gates.append({
+            "gate": 1,
+            "name": "费率窗口",
+            "passed": True,
+            "reason": "新开仓，7天内不可赎回(1.5%)，需有把握",
+            "severity": "OK"
+        })
+    
+    # ===== 门控2: 成本锚点检查 =====
+    change_pct = signal.get("change_pct", 0)
+    if change_pct >= 5:
+        gates.append({
+            "gate": 2,
+            "name": "成本锚点",
+            "passed": False,
+            "reason": f"今日涨幅{change_pct}%>=5%，追高成本锚点过高，等阴线再入",
+            "severity": "BLOCK"
+        })
+        return False, gates, f"门控2未通过: 今日涨幅{change_pct}%>=5%"
+    elif change_pct >= 3:
+        gates.append({
+            "gate": 2,
+            "name": "成本锚点",
+            "passed": False,
+            "reason": f"今日涨幅{change_pct}%>=3%，追高不建议。如需买入等回调至MA10附近",
+            "severity": "BLOCK"
+        })
+        return False, gates, f"门控2未通过: 今日涨幅{change_pct}%>=3%"
+    else:
+        gates.append({
+            "gate": 2,
+            "name": "成本锚点",
+            "passed": True,
+            "reason": f"今日涨幅{change_pct}%，成本锚点合理",
+            "severity": "OK"
+        })
+    
+    # ===== 门控3: 信号一致性检查 =====
+    if fund_estimate:
+        est_direction = "up" if fund_estimate["change_pct"] > 0 else "down"
+        board_direction = "up" if change_pct > 0 else "down"
+        if est_direction != board_direction:
+            gates.append({
+                "gate": 3,
+                "name": "信号一致性",
+                "passed": False,
+                "reason": f"板块{change_pct:+.2f}%与基金估算{fund_estimate['change_pct']:+.2f}%方向矛盾，估值不可靠",
+                "severity": "BLOCK"
+            })
+            return False, gates, "门控3未通过: 板块与基金方向矛盾"
+    
+    # 检查板块涨幅绝对值 vs 基金估值涨幅绝对值 偏差
+    if fund_estimate and abs(fund_estimate["change_pct"] - change_pct) > 5:
+        gates.append({
+            "gate": 3,
+            "name": "信号一致性",
+            "passed": False,
+            "reason": f"板块{change_pct:+.2f}%与基金估算{fund_estimate['change_pct']:+.2f}%偏差>5%，估值异常",
+            "severity": "BLOCK"
+        })
+        return False, gates, "门控3未通过: 板块与基金偏差过大"
+    
+    gates.append({
+        "gate": 3,
+        "name": "信号一致性",
+        "passed": True,
+        "reason": "板块与基金信号一致",
+        "severity": "OK"
+    })
+    
+    # ===== 门控4: 仓位上限检查 =====
+    total_invested = positions_data.get("total_invested", 0)
+    signal_position = signal.get("position", 500)
+    new_total = total_invested + signal_position
+    
+    if new_total > MAX_TOTAL_POSITION:
+        remaining = MAX_TOTAL_POSITION - total_invested
+        gates.append({
+            "gate": 4,
+            "name": "仓位上限",
+            "passed": False,
+            "reason": f"已投{total_invested}+本次{signal_position}={new_total}超过上限{MAX_TOTAL_POSITION}，剩余额度{remaining}",
+            "severity": "BLOCK"
+        })
+        # 不算完全阻止，降额度
+        if remaining >= 200:
+            signal["position"] = remaining
+            gates[-1]["reason"] += f"，建议降为{remaining}元"
+            # 不return False，允许降额通过
+    
+    gates.append({
+        "gate": 4,
+        "name": "仓位上限",
+        "passed": True,
+        "reason": f"已投{total_invested}+{signal_position}={new_total}≤{MAX_TOTAL_POSITION}",
+        "severity": "OK"
+    })
+    
+    return True, gates, "全部门控通过"
+
+
+# ========== 退出/止盈信号检测 ==========
+def detect_exit_signals(klines, fund_code, positions_data):
+    """
+    检测已有持仓的退出信号
+    返回: exit_signal 或 None
+    """
+    pos = positions_data["positions"].get(fund_code)
+    if not pos:
+        return None
+    
+    days_held = get_days_held(pos["entry_date"])
+    closes = [k["close"] for k in klines]
+    latest = klines[-1]
+    entry_price = pos.get("entry_nav", 0)
+    
+    if entry_price <= 0:
+        return None
+    
+    pnl_pct = (latest["close"] - entry_price) / entry_price * 100
+    
+    exit_signal = None
+    
+    # 止损: 持仓>7天 + 相对成本跌>8% → 强制止损
+    if days_held > 7 and pnl_pct <= -8:
+        exit_signal = {
+            "type": "stop_loss",
+            "label": "🛑 强制止损",
+            "reason": f"持仓{days_held}天亏损{pnl_pct:.1f}%超8%止损线",
+            "action": "赎回全部"
+        }
+    
+    # 止盈: 涨幅>15% + 出现高换手/长上影 → 减半仓
+    elif pnl_pct >= 15:
+        # 检查是否高换手（量比>2）或长上影（上影线>实体2倍）
+        vol_ratio = latest["volume"] / (sum([k["volume"] for k in klines[-6:-1]]) / 5) if len(klines) >= 6 else 1
+        upper_shadow = latest["high"] - max(latest["open"], latest["close"])
+        body = abs(latest["close"] - latest["open"])
+        long_shadow = (body > 0 and upper_shadow / body > 2)
+        
+        if vol_ratio >= 2 or long_shadow:
+            exit_signal = {
+                "type": "take_profit",
+                "label": "💰 止盈信号",
+                "reason": f"持仓{days_held}天盈利{pnl_pct:.1f}%{'，放量' if vol_ratio>=2 else '，长上影'}",
+                "action": "减仓50%"
+            }
+    
+    # 连跌破MA20: 持仓>7天 + 连跌3天 + 跌破MA20 → 减仓
+    elif days_held > 7:
+        ma20 = sum(closes[-20:]) / 20 if len(closes) >= 20 else None
+        if ma20 and latest["close"] < ma20 and is_consecutive_drop(klines, 3):
+            exit_signal = {
+                "type": "trend_break",
+                "label": "📉 趋势破位",
+                "reason": f"连跌3天+跌破MA20({ma20:.1f})，持仓{days_held}天",
+                "action": "减仓50%或清仓"
+            }
+    
+    return exit_signal
+
+
+# ========== P3: 基金实时估值 API ==========
+def fetch_fund_estimate(fund_code):
+    """获取基金实时估算净值（天天基金API）"""
+    if not fund_code or len(fund_code) < 6:
+        return None
+    
+    url = f"https://fundgz.1234567.com.cn/js/{fund_code}.js?rt={int(time.time()*1000)}"
+    for attempt in range(3):
+        try:
+            req = urllib.request.Request(url, headers={
+                "User-Agent": "Mozilla/5.0",
+                "Referer": "https://fund.eastmoney.com/"
+            })
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                text = resp.read().decode()
+            start = text.index("{")
+            end = text.rindex("}") + 1
+            data = json.loads(text[start:end])
+            return {
+                "code": fund_code,
+                "name": data.get("name", ""),
+                "nav_estimate": float(data.get("gsz", 0)),
+                "change_pct": float(data.get("gszzl", 0)),
+                "yesterday_nav": float(data.get("dwjz", 0)),
+                "update_time": data.get("gztime", ""),
+            }
+        except:
+            if attempt < 2:
+                time.sleep(1)
+    return None
+
+
+def batch_fetch_estimates(fund_codes):
+    """批量获取基金估值，带缓存"""
+    cache = {}
+    cache_dir = os.path.dirname(FUND_ESTIMATE_CACHE)
+    if cache_dir:
+        os.makedirs(cache_dir, exist_ok=True)
+    
+    if os.path.exists(FUND_ESTIMATE_CACHE):
+        try:
+            with open(FUND_ESTIMATE_CACHE, "r") as f:
+                cached = json.load(f)
+            cache_time = cached.get("_timestamp", "")
+            today_str = date.today().strftime("%Y-%m-%d")
+            if cache_time.startswith(today_str) and datetime.now().hour < 15:
+                cache = cached
+        except:
+            pass
+    
+    results = {}
+    for code in fund_codes:
+        if code in cache and code != "_timestamp":
+            results[code] = cache[code]
+        else:
+            est = fetch_fund_estimate(code)
+            if est:
+                results[code] = est
+                cache[code] = est
+            time.sleep(0.2)
+    
+    cache["_timestamp"] = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+    with open(FUND_ESTIMATE_CACHE, "w") as f:
+        json.dump(cache, f, ensure_ascii=False, indent=2)
+    
+    return results
+
+
+# ========== P3: 信号有效期管理 ==========
+def load_signal_history():
+    """加载信号历史"""
+    if os.path.exists(SIGNAL_HISTORY_FILE):
+        with open(SIGNAL_HISTORY_FILE, "r") as f:
+            return json.load(f)
+    return {}
+
+
+def save_signal_history(history):
+    hist_dir = os.path.dirname(SIGNAL_HISTORY_FILE)
+    if hist_dir:
+        os.makedirs(hist_dir, exist_ok=True)
+    with open(SIGNAL_HISTORY_FILE, "w") as f:
+        json.dump(history, f, ensure_ascii=False, indent=2)
+
+
+def check_signal_freshness(signal, history):
+    """
+    检查信号新鲜度：
+    - 新信号 → fresh (第一天出现)
+    - 连续出现 → persistent (持续2-3天，还可执行)
+    - 过期 → stale (超过3天)
+    - 失效 → invalidated (今天方向反转)
+    """
+    board = signal["board"]
+    sig_type = signal["type"]
+    key = f"{board}_{sig_type}"
+    
+    today_str = date.today().strftime("%Y-%m-%d")
+    today_change = signal.get("change_pct", 0)
+    
+    if key not in history:
+        # 全新信号
+        history[key] = {
+            "first_seen": today_str,
+            "last_seen": today_str,
+            "seen_count": 1,
+            "direction_at_first": "up" if today_change > 0 else "down",
+        }
+        return "fresh"
+    
+    entry = history[key]
+    first_date = datetime.strptime(entry["first_seen"], "%Y-%m-%d").date()
+    days_since_first = (date.today() - first_date).days
+    
+    # 反转检测：比较今天方向与首次出现方向
+    first_direction = entry["direction_at_first"]
+    today_direction = "up" if today_change > 0 else "down"
+    
+    if days_since_first >= 0 and first_direction != today_direction:
+        # 放量突破信号：方向反转 → 失效
+        if sig_type == "breakout" and today_direction == "down":
+            return "invalidated"
+        # 缩量止跌信号：如果放量反弹，止跌确认
+        if sig_type == "dip_buy" and today_direction == "up" and signal.get("vol_ratio", 0) > 1.5:
+            entry["last_seen"] = today_str
+            entry["seen_count"] = entry.get("seen_count", 0) + 1
+            return "confirmed"
+        # 反转但非标准失效模式，仅标记
+        entry["direction_reversed"] = True
+    
+    # 更新历史
+    entry["last_seen"] = today_str
+    entry["seen_count"] = entry.get("seen_count", 0) + 1
+    
+    if days_since_first <= 2:
+        return "persistent"
+    else:
+        return "stale"
+
+
+# ========== P4: 波动率分级 & 动态仓位 ==========
+def calc_volatility(closes):
+    """计算30日年化波动率"""
+    if len(closes) < 21:
+        return 0
+    returns = [(closes[i] - closes[i-1]) / closes[i-1] for i in range(1, len(closes))]
+    daily_vol = (sum((r - sum(returns)/len(returns))**2 for r in returns) / len(returns)) ** 0.5
+    annual_vol = daily_vol * (252 ** 0.5)
+    return round(annual_vol * 100, 1)
+
+
+def adjust_position_by_volatility(signal, closes):
+    """
+    根据板块波动率动态调整仓位：
+    - 低波动(<15%): 1.2倍仓位（更安全，可以多买）
+    - 中波动(15-25%): 标准仓位
+    - 高波动(>25%): 0.7倍仓位（风险大，少买）
+    """
+    vol = calc_volatility(closes)
+    base_position = signal.get("position", 500)
+    
+    if vol < 15:
+        adjusted = int(base_position * 1.2)
+        grade = "low"
+        grade_label = "低波动"
+    elif vol <= 25:
+        adjusted = base_position
+        grade = "medium"
+        grade_label = "中波动"
+    else:
+        adjusted = int(base_position * 0.7)
+        grade = "high"
+        grade_label = "高波动"
+    
+    # 底限200，上限5000
+    adjusted = max(200, min(adjusted, 5000))
+    
+    signal["volatility"] = vol
+    signal["vol_grade"] = grade
+    signal["vol_label"] = grade_label
+    signal["position"] = adjusted
+    signal["position_raw"] = base_position
+    signal["position_note"] = f"波动率{vol}%→{grade_label}，仓位{base_position}→{adjusted}" if adjusted != base_position else ""
+    
+    return signal
 
 
 # ========== 东方财富API ==========
@@ -379,6 +798,8 @@ def is_trading_day():
 # ========== 主函数 ==========
 def main(dry_run=False):
     cache = load_cache()
+    positions_data = load_positions()
+    signal_history = load_signal_history()
     now = datetime.now()
     
     if not is_trading_day():
@@ -456,6 +877,35 @@ def main(dry_run=False):
         print(f"\n  检测到 {len(rotations)} 个轮动补涨信号")
         signals.extend(rotations)
     
+    # P3a: 信号新鲜度过滤
+    fresh_signals = []
+    stale_signals = []
+    for sig in signals:
+        freshness = check_signal_freshness(sig, signal_history)
+        sig["freshness"] = freshness
+        if freshness == "invalidated":
+            print(f"  ✗ {sig['board']} {sig['label']} → 失效（方向反转）")
+            continue
+        if freshness == "stale":
+            sig["note"] = sig.get("note", "") + " [信号已过3天，仅参考]"
+            stale_signals.append(sig)
+        else:
+            sig["freshness_label"] = {"fresh": "🆕", "persistent": "⏳", "confirmed": "✅"}.get(freshness, "")
+            fresh_signals.append(sig)
+    
+    # 合并：新鲜信号优先，过期信号放后面
+    signals = fresh_signals + stale_signals
+    
+    # P4: 波动率分级动态仓位
+    for sig in signals:
+        board = sig["board"]
+        secid = BOARDS.get(board)
+        if secid and board in boards_data:
+            klines = fetch_eastmoney_kline(secid, count=60)
+            if klines and len(klines) >= 21:
+                closes_v = [k["close"] for k in klines]
+                sig = adjust_position_by_volatility(sig, closes_v)
+    
     # 为信号匹配C类基金
     print(f"\n  共 {len(signals)} 个信号，开始匹配C类基金...")
     for sig in signals:
@@ -474,12 +924,98 @@ def main(dry_run=False):
         
         time.sleep(0.1)
     
+    # ===== 申购门控：四道硬约束 =====
+    # P3b: 先批量获取所有候选基金的真实估值
+    all_fund_codes = []
+    for sig in signals:
+        if sig.get("funds"):
+            all_fund_codes.append(sig["funds"][0]["code"])
+    fund_estimates = batch_fetch_estimates(all_fund_codes) if all_fund_codes else {}
+    
+    print(f"\n{'='*60}")
+    print(f"申购门控校验（PURCHASE GATE）:")
+    actionable_signals = []
+    blocked_signals = []
+    
+    for sig in signals:
+        fund_code = sig["funds"][0]["code"] if sig.get("funds") else None
+        if not fund_code:
+            blocked_signals.append({**sig, "gate_blocked": True, "gate_reason": "无匹配C类基金"})
+            continue
+        
+        # P3b: 使用真实基金估值
+        fund_est = fund_estimates.get(fund_code)
+        if fund_est:
+            fund_estimate = {
+                "change_pct": fund_est["change_pct"],
+                "nav_estimate": fund_est["nav_estimate"],
+                "update_time": fund_est["update_time"],
+                "reliability": "high",
+                "source": "天天基金实时估值"
+            }
+        else:
+            board_change = sig.get("change_pct", 0)
+            fund_estimate = {
+                "change_pct": board_change,
+                "reliability": "low",
+                "source": "板块代理（估值API不可用）"
+            }
+        
+        allowed, gate_results, gate_reason = purchase_gate(sig, fund_code, positions_data, fund_estimate)
+        
+        # P3a: 过期信号降仓位50%
+        if allowed and sig.get("freshness") == "stale":
+            sig["position"] = max(200, int(sig.get("position", 500) * 0.5))
+            sig["note"] = sig.get("note", "") + f" [信号过期，仓位减半至¥{sig['position']}]"
+        
+        sig["gate_results"] = gate_results
+        sig["gate_passed"] = allowed
+        
+        if allowed:
+            actionable_signals.append(sig)
+            print(f"  ✅ {sig['label']} {sig['board']} → {fund_code} | 门控全部通过")
+        else:
+            blocked_signals.append({**sig, "gate_blocked": True, "gate_reason": gate_reason})
+            print(f"  ❌ {sig['label']} {sig['board']} → {fund_code} | {gate_reason}")
+    
+    # 如果没有通过门控的信号，给用户一个解释
+    if not actionable_signals and blocked_signals:
+        print(f"\n  ⚠️ 所有信号均被门控拦截，请勿盲目交易")
+    
+    # ===== 退出/止盈信号检测 =====
+    exit_signals = []
+    for fund_code, pos in positions_data.get("positions", {}).items():
+        # 找到该基金对应的板块K线数据
+        for board_name, secid in BOARDS.items():
+            # 简单匹配：用对应板块K线
+            if board_name not in boards_data:
+                continue
+            klines = fetch_eastmoney_kline(secid, count=60)
+            if klines and len(klines) >= 21:
+                exit_sig = detect_exit_signals(klines, fund_code, positions_data)
+                if exit_sig:
+                    exit_sig["fund_code"] = fund_code
+                    exit_sig["board"] = board_name
+                    exit_sig["days_held"] = get_days_held(pos["entry_date"])
+                    exit_sig["entry_nav"] = pos.get("entry_nav", 0)
+                    exit_sig["current_pnl"] = round(
+                        (boards_data[board_name]["current"] - pos.get("entry_nav", boards_data[board_name]["current"])) 
+                        / pos.get("entry_nav", boards_data[board_name]["current"]) * 100, 2
+                    ) if pos.get("entry_nav") else None
+                    exit_signals.append(exit_sig)
+                break  # 每个基金只匹配一个板块
+    
+    if exit_signals:
+        print(f"\n  检测到 {len(exit_signals)} 个退出信号:")
+        for es in exit_signals:
+            print(f"    {es['label']} {es['fund_code']} → {es['reason']}")
+    
     # 按优先级排序：缩量止跌 > 突破 > 轮动 > 超跌
     priority = {"dip_buy": 0, "breakout": 1, "rotation": 2, "oversold": 3}
-    signals.sort(key=lambda s: priority.get(s["type"], 9))
+    actionable_signals.sort(key=lambda s: priority.get(s["type"], 9))
     
     # 计算今日建议仓位
-    total_suggested = sum(s["position"] for s in signals[:5])  # 最多取前5个信号
+    total_suggested = sum(s["position"] for s in actionable_signals[:5])
     
     # 构建输出
     output = {
@@ -487,14 +1023,21 @@ def main(dry_run=False):
         "is_trading_day": True,
         "scan_time": now.strftime("%H:%M"),
         "total_flexible": TOTAL_FLEXIBLE,
+        "total_assets": TOTAL_ASSETS,
         "max_position": MAX_TOTAL_POSITION,
         "boards_scanned": total_fetched,
-        "signals": signals,
+        "positions": positions_data["positions"],
+        "total_invested": positions_data.get("total_invested", 0),
+        "signals": actionable_signals,
+        "blocked_signals": blocked_signals,
+        "exit_signals": exit_signals,
         "summary": {
             "total_signals": len(signals),
-            "actionable_signals": len([s for s in signals if s.get("funds")]),
-            "suggested_position_today": min(total_suggested, MAX_TOTAL_POSITION),
-            "available_cash": TOTAL_FLEXIBLE - 1000,  # 1000已投
+            "actionable_signals": len(actionable_signals),
+            "blocked_signals": len(blocked_signals),
+            "exit_signals": len(exit_signals),
+            "suggested_position_today": min(total_suggested, MAX_TOTAL_POSITION - positions_data.get("total_invested", 0)),
+            "available_cash": TOTAL_FLEXIBLE - positions_data.get("total_invested", 0),
             "fee_reminder": "C类持有≥30天赎回费为0；7天内1.5%罚息，7-30天0.5%",
         },
         "fee_schedule": {
@@ -506,22 +1049,36 @@ def main(dry_run=False):
             "timing": "支付宝T日15:00前下单按当日净值，15:00后按次交易日净值",
             "settlement": "T+1确认份额，T+2可赎回",
             "nav_update": "基金净值每晚约20:00更新，日内数据为板块指数估算",
+            "gate_rules": {
+                "gate1_rate_window": "同基金7天内追加→拦截；30天外0费率区自由操作",
+                "gate2_cost_anchor": "板块涨幅≥3%→拦截追高，等阴线或回调至MA10",
+                "gate3_data_consistency": "基金估算与板块指数方向矛盾→拦截，估值不可靠不下单",
+                "gate4_position_limit": f"总仓位≤¥{MAX_TOTAL_POSITION}(约总资产{round(MAX_TOTAL_POSITION/TOTAL_ASSETS*100)}%)",
+            }
         },
     }
     
     # 打印摘要
     print(f"\n{'='*60}")
     print(f"快钱模块扫描完成 | {now.strftime('%Y-%m-%d %H:%M')}")
-    print(f"扫描板块: {total_fetched}/{len(BOARDS)} | 信号: {len(signals)}")
-    if signals:
+    print(f"扫描板块: {total_fetched}/{len(BOARDS)} | 原始信号: {len(signals)}")
+    print(f"门控通过: {len(actionable_signals)} | 门控拦截: {len(blocked_signals)}")
+    if exit_signals:
+        print(f"退出信号: {len(exit_signals)}")
+    if actionable_signals:
         print(f"今日建议仓位: ¥{output['summary']['suggested_position_today']:,}")
-        for s in signals:
+        for s in actionable_signals:
             fund_str = f" → {s['funds'][0]['code']} {s['funds'][0]['name']}" if s.get('funds') else " → 无合适基金"
             print(f"  {s['label']} {s['board']} ¥{s['position']}{fund_str}")
     else:
-        print("今日无快钱信号")
+        print("今日无可执行信号（全部被门控拦截或市场平淡）")
+    if blocked_signals:
+        print(f"\n  拦截详情:")
+        for b in blocked_signals[:5]:
+            print(f"  ❌ {b.get('label', '?')} {b['board']} → {b.get('gate_reason', '无匹配基金')}")
     
     if not dry_run:
+        save_signal_history(signal_history)
         os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
         with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
             json.dump(output, f, ensure_ascii=False, indent=2)

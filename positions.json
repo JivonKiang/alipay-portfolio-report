@@ -1,0 +1,31 @@
+{
+  "positions": {
+    "005844": {
+      "name": "东方人工智能主题混合C",
+      "entry_date": "2026-06-23",
+      "entry_nav": 3.3511,
+      "amount": 200,
+      "board": "科创芯片"
+    },
+    "006503": {
+      "name": "财通集成电路产业股票C",
+      "entry_date": "2026-06-23",
+      "entry_nav": 9.1008,
+      "amount": 500,
+      "board": "PCB"
+    },
+    "025209": {
+      "name": "永赢先锋半导体智选混合C",
+      "entry_date": "2026-06-23",
+      "entry_nav": 2.8916,
+      "amount": 300,
+      "board": "存储芯片"
+    }
+  },
+  "total_invested": 1000,
+  "history": [
+    {"date": "2026-06-23", "action": "buy", "fund": "005844", "amount": 200, "nav": 3.3511},
+    {"date": "2026-06-23", "action": "buy", "fund": "006503", "amount": 500, "nav": 9.1008},
+    {"date": "2026-06-23", "action": "buy", "fund": "025209", "amount": 300, "nav": 2.8916}
+  ]
+}
