@@ -1,10 +1,10 @@
 {
-  "updated": "2026-06-24T00:00:00+08:00",
+  "updated": "2026-06-24T13:39:22+08:00",
   "is_trading_day": true,
-  "scan_time": "--",
+  "scan_time": "13:39",
   "total_flexible": 96000,
   "max_position": 20000,
-  "boards_scanned": 0,
+  "boards_scanned": 19,
   "signals": [],
   "summary": {
     "total_signals": 0,
