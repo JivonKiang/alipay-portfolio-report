@@ -64,8 +64,8 @@ EXISTING_HOLDINGS = {"005844", "006503", "025209"}
 
 
 # ========== 东方财富API ==========
-def fetch_eastmoney_kline(secid, count=60):
-    """获取日K线数据"""
+def fetch_eastmoney_kline(secid, count=60, max_retries=2):
+    """获取日K线数据（带重试）"""
     url = "https://push2his.eastmoney.com/api/qt/stock/kline/get"
     params = {
         "secid": secid,
@@ -77,26 +77,34 @@ def fetch_eastmoney_kline(secid, count=60):
         "lmt": str(count),
     }
     full_url = url + "?" + urllib.parse.urlencode(params)
-    try:
-        req = urllib.request.Request(full_url, headers={"User-Agent": "Mozilla/5.0"})
-        with urllib.request.urlopen(req, timeout=15) as resp:
-            data = json.loads(resp.read().decode())
-        if data.get("data") and data["data"].get("klines"):
-            klines = []
-            for line in data["data"]["klines"]:
-                parts = line.split(",")
-                klines.append({
-                    "date": parts[0],
-                    "open": float(parts[1]),
-                    "close": float(parts[2]),
-                    "high": float(parts[3]),
-                    "low": float(parts[4]),
-                    "volume": float(parts[5]),
-                    "amount": float(parts[6]),
-                })
-            return klines
-    except Exception as e:
-        print(f"  [ERROR] K-line fetch failed: {e}")
+    
+    for attempt in range(max_retries + 1):
+        try:
+            if attempt > 0:
+                time.sleep(1.5)
+            req = urllib.request.Request(full_url, headers={"User-Agent": "Mozilla/5.0"})
+            with urllib.request.urlopen(req, timeout=20) as resp:
+                data = json.loads(resp.read().decode())
+            if data.get("data") and data["data"].get("klines"):
+                klines = []
+                for line in data["data"]["klines"]:
+                    parts = line.split(",")
+                    klines.append({
+                        "date": parts[0],
+                        "open": float(parts[1]),
+                        "close": float(parts[2]),
+                        "high": float(parts[3]),
+                        "low": float(parts[4]),
+                        "volume": float(parts[5]),
+                        "amount": float(parts[6]),
+                    })
+                return klines
+            else:
+                return []
+        except Exception as e:
+            if attempt < max_retries:
+                continue
+            print(f"  [ERROR] {e}")
     return []
 
 
@@ -228,8 +236,8 @@ def detect_signals(klines, board_name):
     
     signal = None
     
-    # 🔥 放量突破：涨>3% + 量>1.5倍 + 站上MA10
-    if change_pct >= 3 and vol_ratio >= 1.5 and dist_ma10 and dist_ma10 > 0:
+    # 🔥 放量突破：涨>2.5% + 量>1.2倍 + 站上MA10
+    if change_pct >= 2.5 and vol_ratio >= 1.2 and dist_ma10 and dist_ma10 > 0:
         # 确认不是一日游：检查前3天走势
         prev_3_avg = sum(closes[-4:-1]) / 3
         signal = {
@@ -440,7 +448,7 @@ def main(dry_run=False):
         else:
             print(f"→ {change_pct:+.2f}% | 无信号")
         
-        time.sleep(0.15)  # 避免API限流
+        time.sleep(0.4)  # 避免API限流
     
     # 轮动补涨检测
     rotations = detect_rotation(boards_data)
