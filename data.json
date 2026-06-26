@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-26T06:47:45+08:00",
+  "updated": "2026-06-26T08:39:50+08:00",
   "portfolio": {
     "total": 677301,
     "steady": 512111,
@@ -11,13 +11,13 @@
       "name": "半导体设备",
       "index": "科创50",
       "index_code": "000688",
-      "current": 2047.2,
-      "ma10": 1889.0,
-      "ma20": 1785.1,
-      "change_pct": -0.93,
-      "distance_ma10": 8.37,
+      "current": 2032.3,
+      "ma10": 1887.5,
+      "ma20": 1784.4,
+      "change_pct": -1.65,
+      "distance_ma10": 7.67,
       "signal": "dca",
-      "signal_text": "站上10日线+8.4%，定投正常执行",
+      "signal_text": "站上10日线+7.7%，定投正常执行",
       "funds": [
         {
           "code": "017811",
@@ -35,20 +35,20 @@
         "detail": "定投正常执行",
         "path": "支付宝 → 理财 → 基金 → 我的定投"
       },
-      "volume_ratio": 1.01
+      "volume_ratio": 1.06
     },
     "pcb": {
       "name": "PCB/HDI板",
       "index": "PCB概念",
       "index_code": "BK0877",
-      "current": 5218.3,
-      "ma10": 5082.9,
-      "ma20": 4755.5,
-      "change_pct": -2.09,
-      "distance_ma10": 2.66,
-      "volume_ratio": 0.94,
+      "current": 5188.5,
+      "ma10": 5079.9,
+      "ma20": 4754.0,
+      "change_pct": -2.65,
+      "distance_ma10": 2.14,
+      "volume_ratio": 0.99,
       "signal": "watch",
-      "signal_text": "回调-2.09%，观察是否缩量企稳",
+      "signal_text": "回调-2.65%，观察是否缩量企稳",
       "funds": [
         {
           "code": "017811",
