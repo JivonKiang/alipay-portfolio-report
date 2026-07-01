@@ -41,5 +41,82 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-07-01",
+    "time": "13:24",
+    "environment": "bull_lean",
+    "environment_cn": "偏牛 — 积极做多",
+    "position_ratio": 0.6,
+    "buy_signals": 8,
+    "exit_signals": 0,
+    "signals": [
+      {
+        "board": "AI眼镜",
+        "type": "breakout",
+        "label": "🟢 放量突破MA20",
+        "funds": [
+          "008282"
+        ]
+      },
+      {
+        "board": "创新药",
+        "type": "breakout",
+        "label": "🟢 放量突破MA20",
+        "funds": [
+          "011179",
+          "002708"
+        ]
+      },
+      {
+        "board": "存储芯片",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "008888"
+        ]
+      },
+      {
+        "board": "先进封装",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "008888"
+        ]
+      },
+      {
+        "board": "CPO",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "017560"
+        ]
+      },
+      {
+        "board": "光通信",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "017560"
+        ]
+      },
+      {
+        "board": "人形机器人",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "002256",
+          "001643"
+        ]
+      },
+      {
+        "board": "稀土永磁",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "011036"
+        ]
+      }
+    ]
   }
 ]

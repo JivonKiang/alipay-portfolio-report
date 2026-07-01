@@ -2,295 +2,208 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#0f172a">
-<title>Jivon 资产面板</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>交易系统五模块 Dashboard</title>
 <style>
-:root{--bg:#0f172a;--card:#1e293b;--card2:#334155;--text:#f1f5f9;--muted:#94a3b8;--soft:#64748b;--line:#1e293b;--green:#22c55e;--red:#ef4444;--blue:#3b82f6;--orange:#f59e0b;--purple:#a855f7;--radius:14px;--r-sm:10px}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{min-height:100vh;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;padding:0 12px 40px;line-height:1.55;font-size:14px}
-header{position:sticky;top:0;z-index:10;background:rgba(15,23,42,.94);backdrop-filter:blur(14px);padding:14px 4px 10px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)}
-header h1{font-size:17px;font-weight:800;letter-spacing:-.3px}
-header .meta{font-size:11px;color:var(--muted)}
-.loading{text-align:center;padding:60px 0;color:var(--muted)}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px;margin:12px 0}
-.card-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
-.card-head h2{font-size:15px;font-weight:800;letter-spacing:-.2px}
-.card-head .badge{font-size:10px;padding:2px 8px;border-radius:99px;font-weight:800}
-.badge-green{background:#14532d;color:var(--green)}
-.badge-red{background:#450a0a;color:var(--red)}
-.badge-blue{background:#1e3a5f;color:var(--blue)}
-.badge-orange{background:#451a03;color:var(--orange)}
-.stat-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(148,163,184,.1)}
-.stat-row:last-child{border:0}
-.stat-label{color:var(--muted);font-size:13px}
-.stat-value{font-weight:800;font-size:14px}
-.stat-sub{font-size:11px;color:var(--soft)}
-.up{color:var(--green)}.down{color:var(--red)}
-.gauge{height:6px;background:var(--card2);border-radius:99px;margin-top:6px;overflow:hidden}
-.gauge-fill{height:100%;border-radius:99px;transition:width .4s}
-.holding-card{background:var(--card2);border-radius:var(--r-sm);padding:12px;margin:8px 0}
-.holding-card .top-row{display:flex;justify-content:space-between;align-items:center}
-.holding-card .name{font-size:14px;font-weight:800}
-.holding-card .code{font-size:11px;color:var(--muted)}
-.holding-card .pnl{text-align:right}
-.holding-card .pnl-amount{font-size:16px;font-weight:900}
-.holding-card .pnl-pct{font-size:12px;margin-top:1px}
-.holding-card .detail{display:flex;gap:12px;margin-top:8px;font-size:11px;color:var(--soft);flex-wrap:wrap}
-.signal-card{border-left:3px solid var(--blue);padding:0 0 0 10px;margin:8px 0}
-.signal-card.passed{border-color:var(--green)}
-.signal-card.blocked{border-color:var(--red);opacity:.6}
-.signal-card .sig-head{display:flex;justify-content:space-between}
-.signal-card .sig-board{font-weight:800;font-size:13px}
-.signal-card .sig-type{font-size:10px;padding:1px 6px;border-radius:99px}
-.signal-card .sig-fund{font-size:12px;margin-top:4px;color:var(--muted)}
-.signal-card .sig-meta{display:flex;gap:12px;margin-top:4px;font-size:11px;color:var(--soft)}
-.alert{border-radius:var(--r-sm);padding:10px 12px;margin:6px 0;font-size:12px;display:flex;align-items:flex-start;gap:8px}
-.alert-danger{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:#fca5a5}
-.alert-warn{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);color:#fcd34d}
-.alert-info{background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.3);color:#93c5fd}
-.alert .icon{font-size:16px;flex-shrink:0;width:20px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.mini-stat{background:var(--card2);border-radius:var(--r-sm);padding:10px;text-align:center}
-.mini-stat .big{font-size:18px;font-weight:900}
-.mini-stat .label{font-size:10px;color:var(--muted);margin-top:2px}
-.summary-bar{display:flex;gap:8px;margin-top:10px;font-size:11px;color:var(--muted);flex-wrap:wrap}
-.error-msg{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:var(--r-sm);padding:10px;font-size:11px;color:#fca5a5;margin:6px 0}
-.fee-alert{display:inline-block;margin:4px 4px 0 0;padding:3px 8px;border-radius:99px;font-size:10px;background:rgba(239,68,68,.15);color:#fca5a5}
-#market-indices{display:flex;gap:6px;overflow-x:auto;padding:4px 0;font-size:11px}
-#market-indices span{padding:4px 8px;border-radius:99px;white-space:nowrap;background:var(--card2)}
-.sparkline-wrap{position:relative;margin:12px 0 4px}
-.sparkline-wrap svg{display:block;width:100%;height:60px}
-.sparkline-wrap .tag{position:absolute;top:2px;left:2px;font-size:10px;color:var(--soft)}
-.rot-row{display:flex;justify-content:space-between;padding:4px 0;font-size:12px}
-.rot-row .rot-name{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:60%}
+  :root { --bg:#0f1118; --card:#1a1d2b; --border:#2a2d3b; --text:#d1d5db; --dim:#9ca3af; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; line-height:1.6; padding:1.5rem; }
+  .container { max-width:900px; margin:0 auto; }
+  .header { text-align:center; padding:1.5rem 0; border-bottom:1px solid var(--border); margin-bottom:1.5rem; }
+  .header h1 { font-size:1.5rem; color:#f3f4f6; }
+  .update-time { color:var(--dim); font-size:0.8rem; margin-top:0.3rem; }
+
+  .env-banner {
+    background: linear-gradient(135deg, #84cc1618, #84cc1608);
+    border:1px solid #84cc1640; border-radius:12px;
+    padding:1.25rem; text-align:center; margin-bottom:1.25rem;
+  }
+  .env-banner .label { font-size:0.85rem; color:var(--dim); }
+  .env-banner .value { font-size:1.6rem; font-weight:800; color:#84cc16; }
+  .env-banner .detail { font-size:0.85rem; color:var(--dim); margin-top:0.3rem; }
+
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.25rem; }
+  @media(max-width:640px){ .grid-2 { grid-template-columns:1fr; } }
+
+  .card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1.25rem; }
+  .card h3 { font-size:1rem; color:#f3f4f6; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.4rem; }
+
+  .index-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:0.6rem; }
+  .index-card { background:rgba(255,255,255,0.02); border-radius:8px; padding:0.65rem; }
+  .index-name { font-size:0.8rem; color:var(--dim); }
+  .index-price { font-size:1.1rem; font-weight:700; color:#f3f4f6; }
+
+  .tag { display:inline-block; padding:0.15rem 0.5rem; border-radius:12px; font-size:0.7rem; font-weight:600; margin-top:0.25rem; }
+
+  table { width:100%; border-collapse:collapse; font-size:0.85rem; }
+  th { background:rgba(255,255,255,0.03); padding:0.55rem 0.75rem; text-align:left; font-weight:600; color:#e5e7eb; border-bottom:1px solid var(--border); }
+  td { padding:0.5rem 0.75rem; border-bottom:1px solid rgba(255,255,255,0.03); }
+
+  .exit-item { padding:0.6rem 0.75rem; margin-bottom:0.4rem; background:rgba(255,255,255,0.02); border-radius:6px; }
+
+  .stat { text-align:center; padding:0.75rem; }
+  .stat .num { font-size:1.4rem; font-weight:800; color:#f3f4f6; }
+  .stat .lbl { font-size:0.75rem; color:var(--dim); }
+
+  .footer { text-align:center; padding:1.5rem 0; color:var(--dim); font-size:0.75rem; border-top:1px solid var(--border); margin-top:1.5rem; }
+  .footer .flow { display:flex; justify-content:center; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.5rem; }
+  .flow-step { background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.2); border-radius:6px; padding:0.25rem 0.6rem; font-size:0.7rem; }
 </style>
 </head>
 <body>
-<header><div><h1>Jivon 资产面板</h1><div class="meta" id="update-time">加载中...</div></div><div style="font-size:12px;color:var(--muted)" id="total-assets">--</div></header>
-<div id="app"><div class="loading">加载数据...</div></div>
+<div class="container">
 
-<script>
-const DATA_URLS={
-  portfolio:'portfolio_data.json',
-  signals:'quick_money.json',
-  history:'positions_value_history.json'
-};
+<div class="header">
+  <h1>交易系统五模块 Dashboard</h1>
+  <div class="update-time">更新: 2026-07-01 13:24 | 下次: 交易日 11:00 / 14:30</div>
+</div>
 
-let portfolioData=null,signalsData=null,historyData=null;
+<!-- 模块1: 市场环境 -->
+<div class="env-banner">
+  <div class="label">模块1 · 市场环境判断</div>
+  <div class="value">偏牛 — 积极做多</div>
+  <div class="detail">偏牛指数 3/5 | 偏熊指数 0/5 | 建议仓位 60% (¥57,600)</div>
+</div>
 
-async function init(){
-  try{
-    const[p,s,h]=await Promise.all([
-      fetch(DATA_URLS.portfolio+'?t='+Date.now()).then(r=>r.json()),
-      fetch(DATA_URLS.signals+'?t='+Date.now()).then(r=>r.json()).catch(()=>null),
-      fetch(DATA_URLS.history+'?t='+Date.now()).then(r=>r.json()).catch(()=>[])
-    ]);
-    portfolioData=p; signalsData=s; historyData=h;
-    renderAll();
-  }catch(e){
-    document.getElementById('app').innerHTML='<div class="error-msg" style="margin:40px">数据加载失败: '+e.message+'</div>';
-  }
-}
-
-function renderAll(){
-  if(!portfolioData)return;
-  document.getElementById('update-time').textContent='更新 '+portfolioData.updated.slice(11,16);
-  document.getElementById('total-assets').textContent='¥'+portfolioData.total_assets.total.toLocaleString();
-
-  let html='';
-  html+=renderMarketBreadth();
-  html+=renderPortfolio();
-  html+=renderIndustryRotation();
-  html+=renderAlerts();
-  html+=renderQuickMoney();
-  document.getElementById('app').innerHTML=html;
-}
-
-function renderSparkline(values){
-  if(!values||values.length<2)return '';
-  const W=720; const H=60; const pad=8;
-  const xs=values.map((_,i)=>pad+(W-2*pad)*i/(values.length-1));
-  const min=Math.min(...values);
-  const max=Math.max(...values);
-  const range=max-min||1;
-  const last=values[values.length-1];
-  const ys=values.map(v=>pad+(H-2*pad)*(1-(v-min)/range));
-  const up=last>=values[0];
-  const color=up?'#22c55e':'#ef4444';
-
-  // area under curve
-  let areaD='M'+xs[0]+','+(H-pad)+'L'+xs[0]+','+ys[0];
-  for(let i=1;i<xs.length;i++)areaD+='L'+xs[i]+','+ys[i];
-  areaD+='L'+xs[xs.length-1]+','+(H-pad)+'Z';
-
-  // line
-  let lineD='M'+xs[0]+','+ys[0];
-  for(let i=1;i<xs.length;i++)lineD+='L'+xs[i]+','+ys[i];
-
-  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
-    <path d="${areaD}" fill="${color}" opacity=".08"/>
-    <path d="${lineD}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  </svg>`;
-}
-
-function renderMarketBreadth(){
-  const mb=portfolioData.market_breadth||{};
-  const indices=mb.indices||{};
-  const stateLabel=mb.state_label||'未知';
-  const vol=mb.volume_total||0;
-  const stateColor={'强多':'var(--green)','偏多':'#86efac','震荡':'var(--muted)','偏空':'#fca5a5','强空':'var(--red)'}[stateLabel]||'var(--muted)';
-
-  let items='';
-  for(const[k,v]of Object.entries(indices)){
-    const cls=v.change_pct>=0?'up':'down';
-    items+=`<span class="${cls}">${k.slice(0,4)} ${v.change_pct>0?'+':''}${v.change_pct}%</span>`;
-  }
-
-  return `<div class="card">
-    <div class="card-head"><h2>市场状态</h2><span class="badge" style="background:rgba(148,163,184,.15);color:${stateColor}">${stateLabel}</span></div>
-    <div id="market-indices">${items}</div>
-    <div style="margin-top:8px;font-size:11px;color:var(--muted)">
-      两市成交 <span style="font-weight:800;color:var(--text)">${vol.toLocaleString()}亿</span> · ${mb.update_time||''}
-    </div>
-  </div>`;
-}
-
-function renderPortfolio(){
-  const pf=portfolioData.portfolio;
-  const ta=portfolioData.total_assets;
-  let cards='';
-  for(const h of pf.holdings){
-    const pnlCls=h.profit>=0?'up':'down';
-    const sign=h.profit>=0?'+':'';
-    const estChange=h.estimate?h.estimate.change_pct:0;
-    const estCls=estChange>=0?'up':'down';
-    cards+=`<div class="holding-card">
-      <div class="top-row">
-        <div><div class="name">${h.name}</div><div class="code">${h.code} · ${h.sub_type} · 持${h.days_held}天</div></div>
-        <div class="pnl"><div class="pnl-amount ${pnlCls}">${sign}¥${h.profit.toFixed(2)}</div><div class="pnl-pct ${pnlCls}">${sign}${h.profit_pct.toFixed(1)}%</div></div>
-      </div>
-      <div class="detail">
-        <span>成本 ¥${h.entry_amount}</span><span>市值 ¥${h.current_value.toFixed(2)}</span>
-        ${h.estimate?`<span class="${estCls}">估值 ${estChange>0?'+':''}${estChange}%</span>`:''}
-        ${h.days_held<30?`<span style="color:var(--red)">赎回费${h.fee_tier}</span>`:''}
-      </div>
-    </div>`;
-  }
-
-  const totalPnlCls=pf.total_profit>=0?'up':'down';
-  const totalSign=pf.total_profit>=0?'+':'';
-  const histVals=(historyData||[]).map(d=>d.total_value);
-
-  return `<div class="card">
-    <div class="card-head"><h2>持仓总览</h2><span class="badge badge-green">${pf.count}只</span></div>
-    <div class="grid2">
-      <div class="mini-stat"><div class="big">¥${pf.total_market_value.toLocaleString()}</div><div class="label">持仓市值</div></div>
-      <div class="mini-stat"><div class="big ${totalPnlCls}">${totalSign}¥${pf.total_profit.toFixed(2)}</div><div class="label">浮动盈亏</div></div>
-      <div class="mini-stat"><div class="big">¥${pf.available_cash.toLocaleString()}</div><div class="label">可用资金</div></div>
-      <div class="mini-stat"><div class="big">${pf.total_profit_pct>0?'+':''}${pf.total_profit_pct}%</div><div class="label">总收益率</div></div>
-    </div>
-    ${histVals.length>=2?`<div class="sparkline-wrap"><div class="tag">30日市值曲线</div>${renderSparkline(histVals)}</div>`:''}
-    ${cards}
-    <div class="summary-bar">
-      <span>总资产 ¥${ta.total.toLocaleString()}</span>
-      <span>|</span>
-      <span>灵活 ¥${ta.flexible_cash.toLocaleString()}</span>
-      <span>|</span>
-      <span>货基 ¥${ta.money_fund.toLocaleString()}</span>
-    </div>
-  </div>`;
-}
-
-function renderIndustryRotation(){
-  const ir=portfolioData.industry_rotation||{};
-  const tops=ir.top||[];
-  const bots=ir.bottom||[];
-  if(tops.length===0&&bots.length===0)return '';
+<div class="index-grid" style="margin-bottom:1.25rem;">
   
-  let topHtml='',botHtml='';
-  for(const t of tops){
-    topHtml+=`<div class="rot-row"><span class="rot-name">${t.name}</span><span class="up">+${t.change_pct}%</span></div>`;
-  }
-  for(const b of bots){
-    botHtml+=`<div class="rot-row"><span class="rot-name">${b.name}</span><span class="down">${b.change_pct}%</span></div>`;
-  }
-  
-  return `<div class="card">
-    <div class="card-head"><h2>概念板块轮动</h2></div>
-    <div class="grid2">
-      <div style="padding-right:8px"><div style="font-size:10px;color:var(--green);margin-bottom:4px;font-weight:800">领涨 TOP5</div>${topHtml}</div>
-      <div style="padding-left:8px"><div style="font-size:10px;color:var(--red);margin-bottom:4px;font-weight:800">领跌 TOP5</div>${botHtml}</div>
-    </div>
-  </div>`;
-}
+        <div class="index-card" style="border-left:3px solid #9ca3af">
+          <div class="index-name">上证50</div>
+          <div class="index-price">2985.24</div>
+          <div style="font-size:0.75rem;color:#9ca3af">
+            MA60: 2934.46 | MA120: 2975.22
+          </div>
+          <span class="tag" style="background:#9ca3af20;color:#9ca3af">中性</span>
+        </div>
+        <div class="index-card" style="border-left:3px solid #22c55e">
+          <div class="index-name">沪深300</div>
+          <div class="index-price">4958.98</div>
+          <div style="font-size:0.75rem;color:#9ca3af">
+            MA60: 4821.05 | MA120: 4743.96
+          </div>
+          <span class="tag" style="background:#22c55e20;color:#22c55e">多头</span>
+        </div>
+        <div class="index-card" style="border-left:3px solid #22c55e">
+          <div class="index-name">中证500</div>
+          <div class="index-price">9028.93</div>
+          <div style="font-size:0.75rem;color:#9ca3af">
+            MA60: 8402.07 | MA120: 8272.97
+          </div>
+          <span class="tag" style="background:#22c55e20;color:#22c55e">多头</span>
+        </div>
+        <div class="index-card" style="border-left:3px solid #22c55e">
+          <div class="index-name">科创50</div>
+          <div class="index-price">2153.04</div>
+          <div style="font-size:0.75rem;color:#9ca3af">
+            MA60: 1670.68 | MA120: 1548.69
+          </div>
+          <span class="tag" style="background:#22c55e20;color:#22c55e">多头</span>
+        </div>
+</div>
 
-function renderAlerts(){
-  const warns=portfolioData.warnings||[];
-  const fees=portfolioData.fee_checks||[];
-  let html='';
-  for(const w of warns){
-    html+=`<div class="alert alert-${w.level}"><span class="icon">${w.level==='danger'?'⚠':'ℹ'}</span>${w.msg}</div>`;
-  }
-  if(fees.length>0){
-    html+=`<div class="alert alert-warn"><span class="icon">💰</span>费率提醒: ${fees.join('; ')}</div>`;
-  }
-  return html?`<div class="card"><div class="card-head"><h2>告警</h2></div>${html}</div>`:'';
-}
+<!-- 模块2+3: 标的筛选 & 仓位 -->
+<div class="card" style="margin-bottom:1.25rem;">
+  <h3>📊 模块2 · 标的筛选 & 模块3 · 仓位管理</h3>
+  <div style="display:flex;gap:1rem;margin-bottom:0.75rem;flex-wrap:wrap">
+    <div class="stat"><div class="num">21</div><div class="lbl">板块扫描</div></div>
+    <div class="stat"><div class="num">8</div><div class="lbl">买入信号</div></div>
+    <div class="stat"><div class="num">0</div><div class="lbl">门控拦截</div></div>
+    <div class="stat"><div class="num">¥4,100</div><div class="lbl">今日建议仓位</div></div>
+  </div>
+  <table>
+    <tr><th>信号</th><th>板块</th><th>涨跌</th><th>仓位</th><th>匹配基金</th></tr>
+    
+            <tr>
+              <td><span style="color:#22c55e;font-weight:600">🟢 放量突破MA20</span></td>
+              <td>AI眼镜</td>
+              <td>+3.7%</td>
+              <td style="color:#f59e0b">¥1,000</td>
+              <td style="font-size:0.8rem;color:#9ca3af"> → 008282 国泰CES半导体芯片ETF联接C</td>
+            </tr>
+            <tr>
+              <td><span style="color:#22c55e;font-weight:600">🟢 放量突破MA20</span></td>
+              <td>创新药</td>
+              <td>+4.0%</td>
+              <td style="color:#f59e0b">¥1,000</td>
+              <td style="font-size:0.8rem;color:#9ca3af"> → 011179 汇添富中证精准医疗C</td>
+            </tr>
+            <tr>
+              <td><span style="color:#f59e0b;font-weight:600">🟡 超跌反弹</span></td>
+              <td>存储芯片</td>
+              <td>+2.9%</td>
+              <td style="color:#f59e0b">¥700</td>
+              <td style="font-size:0.8rem;color:#9ca3af"> → 008888 国联安中证半导体ETF联接C</td>
+            </tr>
+            <tr>
+              <td><span style="color:#f59e0b;font-weight:600">🟡 超跌反弹</span></td>
+              <td>先进封装</td>
+              <td>+1.2%</td>
+              <td style="color:#f59e0b">¥700</td>
+              <td style="font-size:0.8rem;color:#9ca3af"> → 008888 国联安中证半导体ETF联接C</td>
+            </tr>
+            <tr>
+              <td><span style="color:#f59e0b;font-weight:600">🟡 超跌反弹</span></td>
+              <td>CPO</td>
+              <td>+1.1%</td>
+              <td style="color:#f59e0b">¥700</td>
+              <td style="font-size:0.8rem;color:#9ca3af"> → 017560 嘉实上证科创板芯片ETF联接C</td>
+            </tr>
+            <tr>
+              <td><span style="color:#f59e0b;font-weight:600">🟡 超跌反弹</span></td>
+              <td>光通信</td>
+              <td>+2.6%</td>
+              <td style="color:#f59e0b">¥700</td>
+              <td style="font-size:0.8rem;color:#9ca3af"> → 017560 嘉实上证科创板芯片ETF联接C</td>
+            </tr>
+            <tr>
+              <td><span style="color:#f59e0b;font-weight:600">🟡 超跌反弹</span></td>
+              <td>人形机器人</td>
+              <td>+3.2%</td>
+              <td style="color:#f59e0b">¥700</td>
+              <td style="font-size:0.8rem;color:#9ca3af"> → 002256 金信新能源汽车混合C</td>
+            </tr>
+            <tr>
+              <td><span style="color:#f59e0b;font-weight:600">🟡 超跌反弹</span></td>
+              <td>稀土永磁</td>
+              <td>+2.2%</td>
+              <td style="color:#f59e0b">¥700</td>
+              <td style="font-size:0.8rem;color:#9ca3af"> → 011036 嘉实中证稀土产业ETF联接C</td>
+            </tr>
+  </table>
+</div>
 
-function renderQuickMoney(){
-  if(!signalsData)return '<div class="card"><div style="text-align:center;padding:20px;color:var(--muted)">快钱信号数据暂不可用</div></div>';
+<!-- 模块4: 止盈止损 -->
+<div class="card" style="margin-bottom:1.25rem;">
+  <h3>🛡️ 模块4 · 止盈止损</h3>
+  <div style="color:#6b7280;text-align:center;padding:1rem">无退出信号</div>
+  <div style="font-size:0.75rem;color:var(--dim);margin-top:0.75rem;display:flex;gap:1rem;flex-wrap:wrap">
+    <span>止损: -8%硬止损</span><span>短线止盈: +12%</span><span>趋势止盈: +18%</span><span>移动止盈: 高点回撤>5%</span>
+  </div>
+</div>
 
-  const sum=signalsData.summary||{};
-  const actionable=signalsData.actionable_signals||[];
-  const blocked=signalsData.blocked_signals||[];
-  const totalSignals=sum.total_signals||0;
+<!-- 模块5: 动态优化 -->
+<div class="card">
+  <h3>📈 模块5 · 动态优化</h3>
+  <div style="display:flex;gap:1rem;flex-wrap:wrap">
+    <div class="stat"><div class="num">2</div><div class="lbl">历史记录天数</div></div>
+    <div class="stat"><div class="num">是</div><div class="lbl">今日需操作</div></div>
+  </div>
+  <div style="margin-top:0.75rem;padding:0.75rem;background:rgba(245,158,11,0.08);border-radius:8px;text-align:center;font-weight:600;">
+    优先关注 AI眼镜 (🟢 放量突破MA20)
+  </div>
+</div>
 
-  let signalCards='';
-  if(actionable.length===0&&blocked.length===0){
-    signalCards='<div style="text-align:center;padding:16px;color:var(--muted);font-size:13px">今日市场平淡，无触发信号</div>';
-  }
-  for(const s of actionable){
-    const fund=s.funds&&s.funds[0]?s.funds[0]:null;
-    signalCards+=`<div class="signal-card passed">
-      <div class="sig-head"><span class="sig-board">${s.label} ${s.board}</span><span class="sig-type" style="background:rgba(34,197,94,.15);color:#22c55e">${s.type}</span></div>
-      ${fund?`<div class="sig-fund">${fund.code} ${fund.name} | 建议仓位 ¥${s.position}</div>`:''}
-      <div class="sig-meta">
-        <span>${s.change_pct>0?'+':''}${s.change_pct}%</span>
-        ${s.volatility?`<span>波动率 ${s.volatility}%</span>`:''}
-        ${s.freshness?`<span>${s.freshness}</span>`:''}
-        ${s.position_note?`<span style="color:var(--orange)">${s.position_note}</span>`:''}
-      </div>
-    </div>`;
-  }
-  for(const b of blocked.slice(0,3)){
-    signalCards+=`<div class="signal-card blocked">
-      <div class="sig-head"><span class="sig-board">${b.label||'?'} ${b.board}</span><span class="sig-type" style="background:rgba(239,68,68,.15);color:#ef4444">拦截</span></div>
-      <div class="sig-fund" style="color:var(--red)">${b.gate_reason||'门控拦截'}</div>
-    </div>`;
-  }
+<div class="footer">
+  <div class="flow">
+    <span class="flow-step">判断环境→做不做</span>
+    <span class="flow-step">选股→买什么</span>
+    <span class="flow-step">仓位→能活下来吗</span>
+    <span class="flow-step">止盈止损→守住利润</span>
+    <span class="flow-step">优化→持续赚钱</span>
+  </div>
+  <div>五模块交易系统 · 自动运行 · 顺势而为</div>
+</div>
 
-  const gateCount=actionable.length;
-  const blockCount=blocked.length;
-
-  return `<div class="card">
-    <div class="card-head"><h2>⚡ 快钱信号</h2>
-      <span class="badge ${gateCount>0?'badge-green':(blockCount>0?'badge-orange':'badge-blue')}">
-        ${gateCount>0?gateCount+'可执行':(blockCount>0?blockCount+'拦截':'无信号')}
-      </span>
-    </div>
-    <div class="grid2" style="margin-bottom:10px">
-      <div class="mini-stat"><div class="big">${totalSignals}</div><div class="label">原始信号</div></div>
-      <div class="mini-stat"><div class="big ${gateCount>0?'up':'down'}">${gateCount}</div><div class="label">门控通过</div></div>
-      <div class="mini-stat"><div class="big">¥${(sum.suggested_position_today||0).toLocaleString()}</div><div class="label">建议仓位</div></div>
-      <div class="mini-stat"><div class="big">¥${(sum.available_cash||0).toLocaleString()}</div><div class="label">可用资金</div></div>
-    </div>
-    ${signalCards}
-    ${signalsData.fee_schedule?`<div style="margin-top:8px;font-size:11px;color:var(--muted)">C类费率: 0-6天1.5% ❌ | 7-29天0.5% ⚠ | 30天+0% ✅</div>`:''}
-  </div>`;
-}
-
-init();
-</script>
+</div>
 </body>
 </html>

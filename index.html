@@ -2,107 +2,208 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#f8fafc">
-<title>Jivon 资产执行面板</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>交易系统五模块 Dashboard</title>
 <style>
-:root{--bg:#f8fafc;--surface:#ffffff;--surface2:#f1f5f9;--text:#0f172a;--muted:#64748b;--soft:#94a3b8;--line:#e2e8f0;--blue:#2563eb;--green:#16a34a;--orange:#ea580c;--yellow:#ca8a04;--red:#dc2626;--purple:#7c3aed;--shadow:0 10px 28px rgba(15,23,42,.08);--radius:20px;--radius-sm:14px}*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}body{min-height:100vh;background:linear-gradient(180deg,#ffffff 0%,var(--bg) 26%,#eef2ff 100%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'PingFang SC','Microsoft YaHei',sans-serif;padding-bottom:84px;line-height:1.58}.top{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.92);backdrop-filter:blur(18px);border-bottom:1px solid var(--line);padding:12px 16px;display:flex;align-items:center;gap:12px}.menu-btn{width:38px;height:38px;border:1px solid var(--line);border-radius:12px;background:var(--surface);box-shadow:var(--shadow);font-size:20px;color:var(--text)}.top-title{flex:1}.top h1{font-size:17px;letter-spacing:-.3px}.top p{font-size:11px;color:var(--muted);margin-top:1px}.version{font-size:10px;color:var(--blue);font-weight:800;background:#dbeafe;padding:3px 7px;border-radius:999px}.drawer-mask{position:fixed;inset:0;background:rgba(15,23,42,.24);z-index:40;display:none}.drawer{position:fixed;left:0;top:0;bottom:0;width:286px;background:#fff;z-index:41;transform:translateX(-105%);transition:.22s ease;box-shadow:24px 0 60px rgba(15,23,42,.16);padding:18px;border-right:1px solid var(--line)}.drawer.open{transform:translateX(0)}.drawer-mask.open{display:block}.drawer-head{margin-bottom:18px}.drawer-head h2{font-size:20px;letter-spacing:-.4px}.drawer-head p{font-size:12px;color:var(--muted);margin-top:4px}.nav-link{width:100%;border:0;background:transparent;text-align:left;display:flex;align-items:center;gap:10px;padding:13px 12px;border-radius:14px;color:var(--text);font-size:14px;font-weight:800;margin-bottom:6px}.nav-link span{width:28px;height:28px;display:grid;place-items:center;background:var(--surface2);border-radius:10px}.nav-link.active{background:#eff6ff;color:var(--blue)}.drawer-note{margin-top:16px;background:#f8fafc;border:1px solid var(--line);border-radius:14px;padding:12px;font-size:12px;color:var(--muted);line-height:1.7}.page{display:none;padding:16px 16px 26px}.page.active{display:block;animation:fade .22s ease}@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}.hero{border:1px solid #dbeafe;border-radius:var(--radius);padding:20px;margin-bottom:14px;background:linear-gradient(135deg,#ffffff 0%,#eff6ff 55%,#f5f3ff 100%);box-shadow:var(--shadow)}.kicker{color:var(--blue);font-size:11px;font-weight:900;letter-spacing:.5px;margin-bottom:6px}.hero h2{font-size:26px;line-height:1.15;letter-spacing:-.8px;margin-bottom:8px}.hero .desc{color:var(--muted);font-size:13px;line-height:1.75}.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.metric{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);padding:13px;text-align:center;min-height:78px;box-shadow:0 6px 18px rgba(15,23,42,.05)}.metric .num{font-size:20px;font-weight:900;line-height:1.1}.metric .label{font-size:10px;color:var(--muted);margin-top:6px;line-height:1.35}.section{font-size:14px;font-weight:900;padding-left:10px;border-left:4px solid var(--blue);margin:22px 0 10px;letter-spacing:-.2px}.row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}.row:last-child{border-bottom:none}.row .name{font-size:13px;font-weight:850}.row .sub{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.55}.row .amt{font-size:15px;font-weight:900;text-align:right}.row .tag{font-size:10px;margin-top:3px;color:var(--muted);text-align:right}.bar{height:9px;background:#e2e8f0;border-radius:999px;overflow:hidden;margin-top:9px}.bar i{display:block;height:100%;border-radius:999px}.progress-block{margin:15px 0}.progress-head{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px}.progress-head span:last-child{font-weight:900}.callout{border-radius:var(--radius-sm);padding:13px;font-size:12px;line-height:1.8;margin-bottom:14px}.warn{background:#fffbeb;border:1px solid #fde68a;color:#854d0e}.ok{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534}.danger{background:#fef2f2;border:1px solid #fecaca;color:#991b1b}.info{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af}.pill{display:inline-block;padding:2px 7px;border-radius:999px;font-size:10px;font-weight:900;background:#dbeafe;color:var(--blue)}.plan-step{border-left:4px solid var(--blue);padding:0 0 0 13px;margin:18px 0}.plan-step h3{font-size:15px;margin-bottom:6px;letter-spacing:-.2px}.plan-step p{font-size:12px;color:var(--muted);line-height:1.78}.buy-list{margin-top:9px;background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:10px 11px;font-size:12px;color:#334155;line-height:1.9}.sub-title{font-size:13px;font-weight:900;margin:14px 0 8px;color:var(--blue)}details{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:14px;overflow:hidden;box-shadow:0 8px 22px rgba(15,23,42,.05)}summary{list-style:none;cursor:pointer;padding:15px 16px;font-size:14px;font-weight:900;display:flex;justify-content:space-between;align-items:center}summary::-webkit-details-marker{display:none}summary:after{content:'展开';color:var(--blue);font-size:11px;font-weight:900}details[open] summary:after{content:'收起'}.detail-body{padding:0 16px 16px;color:var(--muted);font-size:12px;line-height:1.8}table{width:100%;border-collapse:collapse;font-size:11px;color:#475569;background:#fff;border-radius:12px;overflow:hidden}th,td{padding:9px 7px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{background:#f1f5f9;color:#0f172a}.copybox{width:100%;min-height:220px;background:#f8fafc;border:1px solid var(--line);border-radius:12px;color:var(--text);font-size:12px;line-height:1.55;padding:12px;resize:vertical}.copybtn{width:100%;border:0;border-radius:12px;background:var(--blue);color:white;font-size:14px;font-weight:900;padding:12px;margin-top:10px}.bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:25;display:flex;background:rgba(255,255,255,.95);backdrop-filter:blur(18px);border-top:1px solid var(--line);padding:6px 4px max(6px,env(safe-area-inset-bottom))}.bottom-nav button{flex:1;border:0;background:transparent;color:var(--soft);padding:7px 4px;font-size:11px;font-weight:800;display:flex;flex-direction:column;align-items:center;gap:3px}.bottom-nav button b{font-size:19px;line-height:1;font-weight:400}.bottom-nav button.active{color:var(--blue)}.small{font-size:11px;color:var(--muted);line-height:1.65}@media(max-width:370px){.grid3{grid-template-columns:1fr}.hero h2{font-size:22px}.bottom-nav button{font-size:10px}.drawer{width:82vw}}
+  :root { --bg:#0f1118; --card:#1a1d2b; --border:#2a2d3b; --text:#d1d5db; --dim:#9ca3af; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; line-height:1.6; padding:1.5rem; }
+  .container { max-width:900px; margin:0 auto; }
+  .header { text-align:center; padding:1.5rem 0; border-bottom:1px solid var(--border); margin-bottom:1.5rem; }
+  .header h1 { font-size:1.5rem; color:#f3f4f6; }
+  .update-time { color:var(--dim); font-size:0.8rem; margin-top:0.3rem; }
+
+  .env-banner {
+    background: linear-gradient(135deg, #84cc1618, #84cc1608);
+    border:1px solid #84cc1640; border-radius:12px;
+    padding:1.25rem; text-align:center; margin-bottom:1.25rem;
+  }
+  .env-banner .label { font-size:0.85rem; color:var(--dim); }
+  .env-banner .value { font-size:1.6rem; font-weight:800; color:#84cc16; }
+  .env-banner .detail { font-size:0.85rem; color:var(--dim); margin-top:0.3rem; }
+
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.25rem; }
+  @media(max-width:640px){ .grid-2 { grid-template-columns:1fr; } }
+
+  .card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1.25rem; }
+  .card h3 { font-size:1rem; color:#f3f4f6; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.4rem; }
+
+  .index-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:0.6rem; }
+  .index-card { background:rgba(255,255,255,0.02); border-radius:8px; padding:0.65rem; }
+  .index-name { font-size:0.8rem; color:var(--dim); }
+  .index-price { font-size:1.1rem; font-weight:700; color:#f3f4f6; }
+
+  .tag { display:inline-block; padding:0.15rem 0.5rem; border-radius:12px; font-size:0.7rem; font-weight:600; margin-top:0.25rem; }
+
+  table { width:100%; border-collapse:collapse; font-size:0.85rem; }
+  th { background:rgba(255,255,255,0.03); padding:0.55rem 0.75rem; text-align:left; font-weight:600; color:#e5e7eb; border-bottom:1px solid var(--border); }
+  td { padding:0.5rem 0.75rem; border-bottom:1px solid rgba(255,255,255,0.03); }
+
+  .exit-item { padding:0.6rem 0.75rem; margin-bottom:0.4rem; background:rgba(255,255,255,0.02); border-radius:6px; }
+
+  .stat { text-align:center; padding:0.75rem; }
+  .stat .num { font-size:1.4rem; font-weight:800; color:#f3f4f6; }
+  .stat .lbl { font-size:0.75rem; color:var(--dim); }
+
+  .footer { text-align:center; padding:1.5rem 0; color:var(--dim); font-size:0.75rem; border-top:1px solid var(--border); margin-top:1.5rem; }
+  .footer .flow { display:flex; justify-content:center; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.5rem; }
+  .flow-step { background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.2); border-radius:6px; padding:0.25rem 0.6rem; font-size:0.7rem; }
 </style>
 </head>
 <body>
-<div class="drawer-mask" id="drawerMask" onclick="closeDrawer()"></div>
-<aside class="drawer" id="drawer"><div class="drawer-head"><h2>资产导航</h2><p>按执行顺序看：目标 → 当前 → 理想 → 执行</p></div><button class="nav-link active" onclick="go('goal')"><span>◎</span>整体目标</button><button class="nav-link" onclick="go('current')"><span>⌂</span>当前持仓</button><button class="nav-link" onclick="go('target')"><span>◉</span>理想方案</button><button class="nav-link" onclick="go('action')"><span>↗</span>执行路线</button><button class="nav-link" onclick="scrollToDetail('risk-rules')"><span>⌁</span>止盈止损</button><button class="nav-link" onclick="scrollToDetail('backtest')"><span>▤</span>回测结果</button><button class="nav-link" onclick="go('quick');loadQuickMoney();"><span>⚡</span>快钱</button>
-<div class="drawer-note">当前版本：白色系 v4.4.0。黄金不新增，重点是把债券超配逐步转为宽基和少量科技。</div></aside>
-<header class="top"><button class="menu-btn" onclick="openDrawer()">☰</button><div class="top-title"><h1>Jivon 资产执行面板</h1><p>回撤优先控制在10%以内，分批补宽基和少量科技</p></div><div class="version">v4.4</div></header>
-<main>
-<section class="page active" id="page-goal"><div class="hero"><div class="kicker">整体目标</div><h2>先稳住，再把收益发动机装上</h2><div class="desc">按你最新资产估算，总资产约732,443元：稳健/债券约535,388元，余额宝99,049元，QDII权益11,732元，工商如意积存金约86,275元。黄金已经够了，接下来不买黄金，重点补宽基和少量科技。</div></div><div class="grid3"><div class="metric"><div class="num" style="color:var(--green)">≤10%</div><div class="label">第一目标：控制回撤</div></div><div class="metric"><div class="num" style="color:var(--blue)">5%–7%</div><div class="label">基础年化目标</div></div><div class="metric"><div class="num" style="color:var(--yellow)">7%–9%</div><div class="label">顺风年份争取</div></div></div><div class="section">落实进度</div><div class="card"><div class="progress-block"><div class="progress-head"><span>安全底仓</span><span style="color:var(--green)">已超额</span></div><div class="bar"><i style="width:100%;background:var(--green)"></i></div><div class="small">稳健/债券当前约53.54万，目标约32.11万，超配约21.42万。下一步是从可赎回债基里慢慢转出来。</div></div><div class="progress-block"><div class="progress-head"><span>宽基落实度</span><span style="color:var(--orange)">几乎未建立</span></div><div class="bar"><i style="width:5%;background:var(--orange)"></i></div><div class="small">宽基目标约9.83万。真正的A500、沪深300、中证500、标普500宽基需要补起来。</div></div><div class="progress-block"><div class="progress-head"><span>科技成长落实度</span><span style="color:var(--blue)">约28%</span></div><div class="bar"><i style="width:28%;background:var(--blue)"></i></div><div class="small">科技目标约4.21万，目前QDII权益约1.17万，可视为科技/全球成长底仓。</div></div><div class="progress-block"><div class="progress-head"><span>黄金仓</span><span style="color:var(--yellow)">已完成</span></div><div class="bar"><i style="width:100%;background:var(--yellow)"></i></div><div class="small">工商如意积存金约8.63万，约占总资产11.8%。只计入总资产和风险对冲，不再新增买入。</div></div></div><div class="callout warn"><strong>当下最重要：</strong>不要再买黄金；不要把余额宝花光；先查哪些债基可赎回，再分批转到宽基和少量科技。</div></section>
-<section class="page" id="page-current"><div class="hero"><div class="kicker">当前持仓</div><h2>债券太重，黄金够了，宽基太少</h2><div class="desc">你现在不是风险资产太多，而是稳健资产太多、宽基资产太少。这能让回撤低，但长期增值不够。</div></div><div class="grid3"><div class="metric"><div class="num">¥73.24万</div><div class="label">估算总资产</div></div><div class="metric"><div class="num" style="color:var(--green)">73.1%</div><div class="label">稳健/债券占比</div></div><div class="metric"><div class="num" style="color:var(--yellow)">11.8%</div><div class="label">工商黄金占比</div></div></div><div class="section">当前大类结构</div><div class="card"><div class="row"><div><div class="name">稳健理财/债券</div><div class="sub">固收+约30%，纯固收/滚动持有约70%</div></div><div><div class="amt">¥535,388</div><div class="tag">约73.1%</div></div></div><div class="bar"><i style="width:73%;background:var(--green)"></i></div><div class="row"><div><div class="name">余额宝/灵活取用</div><div class="sub">日常备用金，收益低但流动性好</div></div><div><div class="amt">¥99,049</div><div class="tag">约13.5%</div></div></div><div class="bar"><i style="width:14%;background:var(--blue)"></i></div><div class="row"><div><div class="name">QDII/权益</div><div class="sub">高波动权益资产，金额仍很小</div></div><div><div class="amt">¥11,732</div><div class="tag">约1.6%</div></div></div><div class="bar"><i style="width:2%;background:var(--orange)"></i></div><div class="row"><div><div class="name">工商如意积存金</div><div class="sub">95.8克，已作为黄金对冲仓</div></div><div><div class="amt">¥86,275</div><div class="tag">约11.8%</div></div></div><div class="bar"><i style="width:12%;background:var(--yellow)"></i></div></div><details><summary>主力持仓明细</summary><div class="detail-body"><table><thead><tr><th>名称</th><th>金额</th><th>收益</th></tr></thead><tbody><tr><td>景顺长城景颐裕利债券C</td><td>205,821.10</td><td>+0.11%</td></tr><tr><td>西部利得汇享债券C</td><td>166,454.02</td><td>-0.14%</td></tr><tr><td>西部利得季季稳90天债券A</td><td>52,050.39</td><td>+8.09%</td></tr><tr><td>兴全天添益货币A</td><td>50,000.00</td><td>刚买入</td></tr><tr><td>信澳稳悦60天债券C</td><td>40,995.15</td><td>+0.02%</td></tr></tbody></table></div></details></section>
-<section class="page" id="page-target"><div class="hero"><div class="kicker">理想方案</div><h2>债券降下来，宽基补起来</h2><div class="desc">以总资产约73.24万估算，单列3万元应急金，剩余约70.24万作为投资资产。黄金按现有工商金保留，不再新增。</div></div><div class="section">目标金额</div><div class="card"><div class="row"><div><div class="name">中短债/纯债/稳健</div><div class="sub">目标稳压仓，当前超配约21.42万</div></div><div><div class="amt">¥321,142</div><div class="tag">约43.8%</div></div></div><div class="row"><div><div class="name">机动现金</div><div class="sub">余额宝/货币/短债，目标含补仓子弹</div></div><div><div class="amt">¥154,538</div><div class="tag">约21.1%</div></div></div><div class="row"><div><div class="name">宽基指数</div><div class="sub">A500/沪深300/中证500/标普500，最需要补</div></div><div><div class="amt">¥98,342</div><div class="tag">约13.4%</div></div></div><div class="row"><div><div class="name">工商如意积存金</div><div class="sub">已持有，只计入总资产和风险对冲</div></div><div><div class="amt">¥86,275</div><div class="tag">约11.8%</div></div></div><div class="row"><div><div class="name">科技成长</div><div class="sub">纳指/全球科技/AI/半导体，小仓位</div></div><div><div class="amt">¥42,147</div><div class="tag">约5.8%</div></div></div><div class="row"><div><div class="name">应急金</div><div class="sub">生活安全垫，不参与投资</div></div><div><div class="amt">¥30,000</div><div class="tag">单列</div></div></div></div><div class="callout ok"><strong>差距：</strong>宽基还需要新增约9.83万；科技还需要新增约3.04万；机动现金还需要从债券超配里补约8.55万；黄金新增0元。</div><details id="backtest" open><summary>为什么这样配：含回测结果</summary><div class="detail-body"><p>你要求回撤压在10%以内，所以权益仓不能太高。主方案仍按约20%权益来做：宽基为主，科技为辅。黄金已经超过原8%目标，因此只保留，不再新增。</p><table><thead><tr><th>方案</th><th>权益仓</th><th>5年模拟年化</th><th>5年最大回撤</th><th>压力测试回撤≤10%</th></tr></thead><tbody><tr><td>收益版</td><td>40%</td><td>11.41%</td><td>-9.36%</td><td>10.2%</td></tr><tr><td>均衡版</td><td>25%</td><td>8.47%</td><td>-5.98%</td><td>65.0%</td></tr><tr><td>风控版</td><td>20%</td><td>7.60%</td><td>-4.97%</td><td>86.4%</td></tr></tbody></table><p style="margin-top:10px">结论：收益版看起来更高，但压力测试里守住10%回撤的概率太低；风控版最符合你的第一目标。</p></div></details><details id="risk-rules" open><summary>止盈止损与再平衡规则</summary><div class="detail-body"><div class="sub-title">止盈规则</div><p>宽基仓单类盈利达到15%：卖出盈利部分的30%，转入机动现金；达到25%：再卖出30%。科技成长仓盈利达到20%：卖出三分之一，避免主题回撤吞掉收益。</p><div class="sub-title">止损规则</div><p>单只主题基金亏损达到-12%：暂停加仓，观察两周；亏损达到-18%且同类指数仍破位：停止定投，只保留核心宽基。宽基不做硬止损，除非组合整体回撤接近10%。</p><div class="sub-title">组合回撤规则</div><p>组合回撤5%：动用机动现金20%补宽基；回撤8%：再动用20%；接近10%：停止主动加仓，等待企稳，不再买科技。</p><div class="sub-title">再平衡规则</div><p>每季度检查一次。权益合计超过25%就减回20%附近；科技超过7%就减；黄金不再新增，若被动涨到15%以上再考虑减一点。</p></div></details></section>
-<section class="page" id="page-action"><div class="hero"><div class="kicker">执行路线</div><h2>照着做：先查能不能赎，再分批买宽基</h2><div class="desc">不要一上来就大买。余额宝还要承担应急金和机动现金，不能全部拿去买基金。真正的资金来源，是债券/稳健仓里可赎回、无高额费用、无封闭期的部分。</div></div><div class="callout danger"><strong>一句话：</strong>黄金0元；债券不新增；宽基是主买入对象；科技只小额；余额宝不能花光。</div><div class="section">一、先做准备</div><div class="card"><div class="plan-step"><h3>1. 查哪些债基可以赎回</h3><p>打开支付宝 → 理财/基金 → 持仓 → 点进每只债基 → 看“卖出/赎回”按钮、到账时间、赎回费、是否持有期内。</p><div class="buy-list">先查：景顺长城景颐裕利债券C、西部利得汇享债券C、信澳稳悦60天债券C。90天/60天/6个月持有期的，没到期就别动。</div></div><div class="plan-step"><h3>2. 先别动黄金</h3><p>工商如意积存金已经有8.63万，够了。看到金价涨跌都不要加仓。</p><div class="buy-list">动作：黄金买入金额 = 0元。</div></div><div class="plan-step"><h3>3. 清理定投</h3><p>24个定投太散，QDII重复多。先暂停或降低重复纳指日定投，保留3–5个核心定投。</p><div class="buy-list">保留方向：1只纳指/全球科技、1只全球精选、1只A股宽基、1只中证500/1000。其他重复纳指标的先暂停。</div></div></div><div class="section">二、第一阶段买入</div><div class="card"><div class="plan-step"><h3>第1周：先小买，合计1.2万</h3><p>目的不是赚钱，是先把宽基仓建起来，熟悉买入流程。</p><div class="buy-list">宽基买入1万元：A500/沪深300 6000元，中证500/1000 4000元。<br>科技买入2000元：纳指/全球科技。<br>黄金0元。<br>操作方式：一次性买入，不设日定投。尽量工作日15:00前下单。</div></div><div class="plan-step"><h3>第2周：如果第1周没有大涨，买2.5万</h3><p>如果宽基一周涨超3%，这一周减半买；如果下跌，正常买。</p><div class="buy-list">宽基2万元：A500/沪深300 1万元，中证500/1000 7000元，标普500/全球宽基3000元。<br>科技5000元：纳指/全球科技3000元，AI/半导体/科创2000元。<br>黄金0元。</div></div><div class="plan-step"><h3>第3周：等债基赎回到账后再买3万</h3><p>不要用完余额宝。只有债基赎回到账，才执行这一周。</p><div class="buy-list">宽基2.4万元：A500/沪深300 1万元，中证500/1000 1万元，标普500/全球宽基4000元。<br>科技6000元：仍然只买小仓位。<br>如果科技板块放量下跌，科技6000元先不买，放回机动现金。</div></div><div class="plan-step"><h3>第4周：继续补宽基，合计3.5万</h3><p>这一周仍然以宽基为主，不追主题。</p><div class="buy-list">宽基2.8万元：A500/沪深300 1.2万元，中证500/1000 1.1万元，标普500/全球宽基5000元。<br>科技7000元：只在没有连续大跌时买。<br>黄金0元。</div></div></div><div class="section">三、第5–8周补齐</div><div class="card"><div class="plan-step"><h3>慢慢补到目标，不追涨</h3><p>前4周执行完后，宽基大约买到8.2万，科技约2万。后面每周只需要小补。</p><div class="buy-list">每周买入：宽基4000–6000元，科技1000–2000元。<br>直到宽基接近9.83万、科技接近4.21万就停。<br>停的意思是：不再加仓，只保留少量定投。</div></div></div><div class="section">四、买基金时怎么选</div><div class="card"><div class="row"><div><div class="name">宽基优先级</div><div class="sub">先A500/沪深300，再中证500/1000，最后标普500</div></div><div><span class="pill">主仓</span></div></div><div class="row"><div><div class="name">科技优先级</div><div class="sub">先纳指/全球科技，再少量AI/半导体/科创</div></div><div><span class="pill">小仓</span></div></div><div class="row"><div><div class="name">份额类型</div><div class="sub">长期拿1年以上优先看A类；半年内可能调整再看C类</div></div><div><span class="pill">费用</span></div></div><div class="row"><div><div class="name">不要做的事</div><div class="sub">不买黄金、不新增债券、不7天内卖出、不追CPO/PCB单一主题</div></div><div><span class="pill">禁区</span></div></div></div><details><summary>市场突然涨跌时怎么处理</summary><div class="detail-body"><p>宽基一周上涨超过3%：下一周买入金额减半；下跌3%以内：正常买；下跌超过5%：按原计划买宽基，但科技暂停一周。</p><p>组合整体回撤到5%：动用机动现金20%补宽基；回撤到8%：再动用20%；接近10%：停止主动加仓，等市场稳定。</p></div></details><details><summary>支付宝操作提醒</summary><div class="detail-body"><p>工作日15:00前下单按当天净值，15:00后按下一个交易日净值。买入后7天内尽量不要卖。QDII基金净值更新慢，不要用它做短线。</p></div></details></section>
+<div class="container">
 
-<section class="page" id="page-quick"><div class="hero" style="border-color:#dc2626;background:linear-gradient(135deg,#ffffff 0%,#fef2f2 55%,#fff7ed 100%);"><div class="kicker" style="color:#dc2626;">⚡ 快钱模块</div><h1>全市场高波动扫描</h1><p class="sub">30个高波动概念板块 · 实时信号 · C类基金匹配 · 30天0费率</p><div class="grid-3" style="margin-top:12px;"><div class="stat"><div class="stat-value red" id="qm-signal-count">-</div><div class="stat-label">今日信号</div></div><div class="stat"><div class="stat-value orange" id="qm-position">-</div><div class="stat-label">建议仓位</div></div><div class="stat"><div class="stat-value blue" id="qm-cash">-</div><div class="stat-label">可用资金</div></div></div></div>
+<div class="header">
+  <h1>交易系统五模块 Dashboard</h1>
+  <div class="update-time">更新: 2026-07-01 13:24 | 下次: 交易日 11:00 / 14:30</div>
+</div>
 
-<div id="qm-signals"><div class="card" style="text-align:center;padding:40px;"><div style="font-size:2rem;margin-bottom:8px;">⏳</div><p style="color:var(--muted);">等待数据更新...</p></div></div>
+<!-- 模块1: 市场环境 -->
+<div class="env-banner">
+  <div class="label">模块1 · 市场环境判断</div>
+  <div class="value">偏牛 — 积极做多</div>
+  <div class="detail">偏牛指数 3/5 | 偏熊指数 0/5 | 建议仓位 60% (¥57,600)</div>
+</div>
 
-<div class="card" style="margin-top:16px;border:1px solid #fecaca;background:#fef2f2;"><h3 style="margin-bottom:8px;color:#dc2626;">📋 C类基金费率表（必读）</h3><div class="grid-3" style="font-size:0.82rem;"><div style="text-align:center;padding:8px;background:#fee2e2;border-radius:8px;"><b style="color:#dc2626;">0-6天</b><br><span style="color:#991b1b;">1.5% 赎回费</span><br><span style="font-size:0.7rem;">❌ 绝对禁止</span></div><div style="text-align:center;padding:8px;background:#fef3c7;border-radius:8px;"><b style="color:#d97706;">7-29天</b><br><span style="color:#92400e;">0.5% 赎回费</span><br><span style="font-size:0.7rem;">⚠️ 预期>2%可考虑</span></div><div style="text-align:center;padding:8px;background:#dcfce7;border-radius:8px;"><b style="color:#16a34a;">30天+</b><br><span style="color:#166534;">0% 免费</span><br><span style="font-size:0.7rem;">✅ 自由进出</span></div></div><p style="margin-top:10px;font-size:0.75rem;color:var(--muted);">支付宝T日15:00前下单按当日净值 · T+1确认 · T+2可赎回 · 净值每晚约20:00更新</p></div>
-
-<div class="card" style="margin-top:16px;"><h3 style="margin-bottom:8px;">📊 扫描范围（25个高波动板块）</h3><div style="display:flex;flex-wrap:wrap;gap:6px;font-size:0.75rem;"><span class="tag tag-red">科创芯片</span><span class="tag tag-red">存储芯片</span><span class="tag tag-red">半导体</span><span class="tag tag-red">先进封装</span><span class="tag tag-red">汽车芯片</span><span class="tag tag-blue">CPO</span><span class="tag tag-blue">光通信</span><span class="tag tag-blue">算力</span><span class="tag tag-blue">液冷服务器</span><span class="tag tag-blue">铜缆连接</span><span class="tag tag-green">PCB</span><span class="tag tag-green">AI手机</span><span class="tag tag-green">智能穿戴</span><span class="tag tag-green">消费电子</span><span class="tag tag-green">AI眼镜</span><span class="tag tag-purple">固态电池</span><span class="tag tag-purple">低空经济</span><span class="tag tag-purple">人形机器人</span><span class="tag tag-purple">商业航天</span><span class="tag tag-orange">创新药</span><span class="tag tag-orange">稀土永磁</span><span class="tag tag-orange">数据要素</span><span class="tag tag-orange">量子科技</span><span class="tag tag-orange">脑机接口</span><span class="tag tag-orange">数字货币</span></div></div></section>
-
-</main><nav class="bottom-nav"><button class="active" onclick="go('goal')"><b>◎</b><span>目标</span></button><button onclick="go('current')"><b>⌂</b><span>当前</span></button><button onclick="go('target')"><b>◉</b><span>理想</span></button><button onclick="go('action')"><b>↗</b><span>执行</span></button><button onclick="go('quick')"><b>⚡</b><span>快钱</span></button>
-</nav>
-<script>
-const APP_VERSION='4.5.0';
-function setActiveNav(name){document.querySelectorAll('.bottom-nav button').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.nav-link').forEach(b=>b.classList.remove('active'));const idx={goal:0,current:1,target:2,action:3,quick:4}[name];if(idx!==undefined){document.querySelectorAll('.bottom-nav button')[idx]?.classList.add('active');document.querySelectorAll('.nav-link')[idx]?.classList.add('active');}}
-function go(name){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+name).classList.add('active');setActiveNav(name);closeDrawer();window.scrollTo({top:0,behavior:'smooth'});if(name==='quick')loadQuickMoney();}
-function openDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('drawerMask').classList.add('open');}
-function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('drawerMask').classList.remove('open');}
-function scrollToDetail(id){go('target');setTimeout(()=>{document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'});},120);}
-if('serviceWorker'in navigator){navigator.serviceWorker.register('sw.js?v=440').catch(()=>{});}
-
-let quickMoneyData = null;
-async function loadQuickMoney(){
-  try{
-    const r=await fetch('quick_money.json?t='+Date.now());
-    quickMoneyData=await r.json();
-    renderQuickMoney();
-  }catch(e){console.error('Quick money load failed:',e);}
-}
-function renderQuickMoney(){
-  const d=quickMoneyData; if(!d)return;
-  document.getElementById('qm-signal-count').textContent=d.summary.total_signals||0;
-  document.getElementById('qm-position').textContent='\u00a5'+((d.summary.suggested_position_today||0)/1000).toFixed(0)+'k';
-  document.getElementById('qm-cash').textContent='\u00a5'+((d.summary.available_cash||0)/10000).toFixed(1)+'w';
+<div class="index-grid" style="margin-bottom:1.25rem;">
   
-  const container=document.getElementById('qm-signals');
-  if(!d.signals||d.signals.length===0){
-    container.innerHTML='<div class="card" style="text-align:center;padding:40px;"><div style="font-size:2rem;margin-bottom:8px;">\ud83d\ude34</div><p style="color:var(--muted);">今日无快钱信号，耐心等待</p><p style="font-size:0.75rem;color:var(--soft);">扫描时间: '+(d.scan_time||'--')+' | '+d.boards_scanned+'个板块</p></div>';
-    return;
-  }
-  
-  const colors={breakout:'#dc2626',dip_buy:'#16a34a',rotation:'#7c3aed',oversold:'#ea580c'};
-  const icons={breakout:'\ud83d\udd25',dip_buy:'\ud83e\ude78',rotation:'\ud83d\udd04',oversold:'\ud83d\udc80'};
-  
-  let html='';
-  d.signals.forEach((s,i)=>{
-    const c=colors[s.type]||'#64748b';
-    const icon=icons[s.type]||'';
-    html+='<div class="card" style="border-left:4px solid '+c+';margin-bottom:12px;">';
-    html+='<div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">';
-    html+='<div><b style="font-size:1rem;">'+icon+' '+s.label+'</b> <span style="color:var(--muted);font-size:0.85rem;">'+s.board+'</span></div>';
-    html+='<div style="text-align:right;"><span style="font-size:1.1rem;font-weight:700;color:'+(s.change_pct>=0?'#dc2626':'#16a34a')+';">'+(s.change_pct>=0?'+':'')+s.change_pct+'%</span></div>';
-    html+='</div>';
-    html+='<div style="font-size:0.8rem;color:var(--muted);margin-bottom:8px;">'+s.reason+' | 当前'+s.current+' | MA10: '+(s.ma10||'?')+'</div>';
+        <div class="index-card" style="border-left:3px solid #9ca3af">
+          <div class="index-name">上证50</div>
+          <div class="index-price">2985.24</div>
+          <div style="font-size:0.75rem;color:#9ca3af">
+            MA60: 2934.46 | MA120: 2975.22
+          </div>
+          <span class="tag" style="background:#9ca3af20;color:#9ca3af">中性</span>
+        </div>
+        <div class="index-card" style="border-left:3px solid #22c55e">
+          <div class="index-name">沪深300</div>
+          <div class="index-price">4958.98</div>
+          <div style="font-size:0.75rem;color:#9ca3af">
+            MA60: 4821.05 | MA120: 4743.96
+          </div>
+          <span class="tag" style="background:#22c55e20;color:#22c55e">多头</span>
+        </div>
+        <div class="index-card" style="border-left:3px solid #22c55e">
+          <div class="index-name">中证500</div>
+          <div class="index-price">9028.93</div>
+          <div style="font-size:0.75rem;color:#9ca3af">
+            MA60: 8402.07 | MA120: 8272.97
+          </div>
+          <span class="tag" style="background:#22c55e20;color:#22c55e">多头</span>
+        </div>
+        <div class="index-card" style="border-left:3px solid #22c55e">
+          <div class="index-name">科创50</div>
+          <div class="index-price">2153.04</div>
+          <div style="font-size:0.75rem;color:#9ca3af">
+            MA60: 1670.68 | MA120: 1548.69
+          </div>
+          <span class="tag" style="background:#22c55e20;color:#22c55e">多头</span>
+        </div>
+</div>
+
+<!-- 模块2+3: 标的筛选 & 仓位 -->
+<div class="card" style="margin-bottom:1.25rem;">
+  <h3>📊 模块2 · 标的筛选 & 模块3 · 仓位管理</h3>
+  <div style="display:flex;gap:1rem;margin-bottom:0.75rem;flex-wrap:wrap">
+    <div class="stat"><div class="num">21</div><div class="lbl">板块扫描</div></div>
+    <div class="stat"><div class="num">8</div><div class="lbl">买入信号</div></div>
+    <div class="stat"><div class="num">0</div><div class="lbl">门控拦截</div></div>
+    <div class="stat"><div class="num">¥4,100</div><div class="lbl">今日建议仓位</div></div>
+  </div>
+  <table>
+    <tr><th>信号</th><th>板块</th><th>涨跌</th><th>仓位</th><th>匹配基金</th></tr>
     
-    if(s.funds&&s.funds.length>0){
-      html+='<div style="background:var(--surface2);border-radius:8px;padding:8px;margin-bottom:6px;">';
-      html+='<div style="font-size:0.75rem;color:var(--muted);margin-bottom:4px;">推荐C类基金：</div>';
-      s.funds.forEach(f=>{
-        html+='<div style="font-size:0.82rem;font-weight:600;">'+f.code+' '+f.name+'</div>';
-      });
-      html+='</div>';
-    }else if(s.funds_note){
-      html+='<div style="font-size:0.75rem;color:#ea580c;margin-bottom:6px;">'+s.funds_note+'</div>';
-    }
-    
-    html+='<div style="display:flex;gap:12px;font-size:0.78rem;">';
-    html+='<span style="color:'+c+';font-weight:700;">建议仓位: \u00a5'+s.position+'</span>';
-    if(s.stop_loss)html+='<span style="color:var(--muted);">止损 '+s.stop_loss+'</span>';
-    if(s.take_profit)html+='<span style="color:var(--muted);">止盈 '+s.take_profit+'</span>';
-    html+='</div></div>';
-  });
-  
-  html+='<div style="font-size:0.75rem;color:var(--soft);text-align:center;margin-top:8px;">扫描时间: '+d.scan_time+' | 更新: '+d.updated+'</div>';
-  container.innerHTML=html;
-}
+            <tr>
+              <td><span style="color:#22c55e;font-weight:600">🟢 放量突破MA20</span></td>
+              <td>AI眼镜</td>
+              <td>+3.7%</td>
+              <td style="color:#f59e0b">¥1,000</td>
+              <td style="font-size:0.8rem;color:#9ca3af"> → 008282 国泰CES半导体芯片ETF联接C</td>
+            </tr>
+            <tr>
+              <td><span style="color:#22c55e;font-weight:600">🟢 放量突破MA20</span></td>
+              <td>创新药</td>
+              <td>+4.0%</td>
+              <td style="color:#f59e0b">¥1,000</td>
+              <td style="font-size:0.8rem;color:#9ca3af"> → 011179 汇添富中证精准医疗C</td>
+            </tr>
+            <tr>
+              <td><span style="color:#f59e0b;font-weight:600">🟡 超跌反弹</span></td>
+              <td>存储芯片</td>
+              <td>+2.9%</td>
+              <td style="color:#f59e0b">¥700</td>
+              <td style="font-size:0.8rem;color:#9ca3af"> → 008888 国联安中证半导体ETF联接C</td>
+            </tr>
+            <tr>
+              <td><span style="color:#f59e0b;font-weight:600">🟡 超跌反弹</span></td>
+              <td>先进封装</td>
+              <td>+1.2%</td>
+              <td style="color:#f59e0b">¥700</td>
+              <td style="font-size:0.8rem;color:#9ca3af"> → 008888 国联安中证半导体ETF联接C</td>
+            </tr>
+            <tr>
+              <td><span style="color:#f59e0b;font-weight:600">🟡 超跌反弹</span></td>
+              <td>CPO</td>
+              <td>+1.1%</td>
+              <td style="color:#f59e0b">¥700</td>
+              <td style="font-size:0.8rem;color:#9ca3af"> → 017560 嘉实上证科创板芯片ETF联接C</td>
+            </tr>
+            <tr>
+              <td><span style="color:#f59e0b;font-weight:600">🟡 超跌反弹</span></td>
+              <td>光通信</td>
+              <td>+2.6%</td>
+              <td style="color:#f59e0b">¥700</td>
+              <td style="font-size:0.8rem;color:#9ca3af"> → 017560 嘉实上证科创板芯片ETF联接C</td>
+            </tr>
+            <tr>
+              <td><span style="color:#f59e0b;font-weight:600">🟡 超跌反弹</span></td>
+              <td>人形机器人</td>
+              <td>+3.2%</td>
+              <td style="color:#f59e0b">¥700</td>
+              <td style="font-size:0.8rem;color:#9ca3af"> → 002256 金信新能源汽车混合C</td>
+            </tr>
+            <tr>
+              <td><span style="color:#f59e0b;font-weight:600">🟡 超跌反弹</span></td>
+              <td>稀土永磁</td>
+              <td>+2.2%</td>
+              <td style="color:#f59e0b">¥700</td>
+              <td style="font-size:0.8rem;color:#9ca3af"> → 011036 嘉实中证稀土产业ETF联接C</td>
+            </tr>
+  </table>
+</div>
 
-function setActiveNav(name){
-  document.querySelectorAll('.bottom-nav button').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.nav-link').forEach(b=>b.classList.remove('active'));
-  const idx={goal:0,current:1,target:2,action:3,quick:4}[name];
-  if(idx!==undefined){
-    document.querySelectorAll('.bottom-nav button')[idx]?.classList.add('active');
-    document.querySelectorAll('.nav-link')[idx]?.classList.add('active');
-  }
-}
+<!-- 模块4: 止盈止损 -->
+<div class="card" style="margin-bottom:1.25rem;">
+  <h3>🛡️ 模块4 · 止盈止损</h3>
+  <div style="color:#6b7280;text-align:center;padding:1rem">无退出信号</div>
+  <div style="font-size:0.75rem;color:var(--dim);margin-top:0.75rem;display:flex;gap:1rem;flex-wrap:wrap">
+    <span>止损: -8%硬止损</span><span>短线止盈: +12%</span><span>趋势止盈: +18%</span><span>移动止盈: 高点回撤>5%</span>
+  </div>
+</div>
 
-</script></body></html>
+<!-- 模块5: 动态优化 -->
+<div class="card">
+  <h3>📈 模块5 · 动态优化</h3>
+  <div style="display:flex;gap:1rem;flex-wrap:wrap">
+    <div class="stat"><div class="num">2</div><div class="lbl">历史记录天数</div></div>
+    <div class="stat"><div class="num">是</div><div class="lbl">今日需操作</div></div>
+  </div>
+  <div style="margin-top:0.75rem;padding:0.75rem;background:rgba(245,158,11,0.08);border-radius:8px;text-align:center;font-weight:600;">
+    优先关注 AI眼镜 (🟢 放量突破MA20)
+  </div>
+</div>
+
+<div class="footer">
+  <div class="flow">
+    <span class="flow-step">判断环境→做不做</span>
+    <span class="flow-step">选股→买什么</span>
+    <span class="flow-step">仓位→能活下来吗</span>
+    <span class="flow-step">止盈止损→守住利润</span>
+    <span class="flow-step">优化→持续赚钱</span>
+  </div>
+  <div>五模块交易系统 · 自动运行 · 顺势而为</div>
+</div>
+
+</div>
+</body>
+</html>
