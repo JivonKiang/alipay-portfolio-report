@@ -1,0 +1,51 @@
+name: Trading System (5-Module)
+
+on:
+  schedule:
+    # 北京时间 11:00 → UTC 3:00 (周一至周五)
+    - cron: '0 3 * * 1-5'
+    # 北京时间 14:30 → UTC 6:30 (周一至周五)
+    - cron: '30 6 * * 1-5'
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run 5-Module Trading System
+        run: python3 trading_system.py
+
+      - name: Commit updated data & dashboard
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # 添加输出文件
+          git add output/trading_data.json
+          git add output/trading_dashboard.html
+          git add trading_dashboard.html
+          git add cache/trading_history.json 2>/dev/null || true
+
+          git diff --staged --quiet || git commit -m "auto: trading system update $(TZ='Asia/Shanghai' date +'%Y-%m-%d %H:%M')"
+          git push
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./output
+          publish_branch: gh-pages
+          force_orphan: true
+          commit_message: "deploy: trading dashboard ${{ github.sha }}"
