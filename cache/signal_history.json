@@ -4,5 +4,29 @@
     "last_seen": "2026-06-30",
     "seen_count": 1,
     "direction_at_first": "down"
+  },
+  "半导体_rotation": {
+    "first_seen": "2026-07-01",
+    "last_seen": "2026-07-01",
+    "seen_count": 1,
+    "direction_at_first": "down"
+  },
+  "PCB_rotation": {
+    "first_seen": "2026-07-01",
+    "last_seen": "2026-07-01",
+    "seen_count": 1,
+    "direction_at_first": "down"
+  },
+  "固态电池_rotation": {
+    "first_seen": "2026-07-01",
+    "last_seen": "2026-07-01",
+    "seen_count": 1,
+    "direction_at_first": "down"
+  },
+  "商业航天_rotation": {
+    "first_seen": "2026-07-01",
+    "last_seen": "2026-07-01",
+    "seen_count": 1,
+    "direction_at_first": "down"
   }
 }
