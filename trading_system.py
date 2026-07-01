@@ -699,13 +699,31 @@ def main():
     return output
 
 
+
 def generate_dashboard_html(data, env):
-    """生成自包含的 HTML Dashboard"""
+    """生成教练式 Dashboard - 每日操盘指南"""
+    import json as _json
     now = datetime.now()
     m1 = data["module_1_environment"]
     m2 = data["module_2_selection"]
     m3 = data["module_3_position"]
     m4 = data["module_4_exit"]
+
+    # 读取心法训练数据
+    mindset = {}
+    mindset_file = os.path.join(CACHE_DIR, "mindset_training.json")
+    if os.path.exists(mindset_file):
+        with open(mindset_file, "r", encoding="utf-8") as f:
+            mindset = _json.load(f)
+
+    # 读取豆包Prompt
+    prompt_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "doubao_prompt.txt")
+    doubao_prompt = ""
+    if os.path.exists(prompt_file):
+        with open(prompt_file, "r", encoding="utf-8") as f:
+            doubao_prompt = f.read()
+    else:
+        doubao_prompt = "（Prompt文件缺失，请联系管理员）"
 
     # 环境颜色
     env_colors = {
@@ -715,182 +733,377 @@ def generate_dashboard_html(data, env):
         "bear_lean": ("#f97316", "#f97316"),
         "bear": ("#ef4444", "#ef4444"),
     }
-    env_color = env_colors.get(m1["env"], ("#9ca3af", "#9ca3af"))
+    ec = env_colors.get(m1["env"], ("#9ca3af", "#9ca3af"))
 
-    # 指数卡片
-    index_cards = ""
-    for name, detail in m1["index_details"].items():
-        if detail.get("status") == "data_insufficient":
-            continue
-        s = detail["status"]
-        sc = {"bullish": "#22c55e", "recovering": "#f59e0b", "bearish": "#ef4444",
-              "correcting": "#f97316", "neutral": "#9ca3af"}.get(s, "#9ca3af")
-        sl = {"bullish": "多头", "recovering": "恢复中", "bearish": "空头",
-              "correcting": "调整中", "neutral": "中性"}.get(s, s)
-        index_cards += f"""
-        <div class="index-card" style="border-left:3px solid {sc}">
-          <div class="index-name">{name}</div>
-          <div class="index-price">{detail['current']}</div>
-          <div style="font-size:0.75rem;color:#9ca3af">
-            MA60: {detail.get('ma60','-')} | MA120: {detail.get('ma120','-')}
-          </div>
-          <span class="tag" style="background:{sc}20;color:{sc}">{sl}</span>
-        </div>"""
+    # ---- 三阶段进度计算 ----
+    def calc_phase_progress(stage_num):
+        records = mindset.get("records", [])
+        if not records:
+            return 0
+        if stage_num == 1:
+            total = len(records)
+            disciplined = sum(1 for r in records if r.get("disciplined", False))
+            return round(disciplined / total * 100) if total > 0 else 0
+        elif stage_num == 2:
+            modes = mindset.get("mode_exploration", {}).get("tried_modes", [])
+            current = mindset.get("mode_exploration", {}).get("current_mode", "")
+            win_rate = mindset.get("mode_exploration", {}).get("monthly_win_rate", 0)
+            if current:
+                return min(100, win_rate * 2)
+            return min(100, len(modes) * 20) if modes else 0
+        elif stage_num == 3:
+            total = len(records)
+            invalid = sum(1 for r in records if r.get("is_impulsive", False) or r.get("impulsive_count", 0) > 0)
+            ratio = round(invalid / total * 100) if total > 0 else 0
+            return max(0, 100 - ratio)
+        return 0
 
-    # 信号列表
+    p1 = calc_phase_progress(1)
+    p2 = calc_phase_progress(2)
+    p3 = calc_phase_progress(3)
+
+    def progress_bar(pct, label, color="#f59e0b"):
+        filled = max(1, round(pct / 10))
+        empty = max(0, 10 - filled)
+        bar = '<span style="color:' + color + '">' + ("■" * filled) + '</span>' + ("□" * empty)
+        return '<div class="progress-row"><span class="phase-label">' + label + '</span><span class="phase-bar">' + bar + '</span><span class="phase-pct">' + str(pct) + '%</span></div>'
+
+    # ---- 今日待办时间逻辑 ----
+    hour = now.hour
+    if hour < 11:
+        todo_step2 = "11:00 系统自动扫描信号，刷新页面查看买卖建议"
+    elif hour < 14:
+        todo_step2 = "14:30 系统再次扫描，刷新页面查看"
+    else:
+        todo_step2 = "今日扫描已完成。打开同花顺+养基宝+支付宝，截图做复盘"
+
+    # ---- 信号表格 ----
     signals_html = ""
     if m2["actionable_signals"] > 0:
         for sig in m2["signals"]:
             fund_info = ""
             if sig.get("funds"):
                 f = sig["funds"][0]
-                fund_info = f" → {f['code']} {f['name']}"
+                fund_info = f["code"] + " " + f["name"]
             pos = sig.get("position", 0)
-            sc = {"dip_buy": "#3b82f6", "breakout": "#22c55e", "oversold": "#f59e0b"}.get(sig.get("type",""), "#9ca3af")
-            signals_html += f"""
-            <tr>
-              <td><span style="color:{sc};font-weight:600">{sig.get('label','')}</span></td>
-              <td>{sig['board']}</td>
-              <td>{sig.get('change_pct',''):+.1f}%</td>
-              <td style="color:#f59e0b">¥{pos:,}</td>
-              <td style="font-size:0.8rem;color:#9ca3af">{fund_info}</td>
-            </tr>"""
+            sc = {
+                "dip_buy": "#3b82f6",
+                "breakout": "#22c55e",
+                "oversold": "#f59e0b"
+            }.get(sig.get("type", ""), "#9ca3af")
+            signals_html += "<tr><td><span style='color:" + sc + ";font-weight:600'>" + sig.get("label", "") + "</span></td><td>" + sig["board"] + "</td><td>" + format(sig.get("change_pct", 0), "+.1f") + "%</td><td style='color:#f59e0b'>\u00a5" + format(pos, ",") + "</td><td style='font-size:0.8rem;color:#9ca3af'>" + fund_info + "</td></tr>"
     else:
-        signals_html = '<tr><td colspan="5" style="text-align:center;color:#6b7280;padding:2rem">今日无符合条件的买入信号</td></tr>'
+        signals_html = "<tr><td colspan='5' style='text-align:center;color:#6b7280;padding:2rem'>今日无买入信号 — 不做也是操作</td></tr>"
 
-    # 退出信号
     exit_html = ""
     if m4["exit_signals"]:
         for es in m4["exit_signals"]:
-            ec = {"stop_loss": "#ef4444", "take_profit": "#22c55e", "trend_broken": "#f59e0b", "trailing_stop": "#f97316"}.get(es.get("exit_type",""), "#9ca3af")
-            exit_html += f"""
-            <div class="exit-item" style="border-left:3px solid {ec}">
-              <strong>{es['fund_code']}</strong> {es.get('board','')}
-              <span style="float:right;color:{ec}">{es.get('pnl_pct',0):+.1f}%</span>
-              <div style="font-size:0.8rem;color:#9ca3af">{es['reason']} | 持有{es.get('days_held',0)}天</div>
-            </div>"""
+            ex_c = {
+                "stop_loss": "#ef4444",
+                "take_profit": "#22c55e",
+                "trend_broken": "#f59e0b",
+                "trailing_stop": "#f97316"
+            }.get(es.get("exit_type", ""), "#9ca3af")
+            exit_html += "<div class='exit-row' style='border-left:3px solid " + ex_c + "'><strong>" + es["fund_code"] + "</strong> " + es.get("board", "") + "<span style='float:right;color:" + ex_c + "'>" + format(es.get("pnl_pct", 0), "+.1f") + "%</span><div style='font-size:0.8rem;color:#9ca3af'>" + es["reason"] + " | " + str(es.get("days_held", 0)) + "天</div></div>"
     else:
-        exit_html = '<div style="color:#6b7280;text-align:center;padding:1rem">无退出信号</div>'
+        exit_html = "<div style='color:#6b7280;text-align:center;padding:1rem'>无退出信号</div>"
 
-    html = f"""<!DOCTYPE html>
+    # ---- 修炼日志表 ----
+    log_rows = ""
+    for r in reversed(mindset.get("records", [])[-10:]):
+        d_icon = "OK" if r.get("disciplined") else "!!"
+        imp = r.get("impulsive_count", 0)
+        log_rows += "<tr><td>" + str(r.get("date", "")) + "</td><td>" + d_icon + "</td><td>" + str(imp) + "</td><td>" + str(r.get("mindset_note", "")) + "</td><td>" + str(r.get("market_env", "")) + "</td></tr>"
+
+    # ---- 指数卡片 ----
+    idx_cards = ""
+    for name, detail in m1["index_details"].items():
+        if detail.get("status") == "data_insufficient":
+            continue
+        s = detail["status"]
+        sc = {
+            "bullish": "#22c55e", "recovering": "#f59e0b",
+            "bearish": "#ef4444", "correcting": "#f97316",
+            "neutral": "#9ca3af"
+        }.get(s, "#9ca3af")
+        sl = {
+            "bullish": "多头", "recovering": "恢复",
+            "bearish": "空头", "correcting": "调整",
+            "neutral": "中性"
+        }.get(s, s)
+        idx_cards += "<div class='idx-card' style='border-left:3px solid " + sc + "'><div class='idx-name'>" + name + "</div><div class='idx-price'>" + str(detail["current"]) + "</div><span class='tag' style='background:" + sc + "20;color:" + sc + "'>" + sl + "</span></div>"
+
+    # 豆包Prompt HTML转义（防止注入HTML）
+    prompt_safe = doubao_prompt.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
+
+    # ---- 完整HTML ----
+    html = """<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>交易系统五模块 Dashboard</title>
+<title>操盘手每日修炼 · 交易系统</title>
 <style>
-  :root {{ --bg:#0f1118; --card:#1a1d2b; --border:#2a2d3b; --text:#d1d5db; --dim:#9ca3af; }}
-  * {{ margin:0; padding:0; box-sizing:border-box; }}
-  body {{ background:var(--bg); color:var(--text); font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; line-height:1.6; padding:1.5rem; }}
-  .container {{ max-width:900px; margin:0 auto; }}
-  .header {{ text-align:center; padding:1.5rem 0; border-bottom:1px solid var(--border); margin-bottom:1.5rem; }}
-  .header h1 {{ font-size:1.5rem; color:#f3f4f6; }}
-  .update-time {{ color:var(--dim); font-size:0.8rem; margin-top:0.3rem; }}
+  :root { --bg:#0d1117; --card:#161b22; --border:#30363d; --text:#c9d1d9; --dim:#8b949e; --gold:#f59e0b; --green:#22c55e; --red:#ef4444; --blue:#3b82f6; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; line-height:1.6; padding:1rem; }
+  .container { max-width:860px; margin:0 auto; }
 
-  .env-banner {{
-    background: linear-gradient(135deg, {env_color[0]}18, {env_color[1]}08);
-    border:1px solid {env_color[0]}40; border-radius:12px;
-    padding:1.25rem; text-align:center; margin-bottom:1.25rem;
-  }}
-  .env-banner .label {{ font-size:0.85rem; color:var(--dim); }}
-  .env-banner .value {{ font-size:1.6rem; font-weight:800; color:{env_color[0]}; }}
-  .env-banner .detail {{ font-size:0.85rem; color:var(--dim); margin-top:0.3rem; }}
+  .coach-banner {
+    background: linear-gradient(135deg, rgba(245,158,11,0.12), rgba(245,158,11,0.04));
+    border:1px solid rgba(245,158,11,0.25); border-radius:14px;
+    padding:1.25rem; text-align:center; margin-bottom:1rem;
+  }
+  .coach-banner .greeting { font-size:0.85rem; color:var(--dim); }
+  .coach-banner .mission { font-size:1.4rem; font-weight:800; color:var(--gold); margin:0.3rem 0; }
+  .coach-banner .env-line { font-size:0.85rem; color:var(--dim); }
 
-  .grid-2 {{ display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.25rem; }}
-  @media(max-width:640px){{ .grid-2 {{ grid-template-columns:1fr; }} }}
+  .todo-panel {
+    background:var(--card); border:1px solid var(--border); border-radius:12px;
+    padding:1.25rem; margin-bottom:1rem;
+  }
+  .todo-panel h3 { font-size:1rem; color:#f0f6fc; margin-bottom:0.75rem; }
+  .todo-item {
+    display:flex; align-items:flex-start; gap:0.65rem; padding:0.5rem 0;
+    border-bottom:1px solid rgba(255,255,255,0.03);
+  }
+  .todo-num { width:28px;height:28px;border-radius:50%;background:rgba(59,130,246,0.15);color:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;flex-shrink:0; }
+  .todo-text { font-size:0.9rem; color:var(--text); }
+  .todo-hint { font-size:0.75rem; color:var(--dim); margin-top:0.15rem; }
 
-  .card {{ background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1.25rem; }}
-  .card h3 {{ font-size:1rem; color:#f3f4f6; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.4rem; }}
+  .prompt-box {
+    background:var(--card); border:1px solid var(--border); border-radius:12px;
+    padding:1.25rem; margin-bottom:1rem; position:relative;
+  }
+  .prompt-box h3 { font-size:1rem; color:var(--blue); margin-bottom:0.5rem; }
+  .prompt-content {
+    background:#0d1117; border:1px solid var(--border); border-radius:8px;
+    padding:1rem; font-size:0.78rem; color:var(--dim); white-space:pre-wrap;
+    max-height:300px; overflow-y:auto; margin-bottom:0.75rem;
+    font-family:"SF Mono","Fira Code",monospace; line-height:1.5;
+  }
+  .btn-copy {
+    display:inline-flex; align-items:center; gap:0.35rem; padding:0.5rem 1rem;
+    background:rgba(59,130,246,0.12); border:1px solid rgba(59,130,246,0.3);
+    border-radius:8px; color:var(--blue); font-size:0.85rem; cursor:pointer;
+    font-weight:600; transition:all 0.2s;
+  }
+  .btn-copy:hover { background:rgba(59,130,246,0.2); }
+  .btn-copy.copied { background:rgba(34,197,94,0.12); border-color:rgba(34,197,94,0.3); color:var(--green); }
+  .paste-area {
+    margin-top:0.75rem; display:none;
+  }
+  .paste-area.show { display:block; }
+  .paste-area textarea {
+    width:100%; background:#0d1117; border:1px dashed var(--gold); border-radius:8px;
+    padding:0.75rem; color:var(--gold); font-size:0.8rem; font-family:monospace;
+    resize:vertical; min-height:80px;
+  }
+  .btn-paste { margin-top:0.5rem; padding:0.4rem 0.9rem; background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.3); border-radius:8px; color:var(--gold); font-size:0.8rem; cursor:pointer; }
+  .btn-paste:hover { background:rgba(245,158,11,0.2); }
 
-  .index-grid {{ display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:0.6rem; }}
-  .index-card {{ background:rgba(255,255,255,0.02); border-radius:8px; padding:0.65rem; }}
-  .index-name {{ font-size:0.8rem; color:var(--dim); }}
-  .index-price {{ font-size:1.1rem; font-weight:700; color:#f3f4f6; }}
+  .mindset-panel {
+    background:var(--card); border:1px solid var(--border); border-radius:12px;
+    padding:1.25rem; margin-bottom:1rem;
+  }
+  .mindset-panel h3 { font-size:1rem; color:#f0f6fc; margin-bottom:0.75rem; }
+  .progress-row {
+    display:flex; align-items:center; gap:0.6rem; padding:0.35rem 0;
+  }
+  .phase-label { width:110px; font-size:0.82rem; color:var(--dim); flex-shrink:0; }
+  .phase-bar { font-size:0.85rem; letter-spacing:2px; }
+  .phase-pct { font-size:0.82rem; color:var(--gold); font-weight:700; width:40px;text-align:right; }
 
-  .tag {{ display:inline-block; padding:0.15rem 0.5rem; border-radius:12px; font-size:0.7rem; font-weight:600; margin-top:0.25rem; }}
+  .log-table { width:100%; border-collapse:collapse; font-size:0.78rem; margin-top:0.5rem; }
+  .log-table th { background:rgba(255,255,255,0.02); padding:0.4rem 0.5rem; text-align:left; font-weight:600; color:var(--dim); border-bottom:1px solid var(--border); }
+  .log-table td { padding:0.35rem 0.5rem; border-bottom:1px solid rgba(255,255,255,0.02); }
+  .log-empty { text-align:center; color:var(--dim); padding:1rem; font-size:0.8rem; }
 
-  table {{ width:100%; border-collapse:collapse; font-size:0.85rem; }}
-  th {{ background:rgba(255,255,255,0.03); padding:0.55rem 0.75rem; text-align:left; font-weight:600; color:#e5e7eb; border-bottom:1px solid var(--border); }}
-  td {{ padding:0.5rem 0.75rem; border-bottom:1px solid rgba(255,255,255,0.03); }}
+  details { margin-bottom:1rem; }
+  details summary {
+    background:var(--card); border:1px solid var(--border); border-radius:10px;
+    padding:0.8rem 1.25rem; cursor:pointer; font-weight:600; color:var(--dim);
+    font-size:0.9rem; user-select:none;
+  }
+  details summary:hover { color:var(--text); }
+  .detail-card { background:var(--card); border:1px solid var(--border); border-top:none; border-radius:0 0 10px 10px; padding:1.25rem; }
 
-  .exit-item {{ padding:0.6rem 0.75rem; margin-bottom:0.4rem; background:rgba(255,255,255,0.02); border-radius:6px; }}
+  .idx-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:0.5rem; margin-bottom:1rem; }
+  .idx-card { background:rgba(255,255,255,0.02); border-radius:8px; padding:0.55rem; }
+  .idx-name { font-size:0.75rem; color:var(--dim); }
+  .idx-price { font-size:1rem; font-weight:700; color:#f0f6fc; }
 
-  .stat {{ text-align:center; padding:0.75rem; }}
-  .stat .num {{ font-size:1.4rem; font-weight:800; color:#f3f4f6; }}
-  .stat .lbl {{ font-size:0.75rem; color:var(--dim); }}
+  .stat-row { display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:0.75rem; }
+  .stat { text-align:center; padding:0.5rem 0.75rem; }
+  .stat .num { font-size:1.2rem; font-weight:800; color:#f0f6fc; }
+  .stat .lbl { font-size:0.7rem; color:var(--dim); }
 
-  .footer {{ text-align:center; padding:1.5rem 0; color:var(--dim); font-size:0.75rem; border-top:1px solid var(--border); margin-top:1.5rem; }}
-  .footer .flow {{ display:flex; justify-content:center; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.5rem; }}
-  .flow-step {{ background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.2); border-radius:6px; padding:0.25rem 0.6rem; font-size:0.7rem; }}
+  table { width:100%; border-collapse:collapse; font-size:0.8rem; }
+  th { background:rgba(255,255,255,0.02); padding:0.45rem 0.6rem; text-align:left; font-weight:600; color:var(--dim); border-bottom:1px solid var(--border); }
+  td { padding:0.4rem 0.6rem; border-bottom:1px solid rgba(255,255,255,0.02); }
+
+  .exit-row { padding:0.5rem 0.7rem; margin-bottom:0.3rem; background:rgba(255,255,255,0.02); border-radius:6px; font-size:0.85rem; }
+
+  .tag { display:inline-block; padding:0.1rem 0.4rem; border-radius:10px; font-size:0.65rem; font-weight:600; }
+
+  .footer { text-align:center; padding:1.5rem 0; color:var(--dim); font-size:0.7rem; border-top:1px solid var(--border); margin-top:1.5rem; }
 </style>
 </head>
 <body>
 <div class="container">
 
-<div class="header">
-  <h1>交易系统五模块 Dashboard</h1>
-  <div class="update-time">更新: {now.strftime('%Y-%m-%d %H:%M')} | 下次: 交易日 11:00 / 14:30</div>
-</div>
-
-<!-- 模块1: 市场环境 -->
-<div class="env-banner">
-  <div class="label">模块1 · 市场环境判断</div>
-  <div class="value">{m1['env_cn']}</div>
-  <div class="detail">偏牛指数 {m1['bullish_count']}/5 | 偏熊指数 {m1['bearish_count']}/5 | 建议仓位 {m1['position_ratio']*100:.0f}% (¥{m1['max_position']:,})</div>
-</div>
-
-<div class="index-grid" style="margin-bottom:1.25rem;">
-  {index_cards}
-</div>
-
-<!-- 模块2+3: 标的筛选 & 仓位 -->
-<div class="card" style="margin-bottom:1.25rem;">
-  <h3>📊 模块2 · 标的筛选 & 模块3 · 仓位管理</h3>
-  <div style="display:flex;gap:1rem;margin-bottom:0.75rem;flex-wrap:wrap">
-    <div class="stat"><div class="num">{m2['scanned']}</div><div class="lbl">板块扫描</div></div>
-    <div class="stat"><div class="num">{m2['actionable_signals']}</div><div class="lbl">买入信号</div></div>
-    <div class="stat"><div class="num">{m2['blocked_signals']}</div><div class="lbl">门控拦截</div></div>
-    <div class="stat"><div class="num">¥{m3['total_suggested']:,}</div><div class="lbl">今日建议仓位</div></div>
-  </div>
-  <table>
-    <tr><th>信号</th><th>板块</th><th>涨跌</th><th>仓位</th><th>匹配基金</th></tr>
-    {signals_html}
-  </table>
-</div>
-
-<!-- 模块4: 止盈止损 -->
-<div class="card" style="margin-bottom:1.25rem;">
-  <h3>🛡️ 模块4 · 止盈止损</h3>
-  {exit_html}
-  <div style="font-size:0.75rem;color:var(--dim);margin-top:0.75rem;display:flex;gap:1rem;flex-wrap:wrap">
-    <span>止损: -8%硬止损</span><span>短线止盈: +12%</span><span>趋势止盈: +18%</span><span>移动止盈: 高点回撤>5%</span>
+<div class="coach-banner">
+  <div class="greeting">操盘手每日修炼</div>
+  <div class="mission">练心，而非练术</div>
+  <div class="env-line">
+    今日市场：<span style="color:""" + ec[0] + """;font-weight:700">""" + m1["env_cn"] + """</span>
+    &nbsp;|&nbsp; 仓位建议：""" + str(int(m1["position_ratio"] * 100)) + """%
+    &nbsp;|&nbsp; 更新：""" + now.strftime("%m-%d %H:%M") + """
   </div>
 </div>
 
-<!-- 模块5: 动态优化 -->
-<div class="card">
-  <h3>📈 模块5 · 动态优化</h3>
-  <div style="display:flex;gap:1rem;flex-wrap:wrap">
-    <div class="stat"><div class="num">{data['module_5_optimization']['history_days']}</div><div class="lbl">历史记录天数</div></div>
-    <div class="stat"><div class="num">{data['summary']['action_required'] and '是' or '否'}</div><div class="lbl">今日需操作</div></div>
+<div class="todo-panel">
+  <h3>今日待办【同花顺 + 养基宝 + 支付宝】</h3>
+  <div class="todo-item">
+    <div class="todo-num">1</div>
+    <div>
+      <div class="todo-text">截图三张：<strong>同花顺大盘</strong> + <strong>养基宝持仓</strong> + <strong>支付宝交易记录</strong></div>
+    </div>
   </div>
-  <div style="margin-top:0.75rem;padding:0.75rem;background:rgba(245,158,11,0.08);border-radius:8px;text-align:center;font-weight:600;">
-    {data['summary']['key_action']}
+  <div class="todo-item">
+    <div class="todo-num">2</div>
+    <div>
+      <div class="todo-text">打开豆包，粘贴下方Prompt，同时上传三张截图，获取JSON分析结果</div>
+    </div>
+  </div>
+  <div class="todo-item">
+    <div class="todo-num">3</div>
+    <div>
+      <div class="todo-text">复制豆包返回的JSON，点击下方「粘贴分析结果」按钮贴进去</div>
+      <div class="todo-hint">数据存到浏览器localStorage，合并修炼记录，刷新页面即可看到进度变化</div>
+    </div>
+  </div>
+  <div class="todo-item">
+    <div class="todo-num">4</div>
+    <div>
+      <div class="todo-text">""" + todo_step2 + """</div>
+      <div class="todo-hint">每天坚持三步，两年轻舟已过万重山</div>
+    </div>
   </div>
 </div>
+
+<div class="prompt-box">
+  <h3>豆包Prompt · 一键复制（同花顺+养基宝+支付宝三图版）</h3>
+  <div class="prompt-content" id="promptText">""" + prompt_safe + """</div>
+  <button class="btn-copy" id="btnCopy" onclick="copyPrompt()">
+    <span id="copyIcon">📋</span> <span id="copyLabel">复制Prompt</span>
+  </button>
+  <div style="margin-top:0.75rem;font-size:0.78rem;color:var(--dim)">
+    复制后粘贴到豆包对话框，同时上传 <strong>同花顺 + 养基宝 + 支付宝</strong> 三张截图
+  </div>
+
+  <div style="margin-top:1rem">
+    <button class="btn-paste" onclick="document.getElementById('pasteBox').classList.toggle('show')">
+      粘贴分析结果
+    </button>
+    <div class="paste-area" id="pasteBox">
+      <textarea id="jsonInput" placeholder="把豆包返回的JSON粘贴到这里..."></textarea>
+      <button class="btn-paste" onclick="mergeResult()" style="margin-top:0.4rem">合并到修炼记录</button>
+      <div id="mergeMsg" style="font-size:0.75rem;color:var(--green);margin-top:0.3rem"></div>
+    </div>
+  </div>
+</div>
+
+<div class="mindset-panel">
+  <h3>修炼进度 · 三阶段</h3>
+  """ + progress_bar(p1, "一阶·练执行力", "#3b82f6") + """
+  """ + progress_bar(p2, "二阶·找交易模式", "#84cc16") + """
+  """ + progress_bar(p3, "三阶·去无效交易", "#22c55e") + """
+  <div style="font-size:0.72rem;color:var(--dim);margin-top:0.5rem">
+    目标：第一阶段→买卖不抖 | 第二阶段→月成功率>=50% | 第三阶段→感觉交易很无聊
+  </div>
+
+  <div style="margin-top:0.75rem">
+    <strong style="font-size:0.82rem;color:var(--dim)">近期修炼记录</strong>
+    """ + ("<table class='log-table'><tr><th>日期</th><th>守纪律</th><th>冲动</th><th>心态</th><th>市场</th></tr>" + log_rows + "</table>" if log_rows else "<div class='log-empty'>等待首次截图分析 — 按上方待办步骤开始</div>") + """
+  </div>
+</div>
+
+<details>
+  <summary>完整交易数据（五模块 · 点击展开）</summary>
+  <div class="detail-card">
+    <div class="idx-grid">""" + idx_cards + """</div>
+    <div class="stat-row">
+      <div class="stat"><div class="num">""" + str(m2["scanned"]) + """</div><div class="lbl">板块扫描</div></div>
+      <div class="stat"><div class="num">""" + str(m2["actionable_signals"]) + """</div><div class="lbl">买入信号</div></div>
+      <div class="stat"><div class="num">""" + str(m2["blocked_signals"]) + """</div><div class="lbl">门控拦截</div></div>
+      <div class="stat"><div class="num">¥""" + format(m3["total_suggested"], ",") + """</div><div class="lbl">建议仓位</div></div>
+    </div>
+    <table><tr><th>信号</th><th>板块</th><th>涨跌</th><th>仓位</th><th>匹配基金</th></tr>""" + signals_html + """</table>
+    <div style="margin-top:1rem">
+      <strong style="color:var(--dim);font-size:0.85rem">退出信号</strong>
+      """ + exit_html + """
+    </div>
+    <div style="margin-top:0.75rem;font-size:0.78rem;color:var(--dim)">
+      止损-8% | 短线止盈+12% | 趋势止盈+18% | 移动止盈高点回撤&gt;5% |
+      历史记录 """ + str(data["module_5_optimization"]["history_days"]) + """ 天
+    </div>
+  </div>
+</details>
 
 <div class="footer">
-  <div class="flow">
-    <span class="flow-step">判断环境→做不做</span>
-    <span class="flow-step">选股→买什么</span>
-    <span class="flow-step">仓位→能活下来吗</span>
-    <span class="flow-step">止盈止损→守住利润</span>
-    <span class="flow-step">优化→持续赚钱</span>
-  </div>
-  <div>五模块交易系统 · 自动运行 · 顺势而为</div>
+  交易系统 + 无忌心法 &nbsp;|&nbsp; 先练心，再练术 &nbsp;|&nbsp; 自动运行 11:00 / 14:30
 </div>
 
 </div>
+
+<script>
+function copyPrompt() {
+  var text = document.getElementById('promptText').innerText;
+  navigator.clipboard.writeText(text).then(function() {
+    var btn = document.getElementById('btnCopy');
+    btn.classList.add('copied');
+    document.getElementById('copyIcon').innerText = 'OK';
+    document.getElementById('copyLabel').innerText = '已复制！去豆包粘贴吧';
+    setTimeout(function() {
+      btn.classList.remove('copied');
+      document.getElementById('copyIcon').innerText = '📋';
+      document.getElementById('copyLabel').innerText = '复制Prompt';
+    }, 3000);
+  });
+}
+
+function mergeResult() {
+  var raw = document.getElementById('jsonInput').value.trim();
+  var msg = document.getElementById('mergeMsg');
+  if (!raw) { msg.innerText = '请先粘贴豆包返回的JSON'; msg.style.color='var(--red)'; return; }
+  try {
+    var obj = JSON.parse(raw);
+    var stored = localStorage.getItem('mindset_records');
+    var records = stored ? JSON.parse(stored) : [];
+    records = records.filter(function(r) { return r.date !== obj.date; });
+    records.push(obj);
+    records.sort(function(a,b) { return a.date.localeCompare(b.date); });
+    localStorage.setItem('mindset_records', JSON.stringify(records));
+    msg.innerText = '已合并！共 ' + records.length + ' 条记录。刷新页面查看更新后的进度。';
+    msg.style.color = 'var(--green)';
+    document.getElementById('jsonInput').value = '';
+  } catch(e) {
+    msg.innerText = 'JSON格式有误：' + e.message;
+    msg.style.color = 'var(--red)';
+  }
+}
+
+(function() {
+  var stored = localStorage.getItem('mindset_records');
+  if (stored) {
+    var records = JSON.parse(stored);
+    if (records.length > 0) {
+      console.log('已加载 ' + records.length + ' 条修炼记录');
+    }
+  }
+})();
+</script>
 </body>
 </html>"""
     return html
