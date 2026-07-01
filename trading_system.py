@@ -10,7 +10,7 @@
 模块5: 动态优化 — 信号历史 + 复盘数据
 
 GitHub Actions 定时运行: 每天 11:00 / 14:30 (北京时间)
-输出: output/trading_data.json + output/trading_dashboard.html (GitHub Pages)
+输出: output/trading_data.json + output/index.html (GitHub Pages)
 """
 import json
 import os
@@ -681,13 +681,13 @@ def main():
 
     # ==================== 生成HTML Dashboard ====================
     html_content = generate_dashboard_html(output, env)
-    html_path = os.path.join(OUTPUT_DIR, "trading_dashboard.html")
+    html_path = os.path.join(OUTPUT_DIR, "index.html")
     with open(html_path, "w", encoding="utf-8") as f:
         f.write(html_content)
     print(f"Dashboard已保存: {html_path}")
 
     # 同时复制到根目录（GitHub Pages 可以从根目录或 /output 读取）
-    root_html = os.path.join(SCRIPT_DIR, "trading_dashboard.html")
+    root_html = os.path.join(SCRIPT_DIR, "index.html")
     with open(root_html, "w", encoding="utf-8") as f:
         f.write(html_content)
 
