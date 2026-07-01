@@ -1,0 +1,45 @@
+[
+  {
+    "date": "2026-07-01",
+    "time": "12:43",
+    "environment": "range",
+    "environment_cn": "震荡市 — 快进快出赚差价",
+    "position_ratio": 0.45,
+    "buy_signals": 4,
+    "exit_signals": 0,
+    "signals": [
+      {
+        "board": "先进封装",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "008888"
+        ]
+      },
+      {
+        "board": "CPO",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "017560"
+        ]
+      },
+      {
+        "board": "光通信",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "017560"
+        ]
+      },
+      {
+        "board": "稀土永磁",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "011036"
+        ]
+      }
+    ]
+  }
+]
