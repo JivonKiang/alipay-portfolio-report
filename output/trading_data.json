@@ -1,6 +1,6 @@
 {
-  "updated": "2026-07-02T06:37:43+08:00",
-  "run_time": "06:37",
+  "updated": "2026-07-02T09:41:39+08:00",
+  "run_time": "09:41",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
@@ -8,161 +8,40 @@
     "env_cn": "震荡市 — 快进快出赚差价",
     "position_ratio": 0.45,
     "max_position": 43200,
-    "bullish_count": 2,
-    "bearish_count": 2,
+    "bullish_count": 0,
+    "bearish_count": 0,
     "index_details": {
       "上证50": {
-        "status": "bearish",
-        "current": 2919.32,
-        "ma60": 2935.56,
-        "ma120": 2974.26,
-        "above_ma60": false,
-        "above_ma120": false,
-        "golden_cross": false,
-        "ma60_trend": "up"
+        "status": "data_insufficient"
       },
       "沪深300": {
-        "status": "correcting",
-        "current": 4823.83,
-        "ma60": 4826.8,
-        "ma120": 4745.49,
-        "above_ma60": false,
-        "above_ma120": true,
-        "golden_cross": true,
-        "ma60_trend": "up"
+        "status": "data_insufficient"
       },
       "中证500": {
-        "status": "bullish",
-        "current": 8734.26,
-        "ma60": 8420.89,
-        "ma120": 8283.83,
-        "above_ma60": true,
-        "above_ma120": true,
-        "golden_cross": true,
-        "ma60_trend": "up"
+        "status": "data_insufficient"
       },
       "创业板指": {
         "status": "data_insufficient"
       },
       "科创50": {
-        "status": "bullish",
-        "current": 1999.59,
-        "ma60": 1682.97,
-        "ma120": 1554.14,
-        "above_ma60": true,
-        "above_ma120": true,
-        "golden_cross": true,
-        "ma60_trend": "up"
+        "status": "data_insufficient"
       }
     }
   },
   "module_2_selection": {
-    "scanned": 21,
+    "scanned": 0,
     "total": 25,
-    "raw_signals": 4,
-    "actionable_signals": 4,
+    "raw_signals": 0,
+    "actionable_signals": 0,
     "blocked_signals": 0,
-    "signals": [
-      {
-        "type": "dip_buy",
-        "label": "🔵 MA60支撑反弹",
-        "strength": "normal",
-        "reason": "距MA60仅2.3%，缩量止跌信号",
-        "board": "液冷服务器",
-        "change_pct": 0.52,
-        "change_5d": 3.54,
-        "vol_ratio": 0.97,
-        "current": 2038.21,
-        "ma10": 2023.8,
-        "ma20": 1996.0,
-        "ma60": 1991.7,
-        "funds": [
-          {
-            "code": "012629",
-            "name": "广发国证半导体芯片ETF联接C"
-          }
-        ],
-        "gate_passed": true,
-        "position": 900
-      },
-      {
-        "type": "oversold",
-        "label": "🟡 超跌反弹",
-        "strength": "weak",
-        "reason": "60日最大回撤-20.4%，今日反弹",
-        "board": "CPO",
-        "change_pct": 2.55,
-        "change_5d": 3.54,
-        "vol_ratio": 0.91,
-        "current": 1008.85,
-        "ma10": 1009.6,
-        "ma20": 1037.2,
-        "ma60": 1130.6,
-        "funds": [
-          {
-            "code": "017560",
-            "name": "嘉实上证科创板芯片ETF联接C"
-          }
-        ],
-        "gate_passed": true,
-        "position": 500
-      },
-      {
-        "type": "oversold",
-        "label": "🟡 超跌反弹",
-        "strength": "weak",
-        "reason": "60日最大回撤-15.2%，今日反弹",
-        "board": "光通信",
-        "change_pct": 0.22,
-        "change_5d": 2.63,
-        "vol_ratio": 0.74,
-        "current": 1054.48,
-        "ma10": 1054.5,
-        "ma20": 1081.9,
-        "ma60": 1150.9,
-        "funds": [
-          {
-            "code": "017560",
-            "name": "嘉实上证科创板芯片ETF联接C"
-          }
-        ],
-        "gate_passed": true,
-        "position": 500
-      },
-      {
-        "type": "oversold",
-        "label": "🟡 超跌反弹",
-        "strength": "weak",
-        "reason": "60日最大回撤-20.0%，今日反弹",
-        "board": "人形机器人",
-        "change_pct": 0.72,
-        "change_5d": 3.84,
-        "vol_ratio": 1.02,
-        "current": 3259.75,
-        "ma10": 3250.8,
-        "ma20": 3337.9,
-        "ma60": 3648.0,
-        "funds": [
-          {
-            "code": "002256",
-            "name": "金信新能源汽车混合C"
-          },
-          {
-            "code": "001643",
-            "name": "汇丰晋信智造先锋股票C"
-          }
-        ],
-        "gate_passed": true,
-        "position": 500
-      }
-    ],
+    "signals": [],
     "blocked": []
   },
   "module_3_position": {
-    "total_suggested": 2400,
+    "total_suggested": 0,
     "single_max": 12960,
     "strategy": "震荡市 — 快进快出赚差价",
-    "diversification_note": "建议分散到4只基金"
+    "diversification_note": "建议分散到0只基金"
   },
   "module_4_exit": {
     "exit_signals": [],
@@ -174,19 +53,20 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 3,
+    "history_days": 4,
     "recent_environments": [
       "range",
       "bull_lean",
+      "range",
       "range"
     ]
   },
   "summary": {
     "environment": "震荡市 — 快进快出赚差价",
-    "buy_signals": 4,
+    "buy_signals": 0,
     "exit_signals": 0,
-    "today_budget": 2400,
-    "action_required": true,
-    "key_action": "优先关注 液冷服务器 (🔵 MA60支撑反弹)"
+    "today_budget": 0,
+    "action_required": false,
+    "key_action": ""
   }
 }
