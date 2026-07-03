@@ -172,5 +172,32 @@
     "buy_signals": 0,
     "exit_signals": 0,
     "signals": []
+  },
+  {
+    "date": "2026-07-03",
+    "time": "06:27",
+    "environment": "bull",
+    "environment_cn": "牛市 — 敢重仓追龙头",
+    "position_ratio": 0.75,
+    "buy_signals": 2,
+    "exit_signals": 0,
+    "signals": [
+      {
+        "board": "存储芯片",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "008888"
+        ]
+      },
+      {
+        "board": "先进封装",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "008888"
+        ]
+      }
+    ]
   }
 ]
