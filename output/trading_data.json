@@ -1,35 +1,63 @@
 {
-  "updated": "2026-07-03T09:41:02+08:00",
-  "run_time": "09:41",
+  "updated": "2026-07-06T07:08:07+08:00",
+  "run_time": "07:08",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
-    "env": "range",
-    "env_cn": "震荡市 — 快进快出赚差价",
-    "position_ratio": 0.45,
-    "max_position": 43200,
-    "bullish_count": 0,
+    "env": "bull",
+    "env_cn": "牛市 — 敢重仓追龙头",
+    "position_ratio": 0.75,
+    "max_position": 72000,
+    "bullish_count": 4,
     "bearish_count": 0,
     "index_details": {
       "上证50": {
-        "status": "data_insufficient"
+        "status": "recovering",
+        "current": 2957.97,
+        "ma60": 2939.24,
+        "ma120": 2972.71,
+        "above_ma60": true,
+        "above_ma120": false,
+        "golden_cross": false,
+        "ma60_trend": "up"
       },
       "沪深300": {
-        "status": "data_insufficient"
+        "status": "bullish",
+        "current": 4842.0,
+        "ma60": 4839.99,
+        "ma120": 4748.75,
+        "above_ma60": true,
+        "above_ma120": true,
+        "golden_cross": true,
+        "ma60_trend": "up"
       },
       "中证500": {
-        "status": "data_insufficient"
+        "status": "bullish",
+        "current": 8651.13,
+        "ma60": 8458.39,
+        "ma120": 8304.1,
+        "above_ma60": true,
+        "above_ma120": true,
+        "golden_cross": true,
+        "ma60_trend": "up"
       },
       "创业板指": {
         "status": "data_insufficient"
       },
       "科创50": {
-        "status": "data_insufficient"
+        "status": "bullish",
+        "current": 1996.1,
+        "ma60": 1706.79,
+        "ma120": 1564.6,
+        "above_ma60": true,
+        "above_ma120": true,
+        "golden_cross": true,
+        "ma60_trend": "up"
       }
     }
   },
   "module_2_selection": {
-    "scanned": 0,
+    "scanned": 21,
     "total": 25,
     "raw_signals": 0,
     "actionable_signals": 0,
@@ -39,8 +67,8 @@
   },
   "module_3_position": {
     "total_suggested": 0,
-    "single_max": 12960,
-    "strategy": "震荡市 — 快进快出赚差价",
+    "single_max": 21600,
+    "strategy": "牛市 — 敢重仓追龙头",
     "diversification_note": "建议分散到0只基金"
   },
   "module_4_exit": {
@@ -53,18 +81,19 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 6,
+    "history_days": 7,
     "recent_environments": [
       "range",
       "bull_lean",
       "range",
       "range",
       "bull",
-      "range"
+      "range",
+      "bull"
     ]
   },
   "summary": {
-    "environment": "震荡市 — 快进快出赚差价",
+    "environment": "牛市 — 敢重仓追龙头",
     "buy_signals": 0,
     "exit_signals": 0,
     "today_budget": 0,
