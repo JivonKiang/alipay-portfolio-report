@@ -1,6 +1,6 @@
 {
-  "updated": "2026-07-06T07:08:07+08:00",
-  "run_time": "07:08",
+  "updated": "2026-07-06T11:11:28+08:00",
+  "run_time": "11:11",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
@@ -57,7 +57,7 @@
     }
   },
   "module_2_selection": {
-    "scanned": 21,
+    "scanned": 2,
     "total": 25,
     "raw_signals": 0,
     "actionable_signals": 0,
@@ -81,7 +81,7 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 7,
+    "history_days": 8,
     "recent_environments": [
       "range",
       "bull_lean",
@@ -89,6 +89,7 @@
       "range",
       "bull",
       "range",
+      "bull",
       "bull"
     ]
   },

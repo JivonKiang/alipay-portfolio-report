@@ -219,5 +219,15 @@
     "buy_signals": 0,
     "exit_signals": 0,
     "signals": []
+  },
+  {
+    "date": "2026-07-06",
+    "time": "11:11",
+    "environment": "bull",
+    "environment_cn": "牛市 — 敢重仓追龙头",
+    "position_ratio": 0.75,
+    "buy_signals": 0,
+    "exit_signals": 0,
+    "signals": []
   }
 ]
