@@ -1,6 +1,6 @@
 {
-  "updated": "2026-07-07T06:42:23+08:00",
-  "run_time": "06:42",
+  "updated": "2026-07-07T10:05:00+08:00",
+  "run_time": "10:05",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
@@ -8,14 +8,14 @@
     "env_cn": "震荡市 — 快进快出赚差价",
     "position_ratio": 0.45,
     "max_position": 43200,
-    "bullish_count": 2,
+    "bullish_count": 1,
     "bearish_count": 2,
     "index_details": {
       "上证50": {
         "status": "bearish",
-        "current": 2924.54,
-        "ma60": 2939.54,
-        "ma120": 2971.25,
+        "current": 2921.89,
+        "ma60": 2939.49,
+        "ma120": 2971.23,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": false,
@@ -23,9 +23,9 @@
       },
       "沪深300": {
         "status": "correcting",
-        "current": 4795.69,
-        "ma60": 4843.32,
-        "ma120": 4749.4,
+        "current": 4792.26,
+        "ma60": 4843.27,
+        "ma120": 4749.38,
         "above_ma60": false,
         "above_ma120": true,
         "golden_cross": true,
@@ -33,9 +33,9 @@
       },
       "中证500": {
         "status": "bullish",
-        "current": 8518.42,
-        "ma60": 8467.95,
-        "ma120": 8311.33,
+        "current": 8508.79,
+        "ma60": 8467.79,
+        "ma120": 8311.24,
         "above_ma60": true,
         "above_ma120": true,
         "golden_cross": true,
@@ -45,19 +45,12 @@
         "status": "data_insufficient"
       },
       "科创50": {
-        "status": "bullish",
-        "current": 2003.93,
-        "ma60": 1717.64,
-        "ma120": 1569.6,
-        "above_ma60": true,
-        "above_ma120": true,
-        "golden_cross": true,
-        "ma60_trend": "up"
+        "status": "data_insufficient"
       }
     }
   },
   "module_2_selection": {
-    "scanned": 8,
+    "scanned": 0,
     "total": 25,
     "raw_signals": 0,
     "actionable_signals": 0,
@@ -81,7 +74,7 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 9,
+    "history_days": 10,
     "recent_environments": [
       "range",
       "bull_lean",
@@ -91,6 +84,7 @@
       "range",
       "bull",
       "bull",
+      "range",
       "range"
     ]
   },
