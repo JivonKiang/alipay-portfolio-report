@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-08T07:55:25+08:00",
+  "updated": "2026-07-09T06:39:25+08:00",
   "portfolio": {
     "total": 677301,
     "steady": 512111,
@@ -41,14 +41,14 @@
       "name": "PCB/HDI板",
       "index": "PCB概念",
       "index_code": "BK0877",
-      "current": 4495.3,
-      "ma10": 4952.7,
-      "ma20": 4934.5,
-      "change_pct": -2.57,
-      "distance_ma10": -9.23,
-      "volume_ratio": 0.72,
-      "signal": "watch",
-      "signal_text": "回调-2.57%，观察是否缩量企稳",
+      "current": 4604.6,
+      "ma10": 4876.0,
+      "ma20": 4940.4,
+      "change_pct": 3.38,
+      "distance_ma10": -5.57,
+      "volume_ratio": 1.02,
+      "signal": "avoid",
+      "signal_text": "远离10日线-5.6%，趋势破坏",
       "funds": [
         {
           "code": "017811",
@@ -63,7 +63,7 @@
       ],
       "action": {
         "type": "wait",
-        "detail": "接近支撑位，盯缩量止跌信号",
+        "detail": "等缩量止跌 + 跌幅收窄至1%以内",
         "trigger": "PCB成交额 < 1400亿 且 日跌幅 < 1%",
         "path": null
       }
