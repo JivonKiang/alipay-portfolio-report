@@ -1,6 +1,6 @@
 {
-  "updated": "2026-07-09T10:02:52+08:00",
-  "run_time": "10:02",
+  "updated": "2026-07-10T06:40:33+08:00",
+  "run_time": "06:40",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
@@ -8,38 +8,17 @@
     "env_cn": "震荡市 — 快进快出赚差价",
     "position_ratio": 0.45,
     "max_position": 43200,
-    "bullish_count": 2,
+    "bullish_count": 0,
     "bearish_count": 0,
     "index_details": {
       "上证50": {
-        "status": "neutral",
-        "current": 2995.79,
-        "ma60": 2941.7,
-        "ma120": 2968.0,
-        "above_ma60": true,
-        "above_ma120": true,
-        "golden_cross": false,
-        "ma60_trend": "up"
+        "status": "data_insufficient"
       },
       "沪深300": {
-        "status": "bullish",
-        "current": 4876.31,
-        "ma60": 4850.42,
-        "ma120": 4749.91,
-        "above_ma60": true,
-        "above_ma120": true,
-        "golden_cross": true,
-        "ma60_trend": "up"
+        "status": "data_insufficient"
       },
       "中证500": {
-        "status": "bullish",
-        "current": 8652.79,
-        "ma60": 8487.37,
-        "ma120": 8322.52,
-        "above_ma60": true,
-        "above_ma120": true,
-        "golden_cross": true,
-        "ma60_trend": "up"
+        "status": "data_insufficient"
       },
       "创业板指": {
         "status": "data_insufficient"
@@ -50,19 +29,90 @@
     }
   },
   "module_2_selection": {
-    "scanned": 0,
+    "scanned": 7,
     "total": 25,
-    "raw_signals": 0,
-    "actionable_signals": 0,
+    "raw_signals": 3,
+    "actionable_signals": 3,
     "blocked_signals": 0,
-    "signals": [],
+    "signals": [
+      {
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "strength": "weak",
+        "reason": "60日最大回撤-21.2%，今日反弹",
+        "board": "人形机器人",
+        "change_pct": 2.55,
+        "change_5d": -2.0,
+        "vol_ratio": 1.01,
+        "current": 3209.66,
+        "ma10": 3200.5,
+        "ma20": 3264.3,
+        "ma60": 3602.8,
+        "funds": [
+          {
+            "code": "002256",
+            "name": "金信新能源汽车混合C"
+          },
+          {
+            "code": "001643",
+            "name": "汇丰晋信智造先锋股票C"
+          }
+        ],
+        "gate_passed": true,
+        "position": 500
+      },
+      {
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "strength": "weak",
+        "reason": "60日最大回撤-19.8%，今日反弹",
+        "board": "稀土永磁",
+        "change_pct": 1.45,
+        "change_5d": 2.77,
+        "vol_ratio": 1.36,
+        "current": 3242.06,
+        "ma10": 3184.6,
+        "ma20": 3271.7,
+        "ma60": 3575.5,
+        "funds": [
+          {
+            "code": "011036",
+            "name": "嘉实中证稀土产业ETF联接C"
+          }
+        ],
+        "gate_passed": true,
+        "position": 500
+      },
+      {
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "strength": "weak",
+        "reason": "60日最大回撤-17.3%，今日反弹",
+        "board": "量子科技",
+        "change_pct": 1.44,
+        "change_5d": -3.21,
+        "vol_ratio": 0.73,
+        "current": 1061.51,
+        "ma10": 1073.2,
+        "ma20": 1099.4,
+        "ma60": 1179.8,
+        "funds": [
+          {
+            "code": "012629",
+            "name": "广发国证半导体芯片ETF联接C"
+          }
+        ],
+        "gate_passed": true,
+        "position": 500
+      }
+    ],
     "blocked": []
   },
   "module_3_position": {
-    "total_suggested": 0,
+    "total_suggested": 1500,
     "single_max": 12960,
     "strategy": "震荡市 — 快进快出赚差价",
-    "diversification_note": "建议分散到0只基金"
+    "diversification_note": "建议分散到3只基金"
   },
   "module_4_exit": {
     "exit_signals": [],
@@ -74,9 +124,8 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 13,
+    "history_days": 14,
     "recent_environments": [
-      "range",
       "bull",
       "range",
       "bull",
@@ -85,15 +134,16 @@
       "range",
       "bear_lean",
       "bear_lean",
+      "range",
       "range"
     ]
   },
   "summary": {
     "environment": "震荡市 — 快进快出赚差价",
-    "buy_signals": 0,
+    "buy_signals": 3,
     "exit_signals": 0,
-    "today_budget": 0,
-    "action_required": false,
-    "key_action": ""
+    "today_budget": 1500,
+    "action_required": true,
+    "key_action": "优先关注 人形机器人 (🟡 超跌反弹)"
   }
 }
