@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-10T06:36:49+08:00",
+  "updated": "2026-07-10T08:49:29+08:00",
   "portfolio": {
     "total": 677301,
     "steady": 512111,
@@ -11,13 +11,13 @@
       "name": "半导体设备",
       "index": "科创50",
       "index_code": "000688",
-      "current": 2037.2,
-      "ma10": 2058.3,
-      "ma20": 1933.7,
-      "change_pct": 1.78,
-      "distance_ma10": -1.03,
-      "signal": "dca",
-      "signal_text": "距10日线-1.0%，小幅回调，定投正常执行",
+      "current": 2065.0,
+      "ma10": 2071.5,
+      "ma20": 1979.5,
+      "change_pct": -5.53,
+      "distance_ma10": -0.31,
+      "signal": "avoid",
+      "signal_text": "放量暴跌-5.53%，等缩量止跌",
       "funds": [
         {
           "code": "017811",
@@ -35,20 +35,20 @@
         "detail": "定投正常执行",
         "path": "支付宝 → 理财 → 基金 → 我的定投"
       },
-      "volume_ratio": 0.9
+      "volume_ratio": 1.24
     },
     "pcb": {
       "name": "PCB/HDI板",
       "index": "PCB概念",
       "index_code": "BK0877",
-      "current": 4604.6,
-      "ma10": 4876.0,
-      "ma20": 4940.4,
-      "change_pct": 3.38,
-      "distance_ma10": -5.57,
-      "volume_ratio": 1.02,
+      "current": 4477.7,
+      "ma10": 4806.2,
+      "ma20": 4943.1,
+      "change_pct": -3.02,
+      "distance_ma10": -6.83,
+      "volume_ratio": 1.06,
       "signal": "avoid",
-      "signal_text": "远离10日线-5.6%，趋势破坏",
+      "signal_text": "放量暴跌-3.02%，等缩量止跌",
       "funds": [
         {
           "code": "017811",
