@@ -1,6 +1,6 @@
 {
-  "updated": "2026-07-10T06:40:33+08:00",
-  "run_time": "06:40",
+  "updated": "2026-07-10T09:58:41+08:00",
+  "run_time": "09:58",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
@@ -29,90 +29,19 @@
     }
   },
   "module_2_selection": {
-    "scanned": 7,
+    "scanned": 0,
     "total": 25,
-    "raw_signals": 3,
-    "actionable_signals": 3,
+    "raw_signals": 0,
+    "actionable_signals": 0,
     "blocked_signals": 0,
-    "signals": [
-      {
-        "type": "oversold",
-        "label": "🟡 超跌反弹",
-        "strength": "weak",
-        "reason": "60日最大回撤-21.2%，今日反弹",
-        "board": "人形机器人",
-        "change_pct": 2.55,
-        "change_5d": -2.0,
-        "vol_ratio": 1.01,
-        "current": 3209.66,
-        "ma10": 3200.5,
-        "ma20": 3264.3,
-        "ma60": 3602.8,
-        "funds": [
-          {
-            "code": "002256",
-            "name": "金信新能源汽车混合C"
-          },
-          {
-            "code": "001643",
-            "name": "汇丰晋信智造先锋股票C"
-          }
-        ],
-        "gate_passed": true,
-        "position": 500
-      },
-      {
-        "type": "oversold",
-        "label": "🟡 超跌反弹",
-        "strength": "weak",
-        "reason": "60日最大回撤-19.8%，今日反弹",
-        "board": "稀土永磁",
-        "change_pct": 1.45,
-        "change_5d": 2.77,
-        "vol_ratio": 1.36,
-        "current": 3242.06,
-        "ma10": 3184.6,
-        "ma20": 3271.7,
-        "ma60": 3575.5,
-        "funds": [
-          {
-            "code": "011036",
-            "name": "嘉实中证稀土产业ETF联接C"
-          }
-        ],
-        "gate_passed": true,
-        "position": 500
-      },
-      {
-        "type": "oversold",
-        "label": "🟡 超跌反弹",
-        "strength": "weak",
-        "reason": "60日最大回撤-17.3%，今日反弹",
-        "board": "量子科技",
-        "change_pct": 1.44,
-        "change_5d": -3.21,
-        "vol_ratio": 0.73,
-        "current": 1061.51,
-        "ma10": 1073.2,
-        "ma20": 1099.4,
-        "ma60": 1179.8,
-        "funds": [
-          {
-            "code": "012629",
-            "name": "广发国证半导体芯片ETF联接C"
-          }
-        ],
-        "gate_passed": true,
-        "position": 500
-      }
-    ],
+    "signals": [],
     "blocked": []
   },
   "module_3_position": {
-    "total_suggested": 1500,
+    "total_suggested": 0,
     "single_max": 12960,
     "strategy": "震荡市 — 快进快出赚差价",
-    "diversification_note": "建议分散到3只基金"
+    "diversification_note": "建议分散到0只基金"
   },
   "module_4_exit": {
     "exit_signals": [],
@@ -124,9 +53,8 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 14,
+    "history_days": 15,
     "recent_environments": [
-      "bull",
       "range",
       "bull",
       "bull",
@@ -134,16 +62,17 @@
       "range",
       "bear_lean",
       "bear_lean",
+      "range",
       "range",
       "range"
     ]
   },
   "summary": {
     "environment": "震荡市 — 快进快出赚差价",
-    "buy_signals": 3,
+    "buy_signals": 0,
     "exit_signals": 0,
-    "today_budget": 1500,
-    "action_required": true,
-    "key_action": "优先关注 人形机器人 (🟡 超跌反弹)"
+    "today_budget": 0,
+    "action_required": false,
+    "key_action": ""
   }
 }
