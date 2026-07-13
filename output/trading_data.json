@@ -1,6 +1,6 @@
 {
-  "updated": "2026-07-13T06:11:39+08:00",
-  "run_time": "06:11",
+  "updated": "2026-07-13T09:52:14+08:00",
+  "run_time": "09:52",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
@@ -13,8 +13,8 @@
     "index_details": {
       "上证50": {
         "status": "bearish",
-        "current": 2912.93,
-        "ma60": 2942.44,
+        "current": 2913.19,
+        "ma60": 2942.45,
         "ma120": 2964.77,
         "above_ma60": false,
         "above_ma120": false,
@@ -23,9 +23,9 @@
       },
       "沪深300": {
         "status": "bearish",
-        "current": 4695.93,
-        "ma60": 4852.57,
-        "ma120": 4749.75,
+        "current": 4695.38,
+        "ma60": 4852.56,
+        "ma120": 4749.74,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": true,
@@ -33,9 +33,9 @@
       },
       "中证500": {
         "status": "bearish",
-        "current": 8151.27,
-        "ma60": 8497.35,
-        "ma120": 8328.39,
+        "current": 8138.14,
+        "ma60": 8497.13,
+        "ma120": 8328.28,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": true,
@@ -46,9 +46,9 @@
       },
       "科创50": {
         "status": "bullish",
-        "current": 1995.19,
-        "ma60": 1763.83,
-        "ma120": 1590.07,
+        "current": 1994.32,
+        "ma60": 1763.81,
+        "ma120": 1590.06,
         "above_ma60": true,
         "above_ma120": true,
         "golden_cross": true,
@@ -57,7 +57,7 @@
     }
   },
   "module_2_selection": {
-    "scanned": 21,
+    "scanned": 1,
     "total": 25,
     "raw_signals": 0,
     "actionable_signals": 0,
@@ -81,10 +81,9 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 16,
+    "history_days": 17,
     "recent_environments": [
       "bull",
-      "bull",
       "range",
       "range",
       "bear_lean",
@@ -92,6 +91,7 @@
       "range",
       "range",
       "range",
+      "bear_lean",
       "bear_lean"
     ]
   },
