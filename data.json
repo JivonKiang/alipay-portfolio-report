@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-13T06:07:23+08:00",
+  "updated": "2026-07-13T08:34:23+08:00",
   "portfolio": {
     "total": 677301,
     "steady": 512111,
@@ -11,13 +11,13 @@
       "name": "半导体设备",
       "index": "科创50",
       "index_code": "000688",
-      "current": 2001.3,
-      "ma10": 2059.0,
-      "ma20": 1996.4,
-      "change_pct": -3.08,
-      "distance_ma10": -2.8,
+      "current": 1994.3,
+      "ma10": 2058.3,
+      "ma20": 1996.1,
+      "change_pct": -3.42,
+      "distance_ma10": -3.11,
       "signal": "watch",
-      "signal_text": "缩量回调-3.08%，接近买点，盯缩量止跌",
+      "signal_text": "缩量回调-3.42%，接近买点，盯缩量止跌",
       "funds": [
         {
           "code": "017811",
@@ -35,7 +35,7 @@
         "detail": "定投正常执行",
         "path": "支付宝 → 理财 → 基金 → 我的定投"
       },
-      "volume_ratio": 0.65
+      "volume_ratio": 0.79
     },
     "pcb": {
       "name": "PCB/HDI板",
