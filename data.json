@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-14T05:22:46+08:00",
+  "updated": "2026-07-14T07:26:14+08:00",
   "portfolio": {
     "total": 677301,
     "steady": 512111,
@@ -11,13 +11,13 @@
       "name": "半导体设备",
       "index": "科创50",
       "index_code": "000688",
-      "current": 1991.9,
-      "ma10": 2036.7,
-      "ma20": 2008.2,
-      "change_pct": -0.12,
-      "distance_ma10": -2.2,
-      "signal": "watch",
-      "signal_text": "距10日线-2.2%，接近支撑",
+      "current": 2009.7,
+      "ma10": 2038.5,
+      "ma20": 2009.1,
+      "change_pct": 0.77,
+      "distance_ma10": -1.41,
+      "signal": "dca",
+      "signal_text": "距10日线-1.4%，小幅回调，定投正常执行",
       "funds": [
         {
           "code": "017811",
@@ -35,20 +35,20 @@
         "detail": "定投正常执行",
         "path": "支付宝 → 理财 → 基金 → 我的定投"
       },
-      "volume_ratio": 0.64
+      "volume_ratio": 0.87
     },
     "pcb": {
       "name": "PCB/HDI板",
       "index": "PCB概念",
       "index_code": "BK0877",
-      "current": 4284.2,
-      "ma10": 4626.9,
-      "ma20": 4901.5,
-      "change_pct": 3.89,
-      "distance_ma10": -7.41,
-      "volume_ratio": 0.7,
+      "current": 4325.5,
+      "ma10": 4631.0,
+      "ma20": 4903.6,
+      "change_pct": 4.89,
+      "distance_ma10": -6.6,
+      "volume_ratio": 0.98,
       "signal": "avoid",
-      "signal_text": "远离10日线-7.4%，趋势破坏",
+      "signal_text": "远离10日线-6.6%，趋势破坏",
       "funds": [
         {
           "code": "017811",
@@ -103,13 +103,13 @@
       "name": "中证500",
       "index": "中证500",
       "index_code": "000905",
-      "current": 8194.9,
-      "ma10": 8550.8,
-      "ma20": 8660.5,
-      "change_pct": 0.7,
-      "distance_ma10": -4.16,
+      "current": 8275.9,
+      "ma10": 8558.9,
+      "ma20": 8664.6,
+      "change_pct": 1.69,
+      "distance_ma10": -3.31,
       "signal": "watch",
-      "signal_text": "距10日线-4.2%，观望",
+      "signal_text": "距10日线-3.3%，观望",
       "funds": [
         {
           "code": "001557",
@@ -122,7 +122,7 @@
         "detail": "定投正常执行",
         "path": "支付宝 → 理财 → 基金 → 我的定投"
       },
-      "volume_ratio": 0.67
+      "volume_ratio": 0.96
     }
   },
   "nasdaq": {
