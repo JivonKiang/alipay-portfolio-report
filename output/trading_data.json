@@ -1,6 +1,6 @@
 {
-  "updated": "2026-07-14T08:33:34+08:00",
-  "run_time": "08:33",
+  "updated": "2026-07-15T05:25:53+08:00",
+  "run_time": "05:25",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
@@ -8,28 +8,14 @@
     "env_cn": "震荡市 — 快进快出赚差价",
     "position_ratio": 0.45,
     "max_position": 43200,
-    "bullish_count": 1,
-    "bearish_count": 1,
+    "bullish_count": 0,
+    "bearish_count": 0,
     "index_details": {
       "上证50": {
-        "status": "recovering",
-        "current": 2955.55,
-        "ma60": 2942.8,
-        "ma120": 2963.2,
-        "above_ma60": true,
-        "above_ma120": false,
-        "golden_cross": false,
-        "ma60_trend": "up"
+        "status": "data_insufficient"
       },
       "沪深300": {
-        "status": "correcting",
-        "current": 4796.5,
-        "ma60": 4854.42,
-        "ma120": 4749.8,
-        "above_ma60": false,
-        "above_ma120": true,
-        "golden_cross": true,
-        "ma60_trend": "up"
+        "status": "data_insufficient"
       },
       "中证500": {
         "status": "data_insufficient"
@@ -67,9 +53,8 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 19,
+    "history_days": 20,
     "recent_environments": [
-      "range",
       "bear_lean",
       "bear_lean",
       "range",
@@ -78,6 +63,7 @@
       "bear_lean",
       "bear_lean",
       "bear_lean",
+      "range",
       "range"
     ]
   },
