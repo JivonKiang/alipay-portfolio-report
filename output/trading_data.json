@@ -1,6 +1,6 @@
 {
-  "updated": "2026-07-15T05:25:53+08:00",
-  "run_time": "05:25",
+  "updated": "2026-07-15T08:40:50+08:00",
+  "run_time": "08:40",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
@@ -12,7 +12,14 @@
     "bearish_count": 0,
     "index_details": {
       "上证50": {
-        "status": "data_insufficient"
+        "status": "neutral",
+        "current": 2967.07,
+        "ma60": 2943.26,
+        "ma120": 2961.82,
+        "above_ma60": true,
+        "above_ma120": true,
+        "golden_cross": false,
+        "ma60_trend": "up"
       },
       "沪深300": {
         "status": "data_insufficient"
@@ -53,16 +60,16 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 20,
+    "history_days": 21,
     "recent_environments": [
       "bear_lean",
-      "bear_lean",
       "range",
       "range",
       "range",
       "bear_lean",
       "bear_lean",
       "bear_lean",
+      "range",
       "range",
       "range"
     ]
