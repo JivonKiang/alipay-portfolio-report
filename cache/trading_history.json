@@ -457,5 +457,24 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-07-16",
+    "time": "08:39",
+    "environment": "bear_lean",
+    "environment_cn": "偏熊 — 谨慎参与",
+    "position_ratio": 0.35,
+    "buy_signals": 1,
+    "exit_signals": 0,
+    "signals": [
+      {
+        "board": "存储芯片",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "008888"
+        ]
+      }
+    ]
   }
 ]

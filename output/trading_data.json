@@ -1,6 +1,6 @@
 {
-  "updated": "2026-07-16T05:35:51+08:00",
-  "run_time": "05:35",
+  "updated": "2026-07-16T08:39:22+08:00",
+  "run_time": "08:39",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
@@ -13,9 +13,9 @@
     "index_details": {
       "上证50": {
         "status": "bearish",
-        "current": 2926.85,
-        "ma60": 2943.52,
-        "ma120": 2960.28,
+        "current": 2904.12,
+        "ma60": 2943.15,
+        "ma120": 2960.09,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": false,
@@ -23,9 +23,9 @@
       },
       "沪深300": {
         "status": "bearish",
-        "current": 4724.84,
-        "ma60": 4855.19,
-        "ma120": 4749.87,
+        "current": 4698.43,
+        "ma60": 4854.75,
+        "ma120": 4749.65,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": true,
@@ -33,9 +33,9 @@
       },
       "中证500": {
         "status": "bearish",
-        "current": 8014.43,
-        "ma60": 8497.13,
-        "ma120": 8326.76,
+        "current": 7955.66,
+        "ma60": 8496.15,
+        "ma120": 8326.27,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": true,
@@ -46,9 +46,9 @@
       },
       "科创50": {
         "status": "bullish",
-        "current": 1869.03,
-        "ma60": 1789.66,
-        "ma120": 1601.07,
+        "current": 1846.88,
+        "ma60": 1789.29,
+        "ma120": 1600.88,
         "above_ma60": true,
         "above_ma120": true,
         "golden_cross": true,
@@ -57,51 +57,29 @@
     }
   },
   "module_2_selection": {
-    "scanned": 11,
+    "scanned": 2,
     "total": 25,
-    "raw_signals": 2,
-    "actionable_signals": 2,
+    "raw_signals": 1,
+    "actionable_signals": 1,
     "blocked_signals": 0,
     "signals": [
       {
         "type": "oversold",
         "label": "🟡 超跌反弹",
         "strength": "weak",
-        "reason": "60日最大回撤-20.6%，今日反弹",
+        "reason": "60日最大回撤-20.8%，今日反弹",
         "board": "存储芯片",
-        "change_pct": 0.88,
-        "change_5d": -3.19,
-        "vol_ratio": 0.66,
-        "current": 1067.6,
-        "ma10": 1076.2,
-        "ma20": 1105.1,
-        "ma60": 1204.3,
+        "change_pct": 0.61,
+        "change_5d": -3.45,
+        "vol_ratio": 0.92,
+        "current": 1064.72,
+        "ma10": 1075.9,
+        "ma20": 1105.0,
+        "ma60": 1204.2,
         "funds": [
           {
             "code": "008888",
             "name": "国联安中证半导体ETF联接C"
-          }
-        ],
-        "gate_passed": true,
-        "position": 500
-      },
-      {
-        "type": "oversold",
-        "label": "🟡 超跌反弹",
-        "strength": "weak",
-        "reason": "60日最大回撤-24.3%，今日反弹",
-        "board": "CPO",
-        "change_pct": 1.98,
-        "change_5d": -2.13,
-        "vol_ratio": 0.67,
-        "current": 959.3,
-        "ma10": 980.8,
-        "ma20": 995.0,
-        "ma60": 1102.3,
-        "funds": [
-          {
-            "code": "017560",
-            "name": "嘉实上证科创板芯片ETF联接C"
           }
         ],
         "gate_passed": true,
@@ -111,10 +89,10 @@
     "blocked": []
   },
   "module_3_position": {
-    "total_suggested": 1000,
+    "total_suggested": 500,
     "single_max": 10080,
     "strategy": "偏熊 — 谨慎参与",
-    "diversification_note": "建议分散到2只基金"
+    "diversification_note": "建议分散到1只基金"
   },
   "module_4_exit": {
     "exit_signals": [],
@@ -126,25 +104,25 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 22,
+    "history_days": 23,
     "recent_environments": [
       "range",
       "range",
-      "range",
       "bear_lean",
       "bear_lean",
       "bear_lean",
       "range",
       "range",
       "range",
+      "bear_lean",
       "bear_lean"
     ]
   },
   "summary": {
     "environment": "偏熊 — 谨慎参与",
-    "buy_signals": 2,
+    "buy_signals": 1,
     "exit_signals": 0,
-    "today_budget": 1000,
+    "today_budget": 500,
     "action_required": true,
     "key_action": "优先关注 存储芯片 (🟡 超跌反弹)"
   }
