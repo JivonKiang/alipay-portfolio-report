@@ -476,5 +476,15 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-07-17",
+    "time": "05:38",
+    "environment": "bear",
+    "environment_cn": "熊市 — 清仓做反弹",
+    "position_ratio": 0.2,
+    "buy_signals": 0,
+    "exit_signals": 0,
+    "signals": []
   }
 ]

@@ -1,55 +1,55 @@
 {
-  "updated": "2026-07-16T08:39:22+08:00",
-  "run_time": "08:39",
+  "updated": "2026-07-17T05:37:48+08:00",
+  "run_time": "05:37",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
-    "env": "bear_lean",
-    "env_cn": "偏熊 — 谨慎参与",
-    "position_ratio": 0.35,
-    "max_position": 33600,
-    "bullish_count": 1,
-    "bearish_count": 3,
+    "env": "bear",
+    "env_cn": "熊市 — 清仓做反弹",
+    "position_ratio": 0.2,
+    "max_position": 19200,
+    "bullish_count": 0,
+    "bearish_count": 4,
     "index_details": {
       "上证50": {
         "status": "bearish",
-        "current": 2904.12,
-        "ma60": 2943.15,
-        "ma120": 2960.09,
+        "current": 2826.99,
+        "ma60": 2941.37,
+        "ma120": 2957.77,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": false,
-        "ma60_trend": "up"
+        "ma60_trend": "down"
       },
       "沪深300": {
         "status": "bearish",
-        "current": 4698.43,
-        "ma60": 4854.75,
-        "ma120": 4749.65,
+        "current": 4517.89,
+        "ma60": 4850.76,
+        "ma120": 4747.7,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": true,
-        "ma60_trend": "up"
+        "ma60_trend": "down"
       },
       "中证500": {
         "status": "bearish",
-        "current": 7955.66,
-        "ma60": 8496.15,
-        "ma120": 8326.27,
+        "current": 7532.86,
+        "ma60": 8483.53,
+        "ma120": 8320.52,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": true,
-        "ma60_trend": "up"
+        "ma60_trend": "down"
       },
       "创业板指": {
         "status": "data_insufficient"
       },
       "科创50": {
-        "status": "bullish",
-        "current": 1846.88,
-        "ma60": 1789.29,
-        "ma120": 1600.88,
-        "above_ma60": true,
+        "status": "correcting",
+        "current": 1719.43,
+        "ma60": 1793.78,
+        "ma120": 1602.76,
+        "above_ma60": false,
         "above_ma120": true,
         "golden_cross": true,
         "ma60_trend": "up"
@@ -57,42 +57,19 @@
     }
   },
   "module_2_selection": {
-    "scanned": 2,
+    "scanned": 5,
     "total": 25,
-    "raw_signals": 1,
-    "actionable_signals": 1,
+    "raw_signals": 0,
+    "actionable_signals": 0,
     "blocked_signals": 0,
-    "signals": [
-      {
-        "type": "oversold",
-        "label": "🟡 超跌反弹",
-        "strength": "weak",
-        "reason": "60日最大回撤-20.8%，今日反弹",
-        "board": "存储芯片",
-        "change_pct": 0.61,
-        "change_5d": -3.45,
-        "vol_ratio": 0.92,
-        "current": 1064.72,
-        "ma10": 1075.9,
-        "ma20": 1105.0,
-        "ma60": 1204.2,
-        "funds": [
-          {
-            "code": "008888",
-            "name": "国联安中证半导体ETF联接C"
-          }
-        ],
-        "gate_passed": true,
-        "position": 500
-      }
-    ],
+    "signals": [],
     "blocked": []
   },
   "module_3_position": {
-    "total_suggested": 500,
-    "single_max": 10080,
-    "strategy": "偏熊 — 谨慎参与",
-    "diversification_note": "建议分散到1只基金"
+    "total_suggested": 0,
+    "single_max": 5760,
+    "strategy": "熊市 — 清仓做反弹",
+    "diversification_note": "建议分散到0只基金"
   },
   "module_4_exit": {
     "exit_signals": [],
@@ -104,10 +81,9 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 23,
+    "history_days": 24,
     "recent_environments": [
       "range",
-      "range",
       "bear_lean",
       "bear_lean",
       "bear_lean",
@@ -115,15 +91,16 @@
       "range",
       "range",
       "bear_lean",
-      "bear_lean"
+      "bear_lean",
+      "bear"
     ]
   },
   "summary": {
-    "environment": "偏熊 — 谨慎参与",
-    "buy_signals": 1,
+    "environment": "熊市 — 清仓做反弹",
+    "buy_signals": 0,
     "exit_signals": 0,
-    "today_budget": 500,
-    "action_required": true,
-    "key_action": "优先关注 存储芯片 (🟡 超跌反弹)"
+    "today_budget": 0,
+    "action_required": false,
+    "key_action": "市场偏熊，持有现金观望"
   }
 }
