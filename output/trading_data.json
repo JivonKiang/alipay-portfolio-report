@@ -1,6 +1,6 @@
 {
-  "updated": "2026-07-17T08:32:57+08:00",
-  "run_time": "08:32",
+  "updated": "2026-07-20T06:13:09+08:00",
+  "run_time": "06:13",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
@@ -13,9 +13,9 @@
     "index_details": {
       "上证50": {
         "status": "bearish",
-        "current": 2827.67,
-        "ma60": 2941.38,
-        "ma120": 2957.77,
+        "current": 2873.12,
+        "ma60": 2940.4,
+        "ma120": 2956.05,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": false,
@@ -23,9 +23,9 @@
       },
       "沪深300": {
         "status": "bearish",
-        "current": 4529.1,
-        "ma60": 4850.94,
-        "ma120": 4747.8,
+        "current": 4546.48,
+        "ma60": 4847.25,
+        "ma120": 4746.25,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": true,
@@ -33,9 +33,9 @@
       },
       "中证500": {
         "status": "bearish",
-        "current": 7513.76,
-        "ma60": 8483.21,
-        "ma120": 8320.36,
+        "current": 7321.98,
+        "ma60": 8467.4,
+        "ma120": 8312.77,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": true,
@@ -46,9 +46,9 @@
       },
       "科创50": {
         "status": "correcting",
-        "current": 1715.4,
-        "ma60": 1793.71,
-        "ma120": 1602.73,
+        "current": 1678.82,
+        "ma60": 1797.91,
+        "ma120": 1604.1,
         "above_ma60": false,
         "above_ma120": true,
         "golden_cross": true,
@@ -57,7 +57,7 @@
     }
   },
   "module_2_selection": {
-    "scanned": 1,
+    "scanned": 21,
     "total": 25,
     "raw_signals": 0,
     "actionable_signals": 0,
@@ -81,16 +81,16 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 25,
+    "history_days": 26,
     "recent_environments": [
       "bear_lean",
       "bear_lean",
-      "bear_lean",
       "range",
       "range",
       "range",
       "bear_lean",
       "bear_lean",
+      "bear",
       "bear",
       "bear"
     ]
