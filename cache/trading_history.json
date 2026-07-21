@@ -516,5 +516,33 @@
     "buy_signals": 0,
     "exit_signals": 0,
     "signals": []
+  },
+  {
+    "date": "2026-07-21",
+    "time": "05:46",
+    "environment": "range",
+    "environment_cn": "震荡市 — 快进快出赚差价",
+    "position_ratio": 0.45,
+    "buy_signals": 2,
+    "exit_signals": 0,
+    "signals": [
+      {
+        "board": "先进封装",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "008888"
+        ]
+      },
+      {
+        "board": "算力",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "012629",
+          "008888"
+        ]
+      }
+    ]
   }
 ]
