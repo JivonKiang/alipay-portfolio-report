@@ -544,5 +544,41 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-07-21",
+    "time": "09:09",
+    "environment": "range",
+    "environment_cn": "震荡市 — 快进快出赚差价",
+    "position_ratio": 0.45,
+    "buy_signals": 3,
+    "exit_signals": 0,
+    "signals": [
+      {
+        "board": "科创芯片",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "017560",
+          "017560"
+        ]
+      },
+      {
+        "board": "存储芯片",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "008888"
+        ]
+      },
+      {
+        "board": "先进封装",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "008888"
+        ]
+      }
+    ]
   }
 ]
