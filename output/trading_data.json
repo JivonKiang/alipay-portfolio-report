@@ -1,6 +1,6 @@
 {
-  "updated": "2026-07-22T05:44:52+08:00",
-  "run_time": "05:44",
+  "updated": "2026-07-22T09:06:51+08:00",
+  "run_time": "09:06",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
@@ -8,139 +8,63 @@
     "env_cn": "震荡市 — 快进快出赚差价",
     "position_ratio": 0.45,
     "max_position": 43200,
-    "bullish_count": 1,
-    "bearish_count": 2,
+    "bullish_count": 0,
+    "bearish_count": 0,
     "index_details": {
       "上证50": {
-        "status": "neutral",
-        "current": 2987.68,
-        "ma60": 2942.78,
-        "ma120": 2954.84,
-        "above_ma60": true,
-        "above_ma120": true,
-        "golden_cross": false,
-        "ma60_trend": "down"
+        "status": "data_insufficient"
       },
       "沪深300": {
-        "status": "bearish",
-        "current": 4731.8,
-        "ma60": 4846.2,
-        "ma120": 4746.83,
-        "above_ma60": false,
-        "above_ma120": false,
-        "golden_cross": true,
-        "ma60_trend": "down"
+        "status": "data_insufficient"
       },
       "中证500": {
-        "status": "bearish",
-        "current": 7774.88,
-        "ma60": 8450.63,
-        "ma120": 8305.52,
-        "above_ma60": false,
-        "above_ma120": false,
-        "golden_cross": true,
-        "ma60_trend": "down"
+        "status": "data_insufficient"
       },
       "创业板指": {
         "status": "data_insufficient"
       },
       "科创50": {
-        "status": "bullish",
-        "current": 1867.21,
-        "ma60": 1813.35,
-        "ma120": 1610.94,
-        "above_ma60": true,
-        "above_ma120": true,
-        "golden_cross": true,
-        "ma60_trend": "up"
+        "status": "data_insufficient"
       }
     }
   },
   "module_2_selection": {
-    "scanned": 19,
+    "scanned": 5,
     "total": 25,
-    "raw_signals": 3,
-    "actionable_signals": 3,
+    "raw_signals": 1,
+    "actionable_signals": 1,
     "blocked_signals": 0,
     "signals": [
       {
         "type": "oversold",
         "label": "🟡 超跌反弹",
         "strength": "weak",
-        "reason": "60日最大回撤-25.9%，今日反弹",
-        "board": "算力",
-        "change_pct": 0.34,
-        "change_5d": -4.87,
-        "vol_ratio": 0.89,
-        "current": 1746.97,
-        "ma10": 1821.2,
-        "ma20": 1899.0,
-        "ma60": 2061.2,
+        "reason": "60日最大回撤-19.0%，今日反弹",
+        "board": "光通信",
+        "change_pct": 0.52,
+        "change_5d": -0.87,
+        "vol_ratio": 1.32,
+        "current": 1006.39,
+        "ma10": 1008.3,
+        "ma20": 1023.8,
+        "ma60": 1114.0,
         "funds": [
           {
-            "code": "012629",
-            "name": "广发国证半导体芯片ETF联接C"
-          },
-          {
-            "code": "008888",
-            "name": "国联安中证半导体ETF联接C"
+            "code": "017560",
+            "name": "嘉实上证科创板芯片ETF联接C"
           }
         ],
         "gate_passed": true,
-        "position": 500
-      },
-      {
-        "type": "oversold",
-        "label": "🟡 超跌反弹",
-        "strength": "weak",
-        "reason": "60日最大回撤-20.7%，今日反弹",
-        "board": "商业航天",
-        "change_pct": 0.2,
-        "change_5d": -5.57,
-        "vol_ratio": 0.9,
-        "current": 2029.83,
-        "ma10": 2136.1,
-        "ma20": 2266.9,
-        "ma60": 2344.8,
-        "funds": [
-          {
-            "code": "001643",
-            "name": "汇丰晋信智造先锋股票C"
-          }
-        ],
-        "gate_passed": true,
-        "position": 500
-      },
-      {
-        "type": "oversold",
-        "label": "🟡 超跌反弹",
-        "strength": "weak",
-        "reason": "60日最大回撤-24.7%，今日反弹",
-        "board": "稀土永磁",
-        "change_pct": 0.42,
-        "change_5d": -1.86,
-        "vol_ratio": 1.08,
-        "current": 3041.13,
-        "ma10": 3077.1,
-        "ma20": 3132.1,
-        "ma60": 3475.3,
-        "funds": [
-          {
-            "code": "011036",
-            "name": "嘉实中证稀土产业ETF联接C"
-          }
-        ],
-        "gate_passed": true,
-        "position": 500
+        "position": 800
       }
     ],
     "blocked": []
   },
   "module_3_position": {
-    "total_suggested": 1500,
+    "total_suggested": 800,
     "single_max": 12960,
     "strategy": "震荡市 — 快进快出赚差价",
-    "diversification_note": "建议分散到3只基金"
+    "diversification_note": "建议分散到1只基金"
   },
   "module_4_exit": {
     "exit_signals": [],
@@ -152,15 +76,15 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 30,
+    "history_days": 31,
     "recent_environments": [
+      "bear_lean",
+      "bear_lean",
+      "bear",
+      "bear",
+      "bear",
+      "bear",
       "range",
-      "bear_lean",
-      "bear_lean",
-      "bear",
-      "bear",
-      "bear",
-      "bear",
       "range",
       "range",
       "range"
@@ -168,10 +92,10 @@
   },
   "summary": {
     "environment": "震荡市 — 快进快出赚差价",
-    "buy_signals": 3,
+    "buy_signals": 1,
     "exit_signals": 0,
-    "today_budget": 1500,
+    "today_budget": 800,
     "action_required": true,
-    "key_action": "优先关注 算力 (🟡 超跌反弹)"
+    "key_action": "优先关注 光通信 (🟡 超跌反弹)"
   }
 }
