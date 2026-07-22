@@ -580,5 +580,41 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-07-22",
+    "time": "05:45",
+    "environment": "range",
+    "environment_cn": "震荡市 — 快进快出赚差价",
+    "position_ratio": 0.45,
+    "buy_signals": 3,
+    "exit_signals": 0,
+    "signals": [
+      {
+        "board": "算力",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "012629",
+          "008888"
+        ]
+      },
+      {
+        "board": "商业航天",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "001643"
+        ]
+      },
+      {
+        "board": "稀土永磁",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "011036"
+        ]
+      }
+    ]
   }
 ]

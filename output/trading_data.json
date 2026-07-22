@@ -1,6 +1,6 @@
 {
-  "updated": "2026-07-21T09:07:49+08:00",
-  "run_time": "09:07",
+  "updated": "2026-07-22T05:44:52+08:00",
+  "run_time": "05:44",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
@@ -8,74 +8,80 @@
     "env_cn": "震荡市 — 快进快出赚差价",
     "position_ratio": 0.45,
     "max_position": 43200,
-    "bullish_count": 0,
-    "bearish_count": 0,
+    "bullish_count": 1,
+    "bearish_count": 2,
     "index_details": {
       "上证50": {
-        "status": "data_insufficient"
+        "status": "neutral",
+        "current": 2987.68,
+        "ma60": 2942.78,
+        "ma120": 2954.84,
+        "above_ma60": true,
+        "above_ma120": true,
+        "golden_cross": false,
+        "ma60_trend": "down"
       },
       "沪深300": {
-        "status": "data_insufficient"
+        "status": "bearish",
+        "current": 4731.8,
+        "ma60": 4846.2,
+        "ma120": 4746.83,
+        "above_ma60": false,
+        "above_ma120": false,
+        "golden_cross": true,
+        "ma60_trend": "down"
       },
       "中证500": {
-        "status": "data_insufficient"
+        "status": "bearish",
+        "current": 7774.88,
+        "ma60": 8450.63,
+        "ma120": 8305.52,
+        "above_ma60": false,
+        "above_ma120": false,
+        "golden_cross": true,
+        "ma60_trend": "down"
       },
       "创业板指": {
         "status": "data_insufficient"
       },
       "科创50": {
-        "status": "data_insufficient"
+        "status": "bullish",
+        "current": 1867.21,
+        "ma60": 1813.35,
+        "ma120": 1610.94,
+        "above_ma60": true,
+        "above_ma120": true,
+        "golden_cross": true,
+        "ma60_trend": "up"
       }
     }
   },
   "module_2_selection": {
-    "scanned": 4,
+    "scanned": 19,
     "total": 25,
-    "raw_signals": 4,
+    "raw_signals": 3,
     "actionable_signals": 3,
-    "blocked_signals": 1,
+    "blocked_signals": 0,
     "signals": [
       {
         "type": "oversold",
         "label": "🟡 超跌反弹",
         "strength": "weak",
-        "reason": "60日最大回撤-18.6%，今日反弹",
-        "board": "科创芯片",
-        "change_pct": 0.87,
-        "change_5d": -6.39,
-        "vol_ratio": 1.1,
-        "current": 1001.02,
-        "ma10": 1034.9,
-        "ma20": 1044.0,
-        "ma60": 1114.5,
+        "reason": "60日最大回撤-25.9%，今日反弹",
+        "board": "算力",
+        "change_pct": 0.34,
+        "change_5d": -4.87,
+        "vol_ratio": 0.89,
+        "current": 1746.97,
+        "ma10": 1821.2,
+        "ma20": 1899.0,
+        "ma60": 2061.2,
         "funds": [
           {
-            "code": "017560",
-            "name": "嘉实上证科创板芯片ETF联接C"
+            "code": "012629",
+            "name": "广发国证半导体芯片ETF联接C"
           },
           {
-            "code": "017560",
-            "name": "嘉实上证科创板芯片ETF联接C"
-          }
-        ],
-        "gate_passed": true,
-        "position": 500
-      },
-      {
-        "type": "oversold",
-        "label": "🟡 超跌反弹",
-        "strength": "weak",
-        "reason": "60日最大回撤-23.7%，今日反弹",
-        "board": "存储芯片",
-        "change_pct": 2.09,
-        "change_5d": -3.03,
-        "vol_ratio": 1.19,
-        "current": 1026.21,
-        "ma10": 1052.9,
-        "ma20": 1080.7,
-        "ma60": 1190.7,
-        "funds": [
-          {
             "code": "008888",
             "name": "国联安中证半导体ETF联接C"
           }
@@ -87,53 +93,48 @@
         "type": "oversold",
         "label": "🟡 超跌反弹",
         "strength": "weak",
-        "reason": "60日最大回撤-36.1%，今日反弹",
-        "board": "先进封装",
-        "change_pct": 1.45,
-        "change_5d": -4.81,
-        "vol_ratio": 1.0,
-        "current": 1174.52,
-        "ma10": 1226.7,
-        "ma20": 1293.4,
-        "ma60": 1520.1,
+        "reason": "60日最大回撤-20.7%，今日反弹",
+        "board": "商业航天",
+        "change_pct": 0.2,
+        "change_5d": -5.57,
+        "vol_ratio": 0.9,
+        "current": 2029.83,
+        "ma10": 2136.1,
+        "ma20": 2266.9,
+        "ma60": 2344.8,
         "funds": [
           {
-            "code": "008888",
-            "name": "国联安中证半导体ETF联接C"
+            "code": "001643",
+            "name": "汇丰晋信智造先锋股票C"
+          }
+        ],
+        "gate_passed": true,
+        "position": 500
+      },
+      {
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "strength": "weak",
+        "reason": "60日最大回撤-24.7%，今日反弹",
+        "board": "稀土永磁",
+        "change_pct": 0.42,
+        "change_5d": -1.86,
+        "vol_ratio": 1.08,
+        "current": 3041.13,
+        "ma10": 3077.1,
+        "ma20": 3132.1,
+        "ma60": 3475.3,
+        "funds": [
+          {
+            "code": "011036",
+            "name": "嘉实中证稀土产业ETF联接C"
           }
         ],
         "gate_passed": true,
         "position": 500
       }
     ],
-    "blocked": [
-      {
-        "type": "oversold",
-        "label": "🟡 超跌反弹",
-        "strength": "weak",
-        "reason": "60日最大回撤-28.3%，今日反弹",
-        "board": "半导体",
-        "change_pct": 9.85,
-        "change_5d": -12.61,
-        "vol_ratio": 1.1,
-        "current": 2730.6,
-        "ma10": 3123.9,
-        "ma20": 3344.7,
-        "ma60": 3003.8,
-        "funds": [
-          {
-            "code": "008888",
-            "name": "国联安中证半导体ETF联接C"
-          },
-          {
-            "code": "008282",
-            "name": "国泰CES半导体芯片ETF联接C"
-          }
-        ],
-        "gate_passed": false,
-        "block_reason": "涨幅9.85%≥3%"
-      }
-    ]
+    "blocked": []
   },
   "module_3_position": {
     "total_suggested": 1500,
@@ -151,16 +152,16 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 29,
+    "history_days": 30,
     "recent_environments": [
       "range",
+      "bear_lean",
+      "bear_lean",
+      "bear",
+      "bear",
+      "bear",
+      "bear",
       "range",
-      "bear_lean",
-      "bear_lean",
-      "bear",
-      "bear",
-      "bear",
-      "bear",
       "range",
       "range"
     ]
@@ -171,6 +172,6 @@
     "exit_signals": 0,
     "today_budget": 1500,
     "action_required": true,
-    "key_action": "优先关注 科创芯片 (🟡 超跌反弹)"
+    "key_action": "优先关注 算力 (🟡 超跌反弹)"
   }
 }
