@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-23T05:46:25+08:00",
+  "updated": "2026-07-23T07:58:18+08:00",
   "portfolio": {
     "total": 677301,
     "steady": 512111,
@@ -11,13 +11,13 @@
       "name": "半导体设备",
       "index": "科创50",
       "index_code": "000688",
-      "current": 1802.7,
-      "ma10": 1884.0,
-      "ma20": 1976.1,
-      "change_pct": -3.09,
-      "distance_ma10": -4.32,
+      "current": 1789.7,
+      "ma10": 1882.7,
+      "ma20": 1975.5,
+      "change_pct": -3.78,
+      "distance_ma10": -4.94,
       "signal": "watch",
-      "signal_text": "缩量回调-3.09%，接近买点，盯缩量止跌",
+      "signal_text": "缩量回调-3.78%，接近买点，盯缩量止跌",
       "funds": [
         {
           "code": "017811",
@@ -35,18 +35,18 @@
         "detail": "定投正常执行",
         "path": "支付宝 → 理财 → 基金 → 我的定投"
       },
-      "volume_ratio": 0.58
+      "volume_ratio": 0.73
     },
     "pcb": {
       "name": "PCB/HDI板",
       "index": "PCB概念",
       "index_code": "BK0877",
-      "current": 3545.4,
-      "ma10": 3894.1,
-      "ma20": 4385.7,
-      "change_pct": 0.16,
-      "distance_ma10": -8.95,
-      "volume_ratio": 0.63,
+      "current": 3549.1,
+      "ma10": 3894.4,
+      "ma20": 4385.9,
+      "change_pct": 0.27,
+      "distance_ma10": -8.87,
+      "volume_ratio": 0.78,
       "signal": "avoid",
       "signal_text": "远离10日线-8.9%，趋势破坏",
       "funds": [
@@ -103,13 +103,13 @@
       "name": "中证500",
       "index": "中证500",
       "index_code": "000905",
-      "current": 7740.5,
-      "ma10": 7923.9,
-      "ma20": 8323.3,
-      "change_pct": -0.14,
-      "distance_ma10": -2.31,
+      "current": 7734.3,
+      "ma10": 7923.3,
+      "ma20": 8323.0,
+      "change_pct": -0.22,
+      "distance_ma10": -2.39,
       "signal": "watch",
-      "signal_text": "距10日线-2.3%，接近支撑",
+      "signal_text": "距10日线-2.4%，接近支撑",
       "funds": [
         {
           "code": "001557",
@@ -122,7 +122,7 @@
         "detail": "定投正常执行",
         "path": "支付宝 → 理财 → 基金 → 我的定投"
       },
-      "volume_ratio": 0.68
+      "volume_ratio": 0.89
     }
   },
   "nasdaq": {
