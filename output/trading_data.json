@@ -1,6 +1,6 @@
 {
-  "updated": "2026-07-23T05:49:54+08:00",
-  "run_time": "05:49",
+  "updated": "2026-07-23T09:05:41+08:00",
+  "run_time": "09:05",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
@@ -13,8 +13,8 @@
     "index_details": {
       "上证50": {
         "status": "neutral",
-        "current": 2979.21,
-        "ma60": 2943.4,
+        "current": 2978.77,
+        "ma60": 2943.39,
         "ma120": 2954.13,
         "above_ma60": true,
         "above_ma120": true,
@@ -23,9 +23,9 @@
       },
       "沪深300": {
         "status": "bearish",
-        "current": 4723.31,
-        "ma60": 4845.19,
-        "ma120": 4746.71,
+        "current": 4728.0,
+        "ma60": 4845.27,
+        "ma120": 4746.75,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": true,
@@ -33,9 +33,9 @@
       },
       "中证500": {
         "status": "bearish",
-        "current": 7725.5,
-        "ma60": 8441.53,
-        "ma120": 8300.2,
+        "current": 7734.31,
+        "ma60": 8441.68,
+        "ma120": 8300.27,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": true,
@@ -46,9 +46,9 @@
       },
       "科创50": {
         "status": "correcting",
-        "current": 1796.57,
-        "ma60": 1818.95,
-        "ma120": 1613.06,
+        "current": 1789.69,
+        "ma60": 1818.83,
+        "ma120": 1613.0,
         "above_ma60": false,
         "above_ma120": true,
         "golden_cross": true,
@@ -57,25 +57,25 @@
     }
   },
   "module_2_selection": {
-    "scanned": 2,
+    "scanned": 3,
     "total": 25,
-    "raw_signals": 1,
-    "actionable_signals": 1,
+    "raw_signals": 2,
+    "actionable_signals": 2,
     "blocked_signals": 0,
     "signals": [
       {
         "type": "oversold",
         "label": "🟡 超跌反弹",
         "strength": "weak",
-        "reason": "60日最大回撤-18.2%，今日反弹",
+        "reason": "60日最大回撤-17.6%，今日反弹",
         "board": "科创芯片",
-        "change_pct": 1.2,
-        "change_5d": -0.88,
-        "vol_ratio": 0.59,
-        "current": 1006.51,
-        "ma10": 1027.5,
-        "ma20": 1038.8,
-        "ma60": 1108.1,
+        "change_pct": 1.94,
+        "change_5d": -0.15,
+        "vol_ratio": 0.77,
+        "current": 1013.85,
+        "ma10": 1028.2,
+        "ma20": 1039.2,
+        "ma60": 1108.2,
         "funds": [
           {
             "code": "017560",
@@ -88,15 +88,37 @@
         ],
         "gate_passed": true,
         "position": 500
+      },
+      {
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "strength": "weak",
+        "reason": "60日最大回撤-23.9%，今日反弹",
+        "board": "存储芯片",
+        "change_pct": 0.98,
+        "change_5d": 0.54,
+        "vol_ratio": 0.79,
+        "current": 1023.05,
+        "ma10": 1041.2,
+        "ma20": 1068.0,
+        "ma60": 1182.3,
+        "funds": [
+          {
+            "code": "008888",
+            "name": "国联安中证半导体ETF联接C"
+          }
+        ],
+        "gate_passed": true,
+        "position": 500
       }
     ],
     "blocked": []
   },
   "module_3_position": {
-    "total_suggested": 500,
+    "total_suggested": 1000,
     "single_max": 10080,
     "strategy": "偏熊 — 谨慎参与",
-    "diversification_note": "建议分散到1只基金"
+    "diversification_note": "建议分散到2只基金"
   },
   "module_4_exit": {
     "exit_signals": [],
@@ -108,25 +130,25 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 32,
+    "history_days": 33,
     "recent_environments": [
+      "bear",
+      "bear",
+      "bear",
+      "bear",
+      "range",
+      "range",
+      "range",
+      "range",
       "bear_lean",
-      "bear",
-      "bear",
-      "bear",
-      "bear",
-      "range",
-      "range",
-      "range",
-      "range",
       "bear_lean"
     ]
   },
   "summary": {
     "environment": "偏熊 — 谨慎参与",
-    "buy_signals": 1,
+    "buy_signals": 2,
     "exit_signals": 0,
-    "today_budget": 500,
+    "today_budget": 1000,
     "action_required": true,
     "key_action": "优先关注 科创芯片 (🟡 超跌反弹)"
   }
