@@ -46,5 +46,11 @@
     "last_seen": "2026-07-22",
     "seen_count": 1,
     "direction_at_first": "down"
+  },
+  "创新药_dip_buy": {
+    "first_seen": "2026-07-23",
+    "last_seen": "2026-07-23",
+    "seen_count": 1,
+    "direction_at_first": "down"
   }
 }
