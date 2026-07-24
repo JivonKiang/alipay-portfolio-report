@@ -1,6 +1,6 @@
 {
-  "updated": "2026-07-23T09:05:41+08:00",
-  "run_time": "09:05",
+  "updated": "2026-07-24T05:46:07+08:00",
+  "run_time": "05:46",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
@@ -8,24 +8,24 @@
     "env_cn": "偏熊 — 谨慎参与",
     "position_ratio": 0.35,
     "max_position": 33600,
-    "bullish_count": 0,
+    "bullish_count": 1,
     "bearish_count": 3,
     "index_details": {
       "上证50": {
-        "status": "neutral",
-        "current": 2978.77,
-        "ma60": 2943.39,
-        "ma120": 2954.13,
+        "status": "recovering",
+        "current": 2952.61,
+        "ma60": 2943.62,
+        "ma120": 2953.29,
         "above_ma60": true,
-        "above_ma120": true,
+        "above_ma120": false,
         "golden_cross": false,
         "ma60_trend": "up"
       },
       "沪深300": {
         "status": "bearish",
-        "current": 4728.0,
-        "ma60": 4845.27,
-        "ma120": 4746.75,
+        "current": 4666.36,
+        "ma60": 4843.52,
+        "ma120": 4746.27,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": true,
@@ -33,9 +33,9 @@
       },
       "中证500": {
         "status": "bearish",
-        "current": 7734.31,
-        "ma60": 8441.68,
-        "ma120": 8300.27,
+        "current": 7578.89,
+        "ma60": 8429.68,
+        "ma120": 8293.53,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": true,
@@ -46,9 +46,9 @@
       },
       "科创50": {
         "status": "correcting",
-        "current": 1789.69,
-        "ma60": 1818.83,
-        "ma120": 1613.0,
+        "current": 1801.09,
+        "ma60": 1823.71,
+        "ma120": 1615.16,
         "above_ma60": false,
         "above_ma120": true,
         "golden_cross": true,
@@ -57,68 +57,19 @@
     }
   },
   "module_2_selection": {
-    "scanned": 3,
+    "scanned": 6,
     "total": 25,
-    "raw_signals": 2,
-    "actionable_signals": 2,
+    "raw_signals": 0,
+    "actionable_signals": 0,
     "blocked_signals": 0,
-    "signals": [
-      {
-        "type": "oversold",
-        "label": "🟡 超跌反弹",
-        "strength": "weak",
-        "reason": "60日最大回撤-17.6%，今日反弹",
-        "board": "科创芯片",
-        "change_pct": 1.94,
-        "change_5d": -0.15,
-        "vol_ratio": 0.77,
-        "current": 1013.85,
-        "ma10": 1028.2,
-        "ma20": 1039.2,
-        "ma60": 1108.2,
-        "funds": [
-          {
-            "code": "017560",
-            "name": "嘉实上证科创板芯片ETF联接C"
-          },
-          {
-            "code": "017560",
-            "name": "嘉实上证科创板芯片ETF联接C"
-          }
-        ],
-        "gate_passed": true,
-        "position": 500
-      },
-      {
-        "type": "oversold",
-        "label": "🟡 超跌反弹",
-        "strength": "weak",
-        "reason": "60日最大回撤-23.9%，今日反弹",
-        "board": "存储芯片",
-        "change_pct": 0.98,
-        "change_5d": 0.54,
-        "vol_ratio": 0.79,
-        "current": 1023.05,
-        "ma10": 1041.2,
-        "ma20": 1068.0,
-        "ma60": 1182.3,
-        "funds": [
-          {
-            "code": "008888",
-            "name": "国联安中证半导体ETF联接C"
-          }
-        ],
-        "gate_passed": true,
-        "position": 500
-      }
-    ],
+    "signals": [],
     "blocked": []
   },
   "module_3_position": {
-    "total_suggested": 1000,
+    "total_suggested": 0,
     "single_max": 10080,
     "strategy": "偏熊 — 谨慎参与",
-    "diversification_note": "建议分散到2只基金"
+    "diversification_note": "建议分散到0只基金"
   },
   "module_4_exit": {
     "exit_signals": [],
@@ -130,9 +81,8 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 33,
+    "history_days": 34,
     "recent_environments": [
-      "bear",
       "bear",
       "bear",
       "bear",
@@ -141,15 +91,16 @@
       "range",
       "range",
       "bear_lean",
+      "bear_lean",
       "bear_lean"
     ]
   },
   "summary": {
     "environment": "偏熊 — 谨慎参与",
-    "buy_signals": 2,
+    "buy_signals": 0,
     "exit_signals": 0,
-    "today_budget": 1000,
-    "action_required": true,
-    "key_action": "优先关注 科创芯片 (🟡 超跌反弹)"
+    "today_budget": 0,
+    "action_required": false,
+    "key_action": "市场偏熊，持有现金观望"
   }
 }
