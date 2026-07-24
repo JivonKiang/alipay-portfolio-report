@@ -1,0 +1,103 @@
+{
+  "updated": "2026-06-24T14:29:46+08:00",
+  "is_trading_day": true,
+  "total_assets": {
+    "flexible_cash": 96000,
+    "money_fund": 50000,
+    "invested": 1038.2,
+    "total": 147038.2
+  },
+  "portfolio": {
+    "holdings": [
+      {
+        "code": "005844",
+        "name": "东方人工智能主题混合C",
+        "type": "科技成长",
+        "sub_type": "AI/半导体",
+        "entry_nav": 3.3511,
+        "entry_amount": 200,
+        "entry_date": "2026-06-23",
+        "latest_nav": 3.5647,
+        "nav_date": "2026-06-23",
+        "shares": 59.68,
+        "current_value": 212.75,
+        "profit": 12.75,
+        "profit_pct": 6.37,
+        "days_held": 1,
+        "fee_tier": "1.5%",
+        "estimate": {
+          "nav_estimate": 3.5647,
+          "change_pct": 6.37,
+          "update_time": "2026-06-24 14:28"
+        }
+      },
+      {
+        "code": "006503",
+        "name": "财通集成电路产业股票C",
+        "type": "科技成长",
+        "sub_type": "PCB/集成电路",
+        "entry_nav": 9.1008,
+        "entry_amount": 500,
+        "entry_date": "2026-06-23",
+        "latest_nav": 9.3428,
+        "nav_date": "2026-06-23",
+        "shares": 54.94,
+        "current_value": 513.3,
+        "profit": 13.3,
+        "profit_pct": 2.66,
+        "days_held": 1,
+        "fee_tier": "1.5%",
+        "estimate": {
+          "nav_estimate": 9.3428,
+          "change_pct": 2.66,
+          "update_time": "2026-06-24 14:25"
+        }
+      },
+      {
+        "code": "025209",
+        "name": "永赢先锋半导体智选混合C",
+        "type": "科技成长",
+        "sub_type": "存储芯片",
+        "entry_nav": 2.8916,
+        "entry_amount": 300,
+        "entry_date": "2026-06-23",
+        "latest_nav": 3.0088,
+        "nav_date": "2026-06-23",
+        "shares": 103.75,
+        "current_value": 312.16,
+        "profit": 12.16,
+        "profit_pct": 4.05,
+        "days_held": 1,
+        "fee_tier": "1.5%",
+        "estimate": {
+          "nav_estimate": 3.0088,
+          "change_pct": 4.05,
+          "update_time": "2026-06-24 14:25"
+        }
+      }
+    ],
+    "count": 3,
+    "total_invested": 1000,
+    "total_market_value": 1038.2,
+    "total_profit": 38.2,
+    "total_profit_pct": 3.82,
+    "available_cash": 95000
+  },
+  "market_breadth": {
+    "indices": {},
+    "volume_total": 0,
+    "market_state": "unknown",
+    "error": "Remote end closed connection without res",
+    "update_time": "14:29"
+  },
+  "industry_rotation": {
+    "top": [],
+    "bottom": []
+  },
+  "warnings": [],
+  "fee_checks": [
+    "东方人工智能主题持有1天，赎回费1.5%",
+    "财通集成电路产业持有1天，赎回费1.5%",
+    "永赢先锋半导体智持有1天，赎回费1.5%"
+  ]
+}

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>操盘手每日修炼 · 交易系统</title>
+<style>
+  :root { --bg:#0d1117; --card:#161b22; --border:#30363d; --text:#c9d1d9; --dim:#8b949e; --gold:#f59e0b; --green:#22c55e; --red:#ef4444; --blue:#3b82f6; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; line-height:1.6; padding:1rem; }
+  .container { max-width:860px; margin:0 auto; }
+
+  .coach-banner {
+    background: linear-gradient(135deg, rgba(245,158,11,0.12), rgba(245,158,11,0.04));
+    border:1px solid rgba(245,158,11,0.25); border-radius:14px;
+    padding:1.25rem; text-align:center; margin-bottom:1rem;
+  }
+  .coach-banner .greeting { font-size:0.85rem; color:var(--dim); }
+  .coach-banner .mission { font-size:1.4rem; font-weight:800; color:var(--gold); margin:0.3rem 0; }
+  .coach-banner .env-line { font-size:0.85rem; color:var(--dim); }
+
+  .todo-panel {
+    background:var(--card); border:1px solid var(--border); border-radius:12px;
+    padding:1.25rem; margin-bottom:1rem;
+  }
+  .todo-panel h3 { font-size:1rem; color:#f0f6fc; margin-bottom:0.75rem; }
+  .todo-item {
+    display:flex; align-items:flex-start; gap:0.65rem; padding:0.5rem 0;
+    border-bottom:1px solid rgba(255,255,255,0.03);
+  }
+  .todo-num { width:28px;height:28px;border-radius:50%;background:rgba(59,130,246,0.15);color:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;flex-shrink:0; }
+  .todo-text { font-size:0.9rem; color:var(--text); }
+  .todo-hint { font-size:0.75rem; color:var(--dim); margin-top:0.15rem; }
+
+  .prompt-box {
+    background:var(--card); border:1px solid var(--border); border-radius:12px;
+    padding:1.25rem; margin-bottom:1rem; position:relative;
+  }
+  .prompt-box h3 { font-size:1rem; color:var(--blue); margin-bottom:0.5rem; }
+  .prompt-content {
+    background:#0d1117; border:1px solid var(--border); border-radius:8px;
+    padding:1rem; font-size:0.78rem; color:var(--dim); white-space:pre-wrap;
+    max-height:300px; overflow-y:auto; margin-bottom:0.75rem;
+    font-family:"SF Mono","Fira Code",monospace; line-height:1.5;
+  }
+  .btn-copy {
+    display:inline-flex; align-items:center; gap:0.35rem; padding:0.5rem 1rem;
+    background:rgba(59,130,246,0.12); border:1px solid rgba(59,130,246,0.3);
+    border-radius:8px; color:var(--blue); font-size:0.85rem; cursor:pointer;
+    font-weight:600; transition:all 0.2s;
+  }
+  .btn-copy:hover { background:rgba(59,130,246,0.2); }
+  .btn-copy.copied { background:rgba(34,197,94,0.12); border-color:rgba(34,197,94,0.3); color:var(--green); }
+  .paste-area {
+    margin-top:0.75rem; display:none;
+  }
+  .paste-area.show { display:block; }
+  .paste-area textarea {
+    width:100%; background:#0d1117; border:1px dashed var(--gold); border-radius:8px;
+    padding:0.75rem; color:var(--gold); font-size:0.8rem; font-family:monospace;
+    resize:vertical; min-height:80px;
+  }
+  .btn-paste { margin-top:0.5rem; padding:0.4rem 0.9rem; background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.3); border-radius:8px; color:var(--gold); font-size:0.8rem; cursor:pointer; }
+  .btn-paste:hover { background:rgba(245,158,11,0.2); }
+
+  .mindset-panel {
+    background:var(--card); border:1px solid var(--border); border-radius:12px;
+    padding:1.25rem; margin-bottom:1rem;
+  }
+  .mindset-panel h3 { font-size:1rem; color:#f0f6fc; margin-bottom:0.75rem; }
+  .progress-row {
+    display:flex; align-items:center; gap:0.6rem; padding:0.35rem 0;
+  }
+  .phase-label { width:110px; font-size:0.82rem; color:var(--dim); flex-shrink:0; }
+  .phase-bar { font-size:0.85rem; letter-spacing:2px; }
+  .phase-pct { font-size:0.82rem; color:var(--gold); font-weight:700; width:40px;text-align:right; }
+
+  .log-table { width:100%; border-collapse:collapse; font-size:0.78rem; margin-top:0.5rem; }
+  .log-table th { background:rgba(255,255,255,0.02); padding:0.4rem 0.5rem; text-align:left; font-weight:600; color:var(--dim); border-bottom:1px solid var(--border); }
+  .log-table td { padding:0.35rem 0.5rem; border-bottom:1px solid rgba(255,255,255,0.02); }
+  .log-empty { text-align:center; color:var(--dim); padding:1rem; font-size:0.8rem; }
+
+  details { margin-bottom:1rem; }
+  details summary {
+    background:var(--card); border:1px solid var(--border); border-radius:10px;
+    padding:0.8rem 1.25rem; cursor:pointer; font-weight:600; color:var(--dim);
+    font-size:0.9rem; user-select:none;
+  }
+  details summary:hover { color:var(--text); }
+  .detail-card { background:var(--card); border:1px solid var(--border); border-top:none; border-radius:0 0 10px 10px; padding:1.25rem; }
+
+  .idx-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:0.5rem; margin-bottom:1rem; }
+  .idx-card { background:rgba(255,255,255,0.02); border-radius:8px; padding:0.55rem; }
+  .idx-name { font-size:0.75rem; color:var(--dim); }
+  .idx-price { font-size:1rem; font-weight:700; color:#f0f6fc; }
+
+  .stat-row { display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:0.75rem; }
+  .stat { text-align:center; padding:0.5rem 0.75rem; }
+  .stat .num { font-size:1.2rem; font-weight:800; color:#f0f6fc; }
+  .stat .lbl { font-size:0.7rem; color:var(--dim); }
+
+  table { width:100%; border-collapse:collapse; font-size:0.8rem; }
+  th { background:rgba(255,255,255,0.02); padding:0.45rem 0.6rem; text-align:left; font-weight:600; color:var(--dim); border-bottom:1px solid var(--border); }
+  td { padding:0.4rem 0.6rem; border-bottom:1px solid rgba(255,255,255,0.02); }
+
+  .exit-row { padding:0.5rem 0.7rem; margin-bottom:0.3rem; background:rgba(255,255,255,0.02); border-radius:6px; font-size:0.85rem; }
+
+  .tag { display:inline-block; padding:0.1rem 0.4rem; border-radius:10px; font-size:0.65rem; font-weight:600; }
+
+  .footer { text-align:center; padding:1.5rem 0; color:var(--dim); font-size:0.7rem; border-top:1px solid var(--border); margin-top:1.5rem; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="coach-banner">
+  <div class="greeting">操盘手每日修炼</div>
+  <div class="mission">练心，而非练术</div>
+  <div class="env-line">
+    今日市场：<span style="color:#f97316;font-weight:700">偏熊 — 谨慎参与</span>
+    &nbsp;|&nbsp; 仓位建议：35%
+    &nbsp;|&nbsp; 更新：07-24 05:46
+  </div>
+</div>
+
+<div class="todo-panel">
+  <h3>今日待办【同花顺 + 养基宝 + 支付宝】</h3>
+  <div class="todo-item">
+    <div class="todo-num">1</div>
+    <div>
+      <div class="todo-text">截图三张：<strong>同花顺大盘</strong> + <strong>养基宝持仓</strong> + <strong>支付宝交易记录</strong></div>
+    </div>
+  </div>
+  <div class="todo-item">
+    <div class="todo-num">2</div>
+    <div>
+      <div class="todo-text">打开豆包，粘贴下方Prompt，同时上传三张截图，获取JSON分析结果</div>
+    </div>
+  </div>
+  <div class="todo-item">
+    <div class="todo-num">3</div>
+    <div>
+      <div class="todo-text">复制豆包返回的JSON，点击下方「粘贴分析结果」按钮贴进去</div>
+      <div class="todo-hint">数据存到浏览器localStorage，合并修炼记录，刷新页面即可看到进度变化</div>
+    </div>
+  </div>
+  <div class="todo-item">
+    <div class="todo-num">4</div>
+    <div>
+      <div class="todo-text">11:00 系统自动扫描信号，刷新页面查看买卖建议</div>
+      <div class="todo-hint">每天坚持三步，两年轻舟已过万重山</div>
+    </div>
+  </div>
+</div>
+
+<div class="prompt-box">
+  <h3>豆包Prompt · 一键复制（同花顺+养基宝+支付宝三图版）</h3>
+  <div class="prompt-content" id="promptText">你是我的私人交易教练。我会给你三张截图：
+图1·同花顺大盘界面：指数行情、板块涨跌、市场情绪
+图2·养基宝持仓页：基金名称、代码、持仓金额、盈亏率
+图3·支付宝交易记录：今日买入/卖出操作截图
+
+请依次分析，然后输出严格JSON（不要markdown包裹）：
+
+1. 今日市场环境：【牛市/偏牛/震荡/偏熊/熊市】，依据是什么
+2. 我的操作是否符合规则：是否按交易系统信号操作？是否有冲动操作？
+3. 今日心态自评：【手不抖/有点慌/扛不住了】，简单描述感受
+4. 技能进阶：我今天在哪个阶段？（一阶练执行力/二阶找模式/三阶去无效）
+
+最终输出JSON：
+{&quot;date&quot;:&quot;2026-07-02&quot;,&quot;market_env&quot;:&quot;震荡&quot;,&quot;market_reason&quot;:&quot;五大指数涨跌各半&quot;,&quot;disciplined&quot;:true,&quot;impulsive_count&quot;:0,&quot;mindset_score&quot;:4,&quot;mindset_note&quot;:&quot;按信号买入，手不抖&quot;,&quot;stage&quot;:1,&quot;try_new_mode&quot;:false,&quot;mode_name&quot;:&quot;&quot;,&quot;invalid_trade_desc&quot;:&quot;&quot;,&quot;boring_index&quot;:1}
+
+只返回JSON，不要其他文字。</div>
+  <button class="btn-copy" id="btnCopy" onclick="copyPrompt()">
+    <span id="copyIcon">📋</span> <span id="copyLabel">复制Prompt</span>
+  </button>
+  <div style="margin-top:0.75rem;font-size:0.78rem;color:var(--dim)">
+    复制后粘贴到豆包对话框，同时上传 <strong>同花顺 + 养基宝 + 支付宝</strong> 三张截图
+  </div>
+
+  <div style="margin-top:1rem">
+    <button class="btn-paste" onclick="document.getElementById('pasteBox').classList.toggle('show')">
+      粘贴分析结果
+    </button>
+    <div class="paste-area" id="pasteBox">
+      <textarea id="jsonInput" placeholder="把豆包返回的JSON粘贴到这里..."></textarea>
+      <button class="btn-paste" onclick="mergeResult()" style="margin-top:0.4rem">合并到修炼记录</button>
+      <div id="mergeMsg" style="font-size:0.75rem;color:var(--green);margin-top:0.3rem"></div>
+    </div>
+  </div>
+</div>
+
+<div class="mindset-panel">
+  <h3>修炼进度 · 三阶段</h3>
+  <div class="progress-row"><span class="phase-label">一阶·练执行力</span><span class="phase-bar"><span style="color:#3b82f6">■</span>□□□□□□□□□</span><span class="phase-pct">0%</span></div>
+  <div class="progress-row"><span class="phase-label">二阶·找交易模式</span><span class="phase-bar"><span style="color:#84cc16">■</span>□□□□□□□□□</span><span class="phase-pct">0%</span></div>
+  <div class="progress-row"><span class="phase-label">三阶·去无效交易</span><span class="phase-bar"><span style="color:#22c55e">■</span>□□□□□□□□□</span><span class="phase-pct">0%</span></div>
+  <div style="font-size:0.72rem;color:var(--dim);margin-top:0.5rem">
+    目标：第一阶段→买卖不抖 | 第二阶段→月成功率>=50% | 第三阶段→感觉交易很无聊
+  </div>
+
+  <div style="margin-top:0.75rem">
+    <strong style="font-size:0.82rem;color:var(--dim)">近期修炼记录</strong>
+    <div class='log-empty'>等待首次截图分析 — 按上方待办步骤开始</div>
+  </div>
+</div>
+
+<details>
+  <summary>完整交易数据（五模块 · 点击展开）</summary>
+  <div class="detail-card">
+    <div class="idx-grid"><div class='idx-card' style='border-left:3px solid #f59e0b'><div class='idx-name'>上证50</div><div class='idx-price'>2952.61</div><span class='tag' style='background:#f59e0b20;color:#f59e0b'>恢复</span></div><div class='idx-card' style='border-left:3px solid #ef4444'><div class='idx-name'>沪深300</div><div class='idx-price'>4666.36</div><span class='tag' style='background:#ef444420;color:#ef4444'>空头</span></div><div class='idx-card' style='border-left:3px solid #ef4444'><div class='idx-name'>中证500</div><div class='idx-price'>7578.89</div><span class='tag' style='background:#ef444420;color:#ef4444'>空头</span></div><div class='idx-card' style='border-left:3px solid #f97316'><div class='idx-name'>科创50</div><div class='idx-price'>1801.09</div><span class='tag' style='background:#f9731620;color:#f97316'>调整</span></div></div>
+    <div class="stat-row">
+      <div class="stat"><div class="num">6</div><div class="lbl">板块扫描</div></div>
+      <div class="stat"><div class="num">0</div><div class="lbl">买入信号</div></div>
+      <div class="stat"><div class="num">0</div><div class="lbl">门控拦截</div></div>
+      <div class="stat"><div class="num">¥0</div><div class="lbl">建议仓位</div></div>
+    </div>
+    <table><tr><th>信号</th><th>板块</th><th>涨跌</th><th>仓位</th><th>匹配基金</th></tr><tr><td colspan='5' style='text-align:center;color:#6b7280;padding:2rem'>今日无买入信号 — 不做也是操作</td></tr></table>
+    <div style="margin-top:1rem">
+      <strong style="color:var(--dim);font-size:0.85rem">退出信号</strong>
+      <div style='color:#6b7280;text-align:center;padding:1rem'>无退出信号</div>
+    </div>
+    <div style="margin-top:0.75rem;font-size:0.78rem;color:var(--dim)">
+      止损-8% | 短线止盈+12% | 趋势止盈+18% | 移动止盈高点回撤&gt;5% |
+      历史记录 34 天
+    </div>
+  </div>
+</details>
+
+<div class="footer">
+  交易系统 + 无忌心法 &nbsp;|&nbsp; 先练心，再练术 &nbsp;|&nbsp; 自动运行 11:00 / 14:30
+</div>
+
+</div>
+
+<script>
+function copyPrompt() {
+  var text = document.getElementById('promptText').innerText;
+  navigator.clipboard.writeText(text).then(function() {
+    var btn = document.getElementById('btnCopy');
+    btn.classList.add('copied');
+    document.getElementById('copyIcon').innerText = 'OK';
+    document.getElementById('copyLabel').innerText = '已复制！去豆包粘贴吧';
+    setTimeout(function() {
+      btn.classList.remove('copied');
+      document.getElementById('copyIcon').innerText = '📋';
+      document.getElementById('copyLabel').innerText = '复制Prompt';
+    }, 3000);
+  });
+}
+
+function mergeResult() {
+  var raw = document.getElementById('jsonInput').value.trim();
+  var msg = document.getElementById('mergeMsg');
+  if (!raw) { msg.innerText = '请先粘贴豆包返回的JSON'; msg.style.color='var(--red)'; return; }
+  try {
+    var obj = JSON.parse(raw);
+    var stored = localStorage.getItem('mindset_records');
+    var records = stored ? JSON.parse(stored) : [];
+    records = records.filter(function(r) { return r.date !== obj.date; });
+    records.push(obj);
+    records.sort(function(a,b) { return a.date.localeCompare(b.date); });
+    localStorage.setItem('mindset_records', JSON.stringify(records));
+    msg.innerText = '已合并！共 ' + records.length + ' 条记录。刷新页面查看更新后的进度。';
+    msg.style.color = 'var(--green)';
+    document.getElementById('jsonInput').value = '';
+  } catch(e) {
+    msg.innerText = 'JSON格式有误：' + e.message;
+    msg.style.color = 'var(--red)';
+  }
+}
+
+(function() {
+  var stored = localStorage.getItem('mindset_records');
+  if (stored) {
+    var records = JSON.parse(stored);
+    if (records.length > 0) {
+      console.log('已加载 ' + records.length + ' 条修炼记录');
+    }
+  }
+})();
+</script>
+</body>
+</html>
