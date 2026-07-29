@@ -52,5 +52,23 @@
     "last_seen": "2026-07-23",
     "seen_count": 1,
     "direction_at_first": "down"
+  },
+  "算力_rotation": {
+    "first_seen": "2026-07-29",
+    "last_seen": "2026-07-29",
+    "seen_count": 1,
+    "direction_at_first": "down"
+  },
+  "液冷服务器_rotation": {
+    "first_seen": "2026-07-29",
+    "last_seen": "2026-07-29",
+    "seen_count": 1,
+    "direction_at_first": "down"
+  },
+  "铜缆高速连接_rotation": {
+    "first_seen": "2026-07-29",
+    "last_seen": "2026-07-29",
+    "seen_count": 1,
+    "direction_at_first": "down"
   }
 }
