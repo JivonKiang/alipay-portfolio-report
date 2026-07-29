@@ -743,5 +743,143 @@
     "buy_signals": 0,
     "exit_signals": 0,
     "signals": []
+  },
+  {
+    "date": "2026-07-29",
+    "time": "05:47",
+    "environment": "bear",
+    "environment_cn": "熊市 — 清仓做反弹",
+    "position_ratio": 0.2,
+    "buy_signals": 15,
+    "exit_signals": 0,
+    "signals": [
+      {
+        "board": "科创芯片",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "017560",
+          "017560"
+        ]
+      },
+      {
+        "board": "存储芯片",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "008888"
+        ]
+      },
+      {
+        "board": "先进封装",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "008888"
+        ]
+      },
+      {
+        "board": "光通信",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "017560"
+        ]
+      },
+      {
+        "board": "算力",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "012629",
+          "008888"
+        ]
+      },
+      {
+        "board": "液冷服务器",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "012629"
+        ]
+      },
+      {
+        "board": "AI手机",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "008087",
+          "008282"
+        ]
+      },
+      {
+        "board": "AI眼镜",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "008282"
+        ]
+      },
+      {
+        "board": "固态电池",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "014188",
+          "013049"
+        ]
+      },
+      {
+        "board": "低空经济",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "002256",
+          "001643"
+        ]
+      },
+      {
+        "board": "人形机器人",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "002256",
+          "001643"
+        ]
+      },
+      {
+        "board": "创新药",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "011179",
+          "002708"
+        ]
+      },
+      {
+        "board": "稀土永磁",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "011036"
+        ]
+      },
+      {
+        "board": "量子科技",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "012629"
+        ]
+      },
+      {
+        "board": "脑机接口",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "002256"
+        ]
+      }
+    ]
   }
 ]
