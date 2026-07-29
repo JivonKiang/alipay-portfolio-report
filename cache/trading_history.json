@@ -881,5 +881,51 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-07-29",
+    "time": "09:20",
+    "environment": "bear_lean",
+    "environment_cn": "偏熊 — 谨慎参与",
+    "position_ratio": 0.35,
+    "buy_signals": 4,
+    "exit_signals": 0,
+    "signals": [
+      {
+        "board": "铜缆高速连接",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "012629"
+        ]
+      },
+      {
+        "board": "固态电池",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "014188",
+          "013049"
+        ]
+      },
+      {
+        "board": "人形机器人",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "002256",
+          "001643"
+        ]
+      },
+      {
+        "board": "创新药",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "011179",
+          "002708"
+        ]
+      }
+    ]
   }
 ]
