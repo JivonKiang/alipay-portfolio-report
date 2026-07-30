@@ -927,5 +927,15 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-07-30",
+    "time": "05:36",
+    "environment": "bear_lean",
+    "environment_cn": "偏熊 — 谨慎参与",
+    "position_ratio": 0.35,
+    "buy_signals": 0,
+    "exit_signals": 0,
+    "signals": []
   }
 ]

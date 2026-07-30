@@ -1,6 +1,6 @@
 {
-  "updated": "2026-07-29T09:20:02+08:00",
-  "run_time": "09:20",
+  "updated": "2026-07-30T05:35:56+08:00",
+  "run_time": "05:35",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
@@ -13,9 +13,9 @@
     "index_details": {
       "上证50": {
         "status": "bearish",
-        "current": 2915.19,
-        "ma60": 2941.77,
-        "ma120": 2950.45,
+        "current": 2913.47,
+        "ma60": 2939.89,
+        "ma120": 2949.22,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": false,
@@ -23,9 +23,9 @@
       },
       "沪深300": {
         "status": "bearish",
-        "current": 4600.26,
-        "ma60": 4834.84,
-        "ma120": 4744.11,
+        "current": 4542.34,
+        "ma60": 4829.26,
+        "ma120": 4742.64,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": true,
@@ -33,9 +33,9 @@
       },
       "中证500": {
         "status": "bearish",
-        "current": 7524.51,
-        "ma60": 8392.12,
-        "ma120": 8268.51,
+        "current": 7328.05,
+        "ma60": 8371.11,
+        "ma120": 8257.9,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": true,
@@ -50,120 +50,19 @@
     }
   },
   "module_2_selection": {
-    "scanned": 5,
+    "scanned": 3,
     "total": 25,
-    "raw_signals": 4,
-    "actionable_signals": 4,
+    "raw_signals": 0,
+    "actionable_signals": 0,
     "blocked_signals": 0,
-    "signals": [
-      {
-        "type": "oversold",
-        "label": "🟡 超跌反弹",
-        "strength": "weak",
-        "reason": "60日最大回撤-34.8%，今日反弹",
-        "board": "铜缆高速连接",
-        "change_pct": 0.1,
-        "change_5d": -4.09,
-        "vol_ratio": 0.86,
-        "current": 2235.54,
-        "ma10": 2319.8,
-        "ma20": 2609.9,
-        "ma60": 2949.3,
-        "funds": [
-          {
-            "code": "012629",
-            "name": "广发国证半导体芯片ETF联接C"
-          }
-        ],
-        "gate_passed": true,
-        "position": 500
-      },
-      {
-        "type": "oversold",
-        "label": "🟡 超跌反弹",
-        "strength": "weak",
-        "reason": "60日最大回撤-25.2%，今日反弹",
-        "board": "固态电池",
-        "change_pct": 1.64,
-        "change_5d": 0.51,
-        "vol_ratio": 1.04,
-        "current": 2289.54,
-        "ma10": 2267.0,
-        "ma20": 2460.4,
-        "ma60": 2750.0,
-        "funds": [
-          {
-            "code": "014188",
-            "name": "华夏中证新能源汽车ETF联接C"
-          },
-          {
-            "code": "013049",
-            "name": "兴银中证科创创业50ETF联接C"
-          }
-        ],
-        "gate_passed": true,
-        "position": 500
-      },
-      {
-        "type": "oversold",
-        "label": "🟡 超跌反弹",
-        "strength": "weak",
-        "reason": "60日最大回撤-23.4%，今日反弹",
-        "board": "人形机器人",
-        "change_pct": 2.17,
-        "change_5d": 4.07,
-        "vol_ratio": 0.88,
-        "current": 3120.09,
-        "ma10": 3028.6,
-        "ma20": 3111.7,
-        "ma60": 3446.8,
-        "funds": [
-          {
-            "code": "002256",
-            "name": "金信新能源汽车混合C"
-          },
-          {
-            "code": "001643",
-            "name": "汇丰晋信智造先锋股票C"
-          }
-        ],
-        "gate_passed": true,
-        "position": 500
-      },
-      {
-        "type": "oversold",
-        "label": "🟡 超跌反弹",
-        "strength": "weak",
-        "reason": "60日最大回撤-16.3%，今日反弹",
-        "board": "创新药",
-        "change_pct": 0.64,
-        "change_5d": 0.75,
-        "vol_ratio": 0.65,
-        "current": 978.15,
-        "ma10": 980.1,
-        "ma20": 1002.4,
-        "ma60": 1035.3,
-        "funds": [
-          {
-            "code": "011179",
-            "name": "汇添富中证精准医疗C"
-          },
-          {
-            "code": "002708",
-            "name": "大摩健康产业混合C"
-          }
-        ],
-        "gate_passed": true,
-        "position": 500
-      }
-    ],
+    "signals": [],
     "blocked": []
   },
   "module_3_position": {
-    "total_suggested": 2000,
+    "total_suggested": 0,
     "single_max": 10080,
     "strategy": "偏熊 — 谨慎参与",
-    "diversification_note": "建议分散到4只基金"
+    "diversification_note": "建议分散到0只基金"
   },
   "module_4_exit": {
     "exit_signals": [],
@@ -175,26 +74,26 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 41,
+    "history_days": 42,
     "recent_environments": [
       "bear_lean",
       "bear_lean",
+      "range",
+      "bear",
+      "range",
+      "range",
+      "bear",
+      "bear",
       "bear_lean",
-      "range",
-      "bear",
-      "range",
-      "range",
-      "bear",
-      "bear",
       "bear_lean"
     ]
   },
   "summary": {
     "environment": "偏熊 — 谨慎参与",
-    "buy_signals": 4,
+    "buy_signals": 0,
     "exit_signals": 0,
-    "today_budget": 2000,
-    "action_required": true,
-    "key_action": "优先关注 铜缆高速连接 (🟡 超跌反弹)"
+    "today_budget": 0,
+    "action_required": false,
+    "key_action": "市场偏熊，持有现金观望"
   }
 }
