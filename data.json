@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-31T05:58:29+08:00",
+  "updated": "2026-07-31T08:17:31+08:00",
   "portfolio": {
     "total": 677301,
     "steady": 512111,
@@ -11,13 +11,13 @@
       "name": "半导体设备",
       "index": "科创50",
       "index_code": "000688",
-      "current": 1665.0,
-      "ma10": 1749.2,
-      "ma20": 1862.4,
-      "change_pct": 4.82,
-      "distance_ma10": -4.82,
-      "signal": "watch",
-      "signal_text": "距10日线-4.8%，观望",
+      "current": 1636.0,
+      "ma10": 1746.3,
+      "ma20": 1860.9,
+      "change_pct": 2.99,
+      "distance_ma10": -6.32,
+      "signal": "avoid",
+      "signal_text": "远离10日线-6.3%，趋势破坏",
       "funds": [
         {
           "code": "017811",
@@ -35,20 +35,20 @@
         "detail": "定投正常执行",
         "path": "支付宝 → 理财 → 基金 → 我的定投"
       },
-      "volume_ratio": 0.82
+      "volume_ratio": 0.99
     },
     "pcb": {
       "name": "PCB/HDI板",
       "index": "PCB概念",
       "index_code": "BK0877",
-      "current": 3389.5,
-      "ma10": 3465.4,
-      "ma20": 3893.7,
-      "change_pct": 5.84,
-      "distance_ma10": -2.19,
-      "volume_ratio": 0.9,
+      "current": 3341.8,
+      "ma10": 3460.7,
+      "ma20": 3891.3,
+      "change_pct": 4.35,
+      "distance_ma10": -3.43,
+      "volume_ratio": 1.08,
       "signal": "watch",
-      "signal_text": "距10日线-2.2%，接近支撑",
+      "signal_text": "距10日线-3.4%，观望",
       "funds": [
         {
           "code": "017811",
@@ -72,14 +72,14 @@
       "name": "CPO/光模块",
       "index": "CPO概念",
       "index_code": "CPO",
-      "current": 922.5,
-      "ma10": 1004.3,
+      "current": 902.0,
+      "ma10": 1002.2,
       "ma20": -1,
-      "change_pct": 6.78,
-      "distance_ma10": -8.14,
-      "volume_ratio": 0.71,
+      "change_pct": 4.4,
+      "distance_ma10": -10.0,
+      "volume_ratio": 0.82,
       "signal": "avoid",
-      "signal_text": "远离10日线-8.1%，趋势破坏 (中际旭创代理)",
+      "signal_text": "远离10日线-10.0%，趋势破坏 (中际旭创代理)",
       "funds": [
         {
           "code": "017811",
@@ -103,13 +103,13 @@
       "name": "中证500",
       "index": "中证500",
       "index_code": "000905",
-      "current": 7544.1,
-      "ma10": 7577.3,
-      "ma20": 7925.5,
-      "change_pct": 3.21,
-      "distance_ma10": -0.44,
+      "current": 7494.0,
+      "ma10": 7572.3,
+      "ma20": 7923.0,
+      "change_pct": 2.52,
+      "distance_ma10": -1.03,
       "signal": "dca",
-      "signal_text": "距10日线-0.4%，小幅回调，定投正常执行",
+      "signal_text": "距10日线-1.0%，小幅回调，定投正常执行",
       "funds": [
         {
           "code": "001557",
@@ -122,7 +122,7 @@
         "detail": "定投正常执行",
         "path": "支付宝 → 理财 → 基金 → 我的定投"
       },
-      "volume_ratio": 0.84
+      "volume_ratio": 1.04
     }
   },
   "nasdaq": {
