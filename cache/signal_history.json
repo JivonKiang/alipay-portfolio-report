@@ -76,5 +76,17 @@
     "last_seen": "2026-07-29",
     "seen_count": 1,
     "direction_at_first": "up"
+  },
+  "存储芯片_breakout": {
+    "first_seen": "2026-07-31",
+    "last_seen": "2026-07-31",
+    "seen_count": 1,
+    "direction_at_first": "up"
+  },
+  "液冷服务器_breakout": {
+    "first_seen": "2026-07-31",
+    "last_seen": "2026-07-31",
+    "seen_count": 1,
+    "direction_at_first": "up"
   }
 }
