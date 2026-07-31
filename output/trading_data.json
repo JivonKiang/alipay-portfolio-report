@@ -1,123 +1,46 @@
 {
-  "updated": "2026-07-31T06:07:30+08:00",
-  "run_time": "06:07",
+  "updated": "2026-07-31T09:22:18+08:00",
+  "run_time": "09:22",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
-    "env": "bear",
-    "env_cn": "熊市 — 清仓做反弹",
-    "position_ratio": 0.2,
-    "max_position": 19200,
+    "env": "range",
+    "env_cn": "震荡市 — 快进快出赚差价",
+    "position_ratio": 0.45,
+    "max_position": 43200,
     "bullish_count": 0,
-    "bearish_count": 4,
+    "bearish_count": 0,
     "index_details": {
       "上证50": {
-        "status": "bearish",
-        "current": 2927.37,
-        "ma60": 2938.41,
-        "ma120": 2947.8,
-        "above_ma60": false,
-        "above_ma120": false,
-        "golden_cross": false,
-        "ma60_trend": "down"
+        "status": "data_insufficient"
       },
       "沪深300": {
-        "status": "bearish",
-        "current": 4605.23,
-        "ma60": 4824.47,
-        "ma120": 4741.46,
-        "above_ma60": false,
-        "above_ma120": false,
-        "golden_cross": true,
-        "ma60_trend": "down"
+        "status": "data_insufficient"
       },
       "中证500": {
-        "status": "bearish",
-        "current": 7547.02,
-        "ma60": 8351.64,
-        "ma120": 8249.65,
-        "above_ma60": false,
-        "above_ma120": false,
-        "golden_cross": true,
-        "ma60_trend": "down"
+        "status": "data_insufficient"
       },
       "创业板指": {
         "status": "data_insufficient"
       },
       "科创50": {
-        "status": "correcting",
-        "current": 1664.61,
-        "ma60": 1832.55,
-        "ma120": 1621.11,
-        "above_ma60": false,
-        "above_ma120": true,
-        "golden_cross": true,
-        "ma60_trend": "up"
+        "status": "data_insufficient"
       }
     }
   },
   "module_2_selection": {
-    "scanned": 2,
+    "scanned": 0,
     "total": 25,
-    "raw_signals": 2,
+    "raw_signals": 0,
     "actionable_signals": 0,
-    "blocked_signals": 2,
+    "blocked_signals": 0,
     "signals": [],
-    "blocked": [
-      {
-        "type": "oversold",
-        "label": "🟡 超跌反弹",
-        "strength": "weak",
-        "reason": "60日最大回撤-36.5%，今日反弹",
-        "board": "PCB",
-        "change_pct": 5.75,
-        "change_5d": -6.48,
-        "vol_ratio": 0.9,
-        "current": 3386.49,
-        "ma10": 3465.1,
-        "ma20": 3893.6,
-        "ma60": 4368.6,
-        "funds": [
-          {
-            "code": "002256",
-            "name": "金信新能源汽车混合C"
-          },
-          {
-            "code": "008282",
-            "name": "国泰CES半导体芯片ETF联接C"
-          }
-        ],
-        "gate_passed": false,
-        "block_reason": "涨幅5.75%≥3%"
-      },
-      {
-        "type": "oversold",
-        "label": "🟡 超跌反弹",
-        "strength": "weak",
-        "reason": "60日最大回撤-24.7%，今日反弹",
-        "board": "商业航天",
-        "change_pct": 6.6,
-        "change_5d": -3.99,
-        "vol_ratio": 0.95,
-        "current": 1927.65,
-        "ma10": 1949.1,
-        "ma20": 2090.3,
-        "ma60": 2312.1,
-        "funds": [
-          {
-            "code": "001643",
-            "name": "汇丰晋信智造先锋股票C"
-          }
-        ],
-        "gate_passed": false,
-        "block_reason": "涨幅6.6%≥3%"
-      }
-    ]
+    "blocked": []
   },
   "module_3_position": {
     "total_suggested": 0,
-    "single_max": 5760,
-    "strategy": "熊市 — 清仓做反弹",
+    "single_max": 12960,
+    "strategy": "震荡市 — 快进快出赚差价",
     "diversification_note": "建议分散到0只基金"
   },
   "module_4_exit": {
@@ -130,9 +53,8 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 44,
+    "history_days": 45,
     "recent_environments": [
-      "range",
       "bear",
       "range",
       "range",
@@ -141,15 +63,16 @@
       "bear_lean",
       "bear_lean",
       "range",
-      "bear"
+      "bear",
+      "range"
     ]
   },
   "summary": {
-    "environment": "熊市 — 清仓做反弹",
+    "environment": "震荡市 — 快进快出赚差价",
     "buy_signals": 0,
     "exit_signals": 0,
     "today_budget": 0,
     "action_required": false,
-    "key_action": "市场偏熊，持有现金观望"
+    "key_action": ""
   }
 }
