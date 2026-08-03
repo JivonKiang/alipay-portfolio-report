@@ -37,8 +37,8 @@
   },
   "存储芯片_rotation": {
     "first_seen": "2026-07-22",
-    "last_seen": "2026-07-22",
-    "seen_count": 1,
+    "last_seen": "2026-08-03",
+    "seen_count": 2,
     "direction_at_first": "down"
   },
   "先进封装_rotation": {
@@ -86,6 +86,12 @@
   "液冷服务器_breakout": {
     "first_seen": "2026-07-31",
     "last_seen": "2026-07-31",
+    "seen_count": 1,
+    "direction_at_first": "up"
+  },
+  "先进封装_breakout": {
+    "first_seen": "2026-08-03",
+    "last_seen": "2026-08-03",
     "seen_count": 1,
     "direction_at_first": "up"
   }
