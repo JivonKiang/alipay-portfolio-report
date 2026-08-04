@@ -1074,5 +1074,33 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-08-04",
+    "time": "09:19",
+    "environment": "bear_lean",
+    "environment_cn": "偏熊 — 谨慎参与",
+    "position_ratio": 0.35,
+    "buy_signals": 2,
+    "exit_signals": 0,
+    "signals": [
+      {
+        "board": "先进封装",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "008888"
+        ]
+      },
+      {
+        "board": "人形机器人",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "002256",
+          "001643"
+        ]
+      }
+    ]
   }
 ]
