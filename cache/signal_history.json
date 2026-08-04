@@ -43,8 +43,8 @@
   },
   "先进封装_rotation": {
     "first_seen": "2026-07-22",
-    "last_seen": "2026-07-22",
-    "seen_count": 1,
+    "last_seen": "2026-08-04",
+    "seen_count": 2,
     "direction_at_first": "down"
   },
   "创新药_dip_buy": {
@@ -94,5 +94,17 @@
     "last_seen": "2026-08-03",
     "seen_count": 1,
     "direction_at_first": "up"
+  },
+  "CPO_rotation": {
+    "first_seen": "2026-08-04",
+    "last_seen": "2026-08-04",
+    "seen_count": 1,
+    "direction_at_first": "down"
+  },
+  "光通信_rotation": {
+    "first_seen": "2026-08-04",
+    "last_seen": "2026-08-04",
+    "seen_count": 1,
+    "direction_at_first": "down"
   }
 }
