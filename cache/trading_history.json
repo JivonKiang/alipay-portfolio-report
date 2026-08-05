@@ -1102,5 +1102,82 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-08-05",
+    "time": "05:42",
+    "environment": "bear",
+    "environment_cn": "熊市 — 清仓做反弹",
+    "position_ratio": 0.2,
+    "buy_signals": 8,
+    "exit_signals": 0,
+    "signals": [
+      {
+        "board": "先进封装",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "008888"
+        ]
+      },
+      {
+        "board": "CPO",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "017560"
+        ]
+      },
+      {
+        "board": "算力",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "012629",
+          "008888"
+        ]
+      },
+      {
+        "board": "液冷服务器",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "012629"
+        ]
+      },
+      {
+        "board": "低空经济",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "002256",
+          "001643"
+        ]
+      },
+      {
+        "board": "稀土永磁",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "011036"
+        ]
+      },
+      {
+        "board": "数据要素",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "008282"
+        ]
+      },
+      {
+        "board": "量子科技",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "012629"
+        ]
+      }
+    ]
   }
 ]
