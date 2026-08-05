@@ -1179,5 +1179,57 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-08-05",
+    "time": "09:17",
+    "environment": "bear",
+    "environment_cn": "熊市 — 清仓做反弹",
+    "position_ratio": 0.2,
+    "buy_signals": 5,
+    "exit_signals": 0,
+    "signals": [
+      {
+        "board": "先进封装",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "008888"
+        ]
+      },
+      {
+        "board": "CPO",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "017560"
+        ]
+      },
+      {
+        "board": "人形机器人",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "002256",
+          "001643"
+        ]
+      },
+      {
+        "board": "稀土永磁",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "011036"
+        ]
+      },
+      {
+        "board": "量子科技",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "012629"
+        ]
+      }
+    ]
   }
 ]
