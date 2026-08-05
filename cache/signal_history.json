@@ -2,7 +2,7 @@
   "科创芯片_rotation": {
     "first_seen": "2026-06-30",
     "last_seen": "2026-08-05",
-    "seen_count": 5,
+    "seen_count": 6,
     "direction_at_first": "down"
   },
   "半导体_rotation": {
@@ -43,8 +43,8 @@
   },
   "先进封装_rotation": {
     "first_seen": "2026-07-22",
-    "last_seen": "2026-08-04",
-    "seen_count": 2,
+    "last_seen": "2026-08-05",
+    "seen_count": 3,
     "direction_at_first": "down"
   },
   "创新药_dip_buy": {
@@ -108,6 +108,12 @@
     "direction_at_first": "down"
   },
   "人形机器人_rotation": {
+    "first_seen": "2026-08-05",
+    "last_seen": "2026-08-05",
+    "seen_count": 2,
+    "direction_at_first": "down"
+  },
+  "AI眼镜_rotation": {
     "first_seen": "2026-08-05",
     "last_seen": "2026-08-05",
     "seen_count": 1,
