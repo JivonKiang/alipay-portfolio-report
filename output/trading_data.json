@@ -1,63 +1,35 @@
 {
-  "updated": "2026-08-06T05:43:53+08:00",
-  "run_time": "05:43",
+  "updated": "2026-08-06T09:19:53+08:00",
+  "run_time": "09:19",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
-    "env": "bear",
-    "env_cn": "熊市 — 清仓做反弹",
-    "position_ratio": 0.2,
-    "max_position": 19200,
+    "env": "range",
+    "env_cn": "震荡市 — 快进快出赚差价",
+    "position_ratio": 0.45,
+    "max_position": 43200,
     "bullish_count": 0,
-    "bearish_count": 4,
+    "bearish_count": 0,
     "index_details": {
       "上证50": {
-        "status": "bearish",
-        "current": 2908.87,
-        "ma60": 2929.38,
-        "ma120": 2942.97,
-        "above_ma60": false,
-        "above_ma120": false,
-        "golden_cross": false,
-        "ma60_trend": "down"
+        "status": "data_insufficient"
       },
       "沪深300": {
-        "status": "bearish",
-        "current": 4625.52,
-        "ma60": 4801.81,
-        "ma120": 4739.3,
-        "above_ma60": false,
-        "above_ma120": false,
-        "golden_cross": true,
-        "ma60_trend": "down"
+        "status": "data_insufficient"
       },
       "中证500": {
-        "status": "bearish",
-        "current": 7756.75,
-        "ma60": 8273.25,
-        "ma120": 8229.17,
-        "above_ma60": false,
-        "above_ma120": false,
-        "golden_cross": true,
-        "ma60_trend": "down"
+        "status": "data_insufficient"
       },
       "创业板指": {
         "status": "data_insufficient"
       },
       "科创50": {
-        "status": "correcting",
-        "current": 1682.42,
-        "ma60": 1826.98,
-        "ma120": 1626.38,
-        "above_ma60": false,
-        "above_ma120": true,
-        "golden_cross": true,
-        "ma60_trend": "down"
+        "status": "data_insufficient"
       }
     }
   },
   "module_2_selection": {
-    "scanned": 4,
+    "scanned": 0,
     "total": 25,
     "raw_signals": 0,
     "actionable_signals": 0,
@@ -67,8 +39,8 @@
   },
   "module_3_position": {
     "total_suggested": 0,
-    "single_max": 5760,
-    "strategy": "熊市 — 清仓做反弹",
+    "single_max": 12960,
+    "strategy": "震荡市 — 快进快出赚差价",
     "diversification_note": "建议分散到0只基金"
   },
   "module_4_exit": {
@@ -81,9 +53,8 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 52,
+    "history_days": 53,
     "recent_environments": [
-      "range",
       "bear",
       "range",
       "bear",
@@ -92,15 +63,16 @@
       "bear_lean",
       "bear",
       "bear",
-      "bear"
+      "bear",
+      "range"
     ]
   },
   "summary": {
-    "environment": "熊市 — 清仓做反弹",
+    "environment": "震荡市 — 快进快出赚差价",
     "buy_signals": 0,
     "exit_signals": 0,
     "today_budget": 0,
     "action_required": false,
-    "key_action": "市场偏熊，持有现金观望"
+    "key_action": ""
   }
 }
