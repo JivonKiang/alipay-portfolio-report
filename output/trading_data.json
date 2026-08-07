@@ -1,6 +1,6 @@
 {
-  "updated": "2026-08-06T09:19:53+08:00",
-  "run_time": "09:19",
+  "updated": "2026-08-07T04:51:12+08:00",
+  "run_time": "04:51",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
@@ -9,16 +9,37 @@
     "position_ratio": 0.45,
     "max_position": 43200,
     "bullish_count": 0,
-    "bearish_count": 0,
+    "bearish_count": 2,
     "index_details": {
       "上证50": {
-        "status": "data_insufficient"
+        "status": "neutral",
+        "current": 2944.45,
+        "ma60": 2928.7,
+        "ma120": 2942.11,
+        "above_ma60": true,
+        "above_ma120": true,
+        "golden_cross": false,
+        "ma60_trend": "down"
       },
       "沪深300": {
-        "status": "data_insufficient"
+        "status": "bearish",
+        "current": 4689.96,
+        "ma60": 4798.5,
+        "ma120": 4739.67,
+        "above_ma60": false,
+        "above_ma120": false,
+        "golden_cross": true,
+        "ma60_trend": "down"
       },
       "中证500": {
-        "status": "data_insufficient"
+        "status": "bearish",
+        "current": 7919.52,
+        "ma60": 8261.95,
+        "ma120": 8227.88,
+        "above_ma60": false,
+        "above_ma120": false,
+        "golden_cross": true,
+        "ma60_trend": "down"
       },
       "创业板指": {
         "status": "data_insufficient"
@@ -29,19 +50,42 @@
     }
   },
   "module_2_selection": {
-    "scanned": 0,
+    "scanned": 2,
     "total": 25,
-    "raw_signals": 0,
-    "actionable_signals": 0,
+    "raw_signals": 1,
+    "actionable_signals": 1,
     "blocked_signals": 0,
-    "signals": [],
+    "signals": [
+      {
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "strength": "weak",
+        "reason": "60日最大回撤-27.3%，今日反弹",
+        "board": "铜缆高速连接",
+        "change_pct": 1.45,
+        "change_5d": 12.03,
+        "vol_ratio": 0.63,
+        "current": 2492.36,
+        "ma10": 2307.6,
+        "ma20": 2378.0,
+        "ma60": 2871.7,
+        "funds": [
+          {
+            "code": "012629",
+            "name": "广发国证半导体芯片ETF联接C"
+          }
+        ],
+        "gate_passed": true,
+        "position": 800
+      }
+    ],
     "blocked": []
   },
   "module_3_position": {
-    "total_suggested": 0,
+    "total_suggested": 800,
     "single_max": 12960,
     "strategy": "震荡市 — 快进快出赚差价",
-    "diversification_note": "建议分散到0只基金"
+    "diversification_note": "建议分散到1只基金"
   },
   "module_4_exit": {
     "exit_signals": [],
@@ -53,9 +97,8 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 53,
+    "history_days": 54,
     "recent_environments": [
-      "bear",
       "range",
       "bear",
       "bear_lean",
@@ -64,15 +107,16 @@
       "bear",
       "bear",
       "bear",
+      "range",
       "range"
     ]
   },
   "summary": {
     "environment": "震荡市 — 快进快出赚差价",
-    "buy_signals": 0,
+    "buy_signals": 1,
     "exit_signals": 0,
-    "today_budget": 0,
-    "action_required": false,
-    "key_action": ""
+    "today_budget": 800,
+    "action_required": true,
+    "key_action": "优先关注 铜缆高速连接 (🟡 超跌反弹)"
   }
 }

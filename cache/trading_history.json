@@ -1251,5 +1251,24 @@
     "buy_signals": 0,
     "exit_signals": 0,
     "signals": []
+  },
+  {
+    "date": "2026-08-07",
+    "time": "04:51",
+    "environment": "range",
+    "environment_cn": "震荡市 — 快进快出赚差价",
+    "position_ratio": 0.45,
+    "buy_signals": 1,
+    "exit_signals": 0,
+    "signals": [
+      {
+        "board": "铜缆高速连接",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "012629"
+        ]
+      }
+    ]
   }
 ]
