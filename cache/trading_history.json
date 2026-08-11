@@ -1319,5 +1319,25 @@
     "buy_signals": 0,
     "exit_signals": 0,
     "signals": []
+  },
+  {
+    "date": "2026-08-11",
+    "time": "07:45",
+    "environment": "bear_lean",
+    "environment_cn": "偏熊 — 谨慎参与",
+    "position_ratio": 0.35,
+    "buy_signals": 1,
+    "exit_signals": 0,
+    "signals": [
+      {
+        "board": "AI手机",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "008087",
+          "008282"
+        ]
+      }
+    ]
   }
 ]
