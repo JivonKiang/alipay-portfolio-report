@@ -1,6 +1,6 @@
 {
-  "updated": "2026-08-10T08:12:07+08:00",
-  "run_time": "08:12",
+  "updated": "2026-08-11T04:15:38+08:00",
+  "run_time": "04:15",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
@@ -9,16 +9,37 @@
     "position_ratio": 0.45,
     "max_position": 43200,
     "bullish_count": 0,
-    "bearish_count": 0,
+    "bearish_count": 2,
     "index_details": {
       "上证50": {
-        "status": "data_insufficient"
+        "status": "neutral",
+        "current": 2960.53,
+        "ma60": 2929.56,
+        "ma120": 2940.65,
+        "above_ma60": true,
+        "above_ma120": true,
+        "golden_cross": false,
+        "ma60_trend": "down"
       },
       "沪深300": {
-        "status": "data_insufficient"
+        "status": "bearish",
+        "current": 4709.1,
+        "ma60": 4793.87,
+        "ma120": 4740.11,
+        "above_ma60": false,
+        "above_ma120": false,
+        "golden_cross": true,
+        "ma60_trend": "down"
       },
       "中证500": {
-        "status": "data_insufficient"
+        "status": "bearish",
+        "current": 8062.88,
+        "ma60": 8246.35,
+        "ma120": 8225.36,
+        "above_ma60": false,
+        "above_ma120": false,
+        "golden_cross": true,
+        "ma60_trend": "down"
       },
       "创业板指": {
         "status": "data_insufficient"
@@ -29,13 +50,36 @@
     }
   },
   "module_2_selection": {
-    "scanned": 0,
+    "scanned": 1,
     "total": 25,
-    "raw_signals": 0,
+    "raw_signals": 1,
     "actionable_signals": 0,
-    "blocked_signals": 0,
+    "blocked_signals": 1,
     "signals": [],
-    "blocked": []
+    "blocked": [
+      {
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "strength": "weak",
+        "reason": "60日最大回撤-27.2%，今日反弹",
+        "board": "铜缆高速连接",
+        "change_pct": 0.26,
+        "change_5d": 3.04,
+        "vol_ratio": 0.43,
+        "current": 2494.81,
+        "ma10": 2348.7,
+        "ma20": 2355.5,
+        "ma60": 2854.8,
+        "funds": [
+          {
+            "code": "012629",
+            "name": "广发国证半导体芯片ETF联接C"
+          }
+        ],
+        "gate_passed": false,
+        "block_reason": "量能不足"
+      }
+    ]
   },
   "module_3_position": {
     "total_suggested": 0,
@@ -53,13 +97,13 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 57,
+    "history_days": 58,
     "recent_environments": [
-      "range",
       "bear_lean",
       "bear",
       "bear",
       "bear",
+      "range",
       "range",
       "range",
       "range",
