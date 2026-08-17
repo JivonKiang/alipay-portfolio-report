@@ -1399,5 +1399,15 @@
     "buy_signals": 0,
     "exit_signals": 0,
     "signals": []
+  },
+  {
+    "date": "2026-08-17",
+    "time": "03:45",
+    "environment": "bear_lean",
+    "environment_cn": "偏熊 — 谨慎参与",
+    "position_ratio": 0.35,
+    "buy_signals": 0,
+    "exit_signals": 0,
+    "signals": []
   }
 ]
