@@ -37,14 +37,14 @@
   },
   "存储芯片_rotation": {
     "first_seen": "2026-07-22",
-    "last_seen": "2026-08-07",
-    "seen_count": 4,
+    "last_seen": "2026-08-17",
+    "seen_count": 5,
     "direction_at_first": "down"
   },
   "先进封装_rotation": {
     "first_seen": "2026-07-22",
-    "last_seen": "2026-08-07",
-    "seen_count": 4,
+    "last_seen": "2026-08-17",
+    "seen_count": 5,
     "direction_at_first": "down"
   },
   "创新药_dip_buy": {
@@ -115,8 +115,8 @@
   },
   "AI眼镜_rotation": {
     "first_seen": "2026-08-05",
-    "last_seen": "2026-08-05",
-    "seen_count": 1,
+    "last_seen": "2026-08-17",
+    "seen_count": 2,
     "direction_at_first": "down"
   },
   "创新药_breakout": {
