@@ -1,6 +1,6 @@
 {
-  "updated": "2026-08-18T03:40:11+08:00",
-  "run_time": "03:40",
+  "updated": "2026-08-18T07:12:40+08:00",
+  "run_time": "07:12",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
@@ -29,19 +29,46 @@
     }
   },
   "module_2_selection": {
-    "scanned": 0,
+    "scanned": 6,
     "total": 25,
-    "raw_signals": 0,
-    "actionable_signals": 0,
+    "raw_signals": 1,
+    "actionable_signals": 1,
     "blocked_signals": 0,
-    "signals": [],
+    "signals": [
+      {
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "strength": "weak",
+        "reason": "60日最大回撤-22.5%，今日反弹",
+        "board": "半导体",
+        "change_pct": 0.16,
+        "change_5d": 4.88,
+        "vol_ratio": 0.95,
+        "current": 2950.53,
+        "ma10": 2784.2,
+        "ma20": 2649.7,
+        "ma60": 2980.1,
+        "funds": [
+          {
+            "code": "008888",
+            "name": "国联安中证半导体ETF联接C"
+          },
+          {
+            "code": "008282",
+            "name": "国泰CES半导体芯片ETF联接C"
+          }
+        ],
+        "gate_passed": true,
+        "position": 800
+      }
+    ],
     "blocked": []
   },
   "module_3_position": {
-    "total_suggested": 0,
+    "total_suggested": 800,
     "single_max": 12960,
     "strategy": "震荡市 — 快进快出赚差价",
-    "diversification_note": "建议分散到0只基金"
+    "diversification_note": "建议分散到1只基金"
   },
   "module_4_exit": {
     "exit_signals": [],
@@ -53,9 +80,8 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 68,
+    "history_days": 69,
     "recent_environments": [
-      "bear_lean",
       "range",
       "range",
       "range",
@@ -63,16 +89,17 @@
       "range",
       "range",
       "bear_lean",
+      "range",
       "range",
       "range"
     ]
   },
   "summary": {
     "environment": "震荡市 — 快进快出赚差价",
-    "buy_signals": 0,
+    "buy_signals": 1,
     "exit_signals": 0,
-    "today_budget": 0,
-    "action_required": false,
-    "key_action": ""
+    "today_budget": 800,
+    "action_required": true,
+    "key_action": "优先关注 半导体 (🟡 超跌反弹)"
   }
 }

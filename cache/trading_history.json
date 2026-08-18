@@ -1429,5 +1429,25 @@
     "buy_signals": 0,
     "exit_signals": 0,
     "signals": []
+  },
+  {
+    "date": "2026-08-18",
+    "time": "07:13",
+    "environment": "range",
+    "environment_cn": "震荡市 — 快进快出赚差价",
+    "position_ratio": 0.45,
+    "buy_signals": 1,
+    "exit_signals": 0,
+    "signals": [
+      {
+        "board": "半导体",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "008888",
+          "008282"
+        ]
+      }
+    ]
   }
 ]
