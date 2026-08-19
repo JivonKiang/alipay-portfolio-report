@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-18T05:56:42+08:00",
+  "updated": "2026-08-19T03:39:32+08:00",
   "portfolio": {
     "total": 677301,
     "steady": 512111,
@@ -11,13 +11,13 @@
       "name": "半导体设备",
       "index": "科创50",
       "index_code": "000688",
-      "current": 1786.0,
-      "ma10": 1733.3,
-      "ma20": 1717.2,
-      "change_pct": -0.16,
-      "distance_ma10": 3.04,
-      "signal": "dca",
-      "signal_text": "站上10日线+3.0%，定投正常执行",
+      "current": 1682.2,
+      "ma10": 1732.7,
+      "ma20": 1708.6,
+      "change_pct": -6.07,
+      "distance_ma10": -2.91,
+      "signal": "watch",
+      "signal_text": "缩量回调-6.07%，接近买点，盯缩量止跌",
       "funds": [
         {
           "code": "017811",
@@ -35,20 +35,20 @@
         "detail": "定投正常执行",
         "path": "支付宝 → 理财 → 基金 → 我的定投"
       },
-      "volume_ratio": 0.83
+      "volume_ratio": 0.67
     },
     "pcb": {
       "name": "PCB/HDI板",
       "index": "PCB概念",
       "index_code": "BK0877",
-      "current": 4187.9,
-      "ma10": 3989.3,
-      "ma20": 3714.0,
-      "change_pct": -0.57,
-      "distance_ma10": 4.98,
-      "volume_ratio": 0.85,
-      "signal": "dca",
-      "signal_text": "站上10日线+5.0%，定投正常执行",
+      "current": 3944.7,
+      "ma10": 4015.1,
+      "ma20": 3735.1,
+      "change_pct": -6.17,
+      "distance_ma10": -1.75,
+      "volume_ratio": 0.63,
+      "signal": "watch",
+      "signal_text": "缩量回调-6.17%，接近买点，盯缩量止跌",
       "funds": [
         {
           "code": "017811",
@@ -62,10 +62,10 @@
         }
       ],
       "action": {
-        "type": "auto_dca",
-        "detail": "定投正常执行",
+        "type": "wait",
+        "detail": "接近支撑位，盯缩量止跌信号",
         "trigger": "PCB成交额 < 1400亿 且 日跌幅 < 1%",
-        "path": "支付宝 → 理财 → 基金 → 我的定投"
+        "path": null
       }
     },
     "cpo": {
@@ -103,13 +103,13 @@
       "name": "中证500",
       "index": "中证500",
       "index_code": "000905",
-      "current": 8117.5,
-      "ma10": 7992.3,
-      "ma20": 7772.8,
-      "change_pct": -0.82,
-      "distance_ma10": 1.57,
-      "signal": "dca",
-      "signal_text": "站上10日线+1.6%，定投正常执行",
+      "current": 7865.7,
+      "ma10": 8004.0,
+      "ma20": 7781.5,
+      "change_pct": -3.81,
+      "distance_ma10": -1.73,
+      "signal": "watch",
+      "signal_text": "缩量回调-3.81%，接近买点，盯缩量止跌",
       "funds": [
         {
           "code": "001557",
@@ -122,7 +122,7 @@
         "detail": "定投正常执行",
         "path": "支付宝 → 理财 → 基金 → 我的定投"
       },
-      "volume_ratio": 0.69
+      "volume_ratio": 0.66
     }
   },
   "nasdaq": {
