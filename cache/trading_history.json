@@ -1489,5 +1489,15 @@
     "buy_signals": 0,
     "exit_signals": 0,
     "signals": []
+  },
+  {
+    "date": "2026-08-21",
+    "time": "03:46",
+    "environment": "range",
+    "environment_cn": "震荡市 — 快进快出赚差价",
+    "position_ratio": 0.45,
+    "buy_signals": 0,
+    "exit_signals": 0,
+    "signals": []
   }
 ]
