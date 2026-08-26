@@ -1,45 +1,24 @@
 {
-  "updated": "2026-08-25T07:23:19+08:00",
-  "run_time": "07:23",
+  "updated": "2026-08-26T03:49:43+08:00",
+  "run_time": "03:49",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
-    "env": "bear_lean",
-    "env_cn": "偏熊 — 谨慎参与",
-    "position_ratio": 0.35,
-    "max_position": 33600,
+    "env": "range",
+    "env_cn": "震荡市 — 快进快出赚差价",
+    "position_ratio": 0.45,
+    "max_position": 43200,
     "bullish_count": 0,
-    "bearish_count": 3,
+    "bearish_count": 0,
     "index_details": {
       "上证50": {
-        "status": "bearish",
-        "current": 2875.51,
-        "ma60": 2924.34,
-        "ma120": 2928.35,
-        "above_ma60": false,
-        "above_ma120": false,
-        "golden_cross": false,
-        "ma60_trend": "down"
+        "status": "data_insufficient"
       },
       "沪深300": {
-        "status": "bearish",
-        "current": 4552.03,
-        "ma60": 4753.84,
-        "ma120": 4734.07,
-        "above_ma60": false,
-        "above_ma120": false,
-        "golden_cross": true,
-        "ma60_trend": "down"
+        "status": "data_insufficient"
       },
       "中证500": {
-        "status": "bearish",
-        "current": 7710.94,
-        "ma60": 8143.27,
-        "ma120": 8181.65,
-        "above_ma60": false,
-        "above_ma120": false,
-        "golden_cross": false,
-        "ma60_trend": "down"
+        "status": "data_insufficient"
       },
       "创业板指": {
         "status": "data_insufficient"
@@ -50,7 +29,7 @@
     }
   },
   "module_2_selection": {
-    "scanned": 2,
+    "scanned": 0,
     "total": 25,
     "raw_signals": 0,
     "actionable_signals": 0,
@@ -60,8 +39,8 @@
   },
   "module_3_position": {
     "total_suggested": 0,
-    "single_max": 10080,
-    "strategy": "偏熊 — 谨慎参与",
+    "single_max": 12960,
+    "strategy": "震荡市 — 快进快出赚差价",
     "diversification_note": "建议分散到0只基金"
   },
   "module_4_exit": {
@@ -74,9 +53,8 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 79,
+    "history_days": 80,
     "recent_environments": [
-      "bear",
       "range",
       "range",
       "bear",
@@ -85,15 +63,16 @@
       "bear_lean",
       "range",
       "range",
-      "bear_lean"
+      "bear_lean",
+      "range"
     ]
   },
   "summary": {
-    "environment": "偏熊 — 谨慎参与",
+    "environment": "震荡市 — 快进快出赚差价",
     "buy_signals": 0,
     "exit_signals": 0,
     "today_budget": 0,
     "action_required": false,
-    "key_action": "市场偏熊，持有现金观望"
+    "key_action": ""
   }
 }
