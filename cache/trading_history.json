@@ -1579,5 +1579,32 @@
     "buy_signals": 0,
     "exit_signals": 0,
     "signals": []
+  },
+  {
+    "date": "2026-08-27",
+    "time": "17:45",
+    "environment": "range",
+    "environment_cn": "震荡市 — 快进快出赚差价",
+    "position_ratio": 0.45,
+    "buy_signals": 2,
+    "exit_signals": 0,
+    "signals": [
+      {
+        "board": "液冷服务器",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "012629"
+        ]
+      },
+      {
+        "board": "数据要素",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "008282"
+        ]
+      }
+    ]
   }
 ]
