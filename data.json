@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-27T16:40:18+08:00",
+  "updated": "2026-08-28T14:46:00+08:00",
   "portfolio": {
     "total": 677301,
     "steady": 512111,
@@ -11,13 +11,13 @@
       "name": "半导体设备",
       "index": "科创50",
       "index_code": "000688",
-      "current": 1693.5,
-      "ma10": 1680.4,
-      "ma20": 1682.5,
-      "change_pct": 3.77,
-      "distance_ma10": 0.78,
-      "signal": "dca",
-      "signal_text": "站上10日线+0.8%，定投正常执行",
+      "current": 1662.2,
+      "ma10": 1674.8,
+      "ma20": 1683.8,
+      "change_pct": -1.85,
+      "distance_ma10": -0.76,
+      "signal": "watch",
+      "signal_text": "距10日线-0.8%，接近支撑",
       "funds": [
         {
           "code": "017811",
@@ -35,20 +35,20 @@
         "detail": "定投正常执行",
         "path": "支付宝 → 理财 → 基金 → 我的定投"
       },
-      "volume_ratio": 1.36
+      "volume_ratio": 0.79
     },
     "pcb": {
       "name": "PCB/HDI板",
       "index": "PCB概念",
       "index_code": "BK0877",
-      "current": 4065.9,
-      "ma10": 3995.8,
-      "ma20": 3878.2,
-      "change_pct": 4.49,
-      "distance_ma10": 1.75,
-      "volume_ratio": 1.29,
+      "current": 4032.4,
+      "ma10": 3994.5,
+      "ma20": 3912.8,
+      "change_pct": -0.83,
+      "distance_ma10": 0.95,
+      "volume_ratio": 1.08,
       "signal": "dca",
-      "signal_text": "站上10日线+1.8%，定投正常执行",
+      "signal_text": "站上10日线+0.9%，定投正常执行",
       "funds": [
         {
           "code": "017811",
@@ -72,12 +72,12 @@
       "name": "CPO/光模块",
       "index": "CPO概念",
       "index_code": "CPO",
-      "current": 866.1,
-      "ma10": 910.8,
+      "current": 858.4,
+      "ma10": 902.4,
       "ma20": -1,
-      "change_pct": 1.79,
-      "distance_ma10": -4.91,
-      "volume_ratio": 1.2,
+      "change_pct": -0.9,
+      "distance_ma10": -4.88,
+      "volume_ratio": 1.21,
       "signal": "watch",
       "signal_text": "距10日线-4.9%，观望 (中际旭创代理)",
       "funds": [
