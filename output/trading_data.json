@@ -1,6 +1,6 @@
 {
-  "updated": "2026-08-31T14:13:49+08:00",
-  "run_time": "14:13",
+  "updated": "2026-09-01T08:13:52+08:00",
+  "run_time": "08:13",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
@@ -53,10 +53,10 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 87,
+    "history_days": 88,
     "recent_environments": [
-      "range",
       "bear_lean",
+      "range",
       "range",
       "range",
       "range",
