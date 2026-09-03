@@ -1706,5 +1706,15 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-09-03",
+    "time": "11:29",
+    "environment": "bear_lean",
+    "environment_cn": "偏熊 — 谨慎参与",
+    "position_ratio": 0.35,
+    "buy_signals": 0,
+    "exit_signals": 0,
+    "signals": []
   }
 ]
