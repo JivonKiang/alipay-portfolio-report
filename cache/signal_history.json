@@ -97,14 +97,14 @@
   },
   "CPO_rotation": {
     "first_seen": "2026-08-04",
-    "last_seen": "2026-08-04",
-    "seen_count": 1,
+    "last_seen": "2026-09-07",
+    "seen_count": 2,
     "direction_at_first": "down"
   },
   "光通信_rotation": {
     "first_seen": "2026-08-04",
-    "last_seen": "2026-08-05",
-    "seen_count": 2,
+    "last_seen": "2026-09-07",
+    "seen_count": 3,
     "direction_at_first": "down"
   },
   "人形机器人_rotation": {
@@ -115,8 +115,8 @@
   },
   "AI眼镜_rotation": {
     "first_seen": "2026-08-05",
-    "last_seen": "2026-08-31",
-    "seen_count": 3,
+    "last_seen": "2026-09-07",
+    "seen_count": 4,
     "direction_at_first": "down"
   },
   "创新药_breakout": {
