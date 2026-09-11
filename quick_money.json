@@ -1,0 +1,61 @@
+{
+  "updated": "2026-06-24T14:26:43+08:00",
+  "is_trading_day": true,
+  "scan_time": "14:26",
+  "total_flexible": 96000,
+  "total_assets": 146000,
+  "max_position": 20000,
+  "boards_scanned": 15,
+  "positions": {
+    "005844": {
+      "name": "东方人工智能主题混合C",
+      "entry_date": "2026-06-23",
+      "entry_nav": 3.3511,
+      "amount": 200,
+      "board": "科创芯片"
+    },
+    "006503": {
+      "name": "财通集成电路产业股票C",
+      "entry_date": "2026-06-23",
+      "entry_nav": 9.1008,
+      "amount": 500,
+      "board": "PCB"
+    },
+    "025209": {
+      "name": "永赢先锋半导体智选混合C",
+      "entry_date": "2026-06-23",
+      "entry_nav": 2.8916,
+      "amount": 300,
+      "board": "存储芯片"
+    }
+  },
+  "total_invested": 1000,
+  "signals": [],
+  "blocked_signals": [],
+  "exit_signals": [],
+  "summary": {
+    "total_signals": 0,
+    "actionable_signals": 0,
+    "blocked_signals": 0,
+    "exit_signals": 0,
+    "suggested_position_today": 0,
+    "available_cash": 95000,
+    "fee_reminder": "C类持有≥30天赎回费为0；7天内1.5%罚息，7-30天0.5%"
+  },
+  "fee_schedule": {
+    "0-6天": "1.5% 赎回费 ❌ 绝对禁止",
+    "7-29天": "0.5% 赎回费 ⚠️ 仅预期涨幅>2%可考虑",
+    "30天+": "0% ✅ 自由进出"
+  },
+  "rule_reminder": {
+    "timing": "支付宝T日15:00前下单按当日净值，15:00后按次交易日净值",
+    "settlement": "T+1确认份额，T+2可赎回",
+    "nav_update": "基金净值每晚约20:00更新，日内数据为板块指数估算",
+    "gate_rules": {
+      "gate1_rate_window": "同基金7天内追加→拦截；30天外0费率区自由操作",
+      "gate2_cost_anchor": "板块涨幅≥3%→拦截追高，等阴线或回调至MA10",
+      "gate3_data_consistency": "基金估算与板块指数方向矛盾→拦截，估值不可靠不下单",
+      "gate4_position_limit": "总仓位≤¥20000(约总资产14%)"
+    }
+  }
+}
