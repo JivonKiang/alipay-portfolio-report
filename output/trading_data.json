@@ -1,15 +1,15 @@
 {
-  "updated": "2026-09-14T08:29:09+08:00",
-  "run_time": "08:29",
+  "updated": "2026-09-14T13:07:51+08:00",
+  "run_time": "13:07",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
-    "env": "bear",
-    "env_cn": "熊市 — 清仓做反弹",
-    "position_ratio": 0.2,
-    "max_position": 19200,
+    "env": "range",
+    "env_cn": "震荡市 — 快进快出赚差价",
+    "position_ratio": 0.45,
+    "max_position": 43200,
     "bullish_count": 0,
-    "bearish_count": 4,
+    "bearish_count": 1,
     "index_details": {
       "上证50": {
         "status": "bearish",
@@ -22,42 +22,21 @@
         "ma60_trend": "down"
       },
       "沪深300": {
-        "status": "bearish",
-        "current": 4480.08,
-        "ma60": 4685.72,
-        "ma120": 4727.09,
-        "above_ma60": false,
-        "above_ma120": false,
-        "golden_cross": false,
-        "ma60_trend": "down"
+        "status": "data_insufficient"
       },
       "中证500": {
-        "status": "bearish",
-        "current": 7571.2,
-        "ma60": 8010.06,
-        "ma120": 8137.83,
-        "above_ma60": false,
-        "above_ma120": false,
-        "golden_cross": false,
-        "ma60_trend": "down"
+        "status": "data_insufficient"
       },
       "创业板指": {
         "status": "data_insufficient"
       },
       "科创50": {
-        "status": "bearish",
-        "current": 1528.27,
-        "ma60": 1782.08,
-        "ma120": 1680.95,
-        "above_ma60": false,
-        "above_ma120": false,
-        "golden_cross": true,
-        "ma60_trend": "down"
+        "status": "data_insufficient"
       }
     }
   },
   "module_2_selection": {
-    "scanned": 4,
+    "scanned": 1,
     "total": 25,
     "raw_signals": 1,
     "actionable_signals": 1,
@@ -67,31 +46,35 @@
         "type": "oversold",
         "label": "🟡 超跌反弹",
         "strength": "weak",
-        "reason": "60日最大回撤-19.1%，今日反弹",
-        "board": "铜缆高速连接",
-        "change_pct": 0.38,
-        "change_5d": 2.33,
-        "vol_ratio": 1.13,
-        "current": 2728.41,
-        "ma10": 2673.7,
-        "ma20": 2631.5,
-        "ma60": 2653.9,
+        "reason": "60日最大回撤-31.8%，今日反弹",
+        "board": "半导体",
+        "change_pct": 0.48,
+        "change_5d": -2.62,
+        "vol_ratio": 0.71,
+        "current": 2596.24,
+        "ma10": 2666.9,
+        "ma20": 2717.2,
+        "ma60": 2909.9,
         "funds": [
           {
-            "code": "012629",
-            "name": "广发国证半导体芯片ETF联接C"
+            "code": "008888",
+            "name": "国联安中证半导体ETF联接C"
+          },
+          {
+            "code": "008282",
+            "name": "国泰CES半导体芯片ETF联接C"
           }
         ],
         "gate_passed": true,
-        "position": 500
+        "position": 800
       }
     ],
     "blocked": []
   },
   "module_3_position": {
-    "total_suggested": 500,
-    "single_max": 5760,
-    "strategy": "熊市 — 清仓做反弹",
+    "total_suggested": 800,
+    "single_max": 12960,
+    "strategy": "震荡市 — 快进快出赚差价",
     "diversification_note": "建议分散到1只基金"
   },
   "module_4_exit": {
@@ -104,9 +87,8 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 106,
+    "history_days": 107,
     "recent_environments": [
-      "bear_lean",
       "range",
       "bear_lean",
       "range",
@@ -115,15 +97,16 @@
       "range",
       "bear",
       "range",
-      "bear"
+      "bear",
+      "range"
     ]
   },
   "summary": {
-    "environment": "熊市 — 清仓做反弹",
+    "environment": "震荡市 — 快进快出赚差价",
     "buy_signals": 1,
     "exit_signals": 0,
-    "today_budget": 500,
+    "today_budget": 800,
     "action_required": true,
-    "key_action": "优先关注 铜缆高速连接 (🟡 超跌反弹)"
+    "key_action": "优先关注 半导体 (🟡 超跌反弹)"
   }
 }
