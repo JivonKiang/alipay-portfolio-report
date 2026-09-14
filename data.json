@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-11T09:57:30+08:00",
+  "updated": "2026-09-14T08:24:23+08:00",
   "portfolio": {
     "total": 677301,
     "steady": 512111,
@@ -11,13 +11,13 @@
       "name": "半导体设备",
       "index": "科创50",
       "index_code": "000688",
-      "current": 1580.1,
-      "ma10": 1628.0,
-      "ma20": 1655.4,
-      "change_pct": -0.69,
-      "distance_ma10": -2.95,
+      "current": 1528.3,
+      "ma10": 1589.1,
+      "ma20": 1626.8,
+      "change_pct": -1.62,
+      "distance_ma10": -3.83,
       "signal": "watch",
-      "signal_text": "距10日线-3.0%，接近支撑",
+      "signal_text": "距10日线-3.8%，观望",
       "funds": [
         {
           "code": "017811",
@@ -35,20 +35,20 @@
         "detail": "定投正常执行",
         "path": "支付宝 → 理财 → 基金 → 我的定投"
       },
-      "volume_ratio": 0.86
+      "volume_ratio": 0.58
     },
     "pcb": {
       "name": "PCB/HDI板",
       "index": "PCB概念",
       "index_code": "BK0877",
-      "current": 4092.9,
-      "ma10": 4025.3,
-      "ma20": 4005.5,
-      "change_pct": 1.1,
-      "distance_ma10": 1.68,
-      "volume_ratio": 1.01,
+      "current": 4162.4,
+      "ma10": 4034.9,
+      "ma20": 4010.5,
+      "change_pct": 2.19,
+      "distance_ma10": 3.16,
+      "volume_ratio": 0.88,
       "signal": "dca",
-      "signal_text": "站上10日线+1.7%，定投正常执行",
+      "signal_text": "站上10日线+3.2%，定投正常执行",
       "funds": [
         {
           "code": "017811",
@@ -72,14 +72,14 @@
       "name": "CPO/光模块",
       "index": "CPO概念",
       "index_code": "CPO",
-      "current": 908.9,
-      "ma10": 859.5,
+      "current": 873.0,
+      "ma10": 870.8,
       "ma20": -1,
-      "change_pct": 0.72,
-      "distance_ma10": 5.75,
-      "volume_ratio": 0.7,
-      "signal": "dca",
-      "signal_text": "站上10日线+5.8%，定投正常执行 (中际旭创代理)",
+      "change_pct": -5.72,
+      "distance_ma10": 0.26,
+      "volume_ratio": 0.83,
+      "signal": "avoid",
+      "signal_text": "放量暴跌-5.72%，等缩量止跌 (中际旭创代理)",
       "funds": [
         {
           "code": "017811",
@@ -93,23 +93,23 @@
         }
       ],
       "action": {
-        "type": "auto_dca",
-        "detail": "定投正常执行",
+        "type": "wait",
+        "detail": "等缩量止跌 + 跌幅收窄至1%以内",
         "trigger": "天孚通信/中际旭创 日跌幅 < 2% 且成交额缩至前日50%",
-        "path": "支付宝 → 理财 → 基金 → 我的定投"
+        "path": null
       }
     },
     "a500": {
       "name": "中证500",
       "index": "中证500",
       "index_code": "000905",
-      "current": 7768.1,
-      "ma10": 7808.8,
-      "ma20": 7854.8,
-      "change_pct": -0.03,
-      "distance_ma10": -0.52,
-      "signal": "dca",
-      "signal_text": "距10日线-0.5%，小幅回调，定投正常执行",
+      "current": 7571.2,
+      "ma10": 7716.4,
+      "ma20": 7791.1,
+      "change_pct": -0.12,
+      "distance_ma10": -1.88,
+      "signal": "watch",
+      "signal_text": "距10日线-1.9%，接近支撑",
       "funds": [
         {
           "code": "001557",
@@ -122,7 +122,7 @@
         "detail": "定投正常执行",
         "path": "支付宝 → 理财 → 基金 → 我的定投"
       },
-      "volume_ratio": 0.99
+      "volume_ratio": 0.72
     }
   },
   "nasdaq": {
