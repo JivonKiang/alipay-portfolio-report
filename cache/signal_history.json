@@ -37,8 +37,8 @@
   },
   "存储芯片_rotation": {
     "first_seen": "2026-07-22",
-    "last_seen": "2026-08-27",
-    "seen_count": 6,
+    "last_seen": "2026-09-15",
+    "seen_count": 7,
     "direction_at_first": "down"
   },
   "先进封装_rotation": {
@@ -91,8 +91,8 @@
   },
   "先进封装_breakout": {
     "first_seen": "2026-08-03",
-    "last_seen": "2026-08-03",
-    "seen_count": 1,
+    "last_seen": "2026-09-15",
+    "seen_count": 2,
     "direction_at_first": "up"
   },
   "CPO_rotation": {
