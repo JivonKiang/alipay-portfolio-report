@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-15T08:15:42+08:00",
+  "updated": "2026-09-15T10:21:49+08:00",
   "portfolio": {
     "total": 677301,
     "steady": 512111,
@@ -41,14 +41,14 @@
       "name": "PCB/HDI板",
       "index": "PCB概念",
       "index_code": "BK0877",
-      "current": 4162.4,
-      "ma10": 4034.9,
-      "ma20": 4010.5,
-      "change_pct": 2.19,
-      "distance_ma10": 3.16,
-      "volume_ratio": 0.88,
+      "current": 4195.2,
+      "ma10": 4054.5,
+      "ma20": 4010.1,
+      "change_pct": 0.79,
+      "distance_ma10": 3.47,
+      "volume_ratio": 1.12,
       "signal": "dca",
-      "signal_text": "站上10日线+3.2%，定投正常执行",
+      "signal_text": "站上10日线+3.5%，定投正常执行",
       "funds": [
         {
           "code": "017811",
@@ -72,14 +72,14 @@
       "name": "CPO/光模块",
       "index": "CPO概念",
       "index_code": "CPO",
-      "current": 873.0,
-      "ma10": 870.8,
+      "current": 864.0,
+      "ma10": 871.2,
       "ma20": -1,
-      "change_pct": -5.72,
-      "distance_ma10": 0.26,
-      "volume_ratio": 0.83,
-      "signal": "avoid",
-      "signal_text": "放量暴跌-5.72%，等缩量止跌 (中际旭创代理)",
+      "change_pct": -1.03,
+      "distance_ma10": -0.83,
+      "volume_ratio": 0.66,
+      "signal": "watch",
+      "signal_text": "距10日线-0.8%，接近支撑 (中际旭创代理)",
       "funds": [
         {
           "code": "017811",
@@ -94,7 +94,7 @@
       ],
       "action": {
         "type": "wait",
-        "detail": "等缩量止跌 + 跌幅收窄至1%以内",
+        "detail": "接近支撑位，盯缩量止跌信号",
         "trigger": "天孚通信/中际旭创 日跌幅 < 2% 且成交额缩至前日50%",
         "path": null
       }
@@ -103,13 +103,13 @@
       "name": "中证500",
       "index": "中证500",
       "index_code": "000905",
-      "current": 7571.2,
-      "ma10": 7716.4,
-      "ma20": 7791.1,
-      "change_pct": -0.12,
-      "distance_ma10": -1.88,
+      "current": 7561.6,
+      "ma10": 7686.7,
+      "ma20": 7760.3,
+      "change_pct": -0.13,
+      "distance_ma10": -1.63,
       "signal": "watch",
-      "signal_text": "距10日线-1.9%，接近支撑",
+      "signal_text": "距10日线-1.6%，接近支撑",
       "funds": [
         {
           "code": "001557",
@@ -122,7 +122,7 @@
         "detail": "定投正常执行",
         "path": "支付宝 → 理财 → 基金 → 我的定投"
       },
-      "volume_ratio": 0.72
+      "volume_ratio": 0.93
     }
   },
   "nasdaq": {
