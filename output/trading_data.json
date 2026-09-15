@@ -1,15 +1,15 @@
 {
-  "updated": "2026-09-15T08:19:53+08:00",
-  "run_time": "08:19",
+  "updated": "2026-09-15T11:57:20+08:00",
+  "run_time": "11:57",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
-    "env": "bear_lean",
-    "env_cn": "偏熊 — 谨慎参与",
-    "position_ratio": 0.35,
-    "max_position": 33600,
+    "env": "bear",
+    "env_cn": "熊市 — 清仓做反弹",
+    "position_ratio": 0.2,
+    "max_position": 19200,
     "bullish_count": 0,
-    "bearish_count": 3,
+    "bearish_count": 4,
     "index_details": {
       "上证50": {
         "status": "bearish",
@@ -45,12 +45,19 @@
         "status": "data_insufficient"
       },
       "科创50": {
-        "status": "data_insufficient"
+        "status": "bearish",
+        "current": 1551.96,
+        "ma60": 1776.0,
+        "ma120": 1683.13,
+        "above_ma60": false,
+        "above_ma120": false,
+        "golden_cross": true,
+        "ma60_trend": "down"
       }
     }
   },
   "module_2_selection": {
-    "scanned": 2,
+    "scanned": 5,
     "total": 25,
     "raw_signals": 0,
     "actionable_signals": 0,
@@ -60,8 +67,8 @@
   },
   "module_3_position": {
     "total_suggested": 0,
-    "single_max": 10080,
-    "strategy": "偏熊 — 谨慎参与",
+    "single_max": 5760,
+    "strategy": "熊市 — 清仓做反弹",
     "diversification_note": "建议分散到0只基金"
   },
   "module_4_exit": {
@@ -74,22 +81,22 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 108,
+    "history_days": 109,
     "recent_environments": [
+      "range",
+      "bear",
+      "bear",
+      "range",
+      "bear",
+      "range",
+      "bear",
+      "range",
       "bear_lean",
-      "range",
-      "bear",
-      "bear",
-      "range",
-      "bear",
-      "range",
-      "bear",
-      "range",
-      "bear_lean"
+      "bear"
     ]
   },
   "summary": {
-    "environment": "偏熊 — 谨慎参与",
+    "environment": "熊市 — 清仓做反弹",
     "buy_signals": 0,
     "exit_signals": 0,
     "today_budget": 0,
