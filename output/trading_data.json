@@ -1,6 +1,6 @@
 {
-  "updated": "2026-09-15T11:57:20+08:00",
-  "run_time": "11:57",
+  "updated": "2026-09-16T08:13:22+08:00",
+  "run_time": "08:13",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
@@ -13,9 +13,9 @@
     "index_details": {
       "上证50": {
         "status": "bearish",
-        "current": 2846.31,
-        "ma60": 2925.97,
-        "ma120": 2924.09,
+        "current": 2865.3,
+        "ma60": 2924.66,
+        "ma120": 2924.14,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": true,
@@ -23,9 +23,9 @@
       },
       "沪深300": {
         "status": "bearish",
-        "current": 4450.04,
-        "ma60": 4677.9,
-        "ma120": 4726.88,
+        "current": 4480.27,
+        "ma60": 4670.18,
+        "ma120": 4726.41,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": false,
@@ -33,9 +33,9 @@
       },
       "中证500": {
         "status": "bearish",
-        "current": 7561.59,
-        "ma60": 7991.28,
-        "ma120": 8137.53,
+        "current": 7683.47,
+        "ma60": 7971.95,
+        "ma120": 8136.83,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": false,
@@ -46,9 +46,9 @@
       },
       "科创50": {
         "status": "bearish",
-        "current": 1551.96,
-        "ma60": 1776.0,
-        "ma120": 1683.13,
+        "current": 1616.19,
+        "ma60": 1769.78,
+        "ma120": 1685.63,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": true,
@@ -57,7 +57,7 @@
     }
   },
   "module_2_selection": {
-    "scanned": 5,
+    "scanned": 0,
     "total": 25,
     "raw_signals": 0,
     "actionable_signals": 0,
@@ -81,9 +81,8 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 109,
+    "history_days": 110,
     "recent_environments": [
-      "range",
       "bear",
       "bear",
       "range",
@@ -92,6 +91,7 @@
       "bear",
       "range",
       "bear_lean",
+      "bear",
       "bear"
     ]
   },
