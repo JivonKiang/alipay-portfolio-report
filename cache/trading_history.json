@@ -1933,5 +1933,24 @@
     "buy_signals": 0,
     "exit_signals": 0,
     "signals": []
+  },
+  {
+    "date": "2026-09-16",
+    "time": "11:53",
+    "environment": "bear",
+    "environment_cn": "熊市 — 清仓做反弹",
+    "position_ratio": 0.2,
+    "buy_signals": 1,
+    "exit_signals": 0,
+    "signals": [
+      {
+        "board": "CPO",
+        "type": "dip_buy",
+        "label": "🔵 MA60支撑反弹",
+        "funds": [
+          "017560"
+        ]
+      }
+    ]
   }
 ]

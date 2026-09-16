@@ -1,6 +1,6 @@
 {
-  "updated": "2026-09-16T08:13:22+08:00",
-  "run_time": "08:13",
+  "updated": "2026-09-16T11:53:00+08:00",
+  "run_time": "11:53",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
@@ -57,19 +57,69 @@
     }
   },
   "module_2_selection": {
-    "scanned": 0,
+    "scanned": 6,
     "total": 25,
-    "raw_signals": 0,
-    "actionable_signals": 0,
-    "blocked_signals": 0,
-    "signals": [],
-    "blocked": []
+    "raw_signals": 2,
+    "actionable_signals": 1,
+    "blocked_signals": 1,
+    "signals": [
+      {
+        "type": "dip_buy",
+        "label": "🔵 MA60支撑反弹",
+        "strength": "strong",
+        "reason": "距MA60仅0.3%，缩量止跌信号",
+        "board": "CPO",
+        "change_pct": 1.09,
+        "change_5d": -1.05,
+        "vol_ratio": 0.55,
+        "current": 977.66,
+        "ma10": 996.9,
+        "ma20": 997.3,
+        "ma60": 975.2,
+        "funds": [
+          {
+            "code": "017560",
+            "name": "嘉实上证科创板芯片ETF联接C"
+          }
+        ],
+        "gate_passed": true,
+        "position": 1100
+      }
+    ],
+    "blocked": [
+      {
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "strength": "weak",
+        "reason": "60日最大回撤-18.9%，今日反弹",
+        "board": "PCB",
+        "change_pct": 3.03,
+        "change_5d": 5.76,
+        "vol_ratio": 1.24,
+        "current": 4322.23,
+        "ma10": 4089.2,
+        "ma20": 4031.9,
+        "ma60": 4079.6,
+        "funds": [
+          {
+            "code": "002256",
+            "name": "金信新能源汽车混合C"
+          },
+          {
+            "code": "008282",
+            "name": "国泰CES半导体芯片ETF联接C"
+          }
+        ],
+        "gate_passed": false,
+        "block_reason": "涨幅3.03%≥3%"
+      }
+    ]
   },
   "module_3_position": {
-    "total_suggested": 0,
+    "total_suggested": 1100,
     "single_max": 5760,
     "strategy": "熊市 — 清仓做反弹",
-    "diversification_note": "建议分散到0只基金"
+    "diversification_note": "建议分散到1只基金"
   },
   "module_4_exit": {
     "exit_signals": [],
@@ -81,9 +131,8 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 110,
+    "history_days": 111,
     "recent_environments": [
-      "bear",
       "bear",
       "range",
       "bear",
@@ -92,15 +141,16 @@
       "range",
       "bear_lean",
       "bear",
+      "bear",
       "bear"
     ]
   },
   "summary": {
     "environment": "熊市 — 清仓做反弹",
-    "buy_signals": 0,
+    "buy_signals": 1,
     "exit_signals": 0,
-    "today_budget": 0,
-    "action_required": false,
-    "key_action": "市场偏熊，持有现金观望"
+    "today_budget": 1100,
+    "action_required": true,
+    "key_action": "优先关注 CPO (🔵 MA60支撑反弹)"
   }
 }
