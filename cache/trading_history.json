@@ -1952,5 +1952,24 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-09-17",
+    "time": "08:20",
+    "environment": "bear_lean",
+    "environment_cn": "偏熊 — 谨慎参与",
+    "position_ratio": 0.35,
+    "buy_signals": 1,
+    "exit_signals": 0,
+    "signals": [
+      {
+        "board": "液冷服务器",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "012629"
+        ]
+      }
+    ]
   }
 ]
