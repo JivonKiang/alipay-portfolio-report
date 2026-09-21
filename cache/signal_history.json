@@ -154,5 +154,11 @@
     "last_seen": "2026-09-16",
     "seen_count": 1,
     "direction_at_first": "up"
+  },
+  "AI手机_rotation": {
+    "first_seen": "2026-09-21",
+    "last_seen": "2026-09-21",
+    "seen_count": 1,
+    "direction_at_first": "down"
   }
 }
