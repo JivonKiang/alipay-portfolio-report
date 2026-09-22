@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-22T08:07:03+08:00",
+  "updated": "2026-09-22T10:14:50+08:00",
   "portfolio": {
     "total": 677301,
     "steady": 512111,
@@ -72,14 +72,14 @@
       "name": "CPO/光模块",
       "index": "CPO概念",
       "index_code": "CPO",
-      "current": 926.4,
-      "ma10": 899.3,
+      "current": 927.7,
+      "ma10": 906.1,
       "ma20": -1,
-      "change_pct": 3.4,
-      "distance_ma10": 3.02,
-      "volume_ratio": 1.29,
+      "change_pct": -1.41,
+      "distance_ma10": 2.39,
+      "volume_ratio": 1.12,
       "signal": "dca",
-      "signal_text": "站上10日线+3.0%，定投正常执行 (中际旭创代理)",
+      "signal_text": "站上10日线+2.4%，定投正常执行 (中际旭创代理)",
       "funds": [
         {
           "code": "017811",
