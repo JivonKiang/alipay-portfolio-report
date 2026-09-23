@@ -1,15 +1,15 @@
 {
-  "updated": "2026-09-23T08:13:40+08:00",
-  "run_time": "08:13",
+  "updated": "2026-09-23T11:54:47+08:00",
+  "run_time": "11:54",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
-    "env": "range",
-    "env_cn": "震荡市 — 快进快出赚差价",
-    "position_ratio": 0.45,
-    "max_position": 43200,
+    "env": "bear_lean",
+    "env_cn": "偏熊 — 谨慎参与",
+    "position_ratio": 0.35,
+    "max_position": 33600,
     "bullish_count": 0,
-    "bearish_count": 2,
+    "bearish_count": 3,
     "index_details": {
       "上证50": {
         "status": "bearish",
@@ -32,7 +32,14 @@
         "ma60_trend": "down"
       },
       "中证500": {
-        "status": "data_insufficient"
+        "status": "bearish",
+        "current": 7791.82,
+        "ma60": 7878.67,
+        "ma120": 8140.37,
+        "above_ma60": false,
+        "above_ma120": false,
+        "golden_cross": false,
+        "ma60_trend": "down"
       },
       "创业板指": {
         "status": "data_insufficient"
@@ -53,8 +60,8 @@
   },
   "module_3_position": {
     "total_suggested": 0,
-    "single_max": 12960,
-    "strategy": "震荡市 — 快进快出赚差价",
+    "single_max": 10080,
+    "strategy": "偏熊 — 谨慎参与",
     "diversification_note": "建议分散到0只基金"
   },
   "module_4_exit": {
@@ -67,9 +74,8 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 120,
+    "history_days": 121,
     "recent_environments": [
-      "bear",
       "bear_lean",
       "range",
       "bear",
@@ -78,15 +84,16 @@
       "range",
       "range",
       "bear",
-      "range"
+      "range",
+      "bear_lean"
     ]
   },
   "summary": {
-    "environment": "震荡市 — 快进快出赚差价",
+    "environment": "偏熊 — 谨慎参与",
     "buy_signals": 0,
     "exit_signals": 0,
     "today_budget": 0,
     "action_required": false,
-    "key_action": ""
+    "key_action": "市场偏熊，持有现金观望"
   }
 }
