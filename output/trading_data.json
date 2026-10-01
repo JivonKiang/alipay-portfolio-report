@@ -1,6 +1,6 @@
 {
-  "updated": "2026-09-30T12:51:35+08:00",
-  "run_time": "12:51",
+  "updated": "2026-10-01T09:42:30+08:00",
+  "run_time": "09:42",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
@@ -9,13 +9,27 @@
     "position_ratio": 0.45,
     "max_position": 43200,
     "bullish_count": 0,
-    "bearish_count": 0,
+    "bearish_count": 2,
     "index_details": {
       "上证50": {
-        "status": "data_insufficient"
+        "status": "bearish",
+        "current": 2823.28,
+        "ma60": 2909.39,
+        "ma120": 2924.44,
+        "above_ma60": false,
+        "above_ma120": false,
+        "golden_cross": false,
+        "ma60_trend": "down"
       },
       "沪深300": {
-        "status": "data_insufficient"
+        "status": "bearish",
+        "current": 4357.62,
+        "ma60": 4603.67,
+        "ma120": 4723.47,
+        "above_ma60": false,
+        "above_ma120": false,
+        "golden_cross": false,
+        "ma60_trend": "down"
       },
       "中证500": {
         "status": "data_insufficient"
@@ -29,7 +43,7 @@
     }
   },
   "module_2_selection": {
-    "scanned": 0,
+    "scanned": 1,
     "total": 25,
     "raw_signals": 0,
     "actionable_signals": 0,
@@ -53,7 +67,7 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 131,
+    "history_days": 132,
     "recent_environments": [
       "range",
       "range",
@@ -61,8 +75,8 @@
       "range",
       "range",
       "range",
-      "range",
       "bear_lean",
+      "range",
       "range",
       "range"
     ]
