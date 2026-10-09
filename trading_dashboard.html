@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>交易系统五模块 Dashboard</title>
+<style>
+  :root { --bg:#0f1118; --card:#1a1d2b; --border:#2a2d3b; --text:#d1d5db; --dim:#9ca3af; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; line-height:1.6; padding:1.5rem; }
+  .container { max-width:900px; margin:0 auto; }
+  .header { text-align:center; padding:1.5rem 0; border-bottom:1px solid var(--border); margin-bottom:1.5rem; }
+  .header h1 { font-size:1.5rem; color:#f3f4f6; }
+  .update-time { color:var(--dim); font-size:0.8rem; margin-top:0.3rem; }
+
+  .env-banner {
+    background: linear-gradient(135deg, #f59e0b18, #f59e0b08);
+    border:1px solid #f59e0b40; border-radius:12px;
+    padding:1.25rem; text-align:center; margin-bottom:1.25rem;
+  }
+  .env-banner .label { font-size:0.85rem; color:var(--dim); }
+  .env-banner .value { font-size:1.6rem; font-weight:800; color:#f59e0b; }
+  .env-banner .detail { font-size:0.85rem; color:var(--dim); margin-top:0.3rem; }
+
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.25rem; }
+  @media(max-width:640px){ .grid-2 { grid-template-columns:1fr; } }
+
+  .card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1.25rem; }
+  .card h3 { font-size:1rem; color:#f3f4f6; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.4rem; }
+
+  .index-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:0.6rem; }
+  .index-card { background:rgba(255,255,255,0.02); border-radius:8px; padding:0.65rem; }
+  .index-name { font-size:0.8rem; color:var(--dim); }
+  .index-price { font-size:1.1rem; font-weight:700; color:#f3f4f6; }
+
+  .tag { display:inline-block; padding:0.15rem 0.5rem; border-radius:12px; font-size:0.7rem; font-weight:600; margin-top:0.25rem; }
+
+  table { width:100%; border-collapse:collapse; font-size:0.85rem; }
+  th { background:rgba(255,255,255,0.03); padding:0.55rem 0.75rem; text-align:left; font-weight:600; color:#e5e7eb; border-bottom:1px solid var(--border); }
+  td { padding:0.5rem 0.75rem; border-bottom:1px solid rgba(255,255,255,0.03); }
+
+  .exit-item { padding:0.6rem 0.75rem; margin-bottom:0.4rem; background:rgba(255,255,255,0.02); border-radius:6px; }
+
+  .stat { text-align:center; padding:0.75rem; }
+  .stat .num { font-size:1.4rem; font-weight:800; color:#f3f4f6; }
+  .stat .lbl { font-size:0.75rem; color:var(--dim); }
+
+  .footer { text-align:center; padding:1.5rem 0; color:var(--dim); font-size:0.75rem; border-top:1px solid var(--border); margin-top:1.5rem; }
+  .footer .flow { display:flex; justify-content:center; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.5rem; }
+  .flow-step { background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.2); border-radius:6px; padding:0.25rem 0.6rem; font-size:0.7rem; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <h1>交易系统五模块 Dashboard</h1>
+  <div class="update-time">更新: 2026-07-01 12:43 | 下次: 交易日 11:00 / 14:30</div>
+</div>
+
+<!-- 模块1: 市场环境 -->
+<div class="env-banner">
+  <div class="label">模块1 · 市场环境判断</div>
+  <div class="value">震荡市 — 快进快出赚差价</div>
+  <div class="detail">偏牛指数 0/5 | 偏熊指数 0/5 | 建议仓位 45% (¥43,200)</div>
+</div>
+
+<div class="index-grid" style="margin-bottom:1.25rem;">
+  
+</div>
+
+<!-- 模块2+3: 标的筛选 & 仓位 -->
+<div class="card" style="margin-bottom:1.25rem;">
+  <h3>📊 模块2 · 标的筛选 & 模块3 · 仓位管理</h3>
+  <div style="display:flex;gap:1rem;margin-bottom:0.75rem;flex-wrap:wrap">
+    <div class="stat"><div class="num">18</div><div class="lbl">板块扫描</div></div>
+    <div class="stat"><div class="num">4</div><div class="lbl">买入信号</div></div>
+    <div class="stat"><div class="num">3</div><div class="lbl">门控拦截</div></div>
+    <div class="stat"><div class="num">¥2,000</div><div class="lbl">今日建议仓位</div></div>
+  </div>
+  <table>
+    <tr><th>信号</th><th>板块</th><th>涨跌</th><th>仓位</th><th>匹配基金</th></tr>
+    
+            <tr>
+              <td><span style="color:#f59e0b;font-weight:600">🟡 超跌反弹</span></td>
+              <td>先进封装</td>
+              <td>+1.2%</td>
+              <td style="color:#f59e0b">¥500</td>
+              <td style="font-size:0.8rem;color:#9ca3af"> → 008888 国联安中证半导体ETF联接C</td>
+            </tr>
+            <tr>
+              <td><span style="color:#f59e0b;font-weight:600">🟡 超跌反弹</span></td>
+              <td>CPO</td>
+              <td>+1.1%</td>
+              <td style="color:#f59e0b">¥500</td>
+              <td style="font-size:0.8rem;color:#9ca3af"> → 017560 嘉实上证科创板芯片ETF联接C</td>
+            </tr>
+            <tr>
+              <td><span style="color:#f59e0b;font-weight:600">🟡 超跌反弹</span></td>
+              <td>光通信</td>
+              <td>+2.6%</td>
+              <td style="color:#f59e0b">¥500</td>
+              <td style="font-size:0.8rem;color:#9ca3af"> → 017560 嘉实上证科创板芯片ETF联接C</td>
+            </tr>
+            <tr>
+              <td><span style="color:#f59e0b;font-weight:600">🟡 超跌反弹</span></td>
+              <td>稀土永磁</td>
+              <td>+2.2%</td>
+              <td style="color:#f59e0b">¥500</td>
+              <td style="font-size:0.8rem;color:#9ca3af"> → 011036 嘉实中证稀土产业ETF联接C</td>
+            </tr>
+  </table>
+</div>
+
+<!-- 模块4: 止盈止损 -->
+<div class="card" style="margin-bottom:1.25rem;">
+  <h3>🛡️ 模块4 · 止盈止损</h3>
+  <div style="color:#6b7280;text-align:center;padding:1rem">无退出信号</div>
+  <div style="font-size:0.75rem;color:var(--dim);margin-top:0.75rem;display:flex;gap:1rem;flex-wrap:wrap">
+    <span>止损: -8%硬止损</span><span>短线止盈: +12%</span><span>趋势止盈: +18%</span><span>移动止盈: 高点回撤>5%</span>
+  </div>
+</div>
+
+<!-- 模块5: 动态优化 -->
+<div class="card">
+  <h3>📈 模块5 · 动态优化</h3>
+  <div style="display:flex;gap:1rem;flex-wrap:wrap">
+    <div class="stat"><div class="num">1</div><div class="lbl">历史记录天数</div></div>
+    <div class="stat"><div class="num">是</div><div class="lbl">今日需操作</div></div>
+  </div>
+  <div style="margin-top:0.75rem;padding:0.75rem;background:rgba(245,158,11,0.08);border-radius:8px;text-align:center;font-weight:600;">
+    优先关注 先进封装 (🟡 超跌反弹)
+  </div>
+</div>
+
+<div class="footer">
+  <div class="flow">
+    <span class="flow-step">判断环境→做不做</span>
+    <span class="flow-step">选股→买什么</span>
+    <span class="flow-step">仓位→能活下来吗</span>
+    <span class="flow-step">止盈止损→守住利润</span>
+    <span class="flow-step">优化→持续赚钱</span>
+  </div>
+  <div>五模块交易系统 · 自动运行 · 顺势而为</div>
+</div>
+
+</div>
+</body>
+</html>
