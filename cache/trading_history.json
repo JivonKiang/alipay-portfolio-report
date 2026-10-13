@@ -2356,5 +2356,40 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-10-13",
+    "time": "14:27",
+    "environment": "bear",
+    "environment_cn": "熊市 — 清仓做反弹",
+    "position_ratio": 0.2,
+    "buy_signals": 3,
+    "exit_signals": 0,
+    "signals": [
+      {
+        "board": "存储芯片",
+        "type": "dip_buy",
+        "label": "🔵 MA60支撑反弹",
+        "funds": [
+          "008888"
+        ]
+      },
+      {
+        "board": "数据要素",
+        "type": "dip_buy",
+        "label": "🔵 MA60支撑反弹",
+        "funds": [
+          "008282"
+        ]
+      },
+      {
+        "board": "铜缆高速连接",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "012629"
+        ]
+      }
+    ]
   }
 ]
