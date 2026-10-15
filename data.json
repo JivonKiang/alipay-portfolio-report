@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-15T07:53:09+08:00",
+  "updated": "2026-10-15T10:14:09+08:00",
   "portfolio": {
     "total": 677301,
     "steady": 512111,
@@ -41,14 +41,14 @@
       "name": "PCB/HDI板",
       "index": "PCB概念",
       "index_code": "BK0877",
-      "current": 3759.1,
-      "ma10": 4018.4,
-      "ma20": 4124.9,
-      "change_pct": -1.59,
-      "distance_ma10": -6.45,
-      "volume_ratio": 0.87,
+      "current": 3653.1,
+      "ma10": 3936.7,
+      "ma20": 4102.9,
+      "change_pct": -2.82,
+      "distance_ma10": -7.2,
+      "volume_ratio": 1.26,
       "signal": "avoid",
-      "signal_text": "远离10日线-6.5%，趋势破坏",
+      "signal_text": "放量下跌-2.82%，先等跌幅收窄",
       "funds": [
         {
           "code": "017811",
@@ -72,14 +72,14 @@
       "name": "CPO/光模块",
       "index": "CPO概念",
       "index_code": "CPO",
-      "current": 735.0,
-      "ma10": 819.1,
+      "current": 656.9,
+      "ma10": 769.3,
       "ma20": -1,
-      "change_pct": 1.45,
-      "distance_ma10": -10.26,
-      "volume_ratio": 1.47,
+      "change_pct": -5.19,
+      "distance_ma10": -14.6,
+      "volume_ratio": 1.5,
       "signal": "avoid",
-      "signal_text": "远离10日线-10.3%，趋势破坏 (中际旭创代理)",
+      "signal_text": "放量暴跌-5.19%，等缩量止跌 (中际旭创代理)",
       "funds": [
         {
           "code": "017811",
@@ -103,13 +103,13 @@
       "name": "中证500",
       "index": "中证500",
       "index_code": "000905",
-      "current": 6980.1,
-      "ma10": 7335.1,
-      "ma20": 7518.4,
-      "change_pct": -1.48,
-      "distance_ma10": -4.84,
-      "signal": "watch",
-      "signal_text": "距10日线-4.8%，观望",
+      "current": 6769.2,
+      "ma10": 7232.8,
+      "ma20": 7468.4,
+      "change_pct": -3.02,
+      "distance_ma10": -6.41,
+      "signal": "avoid",
+      "signal_text": "放量暴跌-3.02%，等缩量止跌",
       "funds": [
         {
           "code": "001557",
@@ -122,7 +122,7 @@
         "detail": "定投正常执行",
         "path": "支付宝 → 理财 → 基金 → 我的定投"
       },
-      "volume_ratio": 0.92
+      "volume_ratio": 1.17
     }
   },
   "nasdaq": {
