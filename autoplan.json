@@ -1,0 +1,172 @@
+{
+  "updated": "2026-06-24T15:00:00+08:00",
+  "monthly": {
+    "target": 38200,
+    "invested": 24000,
+    "remaining": 14200,
+    "executions": {
+      "done": 188,
+      "total": 227
+    },
+    "progress_pct": 62.8
+  },
+  "tomorrow": {
+    "date": "2026-06-25",
+    "daily_total": 1300,
+    "weekly_total": "1250-5000",
+    "grand_total": "2550-6300"
+  },
+  "plans": [
+    {
+      "name": "易方达沪深300精选增强C",
+      "type": "智能日定投",
+      "status": "暂停(非低估)",
+      "next_amount": 0,
+      "total_invested": 0,
+      "periods": 0,
+      "class": "C"
+    },
+    {
+      "name": "华夏全球科技先锋QDII A",
+      "type": "日定投",
+      "status": "执行中",
+      "next_amount": 200,
+      "total_invested": 900,
+      "periods": 3,
+      "class": "A",
+      "region": "全球科技"
+    },
+    {
+      "name": "银华海外数字经济QDII A",
+      "type": "日定投",
+      "status": "执行中",
+      "next_amount": 200,
+      "total_invested": 400,
+      "periods": 2,
+      "class": "A",
+      "region": "海外数字"
+    },
+    {
+      "name": "易方达全球优质企业QDII A",
+      "type": "日定投",
+      "status": "执行中",
+      "next_amount": 500,
+      "total_invested": 1550,
+      "periods": 4,
+      "class": "A",
+      "region": "全球混合"
+    },
+    {
+      "name": "摩根标普500 QDII A",
+      "type": "日定投",
+      "status": "执行中",
+      "next_amount": 100,
+      "total_invested": 170,
+      "periods": 8,
+      "class": "A",
+      "region": "美股标普"
+    },
+    {
+      "name": "建信纳斯达克100 QDII A",
+      "type": "日定投",
+      "status": "执行中",
+      "next_amount": 100,
+      "total_invested": 800,
+      "periods": 8,
+      "class": "A",
+      "region": "美股纳指"
+    },
+    {
+      "name": "汇添富纳斯达克100 QDII A",
+      "type": "日定投",
+      "status": "执行中",
+      "next_amount": 100,
+      "total_invested": 800,
+      "periods": 8,
+      "class": "A",
+      "region": "美股纳指"
+    },
+    {
+      "name": "广发全球精选 QDII A",
+      "type": "日定投",
+      "status": "执行中",
+      "next_amount": 100,
+      "total_invested": 1050,
+      "periods": 11,
+      "class": "A",
+      "region": "全球精选"
+    },
+    {
+      "name": "招商上证综合指数增强C",
+      "type": "智能周定投",
+      "status": "执行中",
+      "next_amount": "500-2000",
+      "total_invested": 0,
+      "periods": 0,
+      "class": "C"
+    },
+    {
+      "name": "国金中证A500指数增强C",
+      "type": "智能周定投",
+      "status": "执行中",
+      "next_amount": "250-1000",
+      "total_invested": 0,
+      "periods": 0,
+      "class": "C"
+    },
+    {
+      "name": "易方达中证红利ETF联接A",
+      "type": "智能周定投",
+      "status": "执行中",
+      "next_amount": "150-600",
+      "total_invested": 0,
+      "periods": 0,
+      "class": "A"
+    },
+    {
+      "name": "长信科创创业50增强C",
+      "type": "智能周定投",
+      "status": "执行中",
+      "next_amount": "100-400",
+      "total_invested": 0,
+      "periods": 0,
+      "class": "C"
+    },
+    {
+      "name": "万家中证500指数增强C",
+      "type": "智能周定投",
+      "status": "执行中",
+      "next_amount": "250-1000",
+      "total_invested": 0,
+      "periods": 0,
+      "class": "C"
+    }
+  ],
+  "analysis": {
+    "domestic_vs_overseas": {
+      "domestic": 6,
+      "overseas": 7
+    },
+    "total_plans": 13,
+    "active_daily": 8,
+    "active_weekly": 5,
+    "class_breakdown": {
+      "A": 8,
+      "C": 5
+    },
+    "issues": [
+      {
+        "severity": "medium",
+        "msg": "建信纳指100 + 汇添富纳指100 高度重叠，每天各100元浪费申购费"
+      },
+      {
+        "severity": "low",
+        "msg": "QDII全部A类，短期赎回有0.5%-1.5%惩罚费"
+      },
+      {
+        "severity": "info",
+        "msg": "周定投5只今日刚起步(累计0元)，明天首次扣款"
+      }
+    ]
+  }
+}
