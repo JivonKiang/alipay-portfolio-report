@@ -1,6 +1,6 @@
 {
-  "updated": "2026-10-16T07:50:35+08:00",
-  "run_time": "07:50",
+  "updated": "2026-10-16T11:42:59+08:00",
+  "run_time": "11:42",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
@@ -57,7 +57,7 @@
     }
   },
   "module_2_selection": {
-    "scanned": 21,
+    "scanned": 5,
     "total": 25,
     "raw_signals": 0,
     "actionable_signals": 0,
@@ -81,10 +81,9 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 154,
+    "history_days": 155,
     "recent_environments": [
       "bear_lean",
-      "bear_lean",
       "range",
       "bear",
       "bear",
@@ -92,6 +91,7 @@
       "range",
       "bear",
       "range",
+      "bear",
       "bear"
     ]
   },
