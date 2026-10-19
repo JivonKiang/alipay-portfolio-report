@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-19T08:20:13+08:00",
+  "updated": "2026-10-19T11:08:35+08:00",
   "portfolio": {
     "total": 677301,
     "steady": 512111,
@@ -72,14 +72,14 @@
       "name": "CPO/光模块",
       "index": "CPO概念",
       "index_code": "CPO",
-      "current": 670.0,
-      "ma10": 746.8,
+      "current": 660.7,
+      "ma10": 731.5,
       "ma20": -1,
-      "change_pct": 1.99,
-      "distance_ma10": -10.29,
-      "volume_ratio": 0.74,
+      "change_pct": -1.39,
+      "distance_ma10": -9.68,
+      "volume_ratio": 0.8,
       "signal": "avoid",
-      "signal_text": "远离10日线-10.3%，趋势破坏 (中际旭创代理)",
+      "signal_text": "远离10日线-9.7%，趋势破坏 (中际旭创代理)",
       "funds": [
         {
           "code": "017811",
@@ -103,13 +103,13 @@
       "name": "中证500",
       "index": "中证500",
       "index_code": "000905",
-      "current": 6772.8,
-      "ma10": 7147.7,
-      "ma20": 7421.2,
-      "change_pct": 0.05,
-      "distance_ma10": -5.25,
-      "signal": "avoid",
-      "signal_text": "远离10日线-5.2%，趋势破坏",
+      "current": 6800.7,
+      "ma10": 7087.5,
+      "ma20": 7382.2,
+      "change_pct": 0.41,
+      "distance_ma10": -4.05,
+      "signal": "watch",
+      "signal_text": "距10日线-4.0%，观望",
       "funds": [
         {
           "code": "001557",
@@ -122,7 +122,7 @@
         "detail": "定投正常执行",
         "path": "支付宝 → 理财 → 基金 → 我的定投"
       },
-      "volume_ratio": 0.95
+      "volume_ratio": 0.86
     }
   },
   "nasdaq": {
