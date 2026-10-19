@@ -7,7 +7,11 @@
 模块2: 标的筛选 — 25个高波动板块扫描 + C类基金匹配 + 四道门控
 模块3: 仓位管理 — 根据市场环境动态调整 20%-80%
 模块4: 止盈止损 — 持仓盈亏监控 + 退出信号
+       + 卖出策略引擎（PE估值分档/收益止盈，源自 nasdaq-dca）
+       + 信号状态机（MA金叉+MACD，源自 etf-quant）
+       + 费率管理器（C类解锁日历/净收益，源自 alipay-quant-system）
 模块5: 动态优化 — 信号历史 + 复盘数据
+模块6: 邮件日报推送（SMTP环境变量，源自 etf-quant-auto）
 
 GitHub Actions 定时运行: 每天 11:00 / 14:30 (北京时间)
 输出: output/trading_data.json + output/index.html (GitHub Pages)
@@ -21,6 +25,13 @@ import time
 from datetime import datetime, date, timedelta
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, SCRIPT_DIR)
+
+from fee_manager import FeeManager          # noqa: E402
+import sell_strategy                        # noqa: E402
+import signal_monitor                       # noqa: E402
+import notifier                             # noqa: E402
+
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, "output")
 CACHE_DIR = os.path.join(SCRIPT_DIR, "cache")
 TEMP_DIR = os.path.join(SCRIPT_DIR, "temp")
@@ -93,6 +104,9 @@ STOP_LOSS_PCT = -0.08    # 止损线 -8%
 TAKE_PROFIT_SHORT = 0.12  # 短线止盈 12%
 TAKE_PROFIT_TREND = 0.18  # 趋势止盈 18%
 SINGLE_MAX_RATIO = 0.30   # 单票上限 30%
+
+# 统一费率管理器（C类基金）
+FEE_MANAGER = FeeManager()
 
 
 # ===================== 数据获取 =====================
@@ -407,7 +421,7 @@ def check_exit_signals(positions_file):
         positions_data = json.load(f)
 
     for fund_code, pos in positions_data.get("positions", {}).items():
-        if pos.get("status") != "HOLDING":
+        if pos.get("status", "HOLDING") != "HOLDING":
             continue
 
         entry_date = pos.get("entry_date", "")
@@ -466,6 +480,9 @@ def check_exit_signals(positions_file):
             exit_type = "trailing_stop"
 
         if exit_reason:
+            # 费率感知: 扣除C类赎回费后的净盈亏（整合自 alipay-quant-system fee_manager）
+            tier = FEE_MANAGER.get_fee_tier(days_held, fund_code)
+            net_pnl = FEE_MANAGER.calc_net_return(pnl_pct, days_held, fund_code)
             exit_signals.append({
                 "fund_code": fund_code,
                 "board": board,
@@ -473,6 +490,8 @@ def check_exit_signals(positions_file):
                 "entry_nav": entry_nav,
                 "current": round(current, 2),
                 "pnl_pct": round(pnl_pct, 2),
+                "net_pnl_pct": round(net_pnl, 2),
+                "fee_label": tier["fee_label"],
                 "days_held": days_held,
                 "exit_type": exit_type,
                 "reason": exit_reason,
@@ -480,6 +499,78 @@ def check_exit_signals(positions_file):
             })
 
     return exit_signals
+
+
+# ===================== 模块4增强: 卖出策略 + 信号状态机 + 费率日历 =====================
+
+def run_risk_suite(positions_file):
+    """
+    整合三个移植模块，对当前持仓做一次全面风险检查:
+    - 信号状态机: 每只持仓基金 MA金叉+MACD 状态 (BUY/HOLDING/SELL_READY/WAIT)
+    - 卖出策略: PE估值分档(蛋卷) + 收益率止盈
+    - 持仓告警: 状态告警 + 费率锁定提醒
+    - 解锁日历: C类费率解锁日期
+    任一数据源失败自动隔离，不影响主流程。
+    """
+    result = {"signal_states": [], "sell_alerts": [], "position_alerts": [],
+              "fee_calendar": [], "index_pe": {}}
+
+    if not os.path.exists(positions_file):
+        return result
+
+    try:
+        with open(positions_file, "r", encoding="utf-8") as f:
+            positions_data = json.load(f)
+    except (OSError, json.JSONDecodeError):
+        return result
+
+    positions = positions_data.get("positions", {})
+    holdings = [{"code": code, "name": pos.get("name", ""), "entry_date": pos.get("entry_date", "")}
+                for code, pos in positions.items()]
+    if not holdings:
+        return result
+
+    # --- 信号状态机（失败隔离） ---
+    try:
+        states = signal_monitor.check_funds([{"code": h["code"], "name": h["name"]} for h in holdings])
+        result["signal_states"] = states
+        states_by_code = {r["code"]: r for r in states}
+    except Exception:
+        states_by_code = {}
+
+    # --- 持仓告警（状态 + 费率锁定） ---
+    try:
+        result["position_alerts"] = signal_monitor.check_position_alerts(
+            holdings, FEE_MANAGER, states_by_code)
+    except Exception:
+        pass
+
+    # --- 收益率止盈 + PE估值卖出策略 ---
+    try:
+        pos_with_profit = []
+        for h in holdings:
+            profit_rate = 0.0
+            nav_rows = signal_monitor.fetch_nav_history(h["code"])
+            entry_nav = positions.get(h["code"], {}).get("entry_nav", 0)
+            if nav_rows and entry_nav > 0:
+                profit_rate = nav_rows[-1]["nav"] / entry_nav - 1
+            pos_with_profit.append({
+                "fund_code": h["code"], "fund_name": h["name"],
+                "profit_rate": round(profit_rate, 4),
+            })
+        result["index_pe"] = sell_strategy.fetch_index_pe()
+        result["sell_alerts"] = sell_strategy.check_sell_signals(
+            pos_with_profit, index_pe=result["index_pe"])
+    except Exception:
+        pass
+
+    # --- C类费率解锁日历 ---
+    try:
+        result["fee_calendar"] = FEE_MANAGER.get_fee_calendar(holdings)
+    except Exception:
+        pass
+
+    return result
 
 
 # ===================== 模块5: 动态优化 =====================
@@ -595,16 +686,29 @@ def main():
 
     total_suggested = sum(s["position"] for s in actionable_signals[:5])
 
-    # ===== 模块4: 止盈止损 =====
+    # ===== 模块4: 止盈止损 + 风险套件 =====
     print(f"\n[模块4] 止盈止损检查...")
     positions_file = os.path.join(SCRIPT_DIR, "positions.json")
     exit_signals = check_exit_signals(positions_file)
     if exit_signals:
         for es in exit_signals:
             emoji = {"stop_loss": "🔴", "take_profit": "🟢", "trend_broken": "🟡", "trailing_stop": "🟠"}.get(es["exit_type"], "⚪")
-            print(f"  {emoji} {es['fund_code']} {es['board']} | 盈亏{es['pnl_pct']:+.1f}% | 持有{es['days_held']}天 | {es['reason']}")
+            print(f"  {emoji} {es['fund_code']} {es['board']} | 盈亏{es['pnl_pct']:+.1f}% (费后{es['net_pnl_pct']:+.1f}%) | 持有{es['days_held']}天 | {es['reason']}")
     else:
         print("  无退出信号")
+
+    print(f"\n[模块4+] 卖出策略 + 信号状态机 + 费率日历...")
+    risk = run_risk_suite(positions_file)
+    for sa in risk["sell_alerts"]:
+        sev = {"danger": "🔴", "warning": "🟡", "info": "🔵"}.get(sa["severity"], "⚪")
+        print(f"  {sev} {sa['title']}: {sa['message']}")
+    for pa in risk["position_alerts"]:
+        sev = {"danger": "🔴", "warning": "🟡", "info": "🔵"}.get(pa["severity"], "⚪")
+        print(f"  {sev} {pa['fund_name']}: {pa['message']}")
+    for st in risk["signal_states"]:
+        print(f"  [状态] {st['name']}({st['code']}): {st['state']}")
+    if not (risk["sell_alerts"] or risk["position_alerts"] or risk["signal_states"]):
+        print("  无额外风险提醒")
 
     # ===== 模块5: 动态优化 =====
     print(f"\n[模块5] 记录历史...")
@@ -643,11 +747,19 @@ def main():
         },
         "module_4_exit": {
             "exit_signals": exit_signals,
+            "sell_alerts": risk.get("sell_alerts", []),
+            "position_alerts": risk.get("position_alerts", []),
+            "signal_states": risk.get("signal_states", []),
+            "fee_calendar": risk.get("fee_calendar", []),
+            "index_pe": risk.get("index_pe", {}),
             "rules": {
                 "stop_loss": f"{STOP_LOSS_PCT*100:.0f}% 硬止损",
                 "take_profit_short": f"{TAKE_PROFIT_SHORT*100:.0f}% 短线止盈",
                 "take_profit_trend": f"{TAKE_PROFIT_TREND*100:.0f}% 趋势止盈",
                 "trailing_stop": "从高点回撤>5% 移动止盈",
+                "pe_percentile": "宽基PE百分位>70/80/90% 关注/减仓50%/减仓70%",
+                "profit_take": "持仓收益>20% 分批止盈 / >35% 强止盈",
+                "fee": "C类 <7天赎回费1.5% / 7-30天0.5% / ≥30天0%",
             },
         },
         "module_5_optimization": {
@@ -678,6 +790,15 @@ def main():
     with open(json_path, "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
     print(f"\n数据已保存: {json_path}")
+
+    # ===== 模块6: 邮件日报（配置了SMTP环境变量才发送） =====
+    print(f"\n[模块6] 邮件日报推送...")
+    try:
+        sent = notifier.notify_daily_report(output)
+        if not sent:
+            print("  未配置 MAIL_SERVER，跳过发送")
+    except Exception as e:
+        print(f"  日报发送异常(不影响主流程): {e}")
 
     # ==================== 生成HTML Dashboard ====================
     html_content = generate_dashboard_html(output, env)
@@ -796,17 +917,35 @@ def generate_dashboard_html(data, env):
         signals_html = "<tr><td colspan='5' style='text-align:center;color:#6b7280;padding:2rem'>今日无买入信号 — 不做也是操作</td></tr>"
 
     exit_html = ""
-    if m4["exit_signals"]:
-        for es in m4["exit_signals"]:
+    alert_items = (m4.get("exit_signals") or []) + (m4.get("sell_alerts") or []) + (m4.get("position_alerts") or [])
+    if alert_items:
+        for es in m4.get("exit_signals") or []:
             ex_c = {
                 "stop_loss": "#ef4444",
                 "take_profit": "#22c55e",
                 "trend_broken": "#f59e0b",
                 "trailing_stop": "#f97316"
             }.get(es.get("exit_type", ""), "#9ca3af")
-            exit_html += "<div class='exit-row' style='border-left:3px solid " + ex_c + "'><strong>" + es["fund_code"] + "</strong> " + es.get("board", "") + "<span style='float:right;color:" + ex_c + "'>" + format(es.get("pnl_pct", 0), "+.1f") + "%</span><div style='font-size:0.8rem;color:#9ca3af'>" + es["reason"] + " | " + str(es.get("days_held", 0)) + "天</div></div>"
+            net = ""
+            if es.get("net_pnl_pct") is not None:
+                net = " (费后" + format(es["net_pnl_pct"], "+.1f") + "%)"
+            exit_html += "<div class='exit-row' style='border-left:3px solid " + ex_c + "'><strong>" + es["fund_code"] + "</strong> " + es.get("board", "") + "<span style='float:right;color:" + ex_c + "'>" + format(es.get("pnl_pct", 0), "+.1f") + "%" + net + "</span><div style='font-size:0.8rem;color:#9ca3af'>" + es["reason"] + " | " + str(es.get("days_held", 0)) + "天</div></div>"
+        sev_c = {"danger": "#ef4444", "warning": "#f59e0b", "info": "#3b82f6"}
+        for a in (m4.get("sell_alerts") or []) + (m4.get("position_alerts") or []):
+            c = sev_c.get(a.get("severity", ""), "#9ca3af")
+            title = a.get("title") or (str(a.get("fund_name", "")) + " 风险提醒")
+            exit_html += "<div class='exit-row' style='border-left:3px solid " + c + "'><strong>" + title + "</strong><span style='float:right;color:" + c + "'>" + a.get("severity", "") + "</span><div style='font-size:0.8rem;color:#9ca3af'>" + a.get("message", "") + "</div></div>"
     else:
-        exit_html = "<div style='color:#6b7280;text-align:center;padding:1rem'>无退出信号</div>"
+        exit_html = "<div style='color:#6b7280;text-align:center;padding:1rem'>无退出/风险信号</div>"
+
+    fee_cal_html = ""
+    for c in m4.get("fee_calendar") or []:
+        fee_cal_html += ("<div class='exit-row' style='border-left:3px solid #3b82f6'><strong>" + c["fund_name"]
+                         + "</strong><span style='float:right;color:#3b82f6'>" + str(c["remaining_days"]) + "天后解锁</span>"
+                         + "<div style='font-size:0.8rem;color:#9ca3af'>持有" + str(c["days_held"]) + "天，赎回费" + c["fee_label"]
+                         + "，" + c["unlock_date"] + "起免赎回费</div></div>")
+    if not fee_cal_html:
+        fee_cal_html = "<div style='color:#6b7280;text-align:center;padding:0.6rem'>所有持仓已免赎回费</div>"
 
     # ---- 修炼日志表 ----
     log_rows = ""
@@ -1041,12 +1180,16 @@ def generate_dashboard_html(data, env):
     </div>
     <table><tr><th>信号</th><th>板块</th><th>涨跌</th><th>仓位</th><th>匹配基金</th></tr>""" + signals_html + """</table>
     <div style="margin-top:1rem">
-      <strong style="color:var(--dim);font-size:0.85rem">退出信号</strong>
+      <strong style="color:var(--dim);font-size:0.85rem">退出 / 风险信号（止盈止损 + PE估值 + 信号状态机）</strong>
       """ + exit_html + """
     </div>
+    <div style="margin-top:1rem">
+      <strong style="color:var(--dim);font-size:0.85rem">C类费率解锁日历</strong>
+      """ + fee_cal_html + """
+    </div>
     <div style="margin-top:0.75rem;font-size:0.78rem;color:var(--dim)">
-      止损-8% | 短线止盈+12% | 趋势止盈+18% | 移动止盈高点回撤&gt;5% |
-      历史记录 """ + str(data["module_5_optimization"]["history_days"]) + """ 天
+      止损-8% | 短线止盈+12% | 趋势止盈+18% | 移动止盈&gt;5% | PE百分位&gt;70/80/90%分档减仓 |
+      收益&gt;20%分批止盈 | C类&lt;7天赎回费1.5% | 历史记录 """ + str(data["module_5_optimization"]["history_days"]) + """ 天
     </div>
   </div>
 </details>

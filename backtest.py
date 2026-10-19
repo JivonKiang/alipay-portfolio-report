@@ -90,7 +90,9 @@ def build_class_covariance(classes):
     """基于类别波动率和相关系数构造协方差矩阵"""
     vols = pd.Series({c: class_expected_return_and_vol(CLASS_WEIGHTS[c])[1] for c in classes})
     corr = CLASS_CORR.reindex(index=classes, columns=classes).fillna(0)
-    np.fill_diagonal(corr.values, 1.0)
+    arr = corr.to_numpy(copy=True)
+    np.fill_diagonal(arr, 1.0)
+    corr = pd.DataFrame(arr, index=corr.index, columns=corr.columns)
     return corr.mul(vols, axis=0).mul(vols, axis=1)
 
 
@@ -164,6 +166,11 @@ class Engine:
             'days': len(port),
         }
 
+    @staticmethod
+    def calmar(ann_return, max_dd):
+        """Calmar比率 = 年化收益 / |最大回撤|（衡量回撤修复能力，整合自 fund-trend-system）"""
+        return ann_return / abs(max_dd) if max_dd < 0 else 0
+
 # ============ 定投回测 ============
 def sip_backtest(prices, key, monthly=50000, years=3):
     if key not in prices: return None
@@ -185,12 +192,16 @@ def sip_backtest(prices, key, monthly=50000, years=3):
 
     fv = shares * p.iloc[-1]
     ret = (fv - invested) / invested
+    # 定投期标的价格最大回撤（衡量定投期间承受的浮亏压力）
+    peak = p.expanding().max()
+    price_max_dd = float(((p - peak) / peak).min())
     return {
         'asset': ASSET_PARAMS.get(key, {}).get('desc', key),
         'invested': int(invested),
         'final_value': round(float(fv), 2),
         'total_return': round(ret * 100, 2),
         'ann_return': round(((1 + ret)**(1/years) - 1) * 100, 2),
+        'price_max_dd': round(price_max_dd * 100, 2),
     }
 
 # ============ 蒙特卡洛 ============
@@ -272,7 +283,8 @@ def main():
         r1 = Engine(p1, s['alloc']).run()
         results[k] = {'info': s, '5y': r5, '3y': r3, '1y': r1}
         if r3:
-            print(f"  {s['name']}: 3年收益{r3['total_return']*100:.2f}%, 夏普{r3['sharpe']:.2f}, 回撤{r3['max_dd']*100:.2f}%")
+            print(f"  {s['name']}: 3年收益{r3['total_return']*100:.2f}%, 夏普{r3['sharpe']:.2f}, "
+                  f"回撤{r3['max_dd']*100:.2f}%, Calmar{Engine.calmar(r3['ann_return'], r3['max_dd']):.2f}")
 
     print("\n[3] 定投回测...")
     sip = {}
@@ -318,6 +330,7 @@ def main():
                     'vol': round(r[p]['ann_vol']*100, 2),
                     'sharpe': round(r[p]['sharpe'], 3),
                     'dd': round(r[p]['max_dd']*100, 2),
+                    'calmar': round(Engine.calmar(r[p]['ann_return'], r[p]['max_dd']), 3),
                     'win': round(r[p]['win_rate']*100, 2),
                 }
         report['scenarios'][k] = d
