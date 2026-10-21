@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>右侧交易扫描 · MACD+KDJ</title>
+<style>
+:root{
+  --bg:#f5f7fa;--card:#fff;--line:#e5e9f0;--txt:#1c2333;--sub:#6b7486;
+  --red:#e03e3e;--green:#0f9960;--gold:#b8860b;--brand:#2f5fe0;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--txt);padding:20px 16px 60px}
+.wrap{max-width:1080px;margin:0 auto}
+h1{font-size:22px;margin-bottom:4px}
+.meta{color:var(--sub);font-size:13px;margin-bottom:16px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.card .num{font-size:26px;font-weight:700}
+.card .lbl{font-size:12px;color:var(--sub);margin-top:2px}
+.rules{background:#fffbe8;border:1px solid #f0e0a0;border-radius:10px;padding:12px 16px;font-size:13px;color:#7a5c00;margin-bottom:18px;line-height:1.7}
+.tabs{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.tabs button{border:1px solid var(--line);background:var(--card);color:var(--sub);padding:7px 16px;border-radius:20px;cursor:pointer;font-size:13px}
+.tabs button.on{background:var(--brand);border-color:var(--brand);color:#fff}
+input#q{width:100%;max-width:320px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;font-size:13px;margin-bottom:12px;outline:none}
+input#q:focus{border-color:var(--brand)}
+table{width:100%;border-collapse:collapse;background:var(--card);border-radius:10px;overflow:hidden;font-size:13px}
+th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}
+th{background:#eef1f6;color:var(--sub);font-weight:600;font-size:12px;position:sticky;top:0}
+tr:hover td{background:#f7f9fd}
+.tag{display:inline-block;padding:1px 8px;border-radius:4px;font-size:11px;background:#eef2ff;color:var(--brand)}
+.up{color:var(--red)}.down{color:var(--green)}.warn{color:var(--gold)}
+.empty{padding:30px;text-align:center;color:var(--sub);background:var(--card);border-radius:10px}
+.footer{margin-top:24px;color:var(--sub);font-size:12px;line-height:1.8}
+@media(max-width:640px){th,td{padding:7px 6px;font-size:12px}.card .num{font-size:20px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>右侧交易每日扫描 · MACD + KDJ</h1>
+  <div class="meta" id="meta">加载中…</div>
+
+  <div class="cards" id="cards"></div>
+
+  <div class="rules" id="rules"></div>
+
+  <div class="tabs">
+    <button class="on" data-view="passed">✅ 右侧达标</button>
+    <button data-view="near">👀 观察池</button>
+    <button data-view="all">📋 全部明细</button>
+  </div>
+  <input id="q" placeholder="搜索板块 / 指数名称…">
+
+  <div id="tbl"></div>
+
+  <div class="footer">
+    数据源：东方财富公开行情接口（日线，前复权）· 每个交易日北京时间 14:10 自动更新<br>
+    ⚠️ 仅为技术指标扫描结果，不构成投资建议。右侧交易 = 趋势确认后跟进，注意仓位与止损。
+  </div>
+</div>
+
+<script>
+let DATA=null, VIEW='passed';
+const fmt=(v,d=2)=>v==null?'-':Number(v).toFixed(d);
+const pct=v=>`<span class="${v>=0?'up':'down'}">${v>=0?'+':''}${fmt(v)}%</span>`;
+const tag=t=>`<span class="tag">${t}</span>`;
+
+function render(){
+  if(!DATA)return;
+  const s=DATA.summary;
+  document.getElementById('meta').textContent=
+    `交易日 ${DATA.trade_date} · 生成于 ${DATA.generated_at}（北京时间）`;
+  document.getElementById('cards').innerHTML=`
+    <div class="card"><div class="num">${s.scanned}</div><div class="lbl">扫描总数</div></div>
+    <div class="card"><div class="num" style="color:var(--red)">${s.passed}</div><div class="lbl">右侧达标</div></div>
+    <div class="card"><div class="num" style="color:var(--gold)">${s.near}</div><div class="lbl">观察池</div></div>
+    <div class="card"><div class="num" style="font-size:15px;line-height:1.5;padding-top:6px">${s.index_passed.length?s.index_passed.join('<br>'):'无达标指数'}</div><div class="lbl">宽基指数达标</div></div>`;
+  document.getElementById('rules').innerHTML=
+    `<b>筛选规则（三条同时满足 = 右侧交易信号）</b><br>`+
+    `① ${DATA.rules.macd}　② ${DATA.rules.kdj}　③ ${DATA.rules.room}`;
+  drawTable();
+}
+
+function drawTable(){
+  let rows=DATA[VIEW]||[];
+  const q=document.getElementById('q').value.trim().toLowerCase();
+  if(q)rows=rows.filter(r=>r.name.toLowerCase().includes(q)||r.secid.toLowerCase().includes(q));
+  const el=document.getElementById('tbl');
+  if(!rows.length){el.innerHTML='<div class="empty">当前视图下没有数据</div>';return;}
+  el.innerHTML=`<table><thead><tr>
+    <th>名称</th><th>类型</th><th>收盘</th><th>涨跌</th><th>DIF</th><th>DEA</th><th>MACD红柱</th><th>K</th><th>D</th><th>J</th>${VIEW!=='passed'?'<th>未达标原因</th>':''}
+  </tr></thead><tbody>`+
+  rows.map(r=>`<tr>
+    <td>${r.name}</td><td>${tag(r.type)}</td>
+    <td>${fmt(r.close)}</td><td>${pct(r.change_pct)}</td>
+    <td>${fmt(r.dif)}</td><td>${fmt(r.dea)}</td>
+    <td><b class="${r.hist>0?'up':'down'}">${fmt(r.hist)}</b></td>
+    <td>${fmt(r.k)}</td><td>${fmt(r.d)}</td>
+    <td class="${r.j>=100||r.k>=90?'warn':''}">${fmt(r.j)}</td>
+    ${VIEW!=='passed'?`<td class="down" style="font-size:11px">${(r.fails||[]).join('，')||'-'}</td>`:''}
+  </tr>`).join('')+'</tbody></table>';
+}
+
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');VIEW=b.dataset.view;drawTable();
+});
+document.getElementById('q').oninput=drawTable;
+
+fetch('data.json').then(r=>r.json()).then(d=>{DATA=d;render();})
+  .catch(()=>document.getElementById('tbl').innerHTML='<div class="empty">数据加载失败，请稍后刷新</div>');
+</script>
+</body>
+</html>
