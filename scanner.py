@@ -12,6 +12,8 @@
 - 输出：scan/data.json（GitHub Pages 面板 /scan/index.html 读取）
 - 达标标的附带历史回测：次日收盘买入、固定持有 5/10 个交易日卖出，
   卖出时若持有不足 7 个自然日按支付宝场外费率计 1.5% 赎回费
+- 龙头股下钻：达标板块按总市值取前 8 只龙头股，逐股做同口径
+  趋势判断 + 历史回测（个股用相对条件，避免价格量级偏差）
 """
 import json
 import os
@@ -37,6 +39,7 @@ KLINE_BARS = 500     # 拉取 K 线根数（约 2 年，兼顾指标计算与历
 REDEEM_FEE = 1.5     # 支付宝场外基金：持有不足 7 个自然日卖出收取 1.5% 赎回费
 MIN_HOLD_CAL_DAYS = 7
 BT_SAMPLE_MIN = 5    # 回测样本少于该值视为「样本不足」
+TOP_STOCKS = 8       # 每个达标板块按总市值取前 N 只龙头股下钻
 
 # ---------- ETF 映射（板块/指数 → 支付宝可搜的场内 ETF；场外需搜「XXETF联接」） ----------
 # 覆盖常用标的，未列出的可在支付宝直接搜索板块关键词，可自行增删
@@ -228,17 +231,20 @@ def calc_indicators(close, high, low):
     }
 
 
-def backtest(kl, holds=(5, 10)):
+def backtest(kl, holds=(5, 10), hist_min=None):
     """
     历史信号回测：过去约 2 年内，凡是触发达标信号的日子，
     均按「信号次日收盘买入、持有 N 个交易日后收盘卖出」模拟，
     卖出时持有不足 7 个自然日按支付宝场外费率扣 1.5% 赎回费。
     同一时间只持有一笔（卖出后才找下一个信号），避免重复计算。
+    hist_min：红柱下限。板块/指数默认用 HIST_MIN（绝对阈值）；
+    个股/ETF 价格量级差异大，传 0.0 用相对条件（红柱>0）。
     """
     close, high, low, dates = kl["close"], kl["high"], kl["low"], kl["dates"]
     n = len(close)
     if n < 120:
         return None
+    hmin = HIST_MIN if hist_min is None else hist_min
 
     # MACD 序列
     ema12, ema26 = ema(close, 12), ema(close, 26)
@@ -263,7 +269,7 @@ def backtest(kl, holds=(5, 10)):
 
     signals = [
         i for i in range(60, n - 1)
-        if hist[i] > HIST_MIN and dif[i] > dea[i]
+        if hist[i] > hmin and dif[i] > dea[i]
         and k_s[i] > d_s[i] and k_s[i] < K_MAX
         and (3.0 * k_s[i] - 2.0 * d_s[i]) < J_MAX
     ]
@@ -366,6 +372,72 @@ def check_etf(etf_str):
         "j": round(j, 2),
         "passed": len(fails) == 0,
         "fails": fails,
+    }
+
+
+def fetch_constituents(bk_code, top_n=TOP_STOCKS):
+    """板块成分股：按总市值降序取前 N（龙头股），剔除 ST/退市"""
+    url = (
+        f"https://push2.eastmoney.com/api/qt/clist/get?pn=1&pz={top_n}&po=1&np=1"
+        f"&fltt=2&invt=2&fid=f20&fs=b:{bk_code}&fields=f12,f14,f3"
+    )
+    data = http_json(url)
+    diff = (data or {}).get("data") or {}
+    out = []
+    for it in diff.get("diff") or []:
+        code = it.get("f12", "")
+        name = it.get("f14", code)
+        if not code.isdigit() or "ST" in name.upper() or "退" in name:
+            continue
+        out.append({
+            "secid": ("1." if code[0] == "6" else "0.") + code,
+            "code": code,
+            "name": name,
+            "change_pct": _f(it.get("f3")),
+        })
+    return out
+
+
+def eval_stock(t):
+    """
+    个股评估：同板块口径的趋势判断（相对条件，避免价格量级偏差）
+    + 历史回测。返回结果 dict 或 None。
+    """
+    kl = fetch_kline(t["secid"], lmt=KLINE_BARS)
+    if not kl:
+        return None
+    try:
+        ind = calc_indicators(kl["close"], kl["high"], kl["low"])
+        bt = backtest(kl, hist_min=0.0)
+    except Exception:
+        return None
+    dif, dea, hist = ind["dif"], ind["dea"], ind["hist"]
+    k, d, j = ind["k"], ind["d"], ind["j"]
+
+    fails = []
+    if not hist > 0:
+        fails.append("MACD绿柱")
+    if not dif > dea:
+        fails.append("DIF≤DEA")
+    if not k > d:
+        fails.append("KDJ死叉")
+    if not (k < K_MAX and j < J_MAX):
+        fails.append("KDJ超买")
+
+    return {
+        "code": t["code"],
+        "name": t["name"] or kl.get("name", ""),
+        "close": kl["close"][-1],
+        "change_pct": t.get("change_pct", 0.0),
+        "hist": round(hist, 2),
+        "dif": round(dif, 2),
+        "dea": round(dea, 2),
+        "k": round(k, 2),
+        "d": round(d, 2),
+        "j": round(j, 2),
+        "passed": len(fails) == 0,
+        "fails": fails,
+        "bt": bt,
     }
 
 
@@ -473,6 +545,32 @@ def scan_all():
     passed.sort(key=bt_sort_key, reverse=True)
     near.sort(key=lambda x: -x["hist"])
     idx_passed = [r["name"] for r in passed if r["type"] == "宽基指数"]
+
+    # 4. 龙头股下钻：达标板块按市值取前 N，逐股做同口径信号判断 + 回测
+    for r in passed:
+        if not r["secid"].startswith("90."):
+            continue  # 仅板块（90.BKxxx）下钻，宽基指数跳过
+        try:
+            cons = fetch_constituents(r["secid"].split(".")[1])
+        except Exception:
+            cons = []
+        if not cons:
+            continue
+        stocks = []
+        with ThreadPoolExecutor(max_workers=6) as p2:
+            futures = {p2.submit(eval_stock, c): c for c in cons}
+            for fut in as_completed(futures):
+                try:
+                    s = fut.result()
+                except Exception:
+                    continue
+                if s:
+                    stocks.append(s)
+        stocks.sort(key=lambda s: (
+            not s["passed"],
+            -(((s.get("bt") or {}).get("hold10")) or {}).get("win_rate", 0.0),
+        ))
+        r["stocks"] = stocks[:5]
 
     data = {
         "generated_at": now_bj.strftime("%Y-%m-%d %H:%M:%S"),

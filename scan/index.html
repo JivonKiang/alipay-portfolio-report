@@ -173,8 +173,8 @@ tr.open .chev{transform:rotate(90deg)}
 <div id="main">
   <div class="topbar">
     <h2 id="viewTitle">达标池<span id="viewDesc"></span></h2>
-    <span class="hint">点击 ETF 复制代码 · 点击行查看详情</span>
-    <input id="search" type="search" placeholder="搜索板块 / 指数 / ETF 代码">
+    <span class="hint">点击代码/ETF 复制 · 点击行查看详情</span>
+    <input id="search" type="search" placeholder="搜索板块 / 指数 / ETF / 股票代码">
   </div>
   <div class="wrap"><div id="content"></div></div>
 </div>
@@ -184,6 +184,7 @@ tr.open .chev{transform:rotate(90deg)}
 <script>
 const VIEWS = [
   {key:"passed",  name:"达标池", icon:"✅", desc:"按回测胜率排序，点行看详情"},
+  {key:"stocks",  name:"龙头股", icon:"🔍", desc:"达标板块前8大市值龙头，逐股 MACD+KDJ+回测评估，胜率排序"},
   {key:"locked",  name:"证据链锁定", icon:"🔒", desc:"板块达标 + ETF 自身同步多头，可直接场内买入"},
   {key:"near",    name:"观察池", icon:"👀", desc:"多头排列，等待信号确认"},
   {key:"index",   name:"宽基指数", icon:"📊", desc:"主流宽基指数状态"},
@@ -236,6 +237,39 @@ function resCell(it){
 }
 
 /* 展开详情：技术指标 + 回测明细 */
+function stockCell(s){
+  return '<span class="etf" data-code="'+ s.code +'" data-kind="stock" title="点击复制代码">'
+    + '<span class="code">'+ s.code +'</span>'
+    + '<span class="ename">'+ s.name +'</span></span>';
+}
+
+/* 个股展开详情 */
+function stockDetailHtml(s){
+  const bt = s.bt || {};
+  const h10 = bt.hold10 || {}, h5 = bt.hold5 || {};
+  const btSec = bt.signals ? (
+    '<div class="dsec">📈 历史回测（约2年，含7日内1.5%赎回费口径）</div>'
+    + '<div><span class="k">历史信号数</span>　<span class="v">'+ (bt.signals ?? "-") +' 次</span></div>'
+    + '<div><span class="k">持10日</span>　<span class="v">胜率 '+ (h10.win_rate ?? "-") +'% ｜ 均 '+(h10.avg>0?"+":"")+(h10.avg ?? "-")+'% ｜ 中位 '+(h10.med ?? "-")+'%</span></div>'
+    + '<div><span class="k">持10日极值</span>　<span class="v">最好 '+(h10.best ?? "-")+'% ｜ 最差 '+(h10.worst ?? "-")+'%</span></div>'
+    + '<div><span class="k">持5日</span>　<span class="v">胜率 '+ (h5.win_rate ?? "-") +'% ｜ 均 '+(h5.avg>0?"+":"")+(h5.avg ?? "-")+'% ｜ 中位 '+(h5.med ?? "-")+'%</span></div>'
+    + '<div><span class="k">持5日极值</span>　<span class="v">最好 '+(h5.best ?? "-")+'% ｜ 最差 '+(h5.worst ?? "-")+'%</span></div>'
+  ) : '<div class="dsec">📈 历史回测</div><div class="reason-inline">样本不足，暂无回测数据</div>';
+  return '<div class="dgrid">'
+    + '<div class="dsec">🔧 技术指标（最新）</div>'
+    + '<div><span class="k">现价</span>　<span class="v">'+ s.close.toFixed(2) +'</span></div>'
+    + '<div><span class="k">MACD</span>　<span class="v">红柱 '+ s.hist.toFixed(2) +' ｜ DIF '+ s.dif.toFixed(2) +' / DEA '+ s.dea.toFixed(2) +'</span></div>'
+    + '<div><span class="k">KDJ</span>　<span class="v">K '+ s.k.toFixed(1) +' / D '+ s.d.toFixed(1) +' / J '+ s.j.toFixed(1) +'</span></div>'
+    + '<div><span class="k">今日涨跌</span>　<span class="v '+ pctCls(s.change_pct) +'">'+ fmtPct(s.change_pct) +'</span></div>'
+    + (s.fails && s.fails.length ? '<div><span class="k">未达标原因</span>　<span class="v">'+ s.fails.join("；") +'</span></div>' : '')
+    + btSec
+    + '<div class="dsec">🏭 所属板块</div>'
+    + '<div><span class="k">板块</span>　<span class="v">'+ s.sector +'</span></div>'
+    + (s.sector_etf ? '<div><span class="k">板块对应ETF</span>　<span class="v">'+ s.sector_etf +'</span></div>' : '')
+    + '<div><span class="k">买入方式</span>　<span class="v">个股需通过兴业证券场内账户买入，点击代码可复制后在同花顺/券商App搜索</span></div>'
+    + '</div>';
+}
+
 function detailHtml(it){
   const bt = it.bt || {};
   const h10 = bt.hold10 || {}, h5 = bt.hold5 || {};
@@ -256,6 +290,22 @@ function detailHtml(it){
         ? '<div><span class="k">结论</span>　<span class="v" style="color:var(--green)">✅ ETF 同步多头，证据链锁定，可场内买入</span></div>'
         : '<div><span class="k">结论</span>　<span class="v" style="color:var(--red)">⚠️ ETF 未同步：'+ it.etf_check.fails.join("；") +'，暂不建议买入</span></div>')
   ) : '<div class="dsec">🔗 ETF 共振自检</div><div class="reason-inline">该板块暂无对应 ETF 映射，可在同花顺搜索板块关键词找相关 ETF</div>';
+  const stkSec = it.stocks && it.stocks.length ? (
+    '<div class="dsec">🔍 龙头股下钻（板块内前8大市值，逐股同口径评估，取前5）</div>'
+    + '<div style="grid-column:1/-1;font-size:12px;line-height:2">'
+    + it.stocks.map(s =>
+        '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">'
+        + stockCell(s)
+        + '<span class="'+ pctCls(s.change_pct) +'">'+ fmtPct(s.change_pct) +'</span>'
+        + (s.passed
+            ? '<span class="tag ok">信号达标</span>'
+            : '<span class="tag no">未达标</span>')
+        + (s.bt && s.bt.hold10 && s.bt.hold10.trades
+            ? '<span class="wr '+ wrCls(s.bt.hold10.win_rate) +'">10日胜率 '+ s.bt.hold10.win_rate.toFixed(0) +'%</span>'
+            : '<span class="wr none">样本不足</span>')
+        + '</div>').join("")
+    + '</div>'
+  ) : '';
   return '<div class="dgrid">'
     + '<div class="dsec">🔧 技术指标（最新）</div>'
     + '<div><span class="k">现价</span>　<span class="v">'+ it.close.toFixed(2) +'</span></div>'
@@ -265,12 +315,30 @@ function detailHtml(it){
     + (it.fails && it.fails.length ? '<div><span class="k">未达标原因</span>　<span class="v">'+ it.fails.join("；") +'</span></div>' : '')
     + btSec
     + etfSec
+    + stkSec
     + '</div>';
 }
 
 function rowsFor(key){
   if (!DATA) return [];
   if (key === "passed")  return DATA.passed || [];
+  if (key === "stocks"){
+    // 展平达标板块下钻的龙头股；同一股票属多个达标板块时去重并合并板块名
+    const seen = {};
+    (DATA.passed || []).forEach(sec =>
+      (sec.stocks || []).forEach(s => {
+        if (seen[s.code]) {
+          if (!seen[s.code].sector.includes(sec.name)) seen[s.code].sector += "、" + sec.name;
+          return;
+        }
+        seen[s.code] = { ...s, sector: sec.name, sector_etf: sec.etf || "" };
+      }));
+    const out = Object.values(seen);
+    out.sort((a, b) =>
+      (b.passed ? 1 : 0) - (a.passed ? 1 : 0)
+      || (((b.bt || {}).hold10 || {}).win_rate || 0) - (((a.bt || {}).hold10 || {}).win_rate || 0));
+    return out;
+  }
   if (key === "locked")  return (DATA.passed || []).filter(x => x.etf_check && x.etf_check.passed);
   if (key === "near")    return DATA.near || [];
   if (key === "index")   return (DATA.all || []).filter(x => x.type === "宽基指数");
@@ -294,7 +362,25 @@ function buildNav(){
 /* ---------- 表格 ---------- */
 function tableHtml(rows, isPassed){
   let head, body;
-  if (isPassed){
+  if (cur === "stocks"){
+    head = '<tr><th>#</th><th>股票</th><th>所属板块</th><th>今日涨跌</th><th>红柱</th>'
+      + '<th>K / D / J</th><th>状态</th><th>10日胜率</th><th>10日均收益</th><th>5日胜率</th><th></th></tr>';
+    body = rows.map((s, i) =>
+      '<tr class="row">'
+      + '<td><span class="rankn">'+ (i+1) +'</span></td>'
+      + '<td>'+ stockCell(s) +'</td>'
+      + '<td style="font-weight:400">'+ s.sector +'</td>'
+      + '<td class="'+ pctCls(s.change_pct) +'">'+ fmtPct(s.change_pct) +'</td>'
+      + '<td>'+ s.hist.toFixed(2) +'</td>'
+      + '<td>'+ s.k.toFixed(0) +' / '+ s.d.toFixed(0) +' / '+ s.j.toFixed(0) +'</td>'
+      + '<td>'+ (s.passed ? '<span class="tag ok">达标</span>' : '<span class="tag no">未达标</span>') +'</td>'
+      + '<td>'+ wrCell(s.bt && s.bt.hold10) +'</td>'
+      + '<td>'+ avgCell(s.bt && s.bt.hold10) +'</td>'
+      + '<td>'+ wrCell(s.bt && s.bt.hold5) +'</td>'
+      + '<td><span class="chev">▶</span></td>'
+      + '</tr><tr class="detail" hidden><td colspan="11">'+ stockDetailHtml(s) +'</td></tr>'
+    ).join("");
+  } else if (isPassed){
     head = '<tr><th>#</th><th>板块 / 指数</th><th>对应 ETF</th><th>ETF共振</th><th>今日涨跌</th><th>红柱</th>'
       + '<th>10日胜率</th><th>10日均收益</th><th>5日胜率</th><th></th></tr>';
     body = rows.map((it, i) =>
@@ -353,6 +439,24 @@ function picksHtml(rows){
     + '<div class="note">证据链：① 板块信号达标 → ② 历史回测胜率验证 → ③ 对应场内 ETF 自身 MACD/KDJ 同步多头。行情为交易所公开 K 线（与同花顺同源），下单前可在同花顺 App 复核一眼；通过兴业证券场内买入 ETF 无赎回费（回测按支付宝场外 1.5% 最严口径计费，实际场内成本更低）。历史胜率不代表未来表现。</div></div>';
 }
 
+/* ---------- 个股优选卡（龙头股视图） ---------- */
+function stockPicksHtml(rows){
+  const pool = rows.filter(s => s.passed && s.bt && s.bt.hold10 && s.bt.hold10.trades >= 5);
+  if (!pool.length) return "";
+  const good = pool.slice(0, 3);
+  const items = good.map((s, i) =>
+    '<div class="pick">'
+    + '<span class="rank'+(i===0?' g1':'')+'">'+ (i+1) +'</span>'
+    + '<span class="pname">'+ stockCell(s) +'</span>'
+    + '<span class="pinfo">'+ s.sector +'</span>'
+    + '<span class="pwr wr '+ wrCls(s.bt.hold10.win_rate) +'">胜率 '+ s.bt.hold10.win_rate.toFixed(0) +'%</span>'
+    + '<span class="avg">均 '+ (s.bt.hold10.avg>0?"+":"") + s.bt.hold10.avg.toFixed(2) +'% / '+ s.bt.hold10.trades +'次</span>'
+    + '</div>').join("");
+  return '<div class="card"><div class="picks-head">🏆 个股优选<small>信号达标 + 10日胜率最高的龙头股（样本 ≥ 5 次）</small></div>'
+    + items
+    + '<div class="note">下钻逻辑：板块信号达标 → 取板块内总市值前 8 龙头（剔除 ST/退市）→ 逐股按同口径 MACD/KDJ 相对条件评估 → 附约 2 年历史回测（次日收盘买入、持 5/10 日收盘卖出）。个股波动大于 ETF，仓位建议更分散。历史胜率不代表未来表现。</div></div>';
+}
+
 function render(){
   const v = VIEWS.find(x => x.key === cur);
   document.getElementById("viewTitle").firstChild.textContent = v.icon + " " + v.name;
@@ -362,15 +466,18 @@ function render(){
   if (keyword){
     const k = keyword.toLowerCase();
     rows = rows.filter(x =>
-      x.name.toLowerCase().includes(k) || (x.etf || "").toLowerCase().includes(k));
+      x.name.toLowerCase().includes(k) || (x.etf || "").toLowerCase().includes(k)
+      || (x.code || "").toLowerCase().includes(k) || (x.sector || "").toLowerCase().includes(k));
   }
 
   const s = (DATA && DATA.summary) || {};
   const lockedN = (DATA.passed || []).filter(x => x.etf_check && x.etf_check.passed).length;
+  const allStocks = (DATA.passed || []).flatMap(x => x.stocks || []);
   const stats = '<div class="card"><div class="stats">'
     + '<div class="stat"><div class="num blue">'+ (s.scanned ?? "-") +'</div><div class="lbl">扫描标的</div></div>'
     + '<div class="stat"><div class="num green">'+ (s.passed ?? "-") +'</div><div class="lbl">达标</div></div>'
     + '<div class="stat"><div class="num" style="color:var(--blue)">'+ lockedN +'</div><div class="lbl">板块+ETF双达标</div></div>'
+    + '<div class="stat"><div class="num" style="color:var(--blue)">'+ allStocks.filter(x => x.passed).length +'</div><div class="lbl">龙头股信号达标</div></div>'
     + '<div class="stat"><div class="num amber">'+ (s.near ?? "-") +'</div><div class="lbl">观察</div></div>'
     + '</div></div>';
 
@@ -382,6 +489,7 @@ function render(){
 
   let html = stats;
   if (cur === "passed") html += picksHtml(rows);
+  if (cur === "stocks") html += stockPicksHtml(rows);
   html += tableHtml(rows, cur === "passed");
   document.getElementById("content").innerHTML = html;
 
@@ -404,7 +512,8 @@ function bindRowEvents(){
     el.onclick = e => {
       e.stopPropagation();
       const code = el.dataset.code;
-      const done = () => toast("已复制 " + code + "，去支付宝搜索买入");
+      const isStock = el.dataset.kind === "stock";
+      const done = () => toast("已复制 " + code + (isStock ? "，去同花顺/券商App搜索" : "，去支付宝搜索买入"));
       if (navigator.clipboard) navigator.clipboard.writeText(code).then(done, () => fallbackCopy(code, done));
       else fallbackCopy(code, done);
     };
