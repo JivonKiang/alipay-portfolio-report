@@ -2,114 +2,295 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>右侧交易扫描 · MACD+KDJ</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>右侧交易扫描面板 · MACD+KDJ</title>
 <style>
 :root{
-  --bg:#f5f7fa;--card:#fff;--line:#e5e9f0;--txt:#1c2333;--sub:#6b7486;
-  --red:#e03e3e;--green:#0f9960;--gold:#b8860b;--brand:#2f5fe0;
+  --bg:#f4f6fa; --card:#fff; --line:#e6e9f0;
+  --txt:#1c2333; --sub:#6b7486;
+  --blue:#2f6fed; --blue-soft:#eaf1ff;
+  --green:#0fa05e; --green-soft:#e5f7ee;
+  --red:#e2493e; --red-soft:#fdeceb;
+  --amber:#c77c0d; --amber-soft:#fdf3e0;
+  --sidebar-w:216px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--txt);padding:20px 16px 60px}
-.wrap{max-width:1080px;margin:0 auto}
-h1{font-size:22px;margin-bottom:4px}
-.meta{color:var(--sub);font-size:13px;margin-bottom:16px}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
-.card .num{font-size:26px;font-weight:700}
-.card .lbl{font-size:12px;color:var(--sub);margin-top:2px}
-.rules{background:#fffbe8;border:1px solid #f0e0a0;border-radius:10px;padding:12px 16px;font-size:13px;color:#7a5c00;margin-bottom:18px;line-height:1.7}
-.tabs{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
-.tabs button{border:1px solid var(--line);background:var(--card);color:var(--sub);padding:7px 16px;border-radius:20px;cursor:pointer;font-size:13px}
-.tabs button.on{background:var(--brand);border-color:var(--brand);color:#fff}
-input#q{width:100%;max-width:320px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;font-size:13px;margin-bottom:12px;outline:none}
-input#q:focus{border-color:var(--brand)}
-table{width:100%;border-collapse:collapse;background:var(--card);border-radius:10px;overflow:hidden;font-size:13px}
-th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
-th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}
-th{background:#eef1f6;color:var(--sub);font-weight:600;font-size:12px;position:sticky;top:0}
-tr:hover td{background:#f7f9fd}
-.tag{display:inline-block;padding:1px 8px;border-radius:4px;font-size:11px;background:#eef2ff;color:var(--brand)}
-.up{color:var(--red)}.down{color:var(--green)}.warn{color:var(--gold)}
-.empty{padding:30px;text-align:center;color:var(--sub);background:var(--card);border-radius:10px}
-.footer{margin-top:24px;color:var(--sub);font-size:12px;line-height:1.8}
-@media(max-width:640px){th,td{padding:7px 6px;font-size:12px}.card .num{font-size:20px}}
+html{-webkit-text-size-adjust:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--txt);font-size:14px}
+
+/* ============ 左侧导航（桌面端） ============ */
+#sidebar{
+  position:fixed;left:0;top:0;bottom:0;width:var(--sidebar-w);
+  background:var(--card);border-right:1px solid var(--line);
+  display:flex;flex-direction:column;z-index:30;
+}
+.brand{padding:18px 16px 12px}
+.brand h1{font-size:17px;letter-spacing:.5px}
+.brand p{font-size:11px;color:var(--sub);margin-top:3px}
+#nav{flex:1;overflow-y:auto;padding:4px 8px}
+.nav-item{
+  display:flex;align-items:center;justify-content:space-between;
+  width:100%;padding:10px 12px;margin-bottom:2px;border:0;border-radius:8px;
+  background:transparent;color:var(--txt);font-size:14px;cursor:pointer;text-align:left;
+}
+.nav-item:hover{background:#f1f4f9}
+.nav-item.active{background:var(--blue-soft);color:var(--blue);font-weight:600}
+.nav-item .cnt{font-size:12px;color:var(--sub);background:#eef1f6;border-radius:10px;padding:1px 8px}
+.nav-item.active .cnt{background:var(--blue);color:#fff}
+.rules{padding:12px 16px;border-top:1px solid var(--line);font-size:11px;color:var(--sub);line-height:1.7}
+.rules b{color:var(--txt)}
+#upTime{padding:0 16px 14px;font-size:11px;color:var(--sub)}
+
+/* ============ 主内容 ============ */
+#main{margin-left:var(--sidebar-w);min-height:100vh;display:flex;flex-direction:column}
+.topbar{
+  position:sticky;top:0;z-index:20;background:rgba(244,246,250,.92);backdrop-filter:blur(8px);
+  padding:14px 22px 10px;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+}
+.topbar h2{font-size:16px;margin-right:auto}
+#viewDesc{font-size:12px;color:var(--sub);font-weight:400;margin-left:8px}
+#search{
+  width:210px;padding:7px 12px;border:1px solid var(--line);border-radius:8px;
+  font-size:13px;outline:none;background:var(--card);
+}
+#search:focus{border-color:var(--blue)}
+.hint{font-size:11px;color:var(--sub)}
+
+.wrap{padding:16px 22px 40px;flex:1}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.stats{display:flex;gap:0;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+.stat{flex:1;min-width:110px;padding:14px 16px;border-right:1px solid var(--line)}
+.stat:last-child{border-right:0}
+.stat .num{font-size:22px;font-weight:700}
+.stat .lbl{font-size:11px;color:var(--sub);margin-top:2px}
+.num.green{color:var(--green)} .num.amber{color:var(--amber)} .num.blue{color:var(--blue)}
+
+.tblwrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:760px}
+th,td{padding:10px 12px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line);font-size:13px}
+th{font-size:11px;color:var(--sub);font-weight:500;background:#f8fafc;position:sticky;top:0}
+tbody tr:hover{background:#f7f9fd}
+td:first-child,th:first-child{position:sticky;left:0;text-align:left;background:#fff;z-index:1;font-weight:600}
+tbody tr:hover td:first-child{background:#f7f9fd}
+th:first-child{background:#f8fafc}
+.tname{display:flex;flex-direction:column;line-height:1.35}
+.tname small{font-weight:400;color:var(--sub);font-size:11px}
+.etf{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.etf .code{font-weight:700;color:var(--blue);font-family:ui-monospace,Menlo,monospace}
+.etf:hover .code{text-decoration:underline}
+.etf .ename{font-size:11px;color:var(--sub);max-width:130px;overflow:hidden;text-overflow:ellipsis}
+.noetf{font-size:11px;color:#a6adbb}
+.pct-up{color:var(--red)} .pct-down{color:var(--green)}
+.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600}
+.tag.ok{background:var(--green-soft);color:var(--green)}
+.tag.near{background:var(--amber-soft);color:var(--amber)}
+.tag.no{background:#eef1f6;color:var(--sub)}
+.reason{font-size:11px;color:var(--sub);white-space:normal;max-width:180px}
+.empty{padding:48px 20px;text-align:center;color:var(--sub)}
+
+#toast{
+  position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:#1c2333;color:#fff;font-size:13px;padding:9px 18px;border-radius:20px;
+  opacity:0;pointer-events:none;transition:.25s;z-index:99;
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ============ 移动端：导航变顶部标签条 ============ */
+@media (max-width:768px){
+  body{font-size:13px}
+  #sidebar{
+    position:sticky;top:0;bottom:auto;width:100%;flex-direction:column;
+    border-right:0;border-bottom:1px solid var(--line);
+  }
+  .brand{display:flex;align-items:baseline;justify-content:space-between;padding:12px 14px 6px}
+  .brand h1{font-size:15px}
+  .rules{display:none}
+  #upTime{padding:0 14px 6px}
+  #nav{display:flex;overflow-x:auto;padding:4px 10px 8px;gap:6px;scrollbar-width:none}
+  #nav::-webkit-scrollbar{display:none}
+  .nav-item{width:auto;flex:0 0 auto;margin:0;padding:7px 13px;background:#f1f4f9;border-radius:18px;font-size:13px;gap:6px}
+  .nav-item.active{background:var(--blue);color:#fff}
+  .nav-item .cnt{background:rgba(0,0,0,.06)}
+  .nav-item.active .cnt{background:rgba(255,255,255,.25);color:#fff}
+  #main{margin-left:0}
+  .topbar{padding:10px 14px 8px}
+  #search{width:100%;order:3}
+  .wrap{padding:12px 12px 32px}
+  table{min-width:720px}
+  td,th{padding:9px 10px}
+}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <h1>右侧交易每日扫描 · MACD + KDJ</h1>
-  <div class="meta" id="meta">加载中…</div>
 
-  <div class="cards" id="cards"></div>
-
-  <div class="rules" id="rules"></div>
-
-  <div class="tabs">
-    <button class="on" data-view="passed">✅ 右侧达标</button>
-    <button data-view="near">👀 观察池</button>
-    <button data-view="all">📋 全部明细</button>
+<aside id="sidebar">
+  <div class="brand">
+    <h1>右侧交易扫描</h1>
+    <p>MACD + KDJ · 每日 14:10</p>
   </div>
-  <input id="q" placeholder="搜索板块 / 指数名称…">
-
-  <div id="tbl"></div>
-
-  <div class="footer">
-    数据源：东方财富公开行情接口（日线，前复权）· 每个交易日北京时间 14:10 自动更新<br>
-    ⚠️ 仅为技术指标扫描结果，不构成投资建议。右侧交易 = 趋势确认后跟进，注意仓位与止损。
+  <nav id="nav"></nav>
+  <div class="rules">
+    <b>达标条件（三条同满足）</b><br>
+    ① MACD 红柱 &gt; 10 且 DIF &gt; DEA<br>
+    ② KDJ：K &gt; D（未死叉）<br>
+    ③ K &lt; 90 且 J &lt; 100（未超买）
   </div>
+  <div id="upTime"></div>
+</aside>
+
+<div id="main">
+  <div class="topbar">
+    <h2 id="viewTitle">达标池<span id="viewDesc"></span></h2>
+    <span class="hint">点击 ETF 代码可复制，去支付宝搜索买入</span>
+    <input id="search" type="search" placeholder="搜索板块 / 指数 / ETF 代码">
+  </div>
+  <div class="wrap"><div id="content"></div></div>
 </div>
 
+<div id="toast"></div>
+
 <script>
-let DATA=null, VIEW='passed';
-const fmt=(v,d=2)=>v==null?'-':Number(v).toFixed(d);
-const pct=v=>`<span class="${v>=0?'up':'down'}">${v>=0?'+':''}${fmt(v)}%</span>`;
-const tag=t=>`<span class="tag">${t}</span>`;
+const VIEWS = [
+  {key:"passed", name:"达标池", icon:"✅", desc:"三条条件全部满足，可关注右侧买点"},
+  {key:"near",   name:"观察池", icon:"👀", desc:"多头排列，红柱不足或临近超买，等待确认"},
+  {key:"index",  name:"宽基指数", icon:"📊", desc:"主流宽基指数状态"},
+  {key:"concept",name:"概念板块", icon:"🔥", desc:"东财全部概念板块"},
+  {key:"industry",name:"行业板块", icon:"🏭", desc:"东财全部行业板块"},
+  {key:"all",    name:"全部明细", icon:"📋", desc:"全部扫描结果"},
+];
+let DATA = null, cur = "passed", keyword = "";
+
+function pctCls(v){ return v > 0 ? "pct-up" : (v < 0 ? "pct-down" : ""); }
+function fmtPct(v){ return (v > 0 ? "+" : "") + v.toFixed(2) + "%"; }
+
+function statusOf(it){
+  if (it.passed) return '<span class="tag ok">达标</span>';
+  if (it.near)   return '<span class="tag near">观察</span>';
+  return '<span class="tag no">未达标</span>';
+}
+
+function etfCell(it){
+  const etf = (it.etf || "").trim();
+  if (!etf) return '<span class="noetf">支付宝搜「'+ it.name +'」或ETF联接</span>';
+  const sp = etf.indexOf(" ");
+  const code = sp > 0 ? etf.slice(0, sp) : etf;
+  const ename = sp > 0 ? etf.slice(sp + 1) : "";
+  return '<span class="etf" data-code="'+ code +'" title="点击复制代码">'
+    + '<span class="code">'+ code +'</span>'
+    + (ename ? '<span class="ename">'+ ename +'</span>' : '')
+    + '</span>';
+}
+
+function rowsFor(key){
+  if (!DATA) return [];
+  if (key === "passed")  return DATA.passed || [];
+  if (key === "near")    return DATA.near || [];
+  if (key === "index")   return (DATA.all || []).filter(x => x.type === "宽基指数");
+  if (key === "concept") return (DATA.all || []).filter(x => x.type === "概念板块");
+  if (key === "industry")return (DATA.all || []).filter(x => x.type === "行业板块");
+  return DATA.all || [];
+}
+
+function buildNav(){
+  const nav = document.getElementById("nav");
+  nav.innerHTML = VIEWS.map(v => {
+    const n = rowsFor(v.key).length;
+    return '<button class="nav-item'+(v.key===cur?' active':'')+'" data-key="'+v.key+'">'
+      + '<span>'+ v.icon +' '+ v.name +'</span><span class="cnt">'+ n +'</span></button>';
+  }).join("");
+  nav.querySelectorAll(".nav-item").forEach(btn => {
+    btn.onclick = () => { cur = btn.dataset.key; buildNav(); render(); };
+  });
+}
 
 function render(){
-  if(!DATA)return;
-  const s=DATA.summary;
-  document.getElementById('meta').textContent=
-    `交易日 ${DATA.trade_date} · 生成于 ${DATA.generated_at}（北京时间）`;
-  document.getElementById('cards').innerHTML=`
-    <div class="card"><div class="num">${s.scanned}</div><div class="lbl">扫描总数</div></div>
-    <div class="card"><div class="num" style="color:var(--red)">${s.passed}</div><div class="lbl">右侧达标</div></div>
-    <div class="card"><div class="num" style="color:var(--gold)">${s.near}</div><div class="lbl">观察池</div></div>
-    <div class="card"><div class="num" style="font-size:15px;line-height:1.5;padding-top:6px">${s.index_passed.length?s.index_passed.join('<br>'):'无达标指数'}</div><div class="lbl">宽基指数达标</div></div>`;
-  document.getElementById('rules').innerHTML=
-    `<b>筛选规则（三条同时满足 = 右侧交易信号）</b><br>`+
-    `① ${DATA.rules.macd}　② ${DATA.rules.kdj}　③ ${DATA.rules.room}`;
-  drawTable();
+  const v = VIEWS.find(x => x.key === cur);
+  document.getElementById("viewTitle").firstChild.textContent = v.icon + " " + v.name;
+  document.getElementById("viewDesc").textContent = " · " + v.desc;
+
+  let rows = rowsFor(cur);
+  if (keyword){
+    const k = keyword.toLowerCase();
+    rows = rows.filter(x =>
+      x.name.toLowerCase().includes(k) || (x.etf || "").toLowerCase().includes(k));
+  }
+
+  const s = (DATA && DATA.summary) || {};
+  const stats = '<div class="stats">'
+    + '<div class="stat"><div class="num blue">'+ (s.scanned ?? "-") +'</div><div class="lbl">扫描标的</div></div>'
+    + '<div class="stat"><div class="num green">'+ (s.passed ?? "-") +'</div><div class="lbl">达标</div></div>'
+    + '<div class="stat"><div class="num amber">'+ (s.near ?? "-") +'</div><div class="lbl">观察</div></div>'
+    + '<div class="stat"><div class="num">'+ (s.failed_fetch ?? 0) +'</div><div class="lbl">抓取失败</div></div>'
+    + '</div>';
+
+  if (!rows.length){
+    document.getElementById("content").innerHTML =
+      '<div class="card">'+ stats +'<div class="empty">'+ (keyword ? "没有匹配「"+ keyword +"」的结果" : "暂无数据") +'</div></div>';
+    return;
+  }
+
+  const tr = rows.map(it =>
+    '<tr>'
+    + '<td><div class="tname">'+ it.name +'<small>'+ it.type +'</small></div></td>'
+    + '<td>'+ etfCell(it) +'</td>'
+    + '<td>'+ it.close.toFixed(2) +'</td>'
+    + '<td class="'+ pctCls(it.change_pct) +'">'+ fmtPct(it.change_pct) +'</td>'
+    + '<td style="font-weight:700;color:'+(it.hist>0?'var(--red)':'var(--green)')+'">'+ it.hist.toFixed(2) +'</td>'
+    + '<td>'+ it.dif.toFixed(2) +' / '+ it.dea.toFixed(2) +'</td>'
+    + '<td>'+ it.k.toFixed(1) +' / '+ it.d.toFixed(1) +' / '+ it.j.toFixed(1) +'</td>'
+    + '<td>'+ statusOf(it) +'</td>'
+    + '<td><div class="reason">'+ (it.fails && it.fails.length ? it.fails.join("；") : "—") +'</div></td>'
+    + '</tr>').join("");
+
+  document.getElementById("content").innerHTML =
+    '<div class="card">'+ stats
+    + '<div class="tblwrap"><table><thead><tr>'
+    + '<th>板块 / 指数</th><th>对应 ETF（支付宝）</th><th>现价</th><th>涨跌</th>'
+    + '<th>MACD红柱</th><th>DIF / DEA</th><th>K / D / J</th><th>状态</th><th>未达标原因</th>'
+    + '</tr></thead><tbody>'+ tr +'</tbody></table></div></div>';
+
+  document.querySelectorAll(".etf").forEach(el => {
+    el.onclick = () => {
+      const code = el.dataset.code;
+      const done = () => toast("已复制 " + code + "，去支付宝搜索买入");
+      if (navigator.clipboard) navigator.clipboard.writeText(code).then(done, () => fallbackCopy(code, done));
+      else fallbackCopy(code, done);
+    };
+  });
 }
 
-function drawTable(){
-  let rows=DATA[VIEW]||[];
-  const q=document.getElementById('q').value.trim().toLowerCase();
-  if(q)rows=rows.filter(r=>r.name.toLowerCase().includes(q)||r.secid.toLowerCase().includes(q));
-  const el=document.getElementById('tbl');
-  if(!rows.length){el.innerHTML='<div class="empty">当前视图下没有数据</div>';return;}
-  el.innerHTML=`<table><thead><tr>
-    <th>名称</th><th>类型</th><th>收盘</th><th>涨跌</th><th>DIF</th><th>DEA</th><th>MACD红柱</th><th>K</th><th>D</th><th>J</th>${VIEW!=='passed'?'<th>未达标原因</th>':''}
-  </tr></thead><tbody>`+
-  rows.map(r=>`<tr>
-    <td>${r.name}</td><td>${tag(r.type)}</td>
-    <td>${fmt(r.close)}</td><td>${pct(r.change_pct)}</td>
-    <td>${fmt(r.dif)}</td><td>${fmt(r.dea)}</td>
-    <td><b class="${r.hist>0?'up':'down'}">${fmt(r.hist)}</b></td>
-    <td>${fmt(r.k)}</td><td>${fmt(r.d)}</td>
-    <td class="${r.j>=100||r.k>=90?'warn':''}">${fmt(r.j)}</td>
-    ${VIEW!=='passed'?`<td class="down" style="font-size:11px">${(r.fails||[]).join('，')||'-'}</td>`:''}
-  </tr>`).join('')+'</tbody></table>';
+function fallbackCopy(text, cb){
+  const ta = document.createElement("textarea");
+  ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand("copy"); cb(); } catch(e){ toast("复制失败，请手动记下代码"); }
+  document.body.removeChild(ta);
 }
 
-document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
-  document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('on'));
-  b.classList.add('on');VIEW=b.dataset.view;drawTable();
+let toastTimer;
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 1800);
+}
+
+document.getElementById("search").addEventListener("input", e => {
+  keyword = e.target.value.trim(); render();
 });
-document.getElementById('q').oninput=drawTable;
 
-fetch('data.json').then(r=>r.json()).then(d=>{DATA=d;render();})
-  .catch(()=>document.getElementById('tbl').innerHTML='<div class="empty">数据加载失败，请稍后刷新</div>');
+fetch("data.json?t=" + Date.now())
+  .then(r => r.json())
+  .then(d => {
+    DATA = d;
+    document.getElementById("upTime").textContent = "更新于 " + (d.generated_at || "-");
+    buildNav(); render();
+  })
+  .catch(() => {
+    document.getElementById("content").innerHTML =
+      '<div class="card"><div class="empty">数据加载失败，请稍后刷新（首次运行请在 Actions 触发 scanner.py 生成 data.json）</div></div>';
+  });
 </script>
 </body>
 </html>
