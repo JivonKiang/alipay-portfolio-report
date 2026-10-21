@@ -19,8 +19,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta, timezone
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-# 输出到 output/scan/ 子目录，与主交易面板（output/ 根）共存
-OUTPUT_DIR = os.path.join(SCRIPT_DIR, "output", "scan")
+# 输出到仓库根 scan/ 目录（GitHub Pages 从 main 根部署 → 面板地址 /scan/）
+OUTPUT_DIR = os.path.join(SCRIPT_DIR, "scan")
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
