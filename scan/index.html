@@ -183,7 +183,8 @@ tr.open .chev{transform:rotate(90deg)}
 
 <script>
 const VIEWS = [
-  {key:"passed",  name:"达标池", icon:"✅", desc:"按历史回测胜率排序，点行看详情"},
+  {key:"passed",  name:"达标池", icon:"✅", desc:"按回测胜率排序，点行看详情"},
+  {key:"locked",  name:"证据链锁定", icon:"🔒", desc:"板块达标 + ETF 自身同步多头，可直接场内买入"},
   {key:"near",    name:"观察池", icon:"👀", desc:"多头排列，等待信号确认"},
   {key:"index",   name:"宽基指数", icon:"📊", desc:"主流宽基指数状态"},
   {key:"concept", name:"概念板块", icon:"🔥", desc:"东财全部概念板块"},
@@ -225,6 +226,15 @@ function statusOf(it){
   return '<span class="tag no">未达标</span>';
 }
 
+/* ETF 共振状态徽章 */
+function resCell(it){
+  const ec = it.etf_check;
+  if (!ec) return '<span class="wr none">无对应ETF</span>';
+  if (ec.passed) return '<span class="tag ok">✅ 同步</span><div style="font-size:10px;color:var(--sub)">'+ ec.code +'</div>';
+  return '<span class="tag" style="background:var(--red-soft);color:var(--red)">⚠️ 未同步</span>'
+    + '<div style="font-size:10px;color:var(--sub)">'+ ec.fails[0] +'</div>';
+}
+
 /* 展开详情：技术指标 + 回测明细 */
 function detailHtml(it){
   const bt = it.bt || {};
@@ -237,6 +247,15 @@ function detailHtml(it){
     + '<div><span class="k">持5日</span>　<span class="v">胜率 '+ (h5.win_rate ?? "-") +'% ｜ 均 '+(h5.avg>0?"+":"")+(h5.avg ?? "-")+'% ｜ 中位 '+(h5.med ?? "-")+'%</span></div>'
     + '<div><span class="k">持5日极值</span>　<span class="v">最好 '+(h5.best ?? "-")+'% ｜ 最差 '+(h5.worst ?? "-")+'%</span></div>'
   ) : '<div class="dsec">📈 历史回测</div><div class="reason-inline">无回测数据（样本不足或非达标标的）</div>';
+  const etfSec = it.etf_check ? (
+    '<div class="dsec">🔗 ETF 共振自检（'+ it.etf_check.code +' '+ it.etf_check.name +'）</div>'
+    + '<div><span class="k">ETF现价 / 涨跌</span>　<span class="v">'+ it.etf_check.close.toFixed(3) +'（'+ fmtPct(it.etf_check.change_pct) +'）</span></div>'
+    + '<div><span class="k">ETF MACD</span>　<span class="v">红柱 '+ it.etf_check.hist +' ｜ DIF '+ it.etf_check.dif +' / DEA '+ it.etf_check.dea +'</span></div>'
+    + '<div><span class="k">ETF KDJ</span>　<span class="v">K '+ it.etf_check.k +' / D '+ it.etf_check.d +' / J '+ it.etf_check.j +'</span></div>'
+    + (it.etf_check.passed
+        ? '<div><span class="k">结论</span>　<span class="v" style="color:var(--green)">✅ ETF 同步多头，证据链锁定，可场内买入</span></div>'
+        : '<div><span class="k">结论</span>　<span class="v" style="color:var(--red)">⚠️ ETF 未同步：'+ it.etf_check.fails.join("；") +'，暂不建议买入</span></div>')
+  ) : '<div class="dsec">🔗 ETF 共振自检</div><div class="reason-inline">该板块暂无对应 ETF 映射，可在同花顺搜索板块关键词找相关 ETF</div>';
   return '<div class="dgrid">'
     + '<div class="dsec">🔧 技术指标（最新）</div>'
     + '<div><span class="k">现价</span>　<span class="v">'+ it.close.toFixed(2) +'</span></div>'
@@ -245,12 +264,14 @@ function detailHtml(it){
     + '<div><span class="k">今日涨跌</span>　<span class="v '+ pctCls(it.change_pct) +'">'+ fmtPct(it.change_pct) +'</span></div>'
     + (it.fails && it.fails.length ? '<div><span class="k">未达标原因</span>　<span class="v">'+ it.fails.join("；") +'</span></div>' : '')
     + btSec
+    + etfSec
     + '</div>';
 }
 
 function rowsFor(key){
   if (!DATA) return [];
   if (key === "passed")  return DATA.passed || [];
+  if (key === "locked")  return (DATA.passed || []).filter(x => x.etf_check && x.etf_check.passed);
   if (key === "near")    return DATA.near || [];
   if (key === "index")   return (DATA.all || []).filter(x => x.type === "宽基指数");
   if (key === "concept") return (DATA.all || []).filter(x => x.type === "概念板块");
@@ -274,20 +295,21 @@ function buildNav(){
 function tableHtml(rows, isPassed){
   let head, body;
   if (isPassed){
-    head = '<tr><th>#</th><th>板块 / 指数</th><th>对应 ETF</th><th>今日涨跌</th><th>红柱</th>'
+    head = '<tr><th>#</th><th>板块 / 指数</th><th>对应 ETF</th><th>ETF共振</th><th>今日涨跌</th><th>红柱</th>'
       + '<th>10日胜率</th><th>10日均收益</th><th>5日胜率</th><th></th></tr>';
     body = rows.map((it, i) =>
       '<tr class="row">'
       + '<td><span class="rankn">'+ (i+1) +'</span></td>'
       + '<td><div class="tname">'+ it.name +'<small>'+ it.type +'</small></div></td>'
       + '<td>'+ etfCell(it) +'</td>'
+      + '<td>'+ resCell(it) +'</td>'
       + '<td class="'+ pctCls(it.change_pct) +'">'+ fmtPct(it.change_pct) +'</td>'
       + '<td>'+ it.hist.toFixed(1) +'</td>'
       + '<td>'+ wrCell(it.bt && it.bt.hold10) +'</td>'
       + '<td>'+ avgCell(it.bt && it.bt.hold10) +'</td>'
       + '<td>'+ wrCell(it.bt && it.bt.hold5) +'</td>'
       + '<td><span class="chev">▶</span></td>'
-      + '</tr><tr class="detail" hidden><td colspan="9">'+ detailHtml(it) +'</td></tr>'
+      + '</tr><tr class="detail" hidden><td colspan="10">'+ detailHtml(it) +'</td></tr>'
     ).join("");
   } else {
     head = '<tr><th>板块 / 指数</th><th>对应 ETF</th><th>现价</th><th>今日涨跌</th><th>红柱</th><th>K / D / J</th><th>状态</th><th></th></tr>';
@@ -309,9 +331,11 @@ function tableHtml(rows, isPassed){
 
 /* ---------- 优选推荐卡（达标池） ---------- */
 function picksHtml(rows){
-  const good = rows.filter(it => it.bt && it.bt.hold10 && it.bt.hold10.trades >= 5)
-    .sort((a, b) => (b.bt.hold10.win_rate - a.bt.hold10.win_rate) || (b.bt.hold10.avg - a.bt.hold10.avg))
-    .slice(0, 3);
+  // 只推荐「板块达标 + ETF 自身同步多头」的证据链锁定标的；无则回退到高胜率
+  const chain = rows.filter(it => it.bt && it.bt.hold10 && it.bt.hold10.trades >= 5 && it.etf_check && it.etf_check.passed);
+  const pool = chain.length ? chain
+    : rows.filter(it => it.bt && it.bt.hold10 && it.bt.hold10.trades >= 5);
+  const good = pool.slice(0, 3);
   if (!good.length) return "";
   const items = good.map((it, i) =>
     '<div class="pick">'
@@ -320,10 +344,13 @@ function picksHtml(rows){
     + '<span class="pinfo">'+ etfCell(it) +'</span>'
     + '<span class="pwr wr '+ wrCls(it.bt.hold10.win_rate) +'">胜率 '+ it.bt.hold10.win_rate.toFixed(0) +'%</span>'
     + '<span class="avg">均 '+ (it.bt.hold10.avg>0?"+":"") + it.bt.hold10.avg.toFixed(2) +'% / '+ it.bt.hold10.trades +'次</span>'
+    + (it.etf_check && it.etf_check.passed ? '<span class="tag ok" style="margin-left:8px">🔗 共振</span>' : '')
     + '</div>').join("");
-  return '<div class="card"><div class="picks-head">🏆 优选推荐<small>回测胜率最高的前 3 个（样本 ≥ 5 次）</small></div>'
+  return '<div class="card"><div class="picks-head">🏆 优选推荐<small>'
+    + (chain.length ? '证据链锁定（板块+ETF双达标）且回测胜率最高' : '暂无双达标标的，以下为回测胜率最高（样本 ≥ 5 次）')
+    + '</small></div>'
     + items
-    + '<div class="note">回测口径：历史出现同类达标信号时，信号次日收盘买入、持有 10 个交易日后收盘卖出；持有不足 7 个自然日已按支付宝场外费率扣除 1.5% 赎回费。历史胜率不代表未来表现，仅供参考。</div></div>';
+    + '<div class="note">证据链：① 板块信号达标 → ② 历史回测胜率验证 → ③ 对应场内 ETF 自身 MACD/KDJ 同步多头。行情为交易所公开 K 线（与同花顺同源），下单前可在同花顺 App 复核一眼；通过兴业证券场内买入 ETF 无赎回费（回测按支付宝场外 1.5% 最严口径计费，实际场内成本更低）。历史胜率不代表未来表现。</div></div>';
 }
 
 function render(){
@@ -339,11 +366,12 @@ function render(){
   }
 
   const s = (DATA && DATA.summary) || {};
+  const lockedN = (DATA.passed || []).filter(x => x.etf_check && x.etf_check.passed).length;
   const stats = '<div class="card"><div class="stats">'
     + '<div class="stat"><div class="num blue">'+ (s.scanned ?? "-") +'</div><div class="lbl">扫描标的</div></div>'
     + '<div class="stat"><div class="num green">'+ (s.passed ?? "-") +'</div><div class="lbl">达标</div></div>'
+    + '<div class="stat"><div class="num" style="color:var(--blue)">'+ lockedN +'</div><div class="lbl">板块+ETF双达标</div></div>'
     + '<div class="stat"><div class="num amber">'+ (s.near ?? "-") +'</div><div class="lbl">观察</div></div>'
-    + '<div class="stat"><div class="num">'+ (s.index_passed || []).length +'</div><div class="lbl">达标宽基</div></div>'
     + '</div></div>';
 
   if (!rows.length){

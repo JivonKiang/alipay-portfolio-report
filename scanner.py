@@ -55,15 +55,19 @@ SECTOR_ETF_MAP = {
     # 申万一级行业（31个）
     "半导体": "512480 半导体ETF", "电子": "159997 电子ETF", "计算机": "512720 计算机ETF",
     "通信": "515880 通信ETF", "传媒": "512980 传媒ETF", "数字媒体": "512980 传媒ETF",
+    "广告媒体": "512980 传媒ETF", "图片媒体": "512980 传媒ETF",
     "电力设备": "516320 电力设备ETF", "机械设备": "", "国防军工": "512660 军工ETF",
     "汽车": "516110 汽车ETF", "医药生物": "512010 医药ETF", "食品饮料": "515170 食品饮料ETF",
     "农林牧渔": "159825 农业ETF", "银行": "512800 银行ETF", "非银金融": "512000 券商ETF",
     "房地产": "512200 房地产ETF", "煤炭": "515220 煤炭ETF", "石油石化": "561360 石油石化ETF",
     "基础化工": "159870 化工ETF", "钢铁": "515210 钢铁ETF", "有色金属": "512400 有色ETF",
     "建筑材料": "159745 建材ETF", "建筑装饰": "516970 基建ETF", "家用电器": "159996 家电ETF",
+    "厨房小家电": "159996 家电ETF", "卫浴电器": "159996 家电ETF",
     "纺织服饰": "", "轻工制造": "", "商业贸易": "", "商贸零售": "",
     "社会服务": "159766 旅游ETF", "综合": "", "公用事业": "159611 电力ETF",
     "交通运输": "561320 交通运输ETF", "环保": "512580 环保ETF", "美容护理": "",
+    "钾肥": "159825 农业ETF", "国有大型银行Ⅱ": "512800 银行ETF", "国有大型银行Ⅲ": "512800 银行ETF",
+    "航空装备Ⅱ": "512660 军工ETF",
     # 常见概念板块
     "人工智能": "159819 AI ETF", "AI算力": "159819 AI ETF", "算力租赁": "159819 AI ETF",
     "光伏": "515790 光伏ETF", "光伏主材": "515790 光伏ETF", "光伏设备": "515790 光伏ETF",
@@ -304,6 +308,67 @@ def lookup_etf(name, ttype):
     return SECTOR_ETF_MAP.get(name, "")
 
 
+def etf_secid(code):
+    """场内 ETF 代码 → 东财 secid（5/6 开头为沪市，1 开头为深市）"""
+    code = (code or "").strip()
+    if not code.isdigit():
+        return None
+    return ("1." if code[0] in "56" else "0.") + code
+
+
+def check_etf(etf_str):
+    """
+    ETF 共振自检：拉取对应场内 ETF 的真实 K 线，验证 ETF 自身是否
+    与板块同趋势（多头排列 + 未超买）。注意 ETF 单价仅 1~5 元，
+    「红柱>10」是绝对阈值、随价格量级变化，故 ETF 自检用相对条件：
+    MACD 红柱 > 0 且 DIF > DEA、K > D、K < 90 且 J < 100。
+    """
+    etf_str = (etf_str or "").strip()
+    if not etf_str:
+        return None
+    sp = etf_str.find(" ")
+    code = etf_str[:sp] if sp > 0 else etf_str
+    secid = etf_secid(code)
+    if not secid:
+        return None
+    kl = fetch_kline(secid, lmt=KLINE_BARS)
+    if not kl:
+        return None
+    try:
+        ind = calc_indicators(kl["close"], kl["high"], kl["low"])
+    except Exception:
+        return None
+    dif, dea, hist = ind["dif"], ind["dea"], ind["hist"]
+    k, d, j = ind["k"], ind["d"], ind["j"]
+
+    fails = []
+    if not hist > 0:
+        fails.append("ETF MACD绿柱")
+    if not dif > dea:
+        fails.append("ETF DIF≤DEA")
+    if not k > d:
+        fails.append("ETF KDJ死叉")
+    if not (k < K_MAX and j < J_MAX):
+        fails.append("ETF KDJ超买")
+
+    prev = kl["close"][-2] if len(kl["close"]) >= 2 else kl["close"][-1]
+    return {
+        "code": code,
+        "name": kl.get("name") or (etf_str[sp + 1:] if sp > 0 else code),
+        "secid": secid,
+        "close": kl["close"][-1],
+        "change_pct": round((kl["close"][-1] / prev - 1.0) * 100.0, 2) if prev else 0.0,
+        "hist": round(hist, 3),
+        "dif": round(dif, 3),
+        "dea": round(dea, 3),
+        "k": round(k, 2),
+        "d": round(d, 2),
+        "j": round(j, 2),
+        "passed": len(fails) == 0,
+        "fails": fails,
+    }
+
+
 def evaluate(target):
     """评估单个板块/指数，返回结果 dict 或 None（失败跳过）"""
     kl = fetch_kline(target["secid"])
@@ -379,6 +444,7 @@ def scan_all():
     near = [r for r in results if r["near"]]
 
     # 3. 对达标标的做历史回测（约 2 年信号，含 7 日内 1.5% 赎回费）
+    #    并对其对应场内 ETF 做共振自检（板块与 ETF 双达标 = 证据链锁定）
     if passed:
         def run_bt(r):
             kl = fetch_kline(r["secid"], lmt=KLINE_BARS)
@@ -387,14 +453,23 @@ def scan_all():
                     r["bt"] = backtest(kl)
                 except Exception:
                     r["bt"] = None
+            try:
+                r["etf_check"] = check_etf(r.get("etf", ""))
+            except Exception:
+                r["etf_check"] = None
         with ThreadPoolExecutor(max_workers=8) as pool:
             list(pool.map(run_bt, passed))
 
-    # 达标按「10日胜率 → 平均收益」排序，样本不足的排后面
+    # 达标按「ETF共振 → 10日胜率 → 平均收益」排序：双达标的证据链最硬，排最前
     def bt_sort_key(r):
         h = ((r.get("bt") or {}).get("hold10")) or {}
-        enough = h.get("trades", 0) >= BT_SAMPLE_MIN
-        return (enough, h.get("win_rate", 0.0), h.get("avg", -999.0))
+        ec = r.get("etf_check") or {}
+        return (
+            bool(ec.get("passed")),                       # 板块+ETF 双达标优先
+            h.get("trades", 0) >= BT_SAMPLE_MIN,          # 回测样本充足优先
+            h.get("win_rate", 0.0),
+            h.get("avg", -999.0),
+        )
     passed.sort(key=bt_sort_key, reverse=True)
     near.sort(key=lambda x: -x["hist"])
     idx_passed = [r["name"] for r in passed if r["type"] == "宽基指数"]
@@ -408,6 +483,7 @@ def scan_all():
             "room": f"K < {K_MAX:g} 且 J < {J_MAX:g}（未超买，仍有上涨空间）",
             "fee": f"支付宝场外卖出不足 {MIN_HOLD_CAL_DAYS} 个自然日计 {REDEEM_FEE:g}% 赎回费（回测已计入）",
             "bt": "回测口径：信号次日收盘买入，持有 5/10 个交易日后收盘卖出，约 2 年历史",
+            "etf_check": "ETF共振自检：对应场内 ETF 自身 MACD 多头（红柱>0 且 DIF>DEA）、K>D、K<90 且 J<100；双达标=证据链锁定，可直接场内买入",
         },
         "summary": {
             "scanned": len(results),
