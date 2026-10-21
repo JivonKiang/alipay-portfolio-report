@@ -10,6 +10,8 @@
   2. K > D（KDJ 金叉状态，未死叉）
   3. K < 90 且 J < 100（未进超买区，仍有上涨空间）
 - 输出：scan/data.json（GitHub Pages 面板 /scan/index.html 读取）
+- 达标标的附带历史回测：次日收盘买入、固定持有 5/10 个交易日卖出，
+  卖出时若持有不足 7 个自然日按支付宝场外费率计 1.5% 赎回费
 """
 import json
 import os
@@ -31,7 +33,10 @@ HEADERS = {
 HIST_MIN = 10.0      # MACD 红柱下限
 K_MAX = 90.0         # K 上限（未超买）
 J_MAX = 100.0        # J 上限（未超买）
-KLINE_BARS = 140     # 计算指标所需 K 线根数
+KLINE_BARS = 500     # 拉取 K 线根数（约 2 年，兼顾指标计算与历史回测）
+REDEEM_FEE = 1.5     # 支付宝场外基金：持有不足 7 个自然日卖出收取 1.5% 赎回费
+MIN_HOLD_CAL_DAYS = 7
+BT_SAMPLE_MIN = 5    # 回测样本少于该值视为「样本不足」
 
 # ---------- ETF 映射（板块/指数 → 支付宝可搜的场内 ETF；场外需搜「XXETF联接」） ----------
 # 覆盖常用标的，未列出的可在支付宝直接搜索板块关键词，可自行增删
@@ -219,6 +224,79 @@ def calc_indicators(close, high, low):
     }
 
 
+def backtest(kl, holds=(5, 10)):
+    """
+    历史信号回测：过去约 2 年内，凡是触发达标信号的日子，
+    均按「信号次日收盘买入、持有 N 个交易日后收盘卖出」模拟，
+    卖出时持有不足 7 个自然日按支付宝场外费率扣 1.5% 赎回费。
+    同一时间只持有一笔（卖出后才找下一个信号），避免重复计算。
+    """
+    close, high, low, dates = kl["close"], kl["high"], kl["low"], kl["dates"]
+    n = len(close)
+    if n < 120:
+        return None
+
+    # MACD 序列
+    ema12, ema26 = ema(close, 12), ema(close, 26)
+    dif = [a - b for a, b in zip(ema12, ema26)]
+    dea = ema(dif, 9)
+    hist = [2.0 * (a - b) for a, b in zip(dif, dea)]
+
+    # KDJ 序列（与 calc_indicators 同口径）
+    k_s, d_s = [], []
+    pk = pd = 50.0
+    for i in range(n):
+        if i < 8:
+            rsv = 50.0
+        else:
+            hn = max(high[i - 8: i + 1])
+            ln = min(low[i - 8: i + 1])
+            rsv = 50.0 if hn == ln else (close[i] - ln) / (hn - ln) * 100.0
+        pk = (rsv + 2.0 * pk) / 3.0
+        pd = (pk + 2.0 * pd) / 3.0
+        k_s.append(pk)
+        d_s.append(pd)
+
+    signals = [
+        i for i in range(60, n - 1)
+        if hist[i] > HIST_MIN and dif[i] > dea[i]
+        and k_s[i] > d_s[i] and k_s[i] < K_MAX
+        and (3.0 * k_s[i] - 2.0 * d_s[i]) < J_MAX
+    ]
+
+    out = {"signals": len(signals)}
+    for hold in holds:
+        trades = []
+        i = 0
+        while i < len(signals):
+            s = signals[i]
+            entry = s + 1          # 信号次日收盘买入
+            exit_i = entry + hold  # 持有 hold 个交易日后收盘卖出
+            if exit_i >= n:
+                break
+            gross = (close[exit_i] / close[entry] - 1.0) * 100.0
+            cal_days = (datetime.strptime(dates[exit_i], "%Y-%m-%d")
+                        - datetime.strptime(dates[entry], "%Y-%m-%d")).days
+            fee = REDEEM_FEE if cal_days < MIN_HOLD_CAL_DAYS else 0.0
+            trades.append(gross - fee)
+            while i < len(signals) and signals[i] <= exit_i:
+                i += 1
+        if trades:
+            sorted_t = sorted(trades)
+            wins = sum(1 for t in trades if t > 0)
+            out[f"hold{hold}"] = {
+                "trades": len(trades),
+                "win_rate": round(wins / len(trades) * 100.0, 1),
+                "avg": round(sum(trades) / len(trades), 2),
+                "med": round(sorted_t[len(trades) // 2], 2),
+                "best": round(max(trades), 2),
+                "worst": round(min(trades), 2),
+            }
+        else:
+            out[f"hold{hold}"] = {"trades": 0}
+    return out
+
+
 def lookup_etf(name, ttype):
     """板块/指数 → 对应 ETF（支付宝可直接搜索的场内代码）"""
     if ttype == "宽基指数":
@@ -299,7 +377,25 @@ def scan_all():
 
     passed = [r for r in results if r["passed"]]
     near = [r for r in results if r["near"]]
-    passed.sort(key=lambda x: -x["hist"])
+
+    # 3. 对达标标的做历史回测（约 2 年信号，含 7 日内 1.5% 赎回费）
+    if passed:
+        def run_bt(r):
+            kl = fetch_kline(r["secid"], lmt=KLINE_BARS)
+            if kl:
+                try:
+                    r["bt"] = backtest(kl)
+                except Exception:
+                    r["bt"] = None
+        with ThreadPoolExecutor(max_workers=8) as pool:
+            list(pool.map(run_bt, passed))
+
+    # 达标按「10日胜率 → 平均收益」排序，样本不足的排后面
+    def bt_sort_key(r):
+        h = ((r.get("bt") or {}).get("hold10")) or {}
+        enough = h.get("trades", 0) >= BT_SAMPLE_MIN
+        return (enough, h.get("win_rate", 0.0), h.get("avg", -999.0))
+    passed.sort(key=bt_sort_key, reverse=True)
     near.sort(key=lambda x: -x["hist"])
     idx_passed = [r["name"] for r in passed if r["type"] == "宽基指数"]
 
@@ -310,6 +406,8 @@ def scan_all():
             "macd": f"MACD 红柱 > {HIST_MIN:g} 且 DIF > DEA",
             "kdj": "K > D（金叉状态未死叉）",
             "room": f"K < {K_MAX:g} 且 J < {J_MAX:g}（未超买，仍有上涨空间）",
+            "fee": f"支付宝场外卖出不足 {MIN_HOLD_CAL_DAYS} 个自然日计 {REDEEM_FEE:g}% 赎回费（回测已计入）",
+            "bt": "回测口径：信号次日收盘买入，持有 5/10 个交易日后收盘卖出，约 2 年历史",
         },
         "summary": {
             "scanned": len(results),

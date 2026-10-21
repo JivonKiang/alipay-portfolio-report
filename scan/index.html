@@ -58,36 +58,65 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 .hint{font-size:11px;color:var(--sub)}
 
 .wrap{padding:16px 22px 40px;flex:1}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
-.stats{display:flex;gap:0;flex-wrap:wrap;border-bottom:1px solid var(--line)}
-.stat{flex:1;min-width:110px;padding:14px 16px;border-right:1px solid var(--line)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:14px}
+.stats{display:flex;flex-wrap:wrap}
+.stat{flex:1;min-width:105px;padding:13px 16px;border-right:1px solid var(--line)}
 .stat:last-child{border-right:0}
-.stat .num{font-size:22px;font-weight:700}
+.stat .num{font-size:21px;font-weight:700}
 .stat .lbl{font-size:11px;color:var(--sub);margin-top:2px}
 .num.green{color:var(--green)} .num.amber{color:var(--amber)} .num.blue{color:var(--blue)}
 
+/* 优选推荐卡 */
+.picks-head{padding:12px 16px 4px;font-size:13px;font-weight:700}
+.picks-head small{font-weight:400;color:var(--sub);margin-left:8px;font-size:11px}
+.pick{display:flex;align-items:center;gap:14px;padding:10px 16px;border-top:1px solid var(--line);flex-wrap:wrap}
+.pick .rank{width:22px;height:22px;border-radius:50%;background:var(--blue-soft);color:var(--blue);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.pick .rank.g1{background:#ffd75e;color:#8a6100}
+.pick .pname{font-weight:600;min-width:72px}
+.pick .pinfo{font-size:12px;color:var(--sub)}
+.pick .pwr{margin-left:auto;font-weight:700}
+.pick .avg{font-size:12px;color:var(--sub);width:96px;text-align:right}
+.note{padding:10px 16px;font-size:11px;color:var(--sub);line-height:1.6;border-top:1px dashed var(--line)}
+
+/* 表格 */
 .tblwrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;min-width:760px}
+table{width:100%;border-collapse:collapse;min-width:700px}
 th,td{padding:10px 12px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line);font-size:13px}
 th{font-size:11px;color:var(--sub);font-weight:500;background:#f8fafc;position:sticky;top:0}
-tbody tr:hover{background:#f7f9fd}
+tbody tr.row{cursor:pointer}
+tbody tr.row:hover{background:#f7f9fd}
+tr.detail td{background:#fafbfd;padding:12px 16px;white-space:normal}
 td:first-child,th:first-child{position:sticky;left:0;text-align:left;background:#fff;z-index:1;font-weight:600}
 tbody tr:hover td:first-child{background:#f7f9fd}
+tr.detail td:first-child{background:#fafbfd}
 th:first-child{background:#f8fafc}
 .tname{display:flex;flex-direction:column;line-height:1.35}
 .tname small{font-weight:400;color:var(--sub);font-size:11px}
+.rankn{color:var(--sub);font-size:12px}
 .etf{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
 .etf .code{font-weight:700;color:var(--blue);font-family:ui-monospace,Menlo,monospace}
 .etf:hover .code{text-decoration:underline}
-.etf .ename{font-size:11px;color:var(--sub);max-width:130px;overflow:hidden;text-overflow:ellipsis}
+.etf .ename{font-size:11px;color:var(--sub);max-width:120px;overflow:hidden;text-overflow:ellipsis}
 .noetf{font-size:11px;color:#a6adbb}
 .pct-up{color:var(--red)} .pct-down{color:var(--green)}
+.wr{display:inline-block;min-width:52px;font-weight:700}
+.wr.hi{color:var(--green)} .wr.mid{color:var(--amber)} .wr.lo{color:var(--red)}
+.wr.none{color:#a6adbb;font-weight:400;font-size:11px}
+.avg-pos{color:var(--green)} .avg-neg{color:var(--red)}
+.chev{color:#b8bfcc;font-size:11px;transition:.15s}
+tr.open .chev{transform:rotate(90deg)}
 .tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600}
 .tag.ok{background:var(--green-soft);color:var(--green)}
 .tag.near{background:var(--amber-soft);color:var(--amber)}
 .tag.no{background:#eef1f6;color:var(--sub)}
-.reason{font-size:11px;color:var(--sub);white-space:normal;max-width:180px}
-.empty{padding:48px 20px;text-align:center;color:var(--sub)}
+
+/* 展开的详情区 */
+.dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px 20px;font-size:12px}
+.dgrid .k{color:var(--sub)}
+.dgrid .v{font-weight:600;text-align:left}
+.dsec{grid-column:1/-1;font-weight:700;font-size:12px;margin-top:6px;color:var(--txt)}
+.reason-inline{font-size:12px;color:var(--sub)}
+.empty{padding:44px 20px;text-align:center;color:var(--sub)}
 
 #toast{
   position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);
@@ -117,8 +146,10 @@ th:first-child{background:#f8fafc}
   .topbar{padding:10px 14px 8px}
   #search{width:100%;order:3}
   .wrap{padding:12px 12px 32px}
-  table{min-width:720px}
+  table{min-width:660px}
   td,th{padding:9px 10px}
+  .pick .avg{width:auto}
+  .dgrid{grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
@@ -142,7 +173,7 @@ th:first-child{background:#f8fafc}
 <div id="main">
   <div class="topbar">
     <h2 id="viewTitle">达标池<span id="viewDesc"></span></h2>
-    <span class="hint">点击 ETF 代码可复制，去支付宝搜索买入</span>
+    <span class="hint">点击 ETF 复制代码 · 点击行查看详情</span>
     <input id="search" type="search" placeholder="搜索板块 / 指数 / ETF 代码">
   </div>
   <div class="wrap"><div id="content"></div></div>
@@ -152,27 +183,22 @@ th:first-child{background:#f8fafc}
 
 <script>
 const VIEWS = [
-  {key:"passed", name:"达标池", icon:"✅", desc:"三条条件全部满足，可关注右侧买点"},
-  {key:"near",   name:"观察池", icon:"👀", desc:"多头排列，红柱不足或临近超买，等待确认"},
-  {key:"index",  name:"宽基指数", icon:"📊", desc:"主流宽基指数状态"},
-  {key:"concept",name:"概念板块", icon:"🔥", desc:"东财全部概念板块"},
+  {key:"passed",  name:"达标池", icon:"✅", desc:"按历史回测胜率排序，点行看详情"},
+  {key:"near",    name:"观察池", icon:"👀", desc:"多头排列，等待信号确认"},
+  {key:"index",   name:"宽基指数", icon:"📊", desc:"主流宽基指数状态"},
+  {key:"concept", name:"概念板块", icon:"🔥", desc:"东财全部概念板块"},
   {key:"industry",name:"行业板块", icon:"🏭", desc:"东财全部行业板块"},
-  {key:"all",    name:"全部明细", icon:"📋", desc:"全部扫描结果"},
+  {key:"all",     name:"全部明细", icon:"📋", desc:"全部扫描结果"},
 ];
 let DATA = null, cur = "passed", keyword = "";
 
-function pctCls(v){ return v > 0 ? "pct-up" : (v < 0 ? "pct-down" : ""); }
-function fmtPct(v){ return (v > 0 ? "+" : "") + v.toFixed(2) + "%"; }
-
-function statusOf(it){
-  if (it.passed) return '<span class="tag ok">达标</span>';
-  if (it.near)   return '<span class="tag near">观察</span>';
-  return '<span class="tag no">未达标</span>';
-}
+const pctCls = v => v > 0 ? "pct-up" : (v < 0 ? "pct-down" : "");
+const fmtPct = v => (v > 0 ? "+" : "") + v.toFixed(2) + "%";
+const wrCls  = w => w >= 60 ? "hi" : (w >= 45 ? "mid" : "lo");
 
 function etfCell(it){
   const etf = (it.etf || "").trim();
-  if (!etf) return '<span class="noetf">支付宝搜「'+ it.name +'」或ETF联接</span>';
+  if (!etf) return '<span class="noetf">支付宝搜「'+ it.name +'」</span>';
   const sp = etf.indexOf(" ");
   const code = sp > 0 ? etf.slice(0, sp) : etf;
   const ename = sp > 0 ? etf.slice(sp + 1) : "";
@@ -180,6 +206,46 @@ function etfCell(it){
     + '<span class="code">'+ code +'</span>'
     + (ename ? '<span class="ename">'+ ename +'</span>' : '')
     + '</span>';
+}
+
+function wrCell(h){
+  if (!h || !h.trades) return '<span class="wr none">样本不足</span>';
+  return '<span class="wr '+ wrCls(h.win_rate) +'">'+ h.win_rate.toFixed(0) +'%</span>'
+    + '<div style="font-size:10px;color:var(--sub)">'+ h.trades +'次</div>';
+}
+
+function avgCell(h){
+  if (!h || !h.trades) return '<span style="color:#a6adbb">—</span>';
+  return '<span class="'+ (h.avg >= 0 ? "avg-pos" : "avg-neg") +'">'+ (h.avg>0?"+":"") + h.avg.toFixed(2) +'%</span>';
+}
+
+function statusOf(it){
+  if (it.passed) return '<span class="tag ok">达标</span>';
+  if (it.near)   return '<span class="tag near">观察</span>';
+  return '<span class="tag no">未达标</span>';
+}
+
+/* 展开详情：技术指标 + 回测明细 */
+function detailHtml(it){
+  const bt = it.bt || {};
+  const h10 = bt.hold10 || {}, h5 = bt.hold5 || {};
+  const btSec = it.bt ? (
+    '<div class="dsec">📈 历史回测（约2年，含7日内1.5%赎回费）</div>'
+    + '<div><span class="k">历史信号数</span>　<span class="v">'+ (bt.signals ?? "-") +' 次</span></div>'
+    + '<div><span class="k">持10日</span>　<span class="v">胜率 '+ (h10.win_rate ?? "-") +'% ｜ 均 '+(h10.avg>0?"+":"")+(h10.avg ?? "-")+'% ｜ 中位 '+(h10.med ?? "-")+'%</span></div>'
+    + '<div><span class="k">持10日极值</span>　<span class="v">最好 '+(h10.best ?? "-")+'% ｜ 最差 '+(h10.worst ?? "-")+'%</span></div>'
+    + '<div><span class="k">持5日</span>　<span class="v">胜率 '+ (h5.win_rate ?? "-") +'% ｜ 均 '+(h5.avg>0?"+":"")+(h5.avg ?? "-")+'% ｜ 中位 '+(h5.med ?? "-")+'%</span></div>'
+    + '<div><span class="k">持5日极值</span>　<span class="v">最好 '+(h5.best ?? "-")+'% ｜ 最差 '+(h5.worst ?? "-")+'%</span></div>'
+  ) : '<div class="dsec">📈 历史回测</div><div class="reason-inline">无回测数据（样本不足或非达标标的）</div>';
+  return '<div class="dgrid">'
+    + '<div class="dsec">🔧 技术指标（最新）</div>'
+    + '<div><span class="k">现价</span>　<span class="v">'+ it.close.toFixed(2) +'</span></div>'
+    + '<div><span class="k">MACD</span>　<span class="v">红柱 '+ it.hist.toFixed(2) +' ｜ DIF '+ it.dif.toFixed(2) +' / DEA '+ it.dea.toFixed(2) +'</span></div>'
+    + '<div><span class="k">KDJ</span>　<span class="v">K '+ it.k.toFixed(1) +' / D '+ it.d.toFixed(1) +' / J '+ it.j.toFixed(1) +'</span></div>'
+    + '<div><span class="k">今日涨跌</span>　<span class="v '+ pctCls(it.change_pct) +'">'+ fmtPct(it.change_pct) +'</span></div>'
+    + (it.fails && it.fails.length ? '<div><span class="k">未达标原因</span>　<span class="v">'+ it.fails.join("；") +'</span></div>' : '')
+    + btSec
+    + '</div>';
 }
 
 function rowsFor(key){
@@ -204,6 +270,62 @@ function buildNav(){
   });
 }
 
+/* ---------- 表格 ---------- */
+function tableHtml(rows, isPassed){
+  let head, body;
+  if (isPassed){
+    head = '<tr><th>#</th><th>板块 / 指数</th><th>对应 ETF</th><th>今日涨跌</th><th>红柱</th>'
+      + '<th>10日胜率</th><th>10日均收益</th><th>5日胜率</th><th></th></tr>';
+    body = rows.map((it, i) =>
+      '<tr class="row">'
+      + '<td><span class="rankn">'+ (i+1) +'</span></td>'
+      + '<td><div class="tname">'+ it.name +'<small>'+ it.type +'</small></div></td>'
+      + '<td>'+ etfCell(it) +'</td>'
+      + '<td class="'+ pctCls(it.change_pct) +'">'+ fmtPct(it.change_pct) +'</td>'
+      + '<td>'+ it.hist.toFixed(1) +'</td>'
+      + '<td>'+ wrCell(it.bt && it.bt.hold10) +'</td>'
+      + '<td>'+ avgCell(it.bt && it.bt.hold10) +'</td>'
+      + '<td>'+ wrCell(it.bt && it.bt.hold5) +'</td>'
+      + '<td><span class="chev">▶</span></td>'
+      + '</tr><tr class="detail" hidden><td colspan="9">'+ detailHtml(it) +'</td></tr>'
+    ).join("");
+  } else {
+    head = '<tr><th>板块 / 指数</th><th>对应 ETF</th><th>现价</th><th>今日涨跌</th><th>红柱</th><th>K / D / J</th><th>状态</th><th></th></tr>';
+    body = rows.map(it =>
+      '<tr class="row">'
+      + '<td><div class="tname">'+ it.name +'<small>'+ it.type +'</small></div></td>'
+      + '<td>'+ etfCell(it) +'</td>'
+      + '<td>'+ it.close.toFixed(2) +'</td>'
+      + '<td class="'+ pctCls(it.change_pct) +'">'+ fmtPct(it.change_pct) +'</td>'
+      + '<td>'+ it.hist.toFixed(1) +'</td>'
+      + '<td>'+ it.k.toFixed(0) +' / '+ it.d.toFixed(0) +' / '+ it.j.toFixed(0) +'</td>'
+      + '<td>'+ statusOf(it) +'</td>'
+      + '<td><span class="chev">▶</span></td>'
+      + '</tr><tr class="detail" hidden><td colspan="8">'+ detailHtml(it) +'</td></tr>'
+    ).join("");
+  }
+  return '<div class="card"><div class="tblwrap"><table><thead>'+ head +'</thead><tbody>'+ body +'</tbody></table></div></div>';
+}
+
+/* ---------- 优选推荐卡（达标池） ---------- */
+function picksHtml(rows){
+  const good = rows.filter(it => it.bt && it.bt.hold10 && it.bt.hold10.trades >= 5)
+    .sort((a, b) => (b.bt.hold10.win_rate - a.bt.hold10.win_rate) || (b.bt.hold10.avg - a.bt.hold10.avg))
+    .slice(0, 3);
+  if (!good.length) return "";
+  const items = good.map((it, i) =>
+    '<div class="pick">'
+    + '<span class="rank'+(i===0?' g1':'')+'">'+ (i+1) +'</span>'
+    + '<span class="pname">'+ it.name +'</span>'
+    + '<span class="pinfo">'+ etfCell(it) +'</span>'
+    + '<span class="pwr wr '+ wrCls(it.bt.hold10.win_rate) +'">胜率 '+ it.bt.hold10.win_rate.toFixed(0) +'%</span>'
+    + '<span class="avg">均 '+ (it.bt.hold10.avg>0?"+":"") + it.bt.hold10.avg.toFixed(2) +'% / '+ it.bt.hold10.trades +'次</span>'
+    + '</div>').join("");
+  return '<div class="card"><div class="picks-head">🏆 优选推荐<small>回测胜率最高的前 3 个（样本 ≥ 5 次）</small></div>'
+    + items
+    + '<div class="note">回测口径：历史出现同类达标信号时，信号次日收盘买入、持有 10 个交易日后收盘卖出；持有不足 7 个自然日已按支付宝场外费率扣除 1.5% 赎回费。历史胜率不代表未来表现，仅供参考。</div></div>';
+}
+
 function render(){
   const v = VIEWS.find(x => x.key === cur);
   document.getElementById("viewTitle").firstChild.textContent = v.icon + " " + v.name;
@@ -217,41 +339,42 @@ function render(){
   }
 
   const s = (DATA && DATA.summary) || {};
-  const stats = '<div class="stats">'
+  const stats = '<div class="card"><div class="stats">'
     + '<div class="stat"><div class="num blue">'+ (s.scanned ?? "-") +'</div><div class="lbl">扫描标的</div></div>'
     + '<div class="stat"><div class="num green">'+ (s.passed ?? "-") +'</div><div class="lbl">达标</div></div>'
     + '<div class="stat"><div class="num amber">'+ (s.near ?? "-") +'</div><div class="lbl">观察</div></div>'
-    + '<div class="stat"><div class="num">'+ (s.failed_fetch ?? 0) +'</div><div class="lbl">抓取失败</div></div>'
-    + '</div>';
+    + '<div class="stat"><div class="num">'+ (s.index_passed || []).length +'</div><div class="lbl">达标宽基</div></div>'
+    + '</div></div>';
 
   if (!rows.length){
-    document.getElementById("content").innerHTML =
-      '<div class="card">'+ stats +'<div class="empty">'+ (keyword ? "没有匹配「"+ keyword +"」的结果" : "暂无数据") +'</div></div>';
+    document.getElementById("content").innerHTML = stats
+      + '<div class="card"><div class="empty">'+ (keyword ? "没有匹配「"+ keyword +"」的结果" : "暂无数据") +'</div></div>';
     return;
   }
 
-  const tr = rows.map(it =>
-    '<tr>'
-    + '<td><div class="tname">'+ it.name +'<small>'+ it.type +'</small></div></td>'
-    + '<td>'+ etfCell(it) +'</td>'
-    + '<td>'+ it.close.toFixed(2) +'</td>'
-    + '<td class="'+ pctCls(it.change_pct) +'">'+ fmtPct(it.change_pct) +'</td>'
-    + '<td style="font-weight:700;color:'+(it.hist>0?'var(--red)':'var(--green)')+'">'+ it.hist.toFixed(2) +'</td>'
-    + '<td>'+ it.dif.toFixed(2) +' / '+ it.dea.toFixed(2) +'</td>'
-    + '<td>'+ it.k.toFixed(1) +' / '+ it.d.toFixed(1) +' / '+ it.j.toFixed(1) +'</td>'
-    + '<td>'+ statusOf(it) +'</td>'
-    + '<td><div class="reason">'+ (it.fails && it.fails.length ? it.fails.join("；") : "—") +'</div></td>'
-    + '</tr>').join("");
+  let html = stats;
+  if (cur === "passed") html += picksHtml(rows);
+  html += tableHtml(rows, cur === "passed");
+  document.getElementById("content").innerHTML = html;
 
-  document.getElementById("content").innerHTML =
-    '<div class="card">'+ stats
-    + '<div class="tblwrap"><table><thead><tr>'
-    + '<th>板块 / 指数</th><th>对应 ETF（支付宝）</th><th>现价</th><th>涨跌</th>'
-    + '<th>MACD红柱</th><th>DIF / DEA</th><th>K / D / J</th><th>状态</th><th>未达标原因</th>'
-    + '</tr></thead><tbody>'+ tr +'</tbody></table></div></div>';
+  bindRowEvents();
+}
 
+function bindRowEvents(){
+  document.querySelectorAll("tr.row").forEach(tr => {
+    tr.onclick = e => {
+      if (e.target.closest(".etf")) return;  // 点 ETF 只复制，不展开
+      const det = tr.nextElementSibling;
+      if (det && det.classList.contains("detail")){
+        const open = det.hidden;
+        det.hidden = !open;
+        tr.classList.toggle("open", open);
+      }
+    };
+  });
   document.querySelectorAll(".etf").forEach(el => {
-    el.onclick = () => {
+    el.onclick = e => {
+      e.stopPropagation();
       const code = el.dataset.code;
       const done = () => toast("已复制 " + code + "，去支付宝搜索买入");
       if (navigator.clipboard) navigator.clipboard.writeText(code).then(done, () => fallbackCopy(code, done));
@@ -289,7 +412,7 @@ fetch("data.json?t=" + Date.now())
   })
   .catch(() => {
     document.getElementById("content").innerHTML =
-      '<div class="card"><div class="empty">数据加载失败，请稍后刷新（首次运行请在 Actions 触发 scanner.py 生成 data.json）</div></div>';
+      '<div class="card"><div class="empty">数据加载失败，请稍后刷新</div></div>';
   });
 </script>
 </body>
