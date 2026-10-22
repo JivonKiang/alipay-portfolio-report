@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-21T10:29:47+08:00",
+  "updated": "2026-10-22T08:10:46+08:00",
   "portfolio": {
     "total": 677301,
     "steady": 512111,
@@ -11,13 +11,13 @@
       "name": "半导体设备",
       "index": "科创50",
       "index_code": "000688",
-      "current": 1343.3,
-      "ma10": 1388.1,
-      "ma20": 1500.8,
-      "change_pct": 0.06,
-      "distance_ma10": -3.23,
-      "signal": "watch",
-      "signal_text": "距10日线-3.2%，观望",
+      "current": 1305.9,
+      "ma10": 1373.0,
+      "ma20": 1485.3,
+      "change_pct": -2.78,
+      "distance_ma10": -4.89,
+      "signal": "avoid",
+      "signal_text": "放量下跌-2.78%，先等跌幅收窄",
       "funds": [
         {
           "code": "017811",
@@ -35,20 +35,20 @@
         "detail": "定投正常执行",
         "path": "支付宝 → 理财 → 基金 → 我的定投"
       },
-      "volume_ratio": 0.83
+      "volume_ratio": 1.27
     },
     "pcb": {
       "name": "PCB/HDI板",
       "index": "PCB概念",
       "index_code": "BK0877",
-      "current": 3638.7,
-      "ma10": 3724.3,
-      "ma20": 3999.8,
-      "change_pct": -0.3,
-      "distance_ma10": -2.3,
-      "volume_ratio": 0.92,
-      "signal": "watch",
-      "signal_text": "距10日线-2.3%，接近支撑",
+      "current": 3482.1,
+      "ma10": 3676.6,
+      "ma20": 3957.8,
+      "change_pct": -4.3,
+      "distance_ma10": -5.29,
+      "volume_ratio": 1.08,
+      "signal": "avoid",
+      "signal_text": "放量暴跌-4.3%，等缩量止跌",
       "funds": [
         {
           "code": "017811",
@@ -63,7 +63,7 @@
       ],
       "action": {
         "type": "wait",
-        "detail": "接近支撑位，盯缩量止跌信号",
+        "detail": "等缩量止跌 + 跌幅收窄至1%以内",
         "trigger": "PCB成交额 < 1400亿 且 日跌幅 < 1%",
         "path": null
       }
@@ -72,14 +72,14 @@
       "name": "CPO/光模块",
       "index": "CPO概念",
       "index_code": "CPO",
-      "current": 646.8,
-      "ma10": 699.1,
+      "current": 590.1,
+      "ma10": 679.9,
       "ma20": -1,
-      "change_pct": -0.17,
-      "distance_ma10": -7.48,
-      "volume_ratio": 1.14,
+      "change_pct": -8.76,
+      "distance_ma10": -13.2,
+      "volume_ratio": 1.6,
       "signal": "avoid",
-      "signal_text": "远离10日线-7.5%，趋势破坏 (中际旭创代理)",
+      "signal_text": "放量暴跌-8.76%，等缩量止跌 (中际旭创代理)",
       "funds": [
         {
           "code": "017811",
@@ -103,13 +103,13 @@
       "name": "中证500",
       "index": "中证500",
       "index_code": "000905",
-      "current": 6840.6,
-      "ma10": 6968.2,
-      "ma20": 7309.6,
-      "change_pct": -0.01,
-      "distance_ma10": -1.83,
+      "current": 6655.2,
+      "ma10": 6908.9,
+      "ma20": 7258.2,
+      "change_pct": -2.71,
+      "distance_ma10": -3.67,
       "signal": "watch",
-      "signal_text": "距10日线-1.8%，接近支撑",
+      "signal_text": "回调-2.71%，观察是否缩量企稳",
       "funds": [
         {
           "code": "001557",
@@ -122,7 +122,7 @@
         "detail": "定投正常执行",
         "path": "支付宝 → 理财 → 基金 → 我的定投"
       },
-      "volume_ratio": 0.92
+      "volume_ratio": 1.13
     }
   },
   "nasdaq": {
