@@ -1,6 +1,6 @@
 {
-  "updated": "2026-10-21T12:09:02+08:00",
-  "run_time": "12:09",
+  "updated": "2026-10-22T08:14:37+08:00",
+  "run_time": "08:14",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
@@ -13,9 +13,9 @@
     "index_details": {
       "上证50": {
         "status": "bearish",
-        "current": 2747.05,
-        "ma60": 2884.57,
-        "ma120": 2913.17,
+        "current": 2724.81,
+        "ma60": 2880.13,
+        "ma120": 2911.48,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": false,
@@ -23,9 +23,9 @@
       },
       "沪深300": {
         "status": "bearish",
-        "current": 4111.93,
-        "ma60": 4519.13,
-        "ma120": 4683.12,
+        "current": 4036.3,
+        "ma60": 4507.78,
+        "ma120": 4676.87,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": false,
@@ -33,9 +33,9 @@
       },
       "中证500": {
         "status": "bearish",
-        "current": 6840.56,
-        "ma60": 7615.24,
-        "ma120": 8037.27,
+        "current": 6655.25,
+        "ma60": 7596.97,
+        "ma120": 8023.6,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": false,
@@ -50,7 +50,7 @@
     }
   },
   "module_2_selection": {
-    "scanned": 3,
+    "scanned": 2,
     "total": 25,
     "raw_signals": 0,
     "actionable_signals": 0,
@@ -74,29 +74,29 @@
         "name": "东方人工智能主题混合C",
         "state": "WAIT",
         "buy_date": "2026-09-28",
-        "held_days": 23,
+        "held_days": 24,
         "buy_nav": 3.2259,
-        "latest_nav": 2.7375,
-        "latest_date": "2026-10-19",
-        "ret": -0.1514
+        "latest_nav": 2.716,
+        "latest_date": "2026-10-20",
+        "ret": -0.1581
       },
       {
         "code": "006503",
         "name": "财通集成电路产业股票C",
         "state": "WAIT",
         "buy_date": "2026-09-17",
-        "held_days": 34,
+        "held_days": 35,
         "buy_nav": 7.3421,
-        "latest_nav": 5.1828,
-        "latest_date": "2026-10-19",
-        "ret": -0.2941
+        "latest_nav": 5.2645,
+        "latest_date": "2026-10-20",
+        "ret": -0.283
       },
       {
         "code": "025209",
         "name": "永赢先锋半导体智选混合C",
         "state": "WAIT",
         "buy_date": "2026-09-28",
-        "held_days": 23,
+        "held_days": 24,
         "buy_nav": 2.31,
         "latest_nav": 1.9338,
         "latest_date": "2026-10-20",
@@ -133,9 +133,8 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 161,
+    "history_days": 162,
     "recent_environments": [
-      "bear",
       "range",
       "bear",
       "bear",
@@ -144,6 +143,7 @@
       "bear",
       "range",
       "bear",
+      "bear_lean",
       "bear_lean"
     ]
   },
