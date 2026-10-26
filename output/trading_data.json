@@ -1,21 +1,21 @@
 {
-  "updated": "2026-10-23T11:53:17+08:00",
-  "run_time": "11:53",
+  "updated": "2026-10-26T08:26:46+08:00",
+  "run_time": "08:26",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
-    "env": "bear_lean",
-    "env_cn": "偏熊 — 谨慎参与",
-    "position_ratio": 0.35,
-    "max_position": 33600,
+    "env": "bear",
+    "env_cn": "熊市 — 清仓做反弹",
+    "position_ratio": 0.2,
+    "max_position": 19200,
     "bullish_count": 0,
-    "bearish_count": 3,
+    "bearish_count": 4,
     "index_details": {
       "上证50": {
         "status": "bearish",
-        "current": 2757.68,
-        "ma60": 2876.44,
-        "ma120": 2909.92,
+        "current": 2769.05,
+        "ma60": 2873.32,
+        "ma120": 2908.5,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": false,
@@ -23,9 +23,9 @@
       },
       "沪深300": {
         "status": "bearish",
-        "current": 4105.33,
-        "ma60": 4497.41,
-        "ma120": 4671.34,
+        "current": 4103.54,
+        "ma60": 4488.31,
+        "ma120": 4665.78,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": false,
@@ -33,9 +33,9 @@
       },
       "中证500": {
         "status": "bearish",
-        "current": 6814.44,
-        "ma60": 7581.63,
-        "ma120": 8011.66,
+        "current": 6712.73,
+        "ma60": 7567.97,
+        "ma120": 7998.44,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": false,
@@ -45,50 +45,63 @@
         "status": "data_insufficient"
       },
       "科创50": {
-        "status": "data_insufficient"
+        "status": "bearish",
+        "current": 1315.5,
+        "ma60": 1586.53,
+        "ma120": 1705.0,
+        "above_ma60": false,
+        "above_ma120": false,
+        "golden_cross": false,
+        "ma60_trend": "down"
       }
     }
   },
   "module_2_selection": {
-    "scanned": 3,
+    "scanned": 20,
     "total": 25,
-    "raw_signals": 1,
-    "actionable_signals": 1,
+    "raw_signals": 0,
+    "actionable_signals": 0,
     "blocked_signals": 0,
-    "signals": [
-      {
-        "type": "oversold",
-        "label": "🟡 超跌反弹",
-        "strength": "weak",
-        "reason": "60日最大回撤-22.4%，今日反弹",
-        "board": "铜缆高速连接",
-        "change_pct": 1.72,
-        "change_5d": -0.05,
-        "vol_ratio": 1.21,
-        "current": 2208.41,
-        "ma10": 2249.8,
-        "ma20": 2444.3,
-        "ma60": 2505.6,
-        "funds": [
-          {
-            "code": "012629",
-            "name": "广发国证半导体芯片ETF联接C"
-          }
-        ],
-        "gate_passed": true,
-        "position": 500
-      }
-    ],
+    "signals": [],
     "blocked": []
   },
   "module_3_position": {
-    "total_suggested": 500,
-    "single_max": 10080,
-    "strategy": "偏熊 — 谨慎参与",
-    "diversification_note": "建议分散到1只基金"
+    "total_suggested": 0,
+    "single_max": 5760,
+    "strategy": "熊市 — 清仓做反弹",
+    "diversification_note": "建议分散到0只基金"
   },
   "module_4_exit": {
-    "exit_signals": [],
+    "exit_signals": [
+      {
+        "fund_code": "005844",
+        "board": "科创芯片",
+        "entry_date": "2026-06-23",
+        "entry_nav": 3.3511,
+        "current": 1052.36,
+        "pnl_pct": 31303.42,
+        "net_pnl_pct": 31303.42,
+        "fee_label": "0%",
+        "days_held": 125,
+        "exit_type": "trend_broken",
+        "reason": "跌破MA10(1052.5)，保护已有利润31303.4%",
+        "action": "SELL"
+      },
+      {
+        "fund_code": "006503",
+        "board": "PCB",
+        "entry_date": "2026-06-23",
+        "entry_nav": 9.1008,
+        "current": 3400.86,
+        "pnl_pct": 37268.8,
+        "net_pnl_pct": 37268.8,
+        "fee_label": "0%",
+        "days_held": 125,
+        "exit_type": "trend_broken",
+        "reason": "跌破MA10(3610.2)，保护已有利润37268.8%",
+        "action": "SELL"
+      }
+    ],
     "sell_alerts": [],
     "position_alerts": [],
     "signal_states": [
@@ -97,33 +110,33 @@
         "name": "东方人工智能主题混合C",
         "state": "WAIT",
         "buy_date": "2026-09-28",
-        "held_days": 25,
+        "held_days": 28,
         "buy_nav": 3.2259,
-        "latest_nav": 2.5928,
-        "latest_date": "2026-10-21",
-        "ret": -0.1963
+        "latest_nav": 2.6155,
+        "latest_date": "2026-10-22",
+        "ret": -0.1892
       },
       {
         "code": "006503",
         "name": "财通集成电路产业股票C",
         "state": "WAIT",
         "buy_date": "2026-09-17",
-        "held_days": 36,
+        "held_days": 39,
         "buy_nav": 7.3421,
-        "latest_nav": 4.9639,
-        "latest_date": "2026-10-21",
-        "ret": -0.3239
+        "latest_nav": 4.9653,
+        "latest_date": "2026-10-22",
+        "ret": -0.3237
       },
       {
         "code": "025209",
         "name": "永赢先锋半导体智选混合C",
         "state": "WAIT",
         "buy_date": "2026-09-28",
-        "held_days": 25,
+        "held_days": 28,
         "buy_nav": 2.31,
-        "latest_nav": 1.8844,
-        "latest_date": "2026-10-21",
-        "ret": -0.1842
+        "latest_nav": 1.9485,
+        "latest_date": "2026-10-22",
+        "ret": -0.1565
       }
     ],
     "fee_calendar": [],
@@ -141,7 +154,7 @@
         "pe_percentile": 0.563
       },
       "中证500": {
-        "pe": 29.33,
+        "pe": 29.35,
         "pe_percentile": 0.688
       }
     },
@@ -156,9 +169,8 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 165,
+    "history_days": 166,
     "recent_environments": [
-      "bear",
       "bear",
       "bear",
       "range",
@@ -167,15 +179,16 @@
       "bear_lean",
       "bear",
       "bear",
-      "bear_lean"
+      "bear_lean",
+      "bear"
     ]
   },
   "summary": {
-    "environment": "偏熊 — 谨慎参与",
-    "buy_signals": 1,
-    "exit_signals": 0,
-    "today_budget": 500,
+    "environment": "熊市 — 清仓做反弹",
+    "buy_signals": 0,
+    "exit_signals": 2,
+    "today_budget": 0,
     "action_required": true,
-    "key_action": "优先关注 铜缆高速连接 (🟡 超跌反弹)"
+    "key_action": "市场偏熊，持有现金观望 | 有持仓需退出"
   }
 }
