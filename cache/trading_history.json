@@ -2659,5 +2659,15 @@
     "buy_signals": 0,
     "exit_signals": 2,
     "signals": []
+  },
+  {
+    "date": "2026-10-26",
+    "time": "13:24",
+    "environment": "bear_lean",
+    "environment_cn": "偏熊 — 谨慎参与",
+    "position_ratio": 0.35,
+    "buy_signals": 0,
+    "exit_signals": 0,
+    "signals": []
   }
 ]
