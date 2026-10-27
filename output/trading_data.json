@@ -1,45 +1,24 @@
 {
-  "updated": "2026-10-26T13:24:19+08:00",
-  "run_time": "13:24",
+  "updated": "2026-10-27T08:35:19+08:00",
+  "run_time": "08:35",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
-    "env": "bear_lean",
-    "env_cn": "偏熊 — 谨慎参与",
-    "position_ratio": 0.35,
-    "max_position": 33600,
+    "env": "range",
+    "env_cn": "震荡市 — 快进快出赚差价",
+    "position_ratio": 0.45,
+    "max_position": 43200,
     "bullish_count": 0,
-    "bearish_count": 3,
+    "bearish_count": 0,
     "index_details": {
       "上证50": {
-        "status": "bearish",
-        "current": 2769.05,
-        "ma60": 2873.32,
-        "ma120": 2908.5,
-        "above_ma60": false,
-        "above_ma120": false,
-        "golden_cross": false,
-        "ma60_trend": "down"
+        "status": "data_insufficient"
       },
       "沪深300": {
-        "status": "bearish",
-        "current": 4103.54,
-        "ma60": 4488.31,
-        "ma120": 4665.78,
-        "above_ma60": false,
-        "above_ma120": false,
-        "golden_cross": false,
-        "ma60_trend": "down"
+        "status": "data_insufficient"
       },
       "中证500": {
-        "status": "bearish",
-        "current": 6712.73,
-        "ma60": 7567.97,
-        "ma120": 7998.44,
-        "above_ma60": false,
-        "above_ma120": false,
-        "golden_cross": false,
-        "ma60_trend": "down"
+        "status": "data_insufficient"
       },
       "创业板指": {
         "status": "data_insufficient"
@@ -50,7 +29,7 @@
     }
   },
   "module_2_selection": {
-    "scanned": 3,
+    "scanned": 0,
     "total": 25,
     "raw_signals": 0,
     "actionable_signals": 0,
@@ -60,8 +39,8 @@
   },
   "module_3_position": {
     "total_suggested": 0,
-    "single_max": 10080,
-    "strategy": "偏熊 — 谨慎参与",
+    "single_max": 12960,
+    "strategy": "震荡市 — 快进快出赚差价",
     "diversification_note": "建议分散到0只基金"
   },
   "module_4_exit": {
@@ -74,7 +53,7 @@
         "name": "东方人工智能主题混合C",
         "state": "WAIT",
         "buy_date": "2026-09-28",
-        "held_days": 28,
+        "held_days": 29,
         "buy_nav": 3.2259,
         "latest_nav": 2.5016,
         "latest_date": "2026-10-25",
@@ -85,7 +64,7 @@
         "name": "财通集成电路产业股票C",
         "state": "WAIT",
         "buy_date": "2026-09-17",
-        "held_days": 39,
+        "held_days": 40,
         "buy_nav": 7.3421,
         "latest_nav": 4.642,
         "latest_date": "2026-10-25",
@@ -96,11 +75,11 @@
         "name": "永赢先锋半导体智选混合C",
         "state": "WAIT",
         "buy_date": "2026-09-28",
-        "held_days": 28,
+        "held_days": 29,
         "buy_nav": 2.31,
-        "latest_nav": 1.9485,
-        "latest_date": "2026-10-22",
-        "ret": -0.1565
+        "latest_nav": 1.8933,
+        "latest_date": "2026-10-25",
+        "ret": -0.1804
       }
     ],
     "fee_calendar": [],
@@ -133,9 +112,8 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 167,
+    "history_days": 168,
     "recent_environments": [
-      "bear",
       "range",
       "bear",
       "bear_lean",
@@ -144,15 +122,16 @@
       "bear",
       "bear_lean",
       "bear",
-      "bear_lean"
+      "bear_lean",
+      "range"
     ]
   },
   "summary": {
-    "environment": "偏熊 — 谨慎参与",
+    "environment": "震荡市 — 快进快出赚差价",
     "buy_signals": 0,
     "exit_signals": 0,
     "today_budget": 0,
     "action_required": false,
-    "key_action": "市场偏熊，持有现金观望"
+    "key_action": ""
   }
 }
