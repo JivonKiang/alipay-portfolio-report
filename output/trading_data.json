@@ -1,6 +1,6 @@
 {
-  "updated": "2026-10-28T09:14:24+08:00",
-  "run_time": "09:14",
+  "updated": "2026-10-28T13:18:51+08:00",
+  "run_time": "13:18",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
@@ -57,13 +57,40 @@
     }
   },
   "module_2_selection": {
-    "scanned": 0,
+    "scanned": 2,
     "total": 25,
-    "raw_signals": 0,
+    "raw_signals": 1,
     "actionable_signals": 0,
-    "blocked_signals": 0,
+    "blocked_signals": 1,
     "signals": [],
-    "blocked": []
+    "blocked": [
+      {
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "strength": "weak",
+        "reason": "60日最大回撤-24.5%，今日反弹",
+        "board": "半导体",
+        "change_pct": 4.88,
+        "change_5d": -0.11,
+        "vol_ratio": 1.21,
+        "current": 2228.01,
+        "ma10": 2247.8,
+        "ma20": 2433.2,
+        "ma60": 2611.5,
+        "funds": [
+          {
+            "code": "008888",
+            "name": "国联安中证半导体ETF联接C"
+          },
+          {
+            "code": "008282",
+            "name": "国泰CES半导体芯片ETF联接C"
+          }
+        ],
+        "gate_passed": false,
+        "block_reason": "涨幅4.88%≥3%"
+      }
+    ]
   },
   "module_3_position": {
     "total_suggested": 0,
@@ -72,22 +99,7 @@
     "diversification_note": "建议分散到0只基金"
   },
   "module_4_exit": {
-    "exit_signals": [
-      {
-        "fund_code": "025209",
-        "board": "存储芯片",
-        "entry_date": "2026-06-23",
-        "entry_nav": 2.8916,
-        "current": 1080.12,
-        "pnl_pct": 37253.71,
-        "net_pnl_pct": 37253.71,
-        "fee_label": "0%",
-        "days_held": 127,
-        "exit_type": "trend_broken",
-        "reason": "跌破MA10(1087.5)，保护已有利润37253.7%",
-        "action": "SELL"
-      }
-    ],
+    "exit_signals": [],
     "sell_alerts": [],
     "position_alerts": [],
     "signal_states": [
@@ -120,28 +132,28 @@
         "buy_date": "2026-09-28",
         "held_days": 30,
         "buy_nav": 2.31,
-        "latest_nav": 1.8386,
-        "latest_date": "2026-10-26",
-        "ret": -0.2041
+        "latest_nav": 1.9436,
+        "latest_date": "2026-10-27",
+        "ret": -0.1586
       }
     ],
     "fee_calendar": [],
     "index_pe": {
       "创业板指": {
-        "pe": 29.19,
-        "pe_percentile": 0.116
+        "pe": 29.79,
+        "pe_percentile": 0.134
       },
       "沪深300": {
-        "pe": 12.82,
-        "pe_percentile": 0.516
+        "pe": 12.86,
+        "pe_percentile": 0.525
       },
       "上证50": {
         "pe": 10.76,
         "pe_percentile": 0.577
       },
       "中证500": {
-        "pe": 27.65,
-        "pe_percentile": 0.586
+        "pe": 28.07,
+        "pe_percentile": 0.609
       }
     },
     "rules": {
@@ -155,9 +167,8 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 170,
+    "history_days": 171,
     "recent_environments": [
-      "bear_lean",
       "bear_lean",
       "bear",
       "bear",
@@ -166,15 +177,16 @@
       "bear_lean",
       "range",
       "bear",
+      "bear",
       "bear"
     ]
   },
   "summary": {
     "environment": "熊市 — 清仓做反弹",
     "buy_signals": 0,
-    "exit_signals": 1,
+    "exit_signals": 0,
     "today_budget": 0,
-    "action_required": true,
-    "key_action": "市场偏熊，持有现金观望 | 有持仓需退出"
+    "action_required": false,
+    "key_action": "市场偏熊，持有现金观望"
   }
 }
