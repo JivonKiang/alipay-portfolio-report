@@ -1,15 +1,15 @@
 {
-  "updated": "2026-10-29T09:15:14+08:00",
-  "run_time": "09:15",
+  "updated": "2026-10-29T13:27:32+08:00",
+  "run_time": "13:27",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
-    "env": "bear_lean",
-    "env_cn": "偏熊 — 谨慎参与",
-    "position_ratio": 0.35,
-    "max_position": 33600,
+    "env": "bear",
+    "env_cn": "熊市 — 清仓做反弹",
+    "position_ratio": 0.2,
+    "max_position": 19200,
     "bullish_count": 0,
-    "bearish_count": 3,
+    "bearish_count": 4,
     "index_details": {
       "上证50": {
         "status": "bearish",
@@ -45,12 +45,19 @@
         "status": "data_insufficient"
       },
       "科创50": {
-        "status": "data_insufficient"
+        "status": "bearish",
+        "current": 1228.09,
+        "ma60": 1562.91,
+        "ma120": 1698.42,
+        "above_ma60": false,
+        "above_ma120": false,
+        "golden_cross": false,
+        "ma60_trend": "down"
       }
     }
   },
   "module_2_selection": {
-    "scanned": 4,
+    "scanned": 10,
     "total": 25,
     "raw_signals": 0,
     "actionable_signals": 0,
@@ -60,56 +67,25 @@
   },
   "module_3_position": {
     "total_suggested": 0,
-    "single_max": 10080,
-    "strategy": "偏熊 — 谨慎参与",
+    "single_max": 5760,
+    "strategy": "熊市 — 清仓做反弹",
     "diversification_note": "建议分散到0只基金"
   },
   "module_4_exit": {
-    "exit_signals": [
+    "exit_signals": [],
+    "sell_alerts": [
       {
-        "fund_code": "005844",
-        "board": "科创芯片",
-        "entry_date": "2026-06-23",
-        "entry_nav": 3.3511,
-        "current": 1019.49,
-        "pnl_pct": 30322.55,
-        "net_pnl_pct": 30322.55,
-        "fee_label": "0%",
-        "days_held": 128,
-        "exit_type": "trend_broken",
-        "reason": "跌破MA10(1037.8)，保护已有利润30322.5%",
-        "action": "SELL"
-      },
-      {
-        "fund_code": "006503",
-        "board": "PCB",
-        "entry_date": "2026-06-23",
-        "entry_nav": 9.1008,
-        "current": 3210.48,
-        "pnl_pct": 35176.9,
-        "net_pnl_pct": 35176.9,
-        "fee_label": "0%",
-        "days_held": 128,
-        "exit_type": "trend_broken",
-        "reason": "跌破MA10(3474.8)，保护已有利润35176.9%",
-        "action": "SELL"
-      },
-      {
-        "fund_code": "025209",
-        "board": "存储芯片",
-        "entry_date": "2026-06-23",
-        "entry_nav": 2.8916,
-        "current": 1045.67,
-        "pnl_pct": 36062.33,
-        "net_pnl_pct": 36062.33,
-        "fee_label": "0%",
-        "days_held": 128,
-        "exit_type": "trend_broken",
-        "reason": "跌破MA10(1085.0)，保护已有利润36062.3%",
-        "action": "SELL"
+        "id": "pe_l1_上证50_2026-10-29",
+        "type": "pe",
+        "severity": "info",
+        "index": "上证50",
+        "title": "上证50 偏高 — 关注市场",
+        "message": "上证50 PE=11.17（百分位70%），做好减仓准备",
+        "pe": 11.17,
+        "reduce_percent": 0,
+        "action": "watch"
       }
     ],
-    "sell_alerts": [],
     "position_alerts": [],
     "signal_states": [
       {
@@ -119,9 +95,9 @@
         "buy_date": "2026-09-28",
         "held_days": 31,
         "buy_nav": 3.2259,
-        "latest_nav": 2.4085,
-        "latest_date": "2026-10-27",
-        "ret": -0.2534
+        "latest_nav": 2.2587,
+        "latest_date": "2026-10-28",
+        "ret": -0.2998
       },
       {
         "code": "006503",
@@ -130,9 +106,9 @@
         "buy_date": "2026-09-17",
         "held_days": 42,
         "buy_nav": 7.3421,
-        "latest_nav": 4.6907,
-        "latest_date": "2026-10-27",
-        "ret": -0.3611
+        "latest_nav": 4.3002,
+        "latest_date": "2026-10-28",
+        "ret": -0.4143
       },
       {
         "code": "025209",
@@ -141,28 +117,28 @@
         "buy_date": "2026-09-28",
         "held_days": 31,
         "buy_nav": 2.31,
-        "latest_nav": 1.9436,
-        "latest_date": "2026-10-27",
-        "ret": -0.1586
+        "latest_nav": 1.893,
+        "latest_date": "2026-10-28",
+        "ret": -0.1805
       }
     ],
     "fee_calendar": [],
     "index_pe": {
       "创业板指": {
-        "pe": 29.79,
-        "pe_percentile": 0.134
+        "pe": 28.46,
+        "pe_percentile": 0.088
       },
       "沪深300": {
-        "pe": 12.86,
-        "pe_percentile": 0.525
+        "pe": 13.04,
+        "pe_percentile": 0.566
       },
       "上证50": {
-        "pe": 10.76,
-        "pe_percentile": 0.577
+        "pe": 11.17,
+        "pe_percentile": 0.704
       },
       "中证500": {
-        "pe": 28.07,
-        "pe_percentile": 0.609
+        "pe": 27.14,
+        "pe_percentile": 0.57
       }
     },
     "rules": {
@@ -176,9 +152,8 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 172,
+    "history_days": 173,
     "recent_environments": [
-      "bear",
       "bear",
       "bear_lean",
       "bear",
@@ -187,15 +162,16 @@
       "bear",
       "bear",
       "bear",
-      "bear_lean"
+      "bear_lean",
+      "bear"
     ]
   },
   "summary": {
-    "environment": "偏熊 — 谨慎参与",
+    "environment": "熊市 — 清仓做反弹",
     "buy_signals": 0,
-    "exit_signals": 3,
+    "exit_signals": 0,
     "today_budget": 0,
-    "action_required": true,
-    "key_action": "市场偏熊，持有现金观望 | 有持仓需退出"
+    "action_required": false,
+    "key_action": "市场偏熊，持有现金观望"
   }
 }
