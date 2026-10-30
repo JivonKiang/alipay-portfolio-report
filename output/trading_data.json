@@ -1,6 +1,6 @@
 {
-  "updated": "2026-10-29T13:27:32+08:00",
-  "run_time": "13:27",
+  "updated": "2026-10-30T09:30:32+08:00",
+  "run_time": "09:30",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
@@ -13,9 +13,9 @@
     "index_details": {
       "上证50": {
         "status": "bearish",
-        "current": 2762.79,
-        "ma60": 2864.55,
-        "ma120": 2903.16,
+        "current": 2742.11,
+        "ma60": 2861.48,
+        "ma120": 2900.79,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": false,
@@ -23,9 +23,9 @@
       },
       "沪深300": {
         "status": "bearish",
-        "current": 4041.84,
-        "ma60": 4460.03,
-        "ma120": 4647.44,
+        "current": 3985.5,
+        "ma60": 4450.63,
+        "ma120": 4640.01,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": false,
@@ -33,9 +33,9 @@
       },
       "中证500": {
         "status": "bearish",
-        "current": 6453.72,
-        "ma60": 7516.59,
-        "ma120": 7954.36,
+        "current": 6266.19,
+        "ma60": 7499.2,
+        "ma120": 7935.0,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": false,
@@ -46,9 +46,9 @@
       },
       "科创50": {
         "status": "bearish",
-        "current": 1228.09,
-        "ma60": 1562.91,
-        "ma120": 1698.42,
+        "current": 1160.84,
+        "ma60": 1555.79,
+        "ma120": 1694.29,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": false,
@@ -57,7 +57,7 @@
     }
   },
   "module_2_selection": {
-    "scanned": 10,
+    "scanned": 2,
     "total": 25,
     "raw_signals": 0,
     "actionable_signals": 0,
@@ -73,19 +73,7 @@
   },
   "module_4_exit": {
     "exit_signals": [],
-    "sell_alerts": [
-      {
-        "id": "pe_l1_上证50_2026-10-29",
-        "type": "pe",
-        "severity": "info",
-        "index": "上证50",
-        "title": "上证50 偏高 — 关注市场",
-        "message": "上证50 PE=11.17（百分位70%），做好减仓准备",
-        "pe": 11.17,
-        "reduce_percent": 0,
-        "action": "watch"
-      }
-    ],
+    "sell_alerts": [],
     "position_alerts": [],
     "signal_states": [
       {
@@ -93,7 +81,7 @@
         "name": "东方人工智能主题混合C",
         "state": "WAIT",
         "buy_date": "2026-09-28",
-        "held_days": 31,
+        "held_days": 32,
         "buy_nav": 3.2259,
         "latest_nav": 2.2587,
         "latest_date": "2026-10-28",
@@ -104,7 +92,7 @@
         "name": "财通集成电路产业股票C",
         "state": "WAIT",
         "buy_date": "2026-09-17",
-        "held_days": 42,
+        "held_days": 43,
         "buy_nav": 7.3421,
         "latest_nav": 4.3002,
         "latest_date": "2026-10-28",
@@ -115,7 +103,7 @@
         "name": "永赢先锋半导体智选混合C",
         "state": "WAIT",
         "buy_date": "2026-09-28",
-        "held_days": 31,
+        "held_days": 32,
         "buy_nav": 2.31,
         "latest_nav": 1.893,
         "latest_date": "2026-10-28",
@@ -129,12 +117,12 @@
         "pe_percentile": 0.088
       },
       "沪深300": {
-        "pe": 13.04,
-        "pe_percentile": 0.566
+        "pe": 12.87,
+        "pe_percentile": 0.526
       },
       "上证50": {
-        "pe": 11.17,
-        "pe_percentile": 0.704
+        "pe": 11.04,
+        "pe_percentile": 0.674
       },
       "中证500": {
         "pe": 27.14,
@@ -152,9 +140,8 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 173,
+    "history_days": 174,
     "recent_environments": [
-      "bear",
       "bear_lean",
       "bear",
       "bear_lean",
@@ -163,6 +150,7 @@
       "bear",
       "bear",
       "bear_lean",
+      "bear",
       "bear"
     ]
   },
