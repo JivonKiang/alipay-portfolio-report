@@ -1,15 +1,15 @@
 {
-  "updated": "2026-10-30T09:30:32+08:00",
-  "run_time": "09:30",
+  "updated": "2026-10-30T13:15:46+08:00",
+  "run_time": "13:15",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
-    "env": "bear",
-    "env_cn": "熊市 — 清仓做反弹",
-    "position_ratio": 0.2,
-    "max_position": 19200,
+    "env": "bear_lean",
+    "env_cn": "偏熊 — 谨慎参与",
+    "position_ratio": 0.35,
+    "max_position": 33600,
     "bullish_count": 0,
-    "bearish_count": 4,
+    "bearish_count": 3,
     "index_details": {
       "上证50": {
         "status": "bearish",
@@ -32,14 +32,7 @@
         "ma60_trend": "down"
       },
       "中证500": {
-        "status": "bearish",
-        "current": 6266.19,
-        "ma60": 7499.2,
-        "ma120": 7935.0,
-        "above_ma60": false,
-        "above_ma120": false,
-        "golden_cross": false,
-        "ma60_trend": "down"
+        "status": "data_insufficient"
       },
       "创业板指": {
         "status": "data_insufficient"
@@ -57,7 +50,7 @@
     }
   },
   "module_2_selection": {
-    "scanned": 2,
+    "scanned": 1,
     "total": 25,
     "raw_signals": 0,
     "actionable_signals": 0,
@@ -67,8 +60,8 @@
   },
   "module_3_position": {
     "total_suggested": 0,
-    "single_max": 5760,
-    "strategy": "熊市 — 清仓做反弹",
+    "single_max": 10080,
+    "strategy": "偏熊 — 谨慎参与",
     "diversification_note": "建议分散到0只基金"
   },
   "module_4_exit": {
@@ -83,9 +76,9 @@
         "buy_date": "2026-09-28",
         "held_days": 32,
         "buy_nav": 3.2259,
-        "latest_nav": 2.2587,
-        "latest_date": "2026-10-28",
-        "ret": -0.2998
+        "latest_nav": 2.0988,
+        "latest_date": "2026-10-29",
+        "ret": -0.3494
       },
       {
         "code": "006503",
@@ -94,9 +87,9 @@
         "buy_date": "2026-09-17",
         "held_days": 43,
         "buy_nav": 7.3421,
-        "latest_nav": 4.3002,
-        "latest_date": "2026-10-28",
-        "ret": -0.4143
+        "latest_nav": 3.9913,
+        "latest_date": "2026-10-29",
+        "ret": -0.4564
       },
       {
         "code": "025209",
@@ -105,16 +98,16 @@
         "buy_date": "2026-09-28",
         "held_days": 32,
         "buy_nav": 2.31,
-        "latest_nav": 1.893,
-        "latest_date": "2026-10-28",
-        "ret": -0.1805
+        "latest_nav": 1.8318,
+        "latest_date": "2026-10-29",
+        "ret": -0.207
       }
     ],
     "fee_calendar": [],
     "index_pe": {
       "创业板指": {
-        "pe": 28.46,
-        "pe_percentile": 0.088
+        "pe": 26.91,
+        "pe_percentile": 0.048
       },
       "沪深300": {
         "pe": 12.87,
@@ -125,8 +118,8 @@
         "pe_percentile": 0.674
       },
       "中证500": {
-        "pe": 27.14,
-        "pe_percentile": 0.57
+        "pe": 26.76,
+        "pe_percentile": 0.555
       }
     },
     "rules": {
@@ -140,9 +133,8 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 174,
+    "history_days": 175,
     "recent_environments": [
-      "bear_lean",
       "bear",
       "bear_lean",
       "range",
@@ -151,11 +143,12 @@
       "bear",
       "bear_lean",
       "bear",
-      "bear"
+      "bear",
+      "bear_lean"
     ]
   },
   "summary": {
-    "environment": "熊市 — 清仓做反弹",
+    "environment": "偏熊 — 谨慎参与",
     "buy_signals": 0,
     "exit_signals": 0,
     "today_budget": 0,
