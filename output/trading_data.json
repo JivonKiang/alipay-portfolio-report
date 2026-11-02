@@ -1,6 +1,6 @@
 {
-  "updated": "2026-11-02T10:27:41+08:00",
-  "run_time": "10:27",
+  "updated": "2026-11-02T16:23:00+08:00",
+  "run_time": "16:23",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
@@ -45,7 +45,19 @@
   },
   "module_4_exit": {
     "exit_signals": [],
-    "sell_alerts": [],
+    "sell_alerts": [
+      {
+        "id": "pe_l2_上证50_2026-11-02",
+        "type": "pe",
+        "severity": "warning",
+        "index": "上证50",
+        "title": "上证50 高估 — 建议减仓",
+        "message": "上证50 PE=11.77（百分位86%），建议减仓 50%",
+        "pe": 11.77,
+        "reduce_percent": 50,
+        "action": "reduce"
+      }
+    ],
     "position_alerts": [],
     "signal_states": [
       {
@@ -55,9 +67,9 @@
         "buy_date": "2026-09-28",
         "held_days": 35,
         "buy_nav": 3.2259,
-        "latest_nav": 2.0988,
-        "latest_date": "2026-10-29",
-        "ret": -0.3494
+        "latest_nav": 2.1748,
+        "latest_date": "2026-11-01",
+        "ret": -0.3258
       },
       {
         "code": "006503",
@@ -66,9 +78,9 @@
         "buy_date": "2026-09-17",
         "held_days": 46,
         "buy_nav": 7.3421,
-        "latest_nav": 3.9913,
-        "latest_date": "2026-10-29",
-        "ret": -0.4564
+        "latest_nav": 3.9741,
+        "latest_date": "2026-11-01",
+        "ret": -0.4587
       },
       {
         "code": "025209",
@@ -77,28 +89,28 @@
         "buy_date": "2026-09-28",
         "held_days": 35,
         "buy_nav": 2.31,
-        "latest_nav": 1.8318,
-        "latest_date": "2026-10-29",
-        "ret": -0.207
+        "latest_nav": 1.8491,
+        "latest_date": "2026-11-01",
+        "ret": -0.1995
       }
     ],
     "fee_calendar": [],
     "index_pe": {
       "创业板指": {
-        "pe": 26.91,
-        "pe_percentile": 0.048
+        "pe": 27.71,
+        "pe_percentile": 0.065
       },
       "沪深300": {
-        "pe": 12.87,
-        "pe_percentile": 0.526
+        "pe": 13.52,
+        "pe_percentile": 0.68
       },
       "上证50": {
-        "pe": 11.04,
-        "pe_percentile": 0.674
+        "pe": 11.77,
+        "pe_percentile": 0.863
       },
       "中证500": {
-        "pe": 26.76,
-        "pe_percentile": 0.555
+        "pe": 27.33,
+        "pe_percentile": 0.577
       }
     },
     "rules": {
@@ -112,9 +124,8 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 176,
+    "history_days": 177,
     "recent_environments": [
-      "bear_lean",
       "range",
       "bear",
       "bear",
@@ -123,6 +134,7 @@
       "bear",
       "bear",
       "bear_lean",
+      "range",
       "range"
     ]
   },
