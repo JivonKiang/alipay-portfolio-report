@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-11-02 23:38:36",
- "trade_date": "2026-11-02",
+ "generated_at": "2026-11-03 22:02:51",
+ "trade_date": "2026-11-03",
  "rules": {
   "macd": "MACD 红柱 > 10 且 DIF > DEA",
   "kdj": "K > D（金叉状态未死叉）",
@@ -11,7 +11,7 @@
  },
  "summary": {
   "scanned": 0,
-  "failed_fetch": 9,
+  "failed_fetch": 536,
   "passed": 0,
   "near": 0,
   "index_passed": []
