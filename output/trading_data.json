@@ -1,6 +1,6 @@
 {
-  "updated": "2026-11-02T16:23:00+08:00",
-  "run_time": "16:23",
+  "updated": "2026-11-03T10:24:44+08:00",
+  "run_time": "10:24",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
@@ -47,7 +47,7 @@
     "exit_signals": [],
     "sell_alerts": [
       {
-        "id": "pe_l2_上证50_2026-11-02",
+        "id": "pe_l2_上证50_2026-11-03",
         "type": "pe",
         "severity": "warning",
         "index": "上证50",
@@ -65,7 +65,7 @@
         "name": "东方人工智能主题混合C",
         "state": "WAIT",
         "buy_date": "2026-09-28",
-        "held_days": 35,
+        "held_days": 36,
         "buy_nav": 3.2259,
         "latest_nav": 2.1748,
         "latest_date": "2026-11-01",
@@ -76,7 +76,7 @@
         "name": "财通集成电路产业股票C",
         "state": "WAIT",
         "buy_date": "2026-09-17",
-        "held_days": 46,
+        "held_days": 47,
         "buy_nav": 7.3421,
         "latest_nav": 3.9741,
         "latest_date": "2026-11-01",
@@ -87,7 +87,7 @@
         "name": "永赢先锋半导体智选混合C",
         "state": "WAIT",
         "buy_date": "2026-09-28",
-        "held_days": 35,
+        "held_days": 36,
         "buy_nav": 2.31,
         "latest_nav": 1.8491,
         "latest_date": "2026-11-01",
@@ -124,16 +124,16 @@
     }
   },
   "module_5_optimization": {
-    "history_days": 177,
+    "history_days": 178,
     "recent_environments": [
+      "bear",
+      "bear",
+      "bear",
+      "bear_lean",
+      "bear",
+      "bear",
+      "bear_lean",
       "range",
-      "bear",
-      "bear",
-      "bear",
-      "bear_lean",
-      "bear",
-      "bear",
-      "bear_lean",
       "range",
       "range"
     ]
