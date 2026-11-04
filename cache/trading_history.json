@@ -2789,5 +2789,15 @@
     "buy_signals": 0,
     "exit_signals": 3,
     "signals": []
+  },
+  {
+    "date": "2026-11-04",
+    "time": "10:21",
+    "environment": "bear",
+    "environment_cn": "熊市 — 清仓做反弹",
+    "position_ratio": 0.2,
+    "buy_signals": 0,
+    "exit_signals": 2,
+    "signals": []
   }
 ]
