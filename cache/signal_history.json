@@ -91,8 +91,8 @@
   },
   "先进封装_breakout": {
     "first_seen": "2026-08-03",
-    "last_seen": "2026-09-15",
-    "seen_count": 2,
+    "last_seen": "2026-11-04",
+    "seen_count": 3,
     "direction_at_first": "up"
   },
   "CPO_rotation": {
@@ -151,8 +151,8 @@
   },
   "半导体_breakout": {
     "first_seen": "2026-09-16",
-    "last_seen": "2026-09-16",
-    "seen_count": 1,
+    "last_seen": "2026-11-04",
+    "seen_count": 2,
     "direction_at_first": "up"
   },
   "AI手机_rotation": {
@@ -160,5 +160,11 @@
     "last_seen": "2026-09-21",
     "seen_count": 1,
     "direction_at_first": "down"
+  },
+  "固态电池_breakout": {
+    "first_seen": "2026-11-04",
+    "last_seen": "2026-11-04",
+    "seen_count": 1,
+    "direction_at_first": "up"
   }
 }
