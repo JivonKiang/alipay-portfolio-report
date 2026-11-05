@@ -1,82 +1,5 @@
 [
   {
-    "date": "2026-07-01",
-    "time": "13:24",
-    "environment": "bull_lean",
-    "environment_cn": "偏牛 — 积极做多",
-    "position_ratio": 0.6,
-    "buy_signals": 8,
-    "exit_signals": 0,
-    "signals": [
-      {
-        "board": "AI眼镜",
-        "type": "breakout",
-        "label": "🟢 放量突破MA20",
-        "funds": [
-          "008282"
-        ]
-      },
-      {
-        "board": "创新药",
-        "type": "breakout",
-        "label": "🟢 放量突破MA20",
-        "funds": [
-          "011179",
-          "002708"
-        ]
-      },
-      {
-        "board": "存储芯片",
-        "type": "oversold",
-        "label": "🟡 超跌反弹",
-        "funds": [
-          "008888"
-        ]
-      },
-      {
-        "board": "先进封装",
-        "type": "oversold",
-        "label": "🟡 超跌反弹",
-        "funds": [
-          "008888"
-        ]
-      },
-      {
-        "board": "CPO",
-        "type": "oversold",
-        "label": "🟡 超跌反弹",
-        "funds": [
-          "017560"
-        ]
-      },
-      {
-        "board": "光通信",
-        "type": "oversold",
-        "label": "🟡 超跌反弹",
-        "funds": [
-          "017560"
-        ]
-      },
-      {
-        "board": "人形机器人",
-        "type": "oversold",
-        "label": "🟡 超跌反弹",
-        "funds": [
-          "002256",
-          "001643"
-        ]
-      },
-      {
-        "board": "稀土永磁",
-        "type": "oversold",
-        "label": "🟡 超跌反弹",
-        "funds": [
-          "011036"
-        ]
-      }
-    ]
-  },
-  {
     "date": "2026-07-02",
     "time": "06:38",
     "environment": "range",
@@ -2766,5 +2689,67 @@
     "buy_signals": 0,
     "exit_signals": 0,
     "signals": []
+  },
+  {
+    "date": "2026-11-05",
+    "time": "10:15",
+    "environment": "bear",
+    "environment_cn": "熊市 — 清仓做反弹",
+    "position_ratio": 0.2,
+    "buy_signals": 6,
+    "exit_signals": 1,
+    "signals": [
+      {
+        "board": "半导体",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "008888",
+          "008282"
+        ]
+      },
+      {
+        "board": "铜缆高速连接",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "012629"
+        ]
+      },
+      {
+        "board": "PCB",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "002256",
+          "008282"
+        ]
+      },
+      {
+        "board": "AI手机",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "008087",
+          "008282"
+        ]
+      },
+      {
+        "board": "商业航天",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "001643"
+        ]
+      },
+      {
+        "board": "脑机接口",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "002256"
+        ]
+      }
+    ]
   }
 ]
