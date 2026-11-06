@@ -1,0 +1,192 @@
+{
+  "updated": "2026-11-06T14:28:23+08:00",
+  "run_time": "14:28",
+  "total_assets": 146000,
+  "total_flexible": 96000,
+  "module_1_environment": {
+    "env": "bear",
+    "env_cn": "熊市 — 清仓做反弹",
+    "position_ratio": 0.2,
+    "max_position": 19200,
+    "bullish_count": 0,
+    "bearish_count": 4,
+    "index_details": {
+      "上证50": {
+        "status": "bearish",
+        "current": 2787.41,
+        "ma60": 2851.56,
+        "ma120": 2890.56,
+        "above_ma60": false,
+        "above_ma120": false,
+        "golden_cross": false,
+        "ma60_trend": "down"
+      },
+      "沪深300": {
+        "status": "bearish",
+        "current": 4054.28,
+        "ma60": 4404.84,
+        "ma120": 4603.54,
+        "above_ma60": false,
+        "above_ma120": false,
+        "golden_cross": false,
+        "ma60_trend": "down"
+      },
+      "中证500": {
+        "status": "bearish",
+        "current": 6597.35,
+        "ma60": 7408.42,
+        "ma120": 7841.44,
+        "above_ma60": false,
+        "above_ma120": false,
+        "golden_cross": false,
+        "ma60_trend": "down"
+      },
+      "创业板指": {
+        "status": "data_insufficient"
+      },
+      "科创50": {
+        "status": "bearish",
+        "current": 1253.2,
+        "ma60": 1521.68,
+        "ma120": 1674.48,
+        "above_ma60": false,
+        "above_ma120": false,
+        "golden_cross": false,
+        "ma60_trend": "down"
+      }
+    }
+  },
+  "module_2_selection": {
+    "scanned": 21,
+    "total": 25,
+    "raw_signals": 0,
+    "actionable_signals": 0,
+    "blocked_signals": 0,
+    "signals": [],
+    "blocked": []
+  },
+  "module_3_position": {
+    "total_suggested": 0,
+    "single_max": 5760,
+    "strategy": "熊市 — 清仓做反弹",
+    "diversification_note": "建议分散到0只基金"
+  },
+  "module_4_exit": {
+    "exit_signals": [
+      {
+        "fund_code": "006503",
+        "board": "PCB",
+        "entry_date": "2026-06-23",
+        "entry_nav": 9.1008,
+        "current": 3137.49,
+        "pnl_pct": 34374.88,
+        "net_pnl_pct": 34374.88,
+        "fee_label": "0%",
+        "days_held": 136,
+        "exit_type": "trend_broken",
+        "reason": "跌破MA10(3216.2)，保护已有利润34374.9%",
+        "action": "SELL"
+      }
+    ],
+    "sell_alerts": [
+      {
+        "id": "pe_l2_上证50_2026-11-06",
+        "type": "pe",
+        "severity": "warning",
+        "index": "上证50",
+        "title": "上证50 高估 — 建议减仓",
+        "message": "上证50 PE=11.65（百分位83%），建议减仓 50%",
+        "pe": 11.65,
+        "reduce_percent": 50,
+        "action": "reduce"
+      }
+    ],
+    "position_alerts": [],
+    "signal_states": [
+      {
+        "code": "005844",
+        "name": "东方人工智能主题混合C",
+        "state": "WAIT",
+        "buy_date": "2026-09-28",
+        "held_days": 39,
+        "buy_nav": 3.2259,
+        "latest_nav": 2.4207,
+        "latest_date": "2026-11-05",
+        "ret": -0.2496
+      },
+      {
+        "code": "006503",
+        "name": "财通集成电路产业股票C",
+        "state": "WAIT",
+        "buy_date": "2026-09-17",
+        "held_days": 50,
+        "buy_nav": 7.3421,
+        "latest_nav": 3.7541,
+        "latest_date": "2026-11-05",
+        "ret": -0.4887
+      },
+      {
+        "code": "025209",
+        "name": "永赢先锋半导体智选混合C",
+        "state": "WAIT",
+        "buy_date": "2026-09-28",
+        "held_days": 39,
+        "buy_nav": 2.31,
+        "latest_nav": 1.8134,
+        "latest_date": "2026-11-05",
+        "ret": -0.215
+      }
+    ],
+    "fee_calendar": [],
+    "index_pe": {
+      "创业板指": {
+        "pe": 28.03,
+        "pe_percentile": 0.076
+      },
+      "沪深300": {
+        "pe": 13.48,
+        "pe_percentile": 0.668
+      },
+      "上证50": {
+        "pe": 11.65,
+        "pe_percentile": 0.83
+      },
+      "中证500": {
+        "pe": 27.97,
+        "pe_percentile": 0.607
+      }
+    },
+    "rules": {
+      "stop_loss": "-8% 硬止损",
+      "take_profit_short": "12% 短线止盈",
+      "take_profit_trend": "18% 趋势止盈",
+      "trailing_stop": "从高点回撤>5% 移动止盈",
+      "pe_percentile": "宽基PE百分位>70/80/90% 关注/减仓50%/减仓70%",
+      "profit_take": "持仓收益>20% 分批止盈 / >35% 强止盈",
+      "fee": "C类 <7天赎回费1.5% / 7-30天0.5% / ≥30天0%"
+    }
+  },
+  "module_5_optimization": {
+    "history_days": 180,
+    "recent_environments": [
+      "range",
+      "range",
+      "range",
+      "bear",
+      "bear",
+      "range",
+      "bear",
+      "range",
+      "range",
+      "bear"
+    ]
+  },
+  "summary": {
+    "environment": "熊市 — 清仓做反弹",
+    "buy_signals": 0,
+    "exit_signals": 1,
+    "today_budget": 0,
+    "action_required": true,
+    "key_action": "市场偏熊，持有现金观望 | 有持仓需退出"
+  }
+}
