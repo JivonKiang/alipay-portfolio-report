@@ -1,6 +1,6 @@
 {
-  "updated": "2026-11-05T14:50:20+08:00",
-  "run_time": "14:50",
+  "updated": "2026-11-06T10:17:58+08:00",
+  "run_time": "10:17",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
@@ -9,10 +9,17 @@
     "position_ratio": 0.45,
     "max_position": 43200,
     "bullish_count": 0,
-    "bearish_count": 0,
+    "bearish_count": 1,
     "index_details": {
       "上证50": {
-        "status": "data_insufficient"
+        "status": "bearish",
+        "current": 2787.41,
+        "ma60": 2851.56,
+        "ma120": 2890.56,
+        "above_ma60": false,
+        "above_ma120": false,
+        "golden_cross": false,
+        "ma60_trend": "down"
       },
       "沪深300": {
         "status": "data_insufficient"
@@ -47,7 +54,7 @@
     "exit_signals": [],
     "sell_alerts": [
       {
-        "id": "pe_l2_上证50_2026-11-05",
+        "id": "pe_l2_上证50_2026-11-06",
         "type": "pe",
         "severity": "warning",
         "index": "上证50",
@@ -65,7 +72,7 @@
         "name": "东方人工智能主题混合C",
         "state": "WAIT",
         "buy_date": "2026-09-28",
-        "held_days": 38,
+        "held_days": 39,
         "buy_nav": 3.2259,
         "latest_nav": 2.451,
         "latest_date": "2026-11-04",
@@ -76,7 +83,7 @@
         "name": "财通集成电路产业股票C",
         "state": "WAIT",
         "buy_date": "2026-09-17",
-        "held_days": 49,
+        "held_days": 50,
         "buy_nav": 7.3421,
         "latest_nav": 3.9756,
         "latest_date": "2026-11-04",
@@ -87,7 +94,7 @@
         "name": "永赢先锋半导体智选混合C",
         "state": "WAIT",
         "buy_date": "2026-09-28",
-        "held_days": 38,
+        "held_days": 39,
         "buy_nav": 2.31,
         "latest_nav": 1.9007,
         "latest_date": "2026-11-04",
@@ -126,7 +133,6 @@
   "module_5_optimization": {
     "history_days": 180,
     "recent_environments": [
-      "bear",
       "bear_lean",
       "range",
       "range",
@@ -135,6 +141,7 @@
       "bear",
       "range",
       "bear",
+      "range",
       "range"
     ]
   },
