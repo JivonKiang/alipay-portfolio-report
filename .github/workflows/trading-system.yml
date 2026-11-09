@@ -38,6 +38,7 @@ jobs:
         run: |
           cp hub.html output/hub.html
           cp data.json output/main-data.json
+          cp CNAME output/CNAME
 
       - name: Commit updated data & dashboard
         run: |
