@@ -3,6 +3,15 @@ name: Build Android APK & OTA Bundle
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'android/**'
+      - 'www/**'
+      - 'capacitor.config.json'
+      - 'package.json'
+      - 'version.json'
+      - 'updates.json'
+      - 'manifest.json'
+      - '.github/workflows/build-android.yml'
   workflow_dispatch:
 
 permissions:
