@@ -40,6 +40,14 @@ jobs:
           cp data.json output/main-data.json
           cp CNAME output/CNAME
 
+      - name: Run Q75 quant executor (75% win-rate paper trading)
+        run: |
+          python3 -m pip install pandas --quiet
+          python3 q75/q75_executor.py
+          cp q75/q75_signal.json output/q75_signal.json
+          cp q75/q75_trades.json output/q75_trades.json 2>/dev/null || echo "[]" > output/q75_trades.json
+          cp q75/q75_ledger.json output/q75_ledger.json 2>/dev/null || true
+
       - name: Commit updated data & dashboard
         run: |
           git config user.name "github-actions[bot]"
@@ -50,6 +58,7 @@ jobs:
           git add output/index.html
           git add index.html
           git add cache/trading_history.json 2>/dev/null || true
+          git add q75/q75_signal.json q75/q75_trades.json q75/q75_ledger.json 2>/dev/null || true
 
           git diff --staged --quiet || git commit -m "auto: trading system update $(TZ='Asia/Shanghai' date +'%Y-%m-%d %H:%M')"
           git push

@@ -172,6 +172,21 @@ footer{border-top:1px solid var(--line);padding:22px 0 34px;display:flex;justify
       <div class="foot-note">周四定投日 · PE 阈值定档 · 仅工作日扣款</div>
     </div>
 
+    <!-- Q75 量化信号 -->
+    <div class="card span12 reveal d3">
+      <div class="seal">Q</div>
+      <div class="tag">Q75 Quant Executor · 纸面执行账本</div>
+      <h3>Q75 量化信号</h3>
+      <div class="stats" style="margin-top:14px">
+        <div class="s"><span class="v" id="q75-wr">—</span><span class="k">账本胜率</span></div>
+        <div class="s"><span class="v" id="q75-n">—</span><span class="k">已平仓笔数</span></div>
+        <div class="s"><span class="v" id="q75-total">—</span><span class="k">纸面总资产</span></div>
+        <div class="s"><span class="v" id="q75-pos">—</span><span class="k">在市标的</span></div>
+      </div>
+      <div id="q75-actions" class="foot-note" style="margin-top:12px;font-size:13px;color:var(--ink-dim)">信号加载中…</div>
+      <div class="foot-note">训练/测试分离回测 75.1%（2024 起真实日线 365 笔）· 每工作日自动执行 · 止盈 1.5% / 止损 5% / 持有 10 日</div>
+    </div>
+
     <!-- 策略实验室 -->
     <div class="card span12 reveal d3">
       <div class="seal">略</div>
@@ -259,6 +274,21 @@ footer{border-top:1px solid var(--line);padding:22px 0 34px;display:flex;justify
     if(env.position_ratio!=null)document.getElementById('env-pos').textContent=Math.round(env.position_ratio*100)+'%';
     if(d.updated)document.getElementById('env-upd').textContent=d.updated.replace('T',' ').slice(0,16);
   }).catch(function(){});
+  fetch('q75_signal.json',{cache:'no-store'}).then(function(r){return r.json()}).then(function(s){
+    function fmt(n){return n==null?'—':n}
+    document.getElementById('q75-wr').textContent=s.win_rate!=null?(s.win_rate*100).toFixed(1)+'%':'—';
+    document.getElementById('q75-n').textContent=fmt(s.closed_trades);
+    document.getElementById('q75-total').textContent='¥'+(s.total_value!=null?Math.round(s.total_value).toLocaleString():'—');
+    var syms=Object.keys(s.positions||{});
+    document.getElementById('q75-pos').textContent=syms.length?syms.map(function(x){return x.slice(0,6)}).join(' / '):'空仓';
+    var acts=(s.actions||[]);
+    var el=document.getElementById('q75-actions');
+    if(acts.length){el.innerHTML='<b>'+s.data_day+' 执行：</b>'+acts.join('；')}
+    else{el.innerHTML='<b>'+s.data_day+'</b> 无新信号（趋势闸/超跌条件未触发，空仓等待）'}
+  }).catch(function(){
+    var el=document.getElementById('q75-actions');
+    if(el)el.textContent='Q75 信号数据尚未生成（首次 CI 运行后可用）';
+  });
 })();
 </script>
 </body>
