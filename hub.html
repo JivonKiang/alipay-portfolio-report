@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Jivon Lab · 投资面板</title>
+<meta name="description" content="Jivon Lab 投资面板 — 持仓、纳指定投、ETF 量化信号与资产配置回测的统一视图（七个投资项目归一）">
+<style>
+:root{
+  --bg:#F7F5EF; --panel:#FFFFFF; --panel-2:#F1EFE8;
+  --line:rgba(25,27,30,.10);
+  --ink:#191B1E; --ink-dim:#454A51; --ink-faint:#84898F;
+  --accent:#0E5A50; --accent-soft:rgba(14,90,80,.10); --accent-line:rgba(14,90,80,.45);
+  --up:#C0392B; --down:#1E8449;   /* 涨红跌绿（A股惯例） */
+  --warn:#B45309;
+}
+@media (prefers-color-scheme:dark){
+:root{
+  --bg:#0B0D0E; --panel:#14171B; --panel-2:#1B1F24;
+  --line:rgba(234,234,230,.09);
+  --ink:#EAEAE6; --ink-dim:#B4B8BC; --ink-faint:#7E848B;
+  --accent:#6FC7B9; --accent-soft:rgba(111,199,185,.12); --accent-line:rgba(111,199,185,.45);
+  --up:#EF5350; --down:#26A69A;
+  --warn:#F2B544;
+}
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:hidden;overscroll-behavior:none}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:Georgia,"Noto Serif SC","Songti SC",serif;
+  line-height:1.6;min-height:100vh;
+}
+.wrap{max-width:1120px;margin:0 auto;padding:0 28px;position:relative}
+.mono{font-family:"JetBrains Mono","SF Mono",Consolas,monospace}
+
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:20px 0;border-bottom:1px solid var(--line)}
+.topbar .brand{font-size:14px;letter-spacing:.12em;color:var(--ink-dim);text-decoration:none}
+.topbar .brand b{color:var(--ink);font-weight:400}
+.back{font-size:12px;color:var(--accent);text-decoration:none;letter-spacing:.08em}
+.back:hover{text-decoration:underline}
+
+.hero{padding:52px 0 36px}
+.kicker{font-size:12px;letter-spacing:.32em;color:var(--accent);font-family:"JetBrains Mono",Consolas,monospace;text-transform:uppercase;margin-bottom:16px}
+.hero h1{font-size:clamp(26px,4vw,40px);font-weight:400;letter-spacing:.02em}
+.hero .sub{margin-top:10px;font-size:14px;color:var(--ink-dim);max-width:44em}
+.hero .rule{margin-top:26px;height:1px;background:linear-gradient(90deg,var(--accent),transparent)}
+
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:18px;padding:8px 0 72px}
+.span12{grid-column:span 12}.span7{grid-column:span 7}.span5{grid-column:span 5}
+.span6{grid-column:span 6}.span4{grid-column:span 4}
+
+.card{background:linear-gradient(160deg,var(--panel),var(--panel-2));border:1px solid var(--line);border-radius:14px;padding:24px 24px 22px;position:relative;overflow:hidden}
+.tag{font-family:"JetBrains Mono",Consolas,monospace;font-size:11px;letter-spacing:.22em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:12px}
+.card h3{font-size:19px;font-weight:400;letter-spacing:.03em;margin-bottom:8px}
+.card p{font-size:13.5px;color:var(--ink-dim);max-width:36em}
+.seal{position:absolute;top:20px;right:20px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;border:1px solid var(--accent-line);border-radius:8px;color:var(--accent);font-size:17px;background:var(--accent-soft);font-family:"Noto Serif SC",serif}
+
+.stats{display:flex;gap:24px;margin-top:18px;flex-wrap:wrap}
+.stats .s{display:flex;flex-direction:column;gap:2px}
+.stats .v{font-family:"JetBrains Mono",Consolas,monospace;font-size:15px;color:var(--ink)}
+.stats .k{font-size:11px;color:var(--ink-faint);letter-spacing:.1em}
+
+/* 持仓三层结构条 */
+.alloc-bar{display:flex;height:34px;border-radius:9px;overflow:hidden;margin-top:16px;border:1px solid var(--line)}
+.alloc-bar .seg{display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;font-family:"JetBrains Mono",Consolas,monospace;letter-spacing:.04em}
+.seg.steady{background:#0E5A50}.seg.flexible{background:#946B00}.seg.growth{background:#7A4FBF}
+.alloc-legend{display:flex;gap:18px;margin-top:10px;flex-wrap:wrap}
+.alloc-legend .lg{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink-dim)}
+.alloc-legend .dot{width:9px;height:9px;border-radius:3px}
+
+/* 策略实验室卡 */
+.strategy-list{display:flex;flex-direction:column;margin-top:6px}
+.strat{display:flex;align-items:center;gap:14px;padding:13px 2px;border-bottom:1px solid var(--line);text-decoration:none;color:inherit}
+.strat:last-child{border-bottom:none}
+.strat .ico{flex:none;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:10px;font-size:16px;font-family:"Noto Serif SC",serif;background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent-line)}
+.strat .body{flex:1;min-width:0}
+.strat .body b{font-size:14.5px;font-weight:600;letter-spacing:.02em}
+.strat .body .d{font-size:12px;color:var(--ink-faint);margin-top:1px}
+.strat .st{flex:none;text-align:right}
+.strat .st .v{font-family:"JetBrains Mono",Consolas,monospace;font-size:13px}
+.strat .st .k{font-size:10.5px;color:var(--ink-faint);letter-spacing:.08em}
+.strat:hover{background:var(--accent-soft);border-radius:10px}
+
+/* 表格 */
+table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:14px}
+th{padding:7px 8px;text-align:left;font-weight:600;color:var(--ink-faint);border-bottom:1px solid var(--line);font-size:11.5px;letter-spacing:.04em}
+td{padding:7px 8px;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:none}
+.num{font-family:"JetBrains Mono",Consolas,monospace}
+.up{color:var(--up)}.down{color:var(--down)}
+
+.foot-note{margin-top:14px;font-size:11.5px;color:var(--ink-faint)}
+a.plainlink{color:var(--accent);text-decoration:none}
+a.plainlink:hover{text-decoration:underline}
+
+footer{border-top:1px solid var(--line);padding:22px 0 34px;display:flex;justify-content:space-between;font-size:12px;color:var(--ink-faint);letter-spacing:.08em}
+
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.reveal{opacity:0;animation:rise .6s cubic-bezier(.2,.7,.2,1) forwards}
+.d1{animation-delay:.05s}.d2{animation-delay:.12s}.d3{animation-delay:.2s}.d4{animation-delay:.28s}
+
+@media (max-width:900px){
+  .span7,.span5,.span6{grid-column:span 12}
+  .span4{grid-column:span 6}
+  .hero{padding:36px 0 24px}
+  .wrap{padding:0 18px}
+}
+@media (max-width:560px){
+  .span4{grid-column:span 12}
+  .stats{gap:16px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="topbar">
+    <a class="brand mono" href="https://jivonlab.com"><b>jivonlab.com</b> · 投资面板</a>
+    <a class="back mono" href="https://jivonlab.com">← 返回工作台</a>
+  </header>
+
+  <section class="hero reveal d1">
+    <div class="kicker">Investment · Unified Asset Panel</div>
+    <h1>七个投资项目，一张桌子。</h1>
+    <div class="sub">持仓速览 · 纳指定投 · ETF 量化信号 · 资产配置回测。数据由各系统自动更新，本页只做归一视图。</div>
+    <div class="env-strip reveal d1" style="display:flex;gap:14px;flex-wrap:wrap;margin-top:18px">
+      <span class="mono" style="font-size:12px;color:var(--ink-dim)">市场环境：<b id="env-cn" style="color:var(--warn)">加载中…</b></span>
+      <span class="mono" style="font-size:12px;color:var(--ink-dim)">建议仓位：<b id="env-pos" class="mono">—</b></span>
+      <span class="mono" style="font-size:12px;color:var(--ink-faint)">交易系统更新：<span id="env-upd">—</span></span>
+    </div>
+    <div class="rule"></div>
+  </section>
+
+  <main class="grid">
+
+    <!-- 资产总览 -->
+    <div class="card span7 reveal d2">
+      <div class="seal">产</div>
+      <div class="tag">Assets · data.json 自动更新</div>
+      <h3>资产总览</h3>
+      <div class="stats" style="margin-top:14px">
+        <div class="s"><span class="v" id="st-total">—</span><span class="k">总资产</span></div>
+        <div class="s"><span class="v" id="st-steady">—</span><span class="k">稳健层</span></div>
+        <div class="s"><span class="v" id="st-flex">—</span><span class="k">灵活层</span></div>
+        <div class="s"><span class="v" id="st-growth">—</span><span class="k">进攻层</span></div>
+      </div>
+      <div class="alloc-bar" id="alloc-bar">
+        <div class="seg steady" style="width:75.6%">75.6%</div>
+        <div class="seg flexible" style="width:22.9%">22.9%</div>
+        <div class="seg growth" data-seg="growth" style="width:1.5%">1.5%</div>
+      </div>
+      <div class="alloc-legend">
+        <div class="lg"><span class="dot" style="background:#0E5A50"></span>稳健 · 债券/货币（512,111）</div>
+        <div class="lg"><span class="dot" style="background:#946B00"></span>灵活 · 货币理财（155,106）</div>
+        <div class="lg"><span class="dot" style="background:#7A4FBF"></span>进攻 · QDII（10,084）</div>
+      </div>
+      <div class="foot-note">数据快照 2026-11-06 · <a class="plainlink" href="./index.html">操盘手修炼页</a> 为每日实操入口</div>
+    </div>
+
+    <!-- 纳指定投 -->
+    <div class="card span5 reveal d2">
+      <div class="seal">投</div>
+      <div class="tag">NASDAQ DCA · 周四定投</div>
+      <h3>纳指定投</h3>
+      <div class="stats" style="margin-top:14px">
+        <div class="s"><span class="v" id="dca-ndx">—</span><span class="k">NDX 点位</span></div>
+        <div class="s"><span class="v" id="dca-dd">—</span><span class="k">距高点回撤</span></div>
+        <div class="s"><span class="v" id="dca-wk">—</span><span class="k">周涨跌</span></div>
+      </div>
+      <div id="dca-signal" class="foot-note" style="margin-top:12px;font-size:13px;color:var(--ink-dim)">信号加载中…</div>
+      <div class="foot-note">周四定投日 · PE 阈值定档 · 仅工作日扣款</div>
+    </div>
+
+    <!-- 策略实验室 -->
+    <div class="card span12 reveal d3">
+      <div class="seal">略</div>
+      <div class="tag">Strategy Lab · 七项目归一</div>
+      <h3>策略实验室</h3>
+      <div class="strategy-list">
+        <a class="strat" href="https://jivonkiang.github.io/etf-quant-auto/">
+          <span class="ico">量</span>
+          <span class="body"><b>ETF 量化自动化</b><span class="d">金叉+MACD · 无人值守每日运行 · 信号邮件推送（当前主战系统）</span></span>
+          <span class="st"><span class="v">daily</span><span class="k">自动运行</span></span>
+        </a>
+        <a class="strat" href="https://github.com/JivonKiang/nasdaq-dca">
+          <span class="ico">纳</span>
+          <span class="body"><b>纳指定投助手</b><span class="d">估值定档 DCA · 已并入本面板（legacy 分支保留）</span></span>
+          <span class="st"><span class="v">merged</span><span class="k">已迁移</span></span>
+        </a>
+        <a class="strat" href="https://github.com/JivonKiang/fund-trend-system">
+          <span class="ico">趋</span>
+          <span class="body"><b>基金趋势量化</b><span class="d">指数 MA60-120 策略回测 + 信号推送（2026-06 归档）</span></span>
+          <span class="st"><span class="v">archived</span><span class="k">历史策略</span></span>
+        </a>
+        <a class="strat" href="https://github.com/JivonKiang/alipay-quant-system">
+          <span class="ico">板</span>
+          <span class="body"><b>C 类基金量化推荐</b><span class="d">热门板块扫描 + 滚动胜率回测（2026-07 归档）</span></span>
+          <span class="st"><span class="v">archived</span><span class="k">历史策略</span></span>
+        </a>
+        <a class="strat" href="https://github.com/JivonKiang/etf-quant">
+          <span class="ico">联</span>
+          <span class="body"><b>ETF 联接量化</b><span class="d">MA10/30 金叉+MACD+持有 20 天 · 胜率 66.0%（2026-08 归档）</span></span>
+          <span class="st"><span class="v">archived</span><span class="k">历史策略</span></span>
+        </a>
+      </div>
+      <div class="foot-note">运行中：ETF 量化自动化（每日 11:00/14:30）· 其余策略仓库保留于 GitHub，README 已挂迁移横幅</div>
+    </div>
+
+    <!-- 资产配置回测 -->
+    <div class="card span12 reveal d4">
+      <div class="seal">测</div>
+      <div class="tag">Backtest · investment-dashboard 归一</div>
+      <h3>资产配置回测摘要</h3>
+      <div class="stats" style="margin-top:14px">
+        <div class="s"><span class="v">+25.4%</span><span class="k">当前持仓累计</span></div>
+        <div class="s"><span class="v">4.56%</span><span class="k">年化</span></div>
+        <div class="s"><span class="v">1.15</span><span class="k">夏普</span></div>
+        <div class="s"><span class="v">-3.4%</span><span class="k">最大回撤</span></div>
+        <div class="s"><span class="v">11.3%</span><span class="k">月投定投 IRR</span></div>
+      </div>
+      <table>
+        <tr><th>基金</th><th>年化</th><th>夏普</th><th>最大回撤</th><th>累计</th></tr>
+        <tr><td>华安黄金 ETF</td><td class="num">19.48%</td><td class="num">1.02</td><td class="num down">-28.08%</td><td class="num up">+146.97%</td></tr>
+        <tr><td>广发纳指 100 联接 A</td><td class="num">16.98%</td><td class="num">0.71</td><td class="num down">-29.47%</td><td class="num up">+121.83%</td></tr>
+        <tr><td>博时标普 500 联接 A</td><td class="num">13.26%</td><td class="num">0.71</td><td class="num down">-18.73%</td><td class="num up">+88.19%</td></tr>
+      </table>
+      <div class="foot-note">回测区间 2019-04-15 ~ 2026-06-22 · 完整 7 基金统计见 <a class="plainlink" href="https://github.com/JivonKiang/investment-dashboard">investment-dashboard</a></div>
+    </div>
+
+  </main>
+
+  <footer>
+    <span>jivonlab.com · invest 子域 · GitHub Pages</span>
+    <span>Est. 2026</span>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  function fmt(n){return '¥'+n.toLocaleString('zh-CN')}
+  fetch('main-data.json',{cache:'no-store'}).then(function(r){return r.json()}).then(function(d){
+    var p=d.portfolio||{};
+    if(p.total)document.getElementById('st-total').textContent=fmt(p.total);
+    if(p.steady)document.getElementById('st-steady').textContent=fmt(p.steady);
+    if(p.flexible)document.getElementById('st-flex').textContent=fmt(p.flexible);
+    if(p.growth)document.getElementById('st-growth').textContent=fmt(p.growth);
+    var n=d.nasdaq||{};
+    if(n.ndx_price)document.getElementById('dca-ndx').textContent=n.ndx_price.toLocaleString('zh-CN');
+    if(n.drawdown_pct!=null)document.getElementById('dca-dd').textContent='-'+n.drawdown_pct+'%';
+    if(n.weekly_change_pct!=null)document.getElementById('dca-wk').textContent=(n.weekly_change_pct>0?'+':'')+n.weekly_change_pct+'%';
+    var sig=document.getElementById('dca-signal');
+    if(sig&&n.signal_text){sig.innerHTML='<b>当前信号：</b>'+n.signal_text}
+  }).catch(function(){});
+  fetch('trading_data.json',{cache:'no-store'}).then(function(r){return r.json()}).then(function(d){
+    var env=d.module_1_environment||{};
+    if(env.env_cn)document.getElementById('env-cn').textContent=env.env_cn;
+    if(env.position_ratio!=null)document.getElementById('env-pos').textContent=Math.round(env.position_ratio*100)+'%';
+    if(d.updated)document.getElementById('env-upd').textContent=d.updated.replace('T',' ').slice(0,16);
+  }).catch(function(){});
+})();
+</script>
+</body>
+</html>

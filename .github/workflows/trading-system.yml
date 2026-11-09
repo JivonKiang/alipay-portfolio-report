@@ -34,6 +34,11 @@ jobs:
           MAIL_TO: ${{ secrets.MAIL_TO }}
         run: python3 trading_system.py
 
+      - name: Copy investment hub panel to output
+        run: |
+          cp hub.html output/hub.html
+          cp data.json output/main-data.json
+
       - name: Commit updated data & dashboard
         run: |
           git config user.name "github-actions[bot]"
