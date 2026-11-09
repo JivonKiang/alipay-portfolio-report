@@ -47,6 +47,10 @@ jobs:
           cp q75/q75_signal.json output/q75_signal.json
           cp q75/q75_trades.json output/q75_trades.json 2>/dev/null || echo "[]" > output/q75_trades.json
           cp q75/q75_ledger.json output/q75_ledger.json 2>/dev/null || true
+          # Pages legacy 模式服务 main 分支根目录：JSON 必须复制到根，hub.html 相对 fetch 才能命中
+          cp q75/q75_signal.json q75_signal.json
+          cp q75/q75_trades.json q75_trades.json 2>/dev/null || echo "[]" > q75_trades.json
+          cp q75/q75_ledger.json q75_ledger.json 2>/dev/null || true
 
       - name: Commit updated data & dashboard
         run: |
@@ -59,6 +63,7 @@ jobs:
           git add index.html
           git add cache/trading_history.json 2>/dev/null || true
           git add q75/q75_signal.json q75/q75_trades.json q75/q75_ledger.json 2>/dev/null || true
+          git add q75_signal.json q75_trades.json q75_ledger.json 2>/dev/null || true
 
           git diff --staged --quiet || git commit -m "auto: trading system update $(TZ='Asia/Shanghai' date +'%Y-%m-%d %H:%M')"
           git push
