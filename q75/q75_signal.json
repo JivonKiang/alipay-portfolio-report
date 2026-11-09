@@ -1,0 +1,31 @@
+{
+  "date": "2026-11-09",
+  "data_day": "2026-11-09",
+  "params": {
+    "entry": "both",
+    "ma_n": 30,
+    "rsi_n": 6,
+    "rsi_max": 45,
+    "wr_n": 3,
+    "break_n": 20,
+    "tp": 1.5,
+    "sl": 5.0,
+    "hold": 10
+  },
+  "actions": [],
+  "positions": {},
+  "cash": 100000.0,
+  "total_value": 100000.0,
+  "closed_trades": 0,
+  "win_rate": null,
+  "pool": [
+    "510300.SH",
+    "510500.SH",
+    "512100.SH",
+    "588000.SH",
+    "512480.SH",
+    "515000.SH",
+    "512690.SH",
+    "518880.SH"
+  ]
+}

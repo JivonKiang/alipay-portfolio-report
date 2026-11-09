@@ -1,41 +1,34 @@
 {
-  "updated": "2026-11-09T03:29:21+08:00",
-  "run_time": "03:29",
+  "updated": "2026-11-09T06:45:27+08:00",
+  "run_time": "06:45",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
-    "env": "bear",
-    "env_cn": "熊市 — 清仓做反弹",
-    "position_ratio": 0.2,
-    "max_position": 19200,
+    "env": "bear_lean",
+    "env_cn": "偏熊 — 谨慎参与",
+    "position_ratio": 0.35,
+    "max_position": 33600,
     "bullish_count": 0,
-    "bearish_count": 4,
+    "bearish_count": 3,
     "index_details": {
       "上证50": {
         "status": "bearish",
-        "current": 2788.66,
-        "ma60": 2848.7,
-        "ma120": 2888.83,
+        "current": 2789.88,
+        "ma60": 2848.72,
+        "ma120": 2888.84,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": false,
         "ma60_trend": "down"
       },
       "沪深300": {
-        "status": "bearish",
-        "current": 4064.37,
-        "ma60": 4394.34,
-        "ma120": 4596.46,
-        "above_ma60": false,
-        "above_ma120": false,
-        "golden_cross": false,
-        "ma60_trend": "down"
+        "status": "data_insufficient"
       },
       "中证500": {
         "status": "bearish",
-        "current": 6617.0,
-        "ma60": 7385.7,
-        "ma120": 7824.33,
+        "current": 6604.66,
+        "ma60": 7385.5,
+        "ma120": 7824.23,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": false,
@@ -46,9 +39,9 @@
       },
       "科创50": {
         "status": "bearish",
-        "current": 1262.39,
-        "ma60": 1513.65,
-        "ma120": 1670.63,
+        "current": 1261.17,
+        "ma60": 1513.63,
+        "ma120": 1670.62,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": false,
@@ -57,10 +50,10 @@
     }
   },
   "module_2_selection": {
-    "scanned": 21,
+    "scanned": 18,
     "total": 25,
-    "raw_signals": 8,
-    "actionable_signals": 8,
+    "raw_signals": 7,
+    "actionable_signals": 7,
     "blocked_signals": 0,
     "signals": [
       {
@@ -69,11 +62,11 @@
         "strength": "weak",
         "reason": "60日最大回撤-27.2%，今日反弹",
         "board": "半导体",
-        "change_pct": 0.72,
-        "change_5d": 10.72,
-        "vol_ratio": 0.54,
-        "current": 2147.14,
-        "ma10": 2106.0,
+        "change_pct": 0.77,
+        "change_5d": 10.77,
+        "vol_ratio": 0.76,
+        "current": 2148.25,
+        "ma10": 2106.2,
         "ma20": 2198.6,
         "ma60": 2555.7,
         "funds": [
@@ -93,15 +86,15 @@
         "type": "oversold",
         "label": "🟡 超跌反弹",
         "strength": "weak",
-        "reason": "60日最大回撤-18.1%，今日反弹",
+        "reason": "60日最大回撤-18.2%，今日反弹",
         "board": "算力",
-        "change_pct": 0.57,
-        "change_5d": 5.66,
-        "vol_ratio": 0.65,
-        "current": 1628.43,
-        "ma10": 1609.6,
-        "ma20": 1662.4,
-        "ma60": 1812.1,
+        "change_pct": 0.39,
+        "change_5d": 5.46,
+        "vol_ratio": 0.89,
+        "current": 1625.45,
+        "ma10": 1609.3,
+        "ma20": 1662.3,
+        "ma60": 1812.0,
         "funds": [
           {
             "code": "012629",
@@ -119,37 +112,15 @@
         "type": "oversold",
         "label": "🟡 超跌反弹",
         "strength": "weak",
-        "reason": "60日最大回撤-15.4%，今日反弹",
+        "reason": "60日最大回撤-15.5%，今日反弹",
         "board": "液冷服务器",
-        "change_pct": 0.74,
-        "change_5d": 3.28,
-        "vol_ratio": 0.56,
-        "current": 1559.29,
-        "ma10": 1560.5,
-        "ma20": 1582.5,
-        "ma60": 1693.8,
-        "funds": [
-          {
-            "code": "012629",
-            "name": "广发国证半导体芯片ETF联接C"
-          }
-        ],
-        "gate_passed": true,
-        "position": 500
-      },
-      {
-        "type": "oversold",
-        "label": "🟡 超跌反弹",
-        "strength": "weak",
-        "reason": "60日最大回撤-28.1%，今日反弹",
-        "board": "铜缆高速连接",
-        "change_pct": 1.97,
-        "change_5d": 6.39,
-        "vol_ratio": 0.56,
-        "current": 2044.87,
-        "ma10": 2032.4,
-        "ma20": 2132.5,
-        "ma60": 2457.7,
+        "change_pct": 0.62,
+        "change_5d": 3.15,
+        "vol_ratio": 0.76,
+        "current": 1557.34,
+        "ma10": 1560.3,
+        "ma20": 1582.4,
+        "ma60": 1693.7,
         "funds": [
           {
             "code": "012629",
@@ -164,14 +135,36 @@
         "label": "🟡 超跌反弹",
         "strength": "weak",
         "reason": "60日最大回撤-28.3%，今日反弹",
+        "board": "铜缆高速连接",
+        "change_pct": 1.66,
+        "change_5d": 6.06,
+        "vol_ratio": 0.75,
+        "current": 2038.61,
+        "ma10": 2031.7,
+        "ma20": 2132.2,
+        "ma60": 2457.6,
+        "funds": [
+          {
+            "code": "012629",
+            "name": "广发国证半导体芯片ETF联接C"
+          }
+        ],
+        "gate_passed": true,
+        "position": 500
+      },
+      {
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "strength": "weak",
+        "reason": "60日最大回撤-28.9%，今日反弹",
         "board": "PCB",
-        "change_pct": 2.12,
-        "change_5d": 6.25,
-        "vol_ratio": 0.61,
-        "current": 3204.08,
-        "ma10": 3196.5,
-        "ma20": 3403.4,
-        "ma60": 3849.4,
+        "change_pct": 1.36,
+        "change_5d": 5.46,
+        "vol_ratio": 0.8,
+        "current": 3180.22,
+        "ma10": 3194.1,
+        "ma20": 3402.2,
+        "ma60": 3849.0,
         "funds": [
           {
             "code": "002256",
@@ -189,41 +182,15 @@
         "type": "oversold",
         "label": "🟡 超跌反弹",
         "strength": "weak",
-        "reason": "60日最大回撤-17.5%，今日反弹",
-        "board": "AI手机",
-        "change_pct": 1.09,
-        "change_5d": 6.5,
-        "vol_ratio": 0.61,
-        "current": 1629.26,
-        "ma10": 1608.7,
-        "ma20": 1637.8,
-        "ma60": 1795.7,
-        "funds": [
-          {
-            "code": "008087",
-            "name": "华夏中证5G通信主题ETF联接C"
-          },
-          {
-            "code": "008282",
-            "name": "国泰CES半导体芯片ETF联接C"
-          }
-        ],
-        "gate_passed": true,
-        "position": 500
-      },
-      {
-        "type": "oversold",
-        "label": "🟡 超跌反弹",
-        "strength": "weak",
-        "reason": "60日最大回撤-20.4%，今日反弹",
+        "reason": "60日最大回撤-20.6%，今日反弹",
         "board": "商业航天",
-        "change_pct": 1.71,
-        "change_5d": 6.39,
-        "vol_ratio": 0.65,
-        "current": 1831.42,
-        "ma10": 1828.6,
-        "ma20": 1898.4,
-        "ma60": 2090.8,
+        "change_pct": 1.45,
+        "change_5d": 6.12,
+        "vol_ratio": 0.87,
+        "current": 1826.77,
+        "ma10": 1828.2,
+        "ma20": 1898.1,
+        "ma60": 2090.7,
         "funds": [
           {
             "code": "001643",
@@ -237,15 +204,15 @@
         "type": "oversold",
         "label": "🟡 超跌反弹",
         "strength": "weak",
-        "reason": "60日最大回撤-16.0%，今日反弹",
+        "reason": "60日最大回撤-16.2%，今日反弹",
         "board": "脑机接口",
-        "change_pct": 2.46,
-        "change_5d": 5.63,
-        "vol_ratio": 0.72,
-        "current": 1915.16,
-        "ma10": 1883.9,
-        "ma20": 1943.7,
-        "ma60": 2095.9,
+        "change_pct": 2.23,
+        "change_5d": 5.4,
+        "vol_ratio": 0.97,
+        "current": 1911.01,
+        "ma10": 1883.4,
+        "ma20": 1943.5,
+        "ma60": 2095.8,
         "funds": [
           {
             "code": "002256",
@@ -260,8 +227,8 @@
   },
   "module_3_position": {
     "total_suggested": 2500,
-    "single_max": 5760,
-    "strategy": "熊市 — 清仓做反弹",
+    "single_max": 10080,
+    "strategy": "偏熊 — 谨慎参与",
     "diversification_note": "建议分散到5只基金"
   },
   "module_4_exit": {
@@ -271,13 +238,13 @@
         "board": "PCB",
         "entry_date": "2026-06-23",
         "entry_nav": 9.1008,
-        "current": 3204.31,
-        "pnl_pct": 35109.1,
-        "net_pnl_pct": 35109.1,
+        "current": 3180.17,
+        "pnl_pct": 34843.85,
+        "net_pnl_pct": 34843.85,
         "fee_label": "0%",
         "days_held": 139,
-        "exit_type": "trailing_stop",
-        "reason": "从10日高点回撤超5%，保护利润",
+        "exit_type": "trend_broken",
+        "reason": "跌破MA10(3194.1)，保护已有利润34843.9%",
         "action": "SELL"
       }
     ],
@@ -363,7 +330,6 @@
     "history_days": 180,
     "recent_environments": [
       "range",
-      "range",
       "bear",
       "bear",
       "range",
@@ -371,12 +337,13 @@
       "range",
       "range",
       "bear",
-      "bear"
+      "bear",
+      "bear_lean"
     ]
   },
   "summary": {
-    "environment": "熊市 — 清仓做反弹",
-    "buy_signals": 8,
+    "environment": "偏熊 — 谨慎参与",
+    "buy_signals": 7,
     "exit_signals": 1,
     "today_budget": 2500,
     "action_required": true,

@@ -1,16 +1,6 @@
 [
   {
     "date": "2026-07-06",
-    "time": "07:08",
-    "environment": "bull",
-    "environment_cn": "牛市 — 敢重仓追龙头",
-    "position_ratio": 0.75,
-    "buy_signals": 0,
-    "exit_signals": 0,
-    "signals": []
-  },
-  {
-    "date": "2026-07-06",
     "time": "11:11",
     "environment": "bull",
     "environment_cn": "牛市 — 敢重仓追龙头",
@@ -2749,6 +2739,76 @@
         "label": "🟡 超跌反弹",
         "funds": [
           "008087",
+          "008282"
+        ]
+      },
+      {
+        "board": "商业航天",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "001643"
+        ]
+      },
+      {
+        "board": "脑机接口",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "002256"
+        ]
+      }
+    ]
+  },
+  {
+    "date": "2026-11-09",
+    "time": "06:47",
+    "environment": "bear_lean",
+    "environment_cn": "偏熊 — 谨慎参与",
+    "position_ratio": 0.35,
+    "buy_signals": 7,
+    "exit_signals": 1,
+    "signals": [
+      {
+        "board": "半导体",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "008888",
+          "008282"
+        ]
+      },
+      {
+        "board": "算力",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "012629",
+          "008888"
+        ]
+      },
+      {
+        "board": "液冷服务器",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "012629"
+        ]
+      },
+      {
+        "board": "铜缆高速连接",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "012629"
+        ]
+      },
+      {
+        "board": "PCB",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "002256",
           "008282"
         ]
       },
