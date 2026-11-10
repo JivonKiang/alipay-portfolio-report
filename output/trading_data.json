@@ -1,6 +1,6 @@
 {
-  "updated": "2026-11-10T10:42:49+08:00",
-  "run_time": "10:42",
+  "updated": "2026-11-10T15:05:46+08:00",
+  "run_time": "15:05",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
@@ -289,9 +289,9 @@
         "buy_date": "2026-09-28",
         "held_days": 43,
         "buy_nav": 3.2259,
-        "latest_nav": 2.415,
-        "latest_date": "2026-11-08",
-        "ret": -0.2514
+        "latest_nav": 2.4298,
+        "latest_date": "2026-11-09",
+        "ret": -0.2468
       },
       {
         "code": "006503",
@@ -300,9 +300,9 @@
         "buy_date": "2026-09-17",
         "held_days": 54,
         "buy_nav": 7.3421,
-        "latest_nav": 3.7763,
-        "latest_date": "2026-11-08",
-        "ret": -0.4857
+        "latest_nav": 3.8827,
+        "latest_date": "2026-11-09",
+        "ret": -0.4712
       },
       {
         "code": "025209",
@@ -311,9 +311,9 @@
         "buy_date": "2026-09-28",
         "held_days": 43,
         "buy_nav": 2.31,
-        "latest_nav": 1.8016,
-        "latest_date": "2026-11-08",
-        "ret": -0.2201
+        "latest_nav": 1.8256,
+        "latest_date": "2026-11-09",
+        "ret": -0.2097
       }
     ],
     "fee_calendar": [],
@@ -348,12 +348,12 @@
   "module_5_optimization": {
     "history_days": 180,
     "recent_environments": [
-      "bear",
       "range",
       "range",
       "bear",
       "bear",
       "bear_lean",
+      "bear",
       "bear",
       "bear",
       "bear",
