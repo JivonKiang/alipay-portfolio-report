@@ -1,0 +1,23 @@
+{
+  "updated": "2026-11-10 起跑线",
+  "start_date": "2026-11-10",
+  "human": {
+    "return_pct": 0,
+    "nav": 1.0,
+    "positions": 0,
+    "trades": 0
+  },
+  "quant": {
+    "return_pct": 0,
+    "nav": 1.0,
+    "positions": 0,
+    "trades": 0
+  },
+  "history": [
+    {
+      "date": "2026-11-10",
+      "human": 1.0,
+      "quant": 1.0
+    }
+  ]
+}
