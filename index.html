@@ -307,7 +307,7 @@
             <div class="kpi"><div class="n num" id="qPos">—</div><div class="l">持仓数</div></div>
             <div class="kpi"><div class="n num" id="qTrd">—</div><div class="l">交易笔数</div></div>
           </div>
-          <div class="fdesc">SuperMind 托管：12 只 ETF 池 + 货基防守，风险调整动量周轮动，硬止损 -10% / 移动止盈回撤 -8%，零人工干预。</div>
+          <div class="fdesc">SuperMind 托管：12 只 ETF 池 + 国债ETF(511010) 防守，风险调整动量周轮动，硬止损 -10% / 移动止盈回撤 -8%，零人工干预。</div>
         </div>
       </div>
 
@@ -321,8 +321,8 @@
       <div class="card">
         <div class="panel-head" style="margin-bottom:0.4rem"><h2>V2 官方回测</h2><span class="ph-sub">先验锚 · 非实盘承诺</span></div>
         <div class="bench3">
-          <div class="bk"><div class="n">65.62%</div><div class="l">回测区间收益</div></div>
-          <div class="bk"><div class="n">32.96%</div><div class="l">年化收益</div></div>
+          <div class="bk"><div class="n">65.62%</div><div class="l">交易胜率</div></div>
+          <div class="bk"><div class="n">32.96%</div><div class="l">回测区间收益</div></div>
           <div class="bk"><div class="n">1.25</div><div class="l">Sharpe</div></div>
         </div>
         <div class="bench-note">回测≠实盘。对照赛的意义正是检验：先验绩效在真实滑点、真实情绪环境中能兑现几成。</div>
@@ -402,6 +402,18 @@
     <section class="section" id="sec-models">
       <div class="panel-head"><h2>经典量化模型参考</h2><span class="ph-sub">五套久经市场检验的框架 · 附落地参数</span></div>
       <div class="model-grid">
+        <div class="mcard" style="border:1px solid rgba(255,176,46,0.45)">
+          <div class="mh"><div class="mic" style="background:rgba(255,176,46,0.18)">⚔️</div><div><div class="mn">V2 实战策略 · 正在跑</div><div class="me">JIVONLAB-ETF动量轮动-Q75（胜率优化版）</div></div><span class="mtag" style="background:rgba(255,176,46,0.18);color:var(--gold)">对照赛选手</span></div>
+          <dl>
+            <dt>一句话</dt><dd><b>双闸动量轮动</b>：每周在 12 只 ETF 里挑「趋势向上且动量最强」的 2 只持有，趋势没了就撤到国债 ETF 防守，叠加双层止损锁利。</dd>
+            <dt>标的池</dt><dd class="param">权益 9：300/500/1000/科创50/半导体/科技/酒/证券/医药/军工 ETF · 商品避险 3：黄金/豆粕 · 防守：511010 国债ETF</dd>
+            <dt>买入闸门（两道都过才买）</dt><dd>① 趋势闸：收盘价 ≥ MA60；② 动量闸：20 日动量必须 >0（弱势坚决不硬买）。过了闸门的按<b>风险调整动量</b>（20日收益÷年化波动，夏普式打分）排名，取前 2 名等权（各 45%）</dd>
+            <dt>防守状态机（滞回）</dt><dd>全池连续 2 周不合格 → 满仓撤入国债 ETF；持仓中 ≥2 只重新合格 → 才回归进攻。根除 V1「防守仓每周被洗」的止损循环</dd>
+            <dt>双层止损（每日检查）</dt><dd class="param">硬止损 -10%（自建仓价，触发后该标的冷却 2 个 ISO 周）· 移动止盈 -8%（自持仓最高价回撤，锁定利润防回吐）</dd>
+            <dt>建仓纪律</dt><dd>权益仓位上限 90%；首周半仓、次周补足，降低单周择时风险</dd>
+            <dt>回测绩效（2025-11~2026-10）</dt><dd>收益 32.96%｜Sharpe 1.25｜<b>交易胜率 65.62%</b>｜回撤 23.53%｜IR 2.14（V1：19.83%/0.69%/50.85%/26.09%）</dd>
+          </dl>
+        </div>
         <div class="mcard">
           <div class="mh"><div class="mic" style="background:rgba(162,107,255,0.15)">🌀</div><div><div class="mn">动量轮动</div><div class="me">Momentum Rotation</div></div><span class="mtag" style="background:rgba(162,107,255,0.15);color:var(--purple)">V2 核心</span></div>
           <dl>
