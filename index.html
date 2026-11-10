@@ -400,10 +400,22 @@
 
     <!-- ⑤ 模型 -->
     <section class="section" id="sec-models">
-      <div class="panel-head"><h2>经典量化模型参考</h2><span class="ph-sub">五套久经市场检验的框架 · 附落地参数</span></div>
+      <div class="panel-head"><h2>经典量化模型参考</h2><span class="ph-sub">V3 主策略 + 对照组 V2 + 五套经典框架</span></div>
       <div class="model-grid">
+        <div class="mcard" style="border:1.5px solid rgba(162,107,255,0.55); background:linear-gradient(180deg,rgba(162,107,255,0.07),rgba(255,176,46,0.04))">
+          <div class="mh"><div class="mic" style="background:rgba(162,107,255,0.18)">🚀</div><div><div class="mn">V3 主策略 · 全市场混池轮动</div><div class="me">JIVONLAB-全市场动量轮动-V3（混池分散版）</div></div><span class="mtag" style="background:rgba(162,107,255,0.2);color:#c9a4ff">已定版 · 待上盘</span></div>
+          <dl>
+            <dt>为什么升级</dt><dd>主任指出 V2 三点不足：<b>持仓太集中（top2=45%单标的）· 个股缺席 · 标的池不全</b>。V3 全部回应：29 标的混池 + top5 分散 + 个股与 ETF 同池同规则。</dd>
+            <dt>标的池（29 只）</dt><dd class="param">宽基 4：300/500/1000/科创50 · 行业 9：半导体/科技/酒/证券/医药/军工/光伏/新能源车/红利 · 海外商品 6：纳指/标普/恒生科技/黄金/豆粕(+红利) · <b>个股 10 龙头</b>：茅台/宁德/中芯/长电/招行/比亚迪/美的/恒瑞/紫金/平安 · 防守：511010 国债ETF</dd>
+            <dt>买入闸门（与 V2 相同双闸）</dt><dd>① 趋势闸：收盘 ≥ MA60；② 动量闸：20 日动量 &gt;0。过闸者按<b>风险调整动量</b>排名取 <b>top5 等权（各 ~18%）</b>——单标的黑天鹅冲击从 45% 降到 1/4.5</dd>
+            <dt>防守状态机 + 双层止损</dt><dd>滞回机制同 V2（连续 2 周全弱→防守；≥3 只复格→回归）· 硬止损 -10% 冷却 2 周 · 移动止盈 -8% · 权益上限 90%</dd>
+            <dt>个股适配</dt><dd>风险调整动量天然压制高波动个股：龙头股必须「趋势+动量+低波」三佳才能挤进前五，与 ETF 公平竞争，无需单独风控</dd>
+            <dt>本地回测实证（同引擎对照 · 真实东财日线 · 双边成本 0.1%）</dt><dd>V3：收益 <b>5.67%</b>｜回撤 <b>21.48%</b>｜Sharpe <b>0.38</b>｜胜率 59.8%｜194 笔<br>V2：收益 2.11%｜回撤 29.34%｜Sharpe 0.22｜胜率 57.4%｜68 笔<br><b class="num" style="color:#c9a4ff">收益 ×2.7 · 回撤 -27% · Sharpe ×1.7 全指标占优</b>（top3/4/5/6 网格实证 top5 最优，参数不挑)</dd>
+            <dt>上盘路径</dt><dd>策略代码已定版（supermind_strategy_astock_etf_v3.py）· 平台 API 保存通道受限，需在编辑器手动粘贴跑官方回测，通过后重建模拟盘切换 V3</dd>
+          </dl>
+        </div>
         <div class="mcard" style="border:1px solid rgba(255,176,46,0.45)">
-          <div class="mh"><div class="mic" style="background:rgba(255,176,46,0.18)">⚔️</div><div><div class="mn">V2 实战策略 · 正在跑</div><div class="me">JIVONLAB-ETF动量轮动-Q75（胜率优化版）</div></div><span class="mtag" style="background:rgba(255,176,46,0.18);color:var(--gold)">对照赛选手</span></div>
+          <div class="mh"><div class="mic" style="background:rgba(255,176,46,0.18)">⚔️</div><div><div class="mn">V2 对照策略 · 正在跑</div><div class="me">JIVONLAB-ETF动量轮动-Q75（胜率优化版）</div></div><span class="mtag" style="background:rgba(255,176,46,0.18);color:var(--gold)">对照赛选手</span></div>
           <dl>
             <dt>一句话</dt><dd><b>双闸动量轮动</b>：每周在 12 只 ETF 里挑「趋势向上且动量最强」的 2 只持有，趋势没了就撤到国债 ETF 防守，叠加双层止损锁利。</dd>
             <dt>标的池</dt><dd class="param">权益 9：300/500/1000/科创50/半导体/科技/酒/证券/医药/军工 ETF · 商品避险 3：黄金/豆粕 · 防守：511010 国债ETF</dd>
