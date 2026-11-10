@@ -167,6 +167,48 @@
     .kpi4 { grid-template-columns:repeat(2,1fr); }
   }
 
+  /* ===== 修炼板块（深色风改写） ===== */
+  .coach-banner {
+    background:linear-gradient(135deg, rgba(255,176,46,0.10), rgba(255,176,46,0.03));
+    border:1px solid rgba(255,176,46,0.25); border-radius:12px;
+    padding:1rem; text-align:center; margin-bottom:0.9rem;
+  }
+  .coach-banner .greeting { font-size:0.78rem; color:var(--dim); }
+  .coach-banner .mission { font-size:1.3rem; font-weight:800; color:var(--gold); margin:0.25rem 0; }
+  .coach-banner .env-line { font-size:0.75rem; color:var(--dim); }
+  .todo-item { display:flex; align-items:flex-start; gap:0.6rem; padding:0.45rem 0; border-bottom:1px solid rgba(255,255,255,0.04); }
+  .todo-num { width:26px; height:26px; border-radius:50%; background:rgba(77,141,255,0.15); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.75rem; flex-shrink:0; }
+  .todo-text { font-size:0.8rem; }
+  .todo-hint { font-size:0.68rem; color:var(--dim); margin-top:0.15rem; }
+  .prompt-content {
+    background:#0a0f1a; border:1px solid var(--border); border-radius:8px;
+    padding:0.9rem; font-size:0.72rem; color:var(--dim); white-space:pre-wrap;
+    max-height:260px; overflow-y:auto; margin-bottom:0.7rem;
+    font-family:"SF Mono","Fira Code",monospace; line-height:1.5;
+  }
+  .btn-act {
+    display:inline-flex; align-items:center; gap:0.3rem; padding:0.45rem 0.9rem; margin-right:0.4rem;
+    background:rgba(77,141,255,0.12); border:1px solid rgba(77,141,255,0.3);
+    border-radius:8px; color:var(--blue); font-size:0.78rem; cursor:pointer; font-weight:600; transition:all 0.2s;
+  }
+  .btn-act:hover { background:rgba(77,141,255,0.2); }
+  .btn-act.copied { background:rgba(45,192,125,0.12); border-color:rgba(45,192,125,0.3); color:var(--down); }
+  .btn-act-gold { background:rgba(255,176,46,0.12); border-color:rgba(255,176,46,0.3); color:var(--gold); }
+  .btn-act-gold:hover { background:rgba(255,176,46,0.2); }
+  .paste-area { margin-top:0.7rem; display:none; }
+  .paste-area.show { display:block; }
+  .paste-area textarea {
+    width:100%; background:#0a0f1a; border:1px dashed var(--gold); border-radius:8px;
+    padding:0.7rem; color:var(--gold); font-size:0.75rem; font-family:monospace; resize:vertical; min-height:80px;
+  }
+  .progress-row { display:flex; align-items:center; gap:0.6rem; padding:0.32rem 0; }
+  .phase-label { width:110px; font-size:0.75rem; color:var(--dim); flex-shrink:0; }
+  .phase-bar { font-size:0.8rem; letter-spacing:2px; }
+  .phase-pct { font-size:0.75rem; color:var(--gold); font-weight:700; width:40px; text-align:right; }
+
+  /* ===== 面板 iframe ===== */
+  .hub-frame-box { margin-top:0.3rem; }
+
   .footer { text-align:center; padding:1.2rem 0 0.6rem; color:#454f66; font-size:0.66rem; border-top:1px solid var(--border); margin-top:1.2rem; }
 </style>
 </head>
@@ -216,12 +258,12 @@
       <div class="nav-cell" data-target="models">
         <div class="ic" style="background:rgba(162,107,255,0.15)">🧭</div><div class="tx">模型</div>
       </div>
-      <a class="nav-cell" href="/practice.html">
+      <div class="nav-cell" data-target="practice">
         <div class="ic" style="background:rgba(45,192,125,0.15)">📿</div><div class="tx">修炼</div>
-      </a>
-      <a class="nav-cell" href="/hub.html">
+      </div>
+      <div class="nav-cell" data-target="hub">
         <div class="ic" style="background:rgba(107,122,153,0.18)">🏦</div><div class="tx">面板</div>
-      </a>
+      </div>
     </nav>
     <div class="foot">V2·自动<br>15:35 更新</div>
   </aside>
@@ -410,6 +452,68 @@
       </div>
     </section>
 
+    <!-- ⑥ 修炼（原 practice.html 融入） -->
+    <section class="section" id="sec-practice">
+      <div class="coach-banner">
+        <div class="greeting">操盘手每日修炼</div>
+        <div class="mission">练心，而非练术</div>
+        <div class="env-line">今日市场：<span style="color:var(--up);font-weight:700">熊市 — 清仓做反弹</span> &nbsp;|&nbsp; 仓位建议：20% &nbsp;|&nbsp; 更新：11-09 16:43</div>
+      </div>
+
+      <div class="card">
+        <div class="panel-head" style="margin-bottom:0.5rem"><h2>今日待办</h2><span class="ph-sub">同花顺 + 养基宝 + 支付宝</span></div>
+        <div class="todo-item"><div class="todo-num">1</div><div><div class="todo-text">截图三张：<strong>同花顺大盘</strong> + <strong>养基宝持仓</strong> + <strong>支付宝交易记录</strong></div></div></div>
+        <div class="todo-item"><div class="todo-num">2</div><div><div class="todo-text">打开豆包，粘贴下方 Prompt，同时上传三张截图，获取 JSON 分析结果</div></div></div>
+        <div class="todo-item"><div class="todo-num">3</div><div><div class="todo-text">复制豆包返回的 JSON，点击下方「粘贴分析结果」贴进去</div><div class="todo-hint">数据存浏览器 localStorage，合并修炼记录后进度自动更新</div></div></div>
+        <div class="todo-item" style="border-bottom:none"><div class="todo-num">4</div><div><div class="todo-text">今日扫描已完成。打开同花顺+养基宝+支付宝，截图做复盘</div><div class="todo-hint">每天坚持三步，两年轻舟已过万重山</div></div></div>
+      </div>
+
+      <div class="card">
+        <div class="panel-head" style="margin-bottom:0.5rem"><h2>豆包 Prompt</h2><span class="ph-sub">一键复制 · 三图版</span></div>
+        <div class="prompt-content" id="promptText">你是我的私人交易教练。我会给你三张截图：
+图1·同花顺大盘界面：指数行情、板块涨跌、市场情绪
+图2·养基宝持仓页：基金名称、代码、持仓金额、盈亏率
+图3·支付宝交易记录：今日买入/卖出操作截图
+
+请依次分析，然后输出严格JSON（不要markdown包裹）：
+
+1. 今日市场环境：【牛市/偏牛/震荡/偏熊/熊市】，依据是什么
+2. 我的操作是否符合规则：是否按交易系统信号操作？是否有冲动操作？
+3. 今日心态自评：【手不抖/有点慌/扛不住了】，简单描述感受
+4. 技能进阶：我今天在哪个阶段？（一阶练执行力/二阶找模式/三阶去无效）
+
+最终输出JSON：
+{"date":"2026-07-02","market_env":"震荡","market_reason":"五大指数涨跌各半","disciplined":true,"impulsive_count":0,"mindset_score":4,"mindset_note":"按信号买入，手不抖","stage":1,"try_new_mode":false,"mode_name":"","invalid_trade_desc":"","boring_index":1}
+
+只返回JSON，不要其他文字。</div>
+        <button class="btn-act" id="btnCopy" onclick="copyPrompt()"><span id="copyIcon">📋</span> <span id="copyLabel">复制 Prompt</span></button>
+        <button class="btn-act btn-act-gold" onclick="document.getElementById('pasteBox').classList.toggle('show')">粘贴分析结果</button>
+        <div class="paste-area" id="pasteBox">
+          <textarea id="jsonInput" placeholder="把豆包返回的 JSON 粘贴到这里..."></textarea>
+          <button class="btn-act btn-act-gold" onclick="mergeResult()" style="margin-top:0.4rem">合并到修炼记录</button>
+          <div id="mergeMsg" style="font-size:0.72rem;margin-top:0.3rem"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="panel-head" style="margin-bottom:0.5rem"><h2>修炼进度 · 三阶段</h2></div>
+        <div class="progress-row"><span class="phase-label">一阶·练执行力</span><span class="phase-bar"><span style="color:var(--blue)">■</span>□□□□□□□□□</span><span class="phase-pct">0%</span></div>
+        <div class="progress-row"><span class="phase-label">二阶·找交易模式</span><span class="phase-bar"><span style="color:#84cc16">■</span>□□□□□□□□□</span><span class="phase-pct">0%</span></div>
+        <div class="progress-row"><span class="phase-label">三阶·去无效交易</span><span class="phase-bar"><span style="color:var(--down)">■</span>□□□□□□□□□</span><span class="phase-pct">0%</span></div>
+        <div class="mut" style="margin-top:0.5rem;line-height:1.7">目标：第一阶段→买卖不抖 | 第二阶段→月成功率≥50% | 第三阶段→感觉交易很无聊</div>
+        <div class="mut" style="margin-top:0.75rem"><strong>近期修炼记录</strong>
+          <div class="empty-tip" style="margin-top:0.4rem">等待首次截图分析 — 按上方待办步骤开始</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ⑦ 面板（hub.html 融入） -->
+    <section class="section" id="sec-hub">
+      <div class="panel-head"><h2>投资总面板</h2><span class="ph-sub">持仓 · 定投 · 信号 · 回测 七项目归一</span></div>
+      <div class="hub-frame-box"><iframe id="hubFrame" data-src="/hub.html" style="width:100%;height:calc(100vh - 130px);border:1px solid var(--border);border-radius:12px;background:#fff" loading="lazy"></iframe></div>
+      <div class="mut" style="margin-top:0.5rem;text-align:center">面板保留原纸质衬线排版，内嵌于终端内直接查看，无需跳转</div>
+    </section>
+
   </main>
 </div>
 
@@ -418,7 +522,7 @@
 </div>
 
 <script>
-/* ===== 导航切换 ===== */
+/* ===== 导航切换 + 面板 iframe 懒加载 ===== */
 (function() {
   var cells = document.querySelectorAll('.nav-cell[data-target]');
   cells.forEach(function(c) {
@@ -428,9 +532,50 @@
       var t = c.getAttribute('data-target');
       document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('show'); });
       document.getElementById('sec-' + t).classList.add('show');
+      window.scrollTo(0, 0);
+      if (t === 'hub') {
+        var fr = document.getElementById('hubFrame');
+        if (fr && !fr.src) fr.src = fr.getAttribute('data-src');
+      }
     });
   });
 })();
+
+/* ===== 修炼：Prompt 复制 + 修炼记录合并（localStorage 同原 practice.html） ===== */
+function copyPrompt() {
+  var text = document.getElementById('promptText').innerText;
+  navigator.clipboard.writeText(text).then(function() {
+    var btn = document.getElementById('btnCopy');
+    btn.classList.add('copied');
+    document.getElementById('copyIcon').innerText = 'OK';
+    document.getElementById('copyLabel').innerText = '已复制！去豆包粘贴吧';
+    setTimeout(function() {
+      btn.classList.remove('copied');
+      document.getElementById('copyIcon').innerText = '📋';
+      document.getElementById('copyLabel').innerText = '复制 Prompt';
+    }, 3000);
+  });
+}
+function mergeResult() {
+  var raw = document.getElementById('jsonInput').value.trim();
+  var msg = document.getElementById('mergeMsg');
+  if (!raw) { msg.innerText = '请先粘贴豆包返回的JSON'; msg.style.color = 'var(--up)'; return; }
+  try {
+    var obj = JSON.parse(raw);
+    var stored = localStorage.getItem('mindset_records');
+    var records = stored ? JSON.parse(stored) : [];
+    records = records.filter(function(r) { return r.date !== obj.date; });
+    records.push(obj);
+    records.sort(function(a, b) { return a.date.localeCompare(b.date); });
+    localStorage.setItem('mindset_records', JSON.stringify(records));
+    msg.innerText = '已合并！共 ' + records.length + ' 条记录。刷新页面查看更新后的进度。';
+    msg.style.color = 'var(--down)';
+    document.getElementById('jsonInput').value = '';
+  } catch (e) {
+    msg.innerText = 'JSON格式有误：' + e.message;
+    msg.style.color = 'var(--up)';
+  }
+}
 
 /* ===== 数据渲染 ===== */
 (function() {
@@ -474,8 +619,7 @@
   }
 
   /* 净值双线 SVG */
-  function renderNav(history) {
-    var box = document.getElementById('navChart');
+  function renderNav(history) {    var box = document.getElementById('navChart');
     if (!history || history.length < 2) return;
     var W = (box.clientWidth || 640), H = 190, padL = 46, padR = 14, padT = 16, padB = 24;
     var n = history.length, vals = [];
