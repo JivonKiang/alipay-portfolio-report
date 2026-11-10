@@ -807,8 +807,8 @@ def main():
         f.write(html_content)
     print(f"Dashboard已保存: {html_path}")
 
-    # 同时复制到根目录（GitHub Pages 可以从根目录或 /output 读取）
-    root_html = os.path.join(SCRIPT_DIR, "index.html")
+    # 同时复制到根目录 dashboard.html（根 index.html 已改为人机对照赛主页，勿覆盖）
+    root_html = os.path.join(SCRIPT_DIR, "dashboard.html")
     with open(root_html, "w", encoding="utf-8") as f:
         f.write(html_content)
 
