@@ -3,284 +3,357 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>操盘手每日修炼 · 交易系统</title>
+<title>人机对照赛 · 手动盘 vs 量化模拟盘</title>
 <style>
-  :root { --bg:#0d1117; --card:#161b22; --border:#30363d; --text:#c9d1d9; --dim:#8b949e; --gold:#f59e0b; --green:#22c55e; --red:#ef4444; --blue:#3b82f6; }
+  :root { --bg:#0d1117; --card:#161b22; --border:#30363d; --text:#c9d1d9; --dim:#8b949e; --gold:#f59e0b; --green:#22c55e; --red:#ef4444; --blue:#3b82f6; --purple:#a78bfa; --teal:#2dd4bf; }
   * { margin:0; padding:0; box-sizing:border-box; }
   body { background:var(--bg); color:var(--text); font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; line-height:1.6; padding:1rem; }
-  .container { max-width:860px; margin:0 auto; }
+  .container { max-width:960px; margin:0 auto; }
 
-  .coach-banner {
-    background: linear-gradient(135deg, rgba(245,158,11,0.12), rgba(245,158,11,0.04));
-    border:1px solid rgba(245,158,11,0.25); border-radius:14px;
-    padding:1.25rem; text-align:center; margin-bottom:1rem;
+  .hero {
+    background: linear-gradient(135deg, rgba(59,130,246,0.12), rgba(167,139,250,0.08));
+    border:1px solid rgba(59,130,246,0.3); border-radius:14px;
+    padding:1.5rem 1.25rem; text-align:center; margin-bottom:1rem;
   }
-  .coach-banner .greeting { font-size:0.85rem; color:var(--dim); }
-  .coach-banner .mission { font-size:1.4rem; font-weight:800; color:var(--gold); margin:0.3rem 0; }
-  .coach-banner .env-line { font-size:0.85rem; color:var(--dim); }
+  .hero .kicker { font-size:0.78rem; color:var(--dim); letter-spacing:1px; }
+  .hero .title { font-size:1.7rem; font-weight:800; color:#f0f6fc; margin:0.3rem 0; }
+  .hero .title .vs { color:var(--gold); font-size:1.1rem; margin:0 0.4rem; }
+  .hero .subtitle { font-size:0.85rem; color:var(--dim); }
+  .rules { display:flex; justify-content:center; gap:0.6rem; flex-wrap:wrap; margin-top:0.8rem; }
+  .rule-chip { font-size:0.72rem; padding:0.25rem 0.7rem; border-radius:20px; background:rgba(255,255,255,0.05); border:1px solid var(--border); color:var(--dim); }
 
-  .todo-panel {
+  .arena {
+    display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; margin-bottom:1rem;
+  }
+  @media (max-width:640px) { .arena { grid-template-columns:1fr; } }
+  .fighter {
+    background:var(--card); border:1px solid var(--border); border-radius:12px; padding:1.1rem;
+    position:relative; overflow:hidden;
+  }
+  .fighter.human { border-top:3px solid var(--blue); }
+  .fighter.quant { border-top:3px solid var(--purple); }
+  .fighter .role { font-size:0.72rem; color:var(--dim); letter-spacing:1px; }
+  .fighter .name { font-size:1.15rem; font-weight:800; color:#f0f6fc; margin:0.15rem 0 0.6rem; }
+  .fighter .name small { font-weight:400; color:var(--dim); font-size:0.72rem; margin-left:0.4rem; }
+  .kpi-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:0.5rem; }
+  .kpi { background:rgba(255,255,255,0.03); border-radius:8px; padding:0.55rem 0.7rem; }
+  .kpi .num { font-size:1.05rem; font-weight:800; color:#f0f6fc; font-variant-numeric:tabular-nums; }
+  .kpi .lbl { font-size:0.68rem; color:var(--dim); margin-top:0.1rem; }
+  .kpi .num.up { color:var(--red); }
+  .kpi .num.down { color:var(--green); }
+  .fighter .desc { font-size:0.75rem; color:var(--dim); margin-top:0.7rem; line-height:1.5; }
+  .badge-live { position:absolute; top:0.8rem; right:0.8rem; font-size:0.62rem; padding:0.15rem 0.5rem; border-radius:10px; background:rgba(34,197,94,0.12); color:var(--green); border:1px solid rgba(34,197,94,0.3); font-weight:600; }
+
+  .chart-card {
     background:var(--card); border:1px solid var(--border); border-radius:12px;
-    padding:1.25rem; margin-bottom:1rem;
+    padding:1.1rem; margin-bottom:1rem;
   }
-  .todo-panel h3 { font-size:1rem; color:#f0f6fc; margin-bottom:0.75rem; }
-  .todo-item {
-    display:flex; align-items:flex-start; gap:0.65rem; padding:0.5rem 0;
-    border-bottom:1px solid rgba(255,255,255,0.03);
+  .chart-card h3 { font-size:0.95rem; color:#f0f6fc; margin-bottom:0.5rem; }
+  .chart-card .hint { font-size:0.72rem; color:var(--dim); }
+  .chart-wrap { position:relative; margin-top:0.6rem; }
+  .chart-empty {
+    height:180px; display:flex; align-items:center; justify-content:center;
+    color:var(--dim); font-size:0.8rem; border:1px dashed var(--border); border-radius:8px;
   }
-  .todo-num { width:28px;height:28px;border-radius:50%;background:rgba(59,130,246,0.15);color:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;flex-shrink:0; }
-  .todo-text { font-size:0.9rem; color:var(--text); }
-  .todo-hint { font-size:0.75rem; color:var(--dim); margin-top:0.15rem; }
+  .legend { display:flex; gap:1rem; margin-top:0.5rem; font-size:0.72rem; color:var(--dim); }
+  .legend span::before { content:''; display:inline-block; width:14px; height:3px; border-radius:2px; margin-right:0.3rem; vertical-align:middle; }
+  .legend .l-human::before { background:var(--blue); }
+  .legend .l-quant::before { background:var(--purple); }
 
-  .prompt-box {
+  .bench-card {
     background:var(--card); border:1px solid var(--border); border-radius:12px;
-    padding:1.25rem; margin-bottom:1rem; position:relative;
+    padding:1.1rem; margin-bottom:1rem;
   }
-  .prompt-box h3 { font-size:1rem; color:var(--blue); margin-bottom:0.5rem; }
-  .prompt-content {
-    background:#0d1117; border:1px solid var(--border); border-radius:8px;
-    padding:1rem; font-size:0.78rem; color:var(--dim); white-space:pre-wrap;
-    max-height:300px; overflow-y:auto; margin-bottom:0.75rem;
-    font-family:"SF Mono","Fira Code",monospace; line-height:1.5;
+  .bench-card h3 { font-size:0.95rem; color:var(--gold); margin-bottom:0.6rem; }
+  .bench-note { font-size:0.72rem; color:var(--dim); margin-top:0.5rem; }
+  .bench-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0.5rem; margin-top:0.4rem; }
+  @media (max-width:560px) { .bench-grid { grid-template-columns:1fr; } }
+  .bench-kpi { background:rgba(245,158,11,0.06); border:1px solid rgba(245,158,11,0.2); border-radius:8px; padding:0.6rem; text-align:center; }
+  .bench-kpi .num { font-size:1.2rem; font-weight:800; color:var(--gold); }
+  .bench-kpi .lbl { font-size:0.68rem; color:var(--dim); }
+
+  .models h2 { font-size:1.05rem; color:#f0f6fc; margin:1.4rem 0 0.8rem; }
+  .models .sec-sub { font-size:0.78rem; color:var(--dim); margin-bottom:0.8rem; }
+  .model-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; }
+  @media (max-width:640px) { .model-grid { grid-template-columns:1fr; } }
+  .model-card {
+    background:var(--card); border:1px solid var(--border); border-radius:12px; padding:1.1rem;
   }
-  .btn-copy {
-    display:inline-flex; align-items:center; gap:0.35rem; padding:0.5rem 1rem;
-    background:rgba(59,130,246,0.12); border:1px solid rgba(59,130,246,0.3);
-    border-radius:8px; color:var(--blue); font-size:0.85rem; cursor:pointer;
-    font-weight:600; transition:all 0.2s;
+  .model-card .m-head { display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem; }
+  .model-card .m-icon { width:30px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:0.9rem; flex-shrink:0; }
+  .model-card .m-name { font-weight:800; font-size:0.95rem; color:#f0f6fc; }
+  .model-card .m-en { font-size:0.68rem; color:var(--dim); }
+  .used-by { font-size:0.62rem; padding:0.15rem 0.5rem; border-radius:10px; margin-left:auto; flex-shrink:0; font-weight:600; white-space:nowrap; }
+  .model-card dl { font-size:0.78rem; margin-top:0.4rem; }
+  .model-card dt { color:var(--dim); font-size:0.7rem; margin-top:0.5rem; }
+  .model-card dd { color:var(--text); margin-top:0.15rem; line-height:1.55; }
+  .model-card dd.param { font-family:"SF Mono","Fira Code",monospace; color:var(--teal); font-size:0.72rem; }
+
+  .links { display:flex; gap:0.6rem; flex-wrap:wrap; margin-top:1.4rem; }
+  .link-btn {
+    flex:1; min-width:180px; text-align:center; padding:0.75rem;
+    background:rgba(59,130,246,0.08); border:1px solid rgba(59,130,246,0.25); border-radius:10px;
+    color:var(--blue); text-decoration:none; font-size:0.85rem; font-weight:600; transition:all 0.2s;
   }
-  .btn-copy:hover { background:rgba(59,130,246,0.2); }
-  .btn-copy.copied { background:rgba(34,197,94,0.12); border-color:rgba(34,197,94,0.3); color:var(--green); }
-  .paste-area {
-    margin-top:0.75rem; display:none;
-  }
-  .paste-area.show { display:block; }
-  .paste-area textarea {
-    width:100%; background:#0d1117; border:1px dashed var(--gold); border-radius:8px;
-    padding:0.75rem; color:var(--gold); font-size:0.8rem; font-family:monospace;
-    resize:vertical; min-height:80px;
-  }
-  .btn-paste { margin-top:0.5rem; padding:0.4rem 0.9rem; background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.3); border-radius:8px; color:var(--gold); font-size:0.8rem; cursor:pointer; }
-  .btn-paste:hover { background:rgba(245,158,11,0.2); }
+  .link-btn:hover { background:rgba(59,130,246,0.16); }
+  .link-btn small { display:block; font-size:0.68rem; color:var(--dim); font-weight:400; margin-top:0.15rem; }
 
-  .mindset-panel {
-    background:var(--card); border:1px solid var(--border); border-radius:12px;
-    padding:1.25rem; margin-bottom:1rem;
-  }
-  .mindset-panel h3 { font-size:1rem; color:#f0f6fc; margin-bottom:0.75rem; }
-  .progress-row {
-    display:flex; align-items:center; gap:0.6rem; padding:0.35rem 0;
-  }
-  .phase-label { width:110px; font-size:0.82rem; color:var(--dim); flex-shrink:0; }
-  .phase-bar { font-size:0.85rem; letter-spacing:2px; }
-  .phase-pct { font-size:0.82rem; color:var(--gold); font-weight:700; width:40px;text-align:right; }
-
-  .log-table { width:100%; border-collapse:collapse; font-size:0.78rem; margin-top:0.5rem; }
-  .log-table th { background:rgba(255,255,255,0.02); padding:0.4rem 0.5rem; text-align:left; font-weight:600; color:var(--dim); border-bottom:1px solid var(--border); }
-  .log-table td { padding:0.35rem 0.5rem; border-bottom:1px solid rgba(255,255,255,0.02); }
-  .log-empty { text-align:center; color:var(--dim); padding:1rem; font-size:0.8rem; }
-
-  details { margin-bottom:1rem; }
-  details summary {
-    background:var(--card); border:1px solid var(--border); border-radius:10px;
-    padding:0.8rem 1.25rem; cursor:pointer; font-weight:600; color:var(--dim);
-    font-size:0.9rem; user-select:none;
-  }
-  details summary:hover { color:var(--text); }
-  .detail-card { background:var(--card); border:1px solid var(--border); border-top:none; border-radius:0 0 10px 10px; padding:1.25rem; }
-
-  .idx-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:0.5rem; margin-bottom:1rem; }
-  .idx-card { background:rgba(255,255,255,0.02); border-radius:8px; padding:0.55rem; }
-  .idx-name { font-size:0.75rem; color:var(--dim); }
-  .idx-price { font-size:1rem; font-weight:700; color:#f0f6fc; }
-
-  .stat-row { display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:0.75rem; }
-  .stat { text-align:center; padding:0.5rem 0.75rem; }
-  .stat .num { font-size:1.2rem; font-weight:800; color:#f0f6fc; }
-  .stat .lbl { font-size:0.7rem; color:var(--dim); }
-
-  table { width:100%; border-collapse:collapse; font-size:0.8rem; }
-  th { background:rgba(255,255,255,0.02); padding:0.45rem 0.6rem; text-align:left; font-weight:600; color:var(--dim); border-bottom:1px solid var(--border); }
-  td { padding:0.4rem 0.6rem; border-bottom:1px solid rgba(255,255,255,0.02); }
-
-  .exit-row { padding:0.5rem 0.7rem; margin-bottom:0.3rem; background:rgba(255,255,255,0.02); border-radius:6px; font-size:0.85rem; }
-
-  .tag { display:inline-block; padding:0.1rem 0.4rem; border-radius:10px; font-size:0.65rem; font-weight:600; }
-
-  .footer { text-align:center; padding:1.5rem 0; color:var(--dim); font-size:0.7rem; border-top:1px solid var(--border); margin-top:1.5rem; }
+  .footer { text-align:center; padding:1.5rem 0 0.5rem; color:var(--dim); font-size:0.7rem; border-top:1px solid var(--border); margin-top:1.5rem; }
+  .footer a { color:var(--blue); text-decoration:none; }
+  .updated-line { text-align:center; font-size:0.7rem; color:var(--dim); margin-bottom:0.8rem; }
 </style>
 </head>
 <body>
 <div class="container">
 
-<div class="coach-banner">
-  <div class="greeting">操盘手每日修炼</div>
-  <div class="mission">练心，而非练术</div>
-  <div class="env-line">
-    今日市场：<span style="color:#ef4444;font-weight:700">熊市 — 清仓做反弹</span>
-    &nbsp;|&nbsp; 仓位建议：20%
-    &nbsp;|&nbsp; 更新：11-09 16:43
+<div class="hero">
+  <div class="kicker">QUANT DUEL · 2026</div>
+  <div class="title">手动盘<span class="vs">VS</span>量化模拟盘</div>
+  <div class="subtitle">同一行情 · 同一起点 · 各凭本事 — 看谁先到终点</div>
+  <div class="rules">
+    <span class="rule-chip">起跑线 2026-11-10</span>
+    <span class="rule-chip">初始资金 ¥1,000,000</span>
+    <span class="rule-chip">同期对比 · 只看净值</span>
+    <span class="rule-chip">量化侧：V2 策略全自动</span>
   </div>
 </div>
 
-<div class="todo-panel">
-  <h3>今日待办【同花顺 + 养基宝 + 支付宝】</h3>
-  <div class="todo-item">
-    <div class="todo-num">1</div>
-    <div>
-      <div class="todo-text">截图三张：<strong>同花顺大盘</strong> + <strong>养基宝持仓</strong> + <strong>支付宝交易记录</strong></div>
+<div class="updated-line" id="updatedLine">数据加载中…</div>
+
+<div class="arena">
+  <div class="fighter human">
+    <div class="badge-live">手动操作</div>
+    <div class="role">PLAYER 1 · HUMAN</div>
+    <div class="name">手动场内盘<small>同花顺实盘</small></div>
+    <div class="kpi-grid">
+      <div class="kpi"><div class="num" id="hRet">—</div><div class="lbl">累计收益</div></div>
+      <div class="kpi"><div class="num" id="hNav">—</div><div class="lbl">当前净值</div></div>
+      <div class="kpi"><div class="num" id="hPos">—</div><div class="lbl">持仓数</div></div>
+      <div class="kpi"><div class="num" id="hTrd">—</div><div class="lbl">交易笔数</div></div>
     </div>
+    <div class="desc">人工决策：盘感 + 消息面 + 仓位管理。所有买卖由本人手动下单，无算法辅助。</div>
   </div>
-  <div class="todo-item">
-    <div class="todo-num">2</div>
-    <div>
-      <div class="todo-text">打开豆包，粘贴下方Prompt，同时上传三张截图，获取JSON分析结果</div>
+  <div class="fighter quant">
+    <div class="badge-live">策略运行中</div>
+    <div class="role">PLAYER 2 · QUANT</div>
+    <div class="name">V2 量化模拟盘<small>ID 6af2c90f…3968</small></div>
+    <div class="kpi-grid">
+      <div class="kpi"><div class="num" id="qRet">—</div><div class="lbl">累计收益</div></div>
+      <div class="kpi"><div class="num" id="qNav">—</div><div class="lbl">当前净值</div></div>
+      <div class="kpi"><div class="num" id="qPos">—</div><div class="lbl">持仓数</div></div>
+      <div class="kpi"><div class="num" id="qTrd">—</div><div class="lbl">交易笔数</div></div>
     </div>
-  </div>
-  <div class="todo-item">
-    <div class="todo-num">3</div>
-    <div>
-      <div class="todo-text">复制豆包返回的JSON，点击下方「粘贴分析结果」按钮贴进去</div>
-      <div class="todo-hint">数据存到浏览器localStorage，合并修炼记录，刷新页面即可看到进度变化</div>
-    </div>
-  </div>
-  <div class="todo-item">
-    <div class="todo-num">4</div>
-    <div>
-      <div class="todo-text">今日扫描已完成。打开同花顺+养基宝+支付宝，截图做复盘</div>
-      <div class="todo-hint">每天坚持三步，两年轻舟已过万重山</div>
-    </div>
-  </div>
-</div>
-
-<div class="prompt-box">
-  <h3>豆包Prompt · 一键复制（同花顺+养基宝+支付宝三图版）</h3>
-  <div class="prompt-content" id="promptText">你是我的私人交易教练。我会给你三张截图：
-图1·同花顺大盘界面：指数行情、板块涨跌、市场情绪
-图2·养基宝持仓页：基金名称、代码、持仓金额、盈亏率
-图3·支付宝交易记录：今日买入/卖出操作截图
-
-请依次分析，然后输出严格JSON（不要markdown包裹）：
-
-1. 今日市场环境：【牛市/偏牛/震荡/偏熊/熊市】，依据是什么
-2. 我的操作是否符合规则：是否按交易系统信号操作？是否有冲动操作？
-3. 今日心态自评：【手不抖/有点慌/扛不住了】，简单描述感受
-4. 技能进阶：我今天在哪个阶段？（一阶练执行力/二阶找模式/三阶去无效）
-
-最终输出JSON：
-{&quot;date&quot;:&quot;2026-07-02&quot;,&quot;market_env&quot;:&quot;震荡&quot;,&quot;market_reason&quot;:&quot;五大指数涨跌各半&quot;,&quot;disciplined&quot;:true,&quot;impulsive_count&quot;:0,&quot;mindset_score&quot;:4,&quot;mindset_note&quot;:&quot;按信号买入，手不抖&quot;,&quot;stage&quot;:1,&quot;try_new_mode&quot;:false,&quot;mode_name&quot;:&quot;&quot;,&quot;invalid_trade_desc&quot;:&quot;&quot;,&quot;boring_index&quot;:1}
-
-只返回JSON，不要其他文字。</div>
-  <button class="btn-copy" id="btnCopy" onclick="copyPrompt()">
-    <span id="copyIcon">📋</span> <span id="copyLabel">复制Prompt</span>
-  </button>
-  <div style="margin-top:0.75rem;font-size:0.78rem;color:var(--dim)">
-    复制后粘贴到豆包对话框，同时上传 <strong>同花顺 + 养基宝 + 支付宝</strong> 三张截图
-  </div>
-
-  <div style="margin-top:1rem">
-    <button class="btn-paste" onclick="document.getElementById('pasteBox').classList.toggle('show')">
-      粘贴分析结果
-    </button>
-    <div class="paste-area" id="pasteBox">
-      <textarea id="jsonInput" placeholder="把豆包返回的JSON粘贴到这里..."></textarea>
-      <button class="btn-paste" onclick="mergeResult()" style="margin-top:0.4rem">合并到修炼记录</button>
-      <div id="mergeMsg" style="font-size:0.75rem;color:var(--green);margin-top:0.3rem"></div>
-    </div>
+    <div class="desc">SuperMind 平台托管：12 只 ETF 池 + 货基防守，风险调整动量周轮动，硬止损 -10% / 移动止盈回撤 -8%，信号到执行零人工干预。</div>
   </div>
 </div>
 
-<div class="mindset-panel">
-  <h3>修炼进度 · 三阶段</h3>
-  <div class="progress-row"><span class="phase-label">一阶·练执行力</span><span class="phase-bar"><span style="color:#3b82f6">■</span>□□□□□□□□□</span><span class="phase-pct">0%</span></div>
-  <div class="progress-row"><span class="phase-label">二阶·找交易模式</span><span class="phase-bar"><span style="color:#84cc16">■</span>□□□□□□□□□</span><span class="phase-pct">0%</span></div>
-  <div class="progress-row"><span class="phase-label">三阶·去无效交易</span><span class="phase-bar"><span style="color:#22c55e">■</span>□□□□□□□□□</span><span class="phase-pct">0%</span></div>
-  <div style="font-size:0.72rem;color:var(--dim);margin-top:0.5rem">
-    目标：第一阶段→买卖不抖 | 第二阶段→月成功率>=50% | 第三阶段→感觉交易很无聊
-  </div>
+<div class="chart-card">
+  <h3>净值走势对比</h3>
+  <div class="hint">双方净值以起跑线 1.0000 归一，每日收盘后由本地采集器自动更新</div>
+  <div class="chart-wrap"><div class="chart-empty" id="navChart">暂无走势数据 — 首个交易日收盘后生成</div></div>
+  <div class="legend"><span class="l-human">手动盘</span><span class="l-quant">V2 模拟盘</span></div>
+</div>
 
-  <div style="margin-top:0.75rem">
-    <strong style="font-size:0.82rem;color:var(--dim)">近期修炼记录</strong>
-    <div class='log-empty'>等待首次截图分析 — 按上方待办步骤开始</div>
+<div class="bench-card">
+  <h3>V2 策略官方回测（先验锚 · 非实盘承诺）</h3>
+  <div class="bench-grid">
+    <div class="bench-kpi"><div class="num">65.62%</div><div class="lbl">回测区间收益</div></div>
+    <div class="bench-kpi"><div class="num">32.96%</div><div class="lbl">年化收益</div></div>
+    <div class="bench-kpi"><div class="num">1.25</div><div class="lbl">Sharpe</div></div>
+  </div>
+  <div class="bench-note">回测≠实盘。对照赛的意义正是检验：先验绩效在真实滑点、真实情绪环境中能兑现几成。</div>
+</div>
+
+<div class="models">
+  <h2>经典量化模型参考区</h2>
+  <div class="sec-sub">五套经过市场长期检验的模型框架，供手动盘实操借鉴 — 每张卡附可直接落地的参数</div>
+  <div class="model-grid">
+
+    <div class="model-card">
+      <div class="m-head">
+        <div class="m-icon" style="background:rgba(167,139,250,0.15)">🌀</div>
+        <div><div class="m-name">动量轮动</div><div class="m-en">Momentum Rotation</div></div>
+        <span class="used-by" style="background:rgba(167,139,250,0.15);color:var(--purple)">V2 核心</span>
+      </div>
+      <dl>
+        <dt>核心思想</dt>
+        <dd>强者恒强：定期对资产池按过去 N 日收益率排名，卖出落后的，买入领先的。趋势市中显著跑赢买入持有。</dd>
+        <dt>经典参数</dt>
+        <dd class="param">N=20/60/120 日动量 · 周频或月频调仓 · 前 2~3 名持仓</dd>
+        <dt>实操要点</dt>
+        <dd>① 用「风险调整动量」（收益/波动率）代替裸收益，避免追高波动妖股；② 池内所有标的都转弱时切防守资产（货基/债基），空仓也是信号；③ 调仓频率不宜高于周频，摩擦成本会吃掉超额。</dd>
+      </dl>
+    </div>
+
+    <div class="model-card">
+      <div class="m-head">
+        <div class="m-icon" style="background:rgba(45,212,191,0.15)">⚖️</div>
+        <div><div class="m-name">均值回归</div><div class="m-en">Mean Reversion</div></div>
+        <span class="used-by" style="background:rgba(45,212,191,0.15);color:var(--teal)">震荡市利器</span>
+      </div>
+      <dl>
+        <dt>核心思想</dt>
+        <dd>价格短期偏离均线后倾向回归：超跌买入、超涨卖出。与动量策略互补，震荡市表现好。</dd>
+        <dt>经典参数</dt>
+        <dd class="param">RSI(14)&lt;30 买 / &gt;70 卖 · 或偏离 MA20 超 ±2 倍标准差</dd>
+        <dt>实操要点</dt>
+        <dd>① 熊市单边下跌中「超跌还会更超跌」，务必叠加趋势过滤（如仅在大盘 MA20 上方做多超跌）；② 单次仓位小、止损硬，回归策略亏损必须快刀；③ 适合宽基指数 ETF，个股基本面突变会让回归失效。</dd>
+      </dl>
+    </div>
+
+    <div class="model-card">
+      <div class="m-head">
+        <div class="m-icon" style="background:rgba(59,130,246,0.15)">📈</div>
+        <div><div class="m-name">双均线系统</div><div class="m-en">Dual Moving Average</div></div>
+        <span class="used-by" style="background:rgba(59,130,246,0.15);color:var(--blue)">最简趋势</span>
+      </div>
+      <dl>
+        <dt>核心思想</dt>
+        <dd>快线上穿慢线（金叉）买入，下穿（死叉）卖出。规则最简单、纪律性最强，是所有趋势跟踪的入门母版。</dd>
+        <dt>经典参数</dt>
+        <dd class="param">5/20 日（短线）· 20/60 日（中线）· 收盘价确认再操作</dd>
+        <dt>实操要点</dt>
+        <dd>① 震荡市会被反复打脸（锯齿行情），需加过滤：ADX&gt;25 或价格距均线&gt;2%才确认；② 单边市里拿得住是关键 — 信号触发前绝不提前下车；③ 可与动量轮动叠加：均线管方向，动量管选标的。</dd>
+      </dl>
+    </div>
+
+    <div class="model-card">
+      <div class="m-head">
+        <div class="m-icon" style="background:rgba(34,197,94,0.15)">🐢</div>
+        <div><div class="m-name">海龟交易法则</div><div class="m-en">Turtle Trading</div></div>
+        <span class="used-by" style="background:rgba(34,197,94,0.15);color:var(--green)">仓位管理范本</span>
+      </div>
+      <dl>
+        <dt>核心思想</dt>
+        <dd>突破 20 日最高价买入（系统1）/ 55 日（系统2），用 ATR 度量波动并决定每单位仓位大小 — 把「买多少」变成数学题。</dd>
+        <dt>经典参数</dt>
+        <dd class="param">唐奇安通道 20/55 日 · Unit = 1% 账户 ÷ ATR(20) · 加仓间隔 0.5N</dd>
+        <dt>实操要点</dt>
+        <dd>① 最大价值在仓位公式：波动大的品种少买、波动小的多买，账户总风险被锁死；② 止损 2N（2 倍 ATR），跌破即无条件出场；③ 1983-1988 年原版年化约 80%，但最大意义不是收益而是「系统化执行」范式。</dd>
+      </dl>
+    </div>
+
+    <div class="model-card">
+      <div class="m-head">
+        <div class="m-icon" style="background:rgba(245,158,11,0.15)">🌊</div>
+        <div><div class="m-name">风险平价</div><div class="m-en">Risk Parity</div></div>
+        <span class="used-by" style="background:rgba(245,158,11,0.15);color:var(--gold)">全天候打底</span>
+      </div>
+      <dl>
+        <dt>核心思想</dt>
+        <dd>不按资金比例、而按风险贡献分配权重：波动大的资产配少一点，让每类资产对组合的「风险贡献」相等。</dd>
+        <dt>经典参数</dt>
+        <dd class="param">权重 ∝ 1/波动率 · 常见配比：股 30% / 债 55% / 商品 15%（杠杆版另计）</dd>
+        <dt>实操要点</dt>
+        <dd>① 桥水「全天候」基金的核心逻辑，回撤极小、长期年化 8-12%；② ETF 落地版：按近 60 日波动率倒数给股票/债券/黄金 ETF 分配，月频再平衡即可；③ 适合作为底仓压舱石，上面再叠加动量/回归等进攻策略。</dd>
+      </dl>
+    </div>
+
+    <div class="model-card" style="border-style:dashed">
+      <div class="m-head">
+        <div class="m-icon" style="background:rgba(139,148,158,0.15)">🧭</div>
+        <div><div class="m-name">怎么用这五张卡</div><div class="m-en">How to Apply</div></div>
+        <span class="used-by" style="background:rgba(139,148,158,0.15);color:var(--dim)">路线图</span>
+      </div>
+      <dl>
+        <dt>一条务实路线</dt>
+        <dd>先用<b>风险平价</b>打底仓（稳），再用<b>动量轮动</b>做进攻仓（狠），手动盘可借<b>海龟 ATR 仓位法</b>决定每笔买多少，<b>双均线</b>判断大盘多空做开关，震荡市切换到<b>均值回归</b>思路做超跌反弹。</dd>
+        <dt>对照赛启示</dt>
+        <dd>量化赢在「纪律 + 复利」：每笔小赢亏都按规则执行，千次博弈后差异放大。手动盘的胜负手不在聪明，而在能否长期不破自己的规则。</dd>
+      </dl>
+    </div>
+
   </div>
 </div>
 
-<details>
-  <summary>完整交易数据（五模块 · 点击展开）</summary>
-  <div class="detail-card">
-    <div class="idx-grid"><div class='idx-card' style='border-left:3px solid #ef4444'><div class='idx-name'>上证50</div><div class='idx-price'>2789.15</div><span class='tag' style='background:#ef444420;color:#ef4444'>空头</span></div><div class='idx-card' style='border-left:3px solid #ef4444'><div class='idx-name'>沪深300</div><div class='idx-price'>4056.11</div><span class='tag' style='background:#ef444420;color:#ef4444'>空头</span></div><div class='idx-card' style='border-left:3px solid #ef4444'><div class='idx-name'>中证500</div><div class='idx-price'>6586.18</div><span class='tag' style='background:#ef444420;color:#ef4444'>空头</span></div><div class='idx-card' style='border-left:3px solid #ef4444'><div class='idx-name'>科创50</div><div class='idx-price'>1256.96</div><span class='tag' style='background:#ef444420;color:#ef4444'>空头</span></div></div>
-    <div class="stat-row">
-      <div class="stat"><div class="num">21</div><div class="lbl">板块扫描</div></div>
-      <div class="stat"><div class="num">8</div><div class="lbl">买入信号</div></div>
-      <div class="stat"><div class="num">0</div><div class="lbl">门控拦截</div></div>
-      <div class="stat"><div class="num">¥2,500</div><div class="lbl">建议仓位</div></div>
-    </div>
-    <table><tr><th>信号</th><th>板块</th><th>涨跌</th><th>仓位</th><th>匹配基金</th></tr><tr><td><span style='color:#f59e0b;font-weight:600'>🟡 超跌反弹</span></td><td>半导体</td><td>+0.5%</td><td style='color:#f59e0b'>¥500</td><td style='font-size:0.8rem;color:#9ca3af'>008888 国联安中证半导体ETF联接C</td></tr><tr><td><span style='color:#f59e0b;font-weight:600'>🟡 超跌反弹</span></td><td>算力</td><td>+0.2%</td><td style='color:#f59e0b'>¥500</td><td style='font-size:0.8rem;color:#9ca3af'>012629 广发国证半导体芯片ETF联接C</td></tr><tr><td><span style='color:#f59e0b;font-weight:600'>🟡 超跌反弹</span></td><td>液冷服务器</td><td>+0.5%</td><td style='color:#f59e0b'>¥500</td><td style='font-size:0.8rem;color:#9ca3af'>012629 广发国证半导体芯片ETF联接C</td></tr><tr><td><span style='color:#f59e0b;font-weight:600'>🟡 超跌反弹</span></td><td>铜缆高速连接</td><td>+1.4%</td><td style='color:#f59e0b'>¥500</td><td style='font-size:0.8rem;color:#9ca3af'>012629 广发国证半导体芯片ETF联接C</td></tr><tr><td><span style='color:#f59e0b;font-weight:600'>🟡 超跌反弹</span></td><td>PCB</td><td>+1.2%</td><td style='color:#f59e0b'>¥500</td><td style='font-size:0.8rem;color:#9ca3af'>002256 金信新能源汽车混合C</td></tr><tr><td><span style='color:#f59e0b;font-weight:600'>🟡 超跌反弹</span></td><td>AI手机</td><td>+0.8%</td><td style='color:#f59e0b'>¥500</td><td style='font-size:0.8rem;color:#9ca3af'>008087 华夏中证5G通信主题ETF联接C</td></tr><tr><td><span style='color:#f59e0b;font-weight:600'>🟡 超跌反弹</span></td><td>商业航天</td><td>+1.1%</td><td style='color:#f59e0b'>¥500</td><td style='font-size:0.8rem;color:#9ca3af'>001643 汇丰晋信智造先锋股票C</td></tr><tr><td><span style='color:#f59e0b;font-weight:600'>🟡 超跌反弹</span></td><td>脑机接口</td><td>+2.0%</td><td style='color:#f59e0b'>¥500</td><td style='font-size:0.8rem;color:#9ca3af'>002256 金信新能源汽车混合C</td></tr></table>
-    <div style="margin-top:1rem">
-      <strong style="color:var(--dim);font-size:0.85rem">退出 / 风险信号（止盈止损 + PE估值 + 信号状态机）</strong>
-      <div class='exit-row' style='border-left:3px solid #f59e0b'><strong>006503</strong> PCB<span style='float:right;color:#f59e0b'>+34774.6% (费后+34774.6%)</span><div style='font-size:0.8rem;color:#9ca3af'>跌破MA10(3193.5)，保护已有利润34774.6% | 139天</div></div><div class='exit-row' style='border-left:3px solid #f59e0b'><strong>上证50 高估 — 建议减仓</strong><span style='float:right;color:#f59e0b'>warning</span><div style='font-size:0.8rem;color:#9ca3af'>上证50 PE=11.7（百分位85%），建议减仓 50%</div></div>
-    </div>
-    <div style="margin-top:1rem">
-      <strong style="color:var(--dim);font-size:0.85rem">C类费率解锁日历</strong>
-      <div style='color:#6b7280;text-align:center;padding:0.6rem'>所有持仓已免赎回费</div>
-    </div>
-    <div style="margin-top:0.75rem;font-size:0.78rem;color:var(--dim)">
-      止损-8% | 短线止盈+12% | 趋势止盈+18% | 移动止盈&gt;5% | PE百分位&gt;70/80/90%分档减仓 |
-      收益&gt;20%分批止盈 | C类&lt;7天赎回费1.5% | 历史记录 180 天
-    </div>
-  </div>
-</details>
+<div class="links">
+  <a class="link-btn" href="/practice.html">每日修炼 · 交易系统<small>豆包 Prompt 三图复盘 + 心态记录</small></a>
+  <a class="link-btn" href="https://jivonlab.com/etf-quant-auto/">ETF 量化信号<small>V2 策略信号 + SuperMind 面板</small></a>
+  <a class="link-btn" href="/hub.html">统一投资面板<small>全账户资产总览</small></a>
+</div>
 
 <div class="footer">
-  交易系统 + 无忌心法 &nbsp;|&nbsp; 先练心，再练术 &nbsp;|&nbsp; 自动运行 11:00 / 14:30
+  Quant Duel · 手动盘 vs V2 模拟盘 &nbsp;|&nbsp; 数据由本地采集器每日收盘后自动更新 &nbsp;|&nbsp; 仅供个人研究，不构成投资建议
 </div>
 
 </div>
 
 <script>
-function copyPrompt() {
-  var text = document.getElementById('promptText').innerText;
-  navigator.clipboard.writeText(text).then(function() {
-    var btn = document.getElementById('btnCopy');
-    btn.classList.add('copied');
-    document.getElementById('copyIcon').innerText = 'OK';
-    document.getElementById('copyLabel').innerText = '已复制！去豆包粘贴吧';
-    setTimeout(function() {
-      btn.classList.remove('copied');
-      document.getElementById('copyIcon').innerText = '📋';
-      document.getElementById('copyLabel').innerText = '复制Prompt';
-    }, 3000);
-  });
-}
-
-function mergeResult() {
-  var raw = document.getElementById('jsonInput').value.trim();
-  var msg = document.getElementById('mergeMsg');
-  if (!raw) { msg.innerText = '请先粘贴豆包返回的JSON'; msg.style.color='var(--red)'; return; }
-  try {
-    var obj = JSON.parse(raw);
-    var stored = localStorage.getItem('mindset_records');
-    var records = stored ? JSON.parse(stored) : [];
-    records = records.filter(function(r) { return r.date !== obj.date; });
-    records.push(obj);
-    records.sort(function(a,b) { return a.date.localeCompare(b.date); });
-    localStorage.setItem('mindset_records', JSON.stringify(records));
-    msg.innerText = '已合并！共 ' + records.length + ' 条记录。刷新页面查看更新后的进度。';
-    msg.style.color = 'var(--green)';
-    document.getElementById('jsonInput').value = '';
-  } catch(e) {
-    msg.innerText = 'JSON格式有误：' + e.message;
-    msg.style.color = 'var(--red)';
-  }
-}
-
 (function() {
-  var stored = localStorage.getItem('mindset_records');
-  if (stored) {
-    var records = JSON.parse(stored);
-    if (records.length > 0) {
-      console.log('已加载 ' + records.length + ' 条修炼记录');
+  var fmtPct = function(v) {
+    if (v === null || v === undefined) return '—';
+    var s = (v >= 0 ? '+' : '') + (v * 100).toFixed(2) + '%';
+    return s;
+  };
+  var paintKpi = function(el, v, isPct) {
+    var node = document.getElementById(el);
+    if (!node) return;
+    node.innerText = isPct ? fmtPct(v) : v;
+    if (isPct && typeof v === 'number') {
+      node.classList.remove('up','down');
+      node.classList.add(v >= 0 ? 'up' : 'down');
     }
+  };
+
+  fetch('./data/duel.json', {cache: 'no-store'})
+    .then(function(r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
+    .then(function(d) {
+      var h = d.human || {}, q = d.quant || {};
+      paintKpi('hRet', h.return_pct, true);
+      paintKpi('hNav', h.nav !== undefined ? h.nav.toFixed(4) : '—');
+      paintKpi('hPos', h.positions !== undefined ? h.positions : '—');
+      paintKpi('hTrd', h.trades !== undefined ? h.trades : '—');
+      paintKpi('qRet', q.return_pct, true);
+      paintKpi('qNav', q.nav !== undefined ? q.nav.toFixed(4) : '—');
+      paintKpi('qPos', q.positions !== undefined ? q.positions : '—');
+      paintKpi('qTrd', q.trades !== undefined ? q.trades : '—');
+      var ul = document.getElementById('updatedLine');
+      if (ul) ul.innerText = '数据更新：' + (d.updated || '—');
+      drawNav(d.history || []);
+    })
+    .catch(function(e) {
+      paintKpi('hRet', 0, true);
+      paintKpi('hNav', '1.0000');
+      paintKpi('hPos', 0);
+      paintKpi('hTrd', 0);
+      paintKpi('qRet', 0, true);
+      paintKpi('qNav', '1.0000');
+      paintKpi('qPos', 0);
+      paintKpi('qTrd', 0);
+      var ul = document.getElementById('updatedLine');
+      if (ul) ul.innerText = '起跑线状态（2026-11-10 开赛）— 首个交易日收盘后自动更新';
+    });
+
+  function drawNav(history) {
+    var box = document.getElementById('navChart');
+    if (!history || history.length < 2) return;
+    var W = box.clientWidth || 600, H = 180, padL = 44, padR = 12, padT = 14, padB = 22;
+    var n = history.length;
+    var vals = [];
+    history.forEach(function(p) { vals.push(p.human); vals.push(p.quant); });
+    var vmin = Math.min.apply(null, vals), vmax = Math.max.apply(null, vals);
+    if (vmax - vmin < 1e-9) { vmin -= 0.01; vmax += 0.01; }
+    var span = vmax - vmin;
+    var x = function(i) { return padL + (W - padL - padR) * (n === 1 ? 0 : i / (n - 1)); };
+    var y = function(v) { return padT + (H - padT - padB) * (1 - (v - vmin) / span); };
+    function line(key, color) {
+      var pts = history.map(function(p, i) { return x(i).toFixed(1) + ',' + y(p[key]).toFixed(1); }).join(' ');
+      return '<polyline points="' + pts + '" fill="none" stroke="' + color + '" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>';
+    }
+    var svg = '<svg width="100%" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg">';
+    for (var g = 0; g <= 4; g++) {
+      var gv = vmin + span * g / 4, gy = y(gv);
+      svg += '<line x1="' + padL + '" y1="' + gy.toFixed(1) + '" x2="' + (W - padR) + '" y2="' + gy.toFixed(1) + '" stroke="#30363d" stroke-width="0.6"/>';
+      svg += '<text x="' + (padL - 6) + '" y="' + (gy + 3).toFixed(1) + '" fill="#8b949e" font-size="10" text-anchor="end">' + gv.toFixed(3) + '</text>';
+    }
+    svg += line('human', '#3b82f6') + line('quant', '#a78bfa');
+    var last = history[n - 1];
+    svg += '<circle cx="' + x(n - 1).toFixed(1) + '" cy="' + y(last.human).toFixed(1) + '" r="3" fill="#3b82f6"/>';
+    svg += '<circle cx="' + x(n - 1).toFixed(1) + '" cy="' + y(last.quant).toFixed(1) + '" r="3" fill="#a78bfa"/>';
+    svg += '<text x="' + padL + '" y="' + (H - 6) + '" fill="#8b949e" font-size="10">' + history[0].date + '</text>';
+    svg += '<text x="' + (W - padR) + '" y="' + (H - 6) + '" fill="#8b949e" font-size="10" text-anchor="end">' + last.date + '</text>';
+    svg += '</svg>';
+    box.outerHTML = '<div style="border:1px solid var(--border);border-radius:8px;background:#0d1117">' + svg + '</div>';
   }
 })();
 </script>
