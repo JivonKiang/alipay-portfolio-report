@@ -38,31 +38,12 @@ POOL = {
 
 
 def fetch_kline(secid, beg='20240101', end='20500101'):
-    url = (
-        'https://push2his.eastmoney.com/api/qt/stock/kline/get?'
-        f'secid={secid}&fields1=f1,f2,f3,f4,f5&'
-        'fields2=f51,f52,f53,f54,f55,f56,f57&klt=101&fqt=1'
-        f'&beg={beg}&end={end}'
-    )
-    # 重试+备用主机：东财限速/断连时退避重试（RemoteDisconnected 常见）
-    import time
-    last_err = None
-    for attempt, host in enumerate(['push2his.eastmoney.com'] * 3 +
-                                   ['92.push2his.eastmoney.com']):
-        try:
-            req = urllib.request.Request(
-                url.replace('push2his.eastmoney.com', host, 1), headers=UA)
-            d = json.load(urllib.request.urlopen(req, timeout=20, context=CTX))
-            rows = [r.split(',') for r in d['data']['klines']]
-            df = pd.DataFrame(rows, columns=['date', 'open', 'close', 'high', 'low', 'vol', 'amt'])
-            for c in ['open', 'close', 'high', 'low', 'vol', 'amt']:
-                df[c] = pd.to_numeric(df[c])
-            df['date'] = pd.to_datetime(df['date'])
-            return df.set_index('date')
-        except Exception as e:  # noqa: BLE001 — 网络层宽捕获重试
-            last_err = e
-            time.sleep(2.0 * (attempt + 1))
-    raise last_err
+    """v0.4.2: 统一走 em_fetch 双源（东财主源→腾讯降级）。
+    注意：本脚本 POOL 值是东财 secid（'1.510300'），em_fetch 吃 '510300.SH' 格式，须转换。"""
+    from em_fetch import fetch_kline as dual_fetch
+    num = secid.split('.', 1)[1]
+    code = num + ('.SZ' if secid.startswith('0.') else '.SH')
+    return dual_fetch(code)
 
 
 def load_state():
