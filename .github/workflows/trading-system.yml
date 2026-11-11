@@ -24,6 +24,33 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Prefetch board klines via relay (EM blocks Azure IPs)
+        if: vars.EM_RELAY_SSH != ''
+        continue-on-error: true
+        env:
+          SSH_CMD: ${{ vars.EM_RELAY_SSH }}
+        run: |
+          # 2026-11-11: 东财对境外IP(Azure Runner段)常态限流, 板块码90.BK无腾讯备源
+          # 方案: 经阿里云中继(境内IP)预取全部板块K线 → 落 cache/ts_board_kline_cache.json
+          # EM_RELAY_SSH 为仓库 Variable, 值如 "ssh -o StrictHostKeyChecking=no root@1.2.3.4 python3 /opt/em_fetch.py"
+          # 中继端脚本输出单行JSON(全板块OHLC), 本步直接写入缓存文件
+          eval "$SSH_CMD" > /tmp/em_boards.json
+          python3 - <<'EOF'
+          import json, os
+          with open("/tmp/em_boards.json") as f:
+              payload = json.load(f)
+          boards = payload.get("boards") or {}
+          ok = sum(1 for b in boards.values() if len(b.get("dates") or []) >= 25)
+          print(f"relay prefetch: {ok}/{len(boards)} boards >=25 bars")
+          if ok < 20:
+              raise SystemExit(f"relay prefetch incomplete: {ok} boards")
+          out = os.path.join("cache", "ts_board_kline_cache.json")
+          os.makedirs("cache", exist_ok=True)
+          with open(out, "w", encoding="utf-8") as f:
+              json.dump({"boards": boards, "source": "relay"}, f, ensure_ascii=False)
+          print(f"seeded {out}")
+          EOF
+
       - name: Run 5-Module Trading System
         env:
           # 邮件日报（可选）: 在仓库 Secrets 配置后自动推送，未配置则跳过
@@ -85,6 +112,8 @@ jobs:
           git add output/index.html
           git add index.html
           git add cache/trading_history.json 2>/dev/null || true
+          # 板块OHLC缓存：限流日回退命脉，必须持久化进仓库（2026-11-11）
+          git add cache/ts_board_kline_cache.json 2>/dev/null || true
           git add q75/q75_signal.json q75/q75_trades.json q75/q75_ledger.json 2>/dev/null || true
           git add q75/jq_forward_log.jsonl q75_signal.json q75_trades.json q75_ledger.json jq_forward_log.jsonl 2>/dev/null || true
           git add q75_signal.json q75_trades.json q75_ledger.json 2>/dev/null || true
