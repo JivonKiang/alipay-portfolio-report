@@ -395,7 +395,7 @@
           0 笔成交 · 起跑线状态<br>策略信号触发后此处自动出现流水，同步推送通知
         </div>
       </div>
-      <div class="bench-note">成交数据由 watch 链路 + duel_update.py 双通道采集（simuaccount/gettradelog），匿名可读。</div>
+      <div class="bench-note">成交数据由 watch 链路 + duel_update.py 双通道采集（simupaper/gettradelog），匿名可读。</div>
     </section>
 
     <!-- ⑤ 模型 -->
@@ -673,7 +673,7 @@ function mergeResult() {
     box.innerHTML = svg;
   }
 
-  /* 持仓表 */
+  /* 持仓表（字段适配 simupaper getposition：asset_code/stock_name/pos_value/avg_price/close_price/profit_and_loss） */
   function renderPositions(list) {
     var tbl = document.getElementById('posTable');
     var empty = document.getElementById('posEmpty');
@@ -682,40 +682,54 @@ function mergeResult() {
       return;
     }
     empty.style.display = 'none';
+    function n2(v, d) { var x = parseFloat(v); return isNaN(x) ? '—' : x.toFixed(d === undefined ? 2 : d); }
+    function n0(v) { var x = parseFloat(v); return isNaN(x) ? '—' : x.toLocaleString('en-US', {maximumFractionDigits: 0}); }
     var rows = list.map(function(p) {
-      var code = p.stock_code || p.code || p.security || '—';
-      var name = p.stock_name || p.name || p.security_name || '—';
-      var mv = p.market_value || p.marketValue || '—';
-      var cost = p.cost_price || p.cost || '—';
-      var px = p.last_price || p.price || p.now_price || '—';
-      var pl = parseFloat(p.profit_rate !== undefined ? p.profit_rate : (p.float_profit_rate || 0));
-      var cls = pl >= 0 ? 'up' : 'down';
-      return '<tr><td class="num">' + esc(code) + '</td><td>' + esc(name) + '</td><td class="r num">' + esc(mv) +
-        '</td><td class="r num">' + esc(cost) + '</td><td class="r num">' + esc(px) +
-        '</td><td class="r num ' + cls + '">' + (isNaN(pl) ? '—' : fmtPct(pl)) + '</td></tr>';
+      var code = p.asset_code || p.stock_code || p.code || '—';
+      var name = p.stock_name || p.name || '—';
+      var amt = parseFloat(p.pos_amount);
+      var mv = n0(p.pos_value || p.market_value);
+      var cost = n2(p.avg_price || p.cost_price, 4);
+      var px = n2(p.close_price || p.last_price, 3);
+      var pnl = parseFloat(p.profit_and_loss);
+      var costv = parseFloat(p.avg_price) * amt;
+      var pl = (isNaN(pnl) || !costv) ? NaN : pnl / costv * 100;
+      var cls = (!isNaN(pl) && pl < 0) ? 'down' : 'up';
+      var pnlStr = isNaN(pnl) ? '—' : (pnl >= 0 ? '+' : '') + n0(pnl);
+      var plStr = isNaN(pl) ? '—' : (pl >= 0 ? '+' : '') + pl.toFixed(2) + '%';
+      var hold = isNaN(amt) ? '—' : n0(amt) + ' 股<br><span style="color:#7a8499;font-size:10px">市值 ' + mv + '</span>';
+      return '<tr><td class="num">' + esc(code) + '</td><td>' + esc(name) + '</td><td class="r num">' + hold +
+        '</td><td class="r num">' + cost + '</td><td class="r num">' + px +
+        '</td><td class="r num ' + cls + '">' + plStr + '<br><span style="font-size:10px">' + pnlStr + '</span></td></tr>';
     }).join('');
     tbl.insertAdjacentHTML('beforeend', rows);
   }
 
-  /* 成交表 */
+  /* 成交表（字段适配 simupaper gettradelog：trade_date/asset_code/stock_name/operation_type/trade_price/trade_amount/trade_value） */
   function renderTrades(list, d) {
     var tbl = document.getElementById('trdTable');
     var empty = document.getElementById('trdEmpty');
-    document.getElementById('trdUpdated').innerText = '累计 ' + ((d && d.quant && d.quant.trades) || 0) + ' 笔';
+    document.getElementById('trdUpdated').innerText = '累计 ' + ((d && d.quant && d.quant.trades) || (list ? list.length : 0)) + ' 笔';
     if (!list || !list.length) return;
     empty.style.display = 'none';
     var rows = list.slice().reverse().map(function(t) {
-      var dt = t.date || t.trade_date || t.deal_date || '—';
-      var code = t.stock_code || t.code || '—';
+      var dt = t.trade_date || t.date || t.deal_date || '—';
+      var code = t.asset_code || t.stock_code || t.code || '—';
       var name = t.stock_name || t.name || '—';
-      var act = t.business || t.bs_flag || t.trade_type || t.type || '—';
+      var act = t.operation_type || t.business || t.bs_flag || t.trade_type || t.type || '—';
       var isBuy = /买|buy|B/i.test(String(act));
-      var px = t.price || t.deal_price || '—';
-      var vol = t.volume || t.amount || t.deal_volume || '—';
-      var amt = t.amount_money || t.money || t.deal_value || '—';
-      return '<tr><td class="num">' + esc(dt) + '</td><td class="num">' + esc(code) + '</td><td>' + esc(name) +
-        '</td><td style="color:' + (isBuy ? 'var(--up)' : 'var(--down)') + ';font-weight:600">' + esc(act) +
-        '</td><td class="r num">' + esc(px) + '</td><td class="r num">' + esc(vol) + '</td><td class="r num">' + esc(amt) + '</td></tr>';
+      var actCn = isBuy ? '买入' : (/卖|sell|S/i.test(String(act)) ? '卖出' : String(act));
+      var px = parseFloat(t.trade_price || t.price || t.deal_price);
+      var vol = parseFloat(t.trade_amount || t.volume || t.amount);
+      var amt = parseFloat(t.trade_value || t.amount_money || t.money || t.deal_value);
+      var fee = parseFloat(t.commissions);
+      var pxS = isNaN(px) ? '—' : px.toFixed(4).replace(/0+$/, '').replace(/\.$/, '');
+      var volS = isNaN(vol) ? '—' : vol.toLocaleString('en-US', {maximumFractionDigits: 0});
+      var amtS = isNaN(amt) ? '—' : amt.toLocaleString('en-US', {maximumFractionDigits: 0});
+      var feeS = isNaN(fee) ? '' : '<br><span style="color:#7a8499;font-size:10px">佣 ' + fee.toFixed(2) + '</span>';
+      return '<tr><td class="num">' + esc(String(dt).replace('2026-', '')) + '</td><td class="num">' + esc(code) + '</td><td>' + esc(name) +
+        '</td><td style="color:' + (isBuy ? 'var(--up)' : 'var(--down)') + ';font-weight:600">' + esc(actCn) +
+        '</td><td class="r num">' + pxS + feeS + '</td><td class="r num">' + volS + '</td><td class="r num">' + amtS + '</td></tr>';
     }).join('');
     tbl.insertAdjacentHTML('beforeend', rows);
   }
