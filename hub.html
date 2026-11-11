@@ -172,6 +172,23 @@ footer{border-top:1px solid var(--line);padding:22px 0 34px;display:flex;justify
       <div class="foot-note">周四定投日 · PE 阈值定档 · 仅工作日扣款</div>
     </div>
 
+    <!-- jivonQuant 主战系统 -->
+    <div class="card span12 reveal d2">
+      <div class="seal">量</div>
+      <div class="tag">jivonQuant (jq) v0.3 · 主战多因子系统 · 幻方蒸馏</div>
+      <h3>jivonQuant — 主战量化系统</h3>
+      <div class="stats" style="margin-top:14px">
+        <div class="s"><span class="v" id="jq-wr">—</span><span class="k">回测胜率</span></div>
+        <div class="s"><span class="v" id="jq-pl">—</span><span class="k">盈亏比</span></div>
+        <div class="s"><span class="v" id="jq-ret">—</span><span class="k">区间收益</span></div>
+        <div class="s"><span class="v" id="jq-mdd">—</span><span class="k">最大回撤</span></div>
+        <div class="s"><span class="v" id="jq-exp">—</span><span class="k">期望值</span></div>
+      </div>
+      <div id="jq-current" class="foot-note" style="margin-top:12px;font-size:13px;color:var(--ink-dim)">状态加载中…</div>
+      <div id="jq-structure" class="foot-note" style="margin-top:8px;font-size:12.5px;color:var(--ink-faint)"></div>
+      <div class="foot-note">真实日K 301 根回测（2025-08→2026-11）· 对比同期持有 510300 仅 +0.24% · 五重防守结构：部分止盈/移动止盈/时间止损/硬止损/regime 闸 · <a class="plainlink" href="https://github.com/JivonKiang">代码仓库</a></div>
+    </div>
+
     <!-- Q75 量化信号 -->
     <div class="card span12 reveal d3">
       <div class="seal">Q</div>
@@ -193,6 +210,11 @@ footer{border-top:1px solid var(--line);padding:22px 0 34px;display:flex;justify
       <div class="tag">Strategy Lab · 七项目归一</div>
       <h3>策略实验室</h3>
       <div class="strategy-list">
+        <a class="strat" href="#" onclick="return false">
+          <span class="ico">量</span>
+          <span class="body"><b>jivonQuant (jq)</b><span class="d">主战多因子打分系统 · 部分止盈+移动止盈结构 · 胜率 56.2% · 本页面顶部主卡</span></span>
+          <span class="st"><span class="v">running</span><span class="k">主战系统</span></span>
+        </a>
         <a class="strat" href="https://jivonkiang.github.io/etf-quant-auto/">
           <span class="ico">量</span>
           <span class="body"><b>ETF 量化自动化</b><span class="d">金叉+MACD · 无人值守每日运行 · 信号邮件推送（当前主战系统）</span></span>
@@ -274,6 +296,23 @@ footer{border-top:1px solid var(--line);padding:22px 0 34px;display:flex;justify
     if(env.position_ratio!=null)document.getElementById('env-pos').textContent=Math.round(env.position_ratio*100)+'%';
     if(d.updated)document.getElementById('env-upd').textContent=d.updated.replace('T',' ').slice(0,16);
   }).catch(function(){});
+  fetch('jq_panel.json',{cache:'no-store'}).then(function(r){return r.json()}).then(function(d){
+    var b=d.backtest||{};
+    if(b.win_rate!=null)document.getElementById('jq-wr').textContent=b.win_rate.toFixed(1)+'%';
+    if(b.profit_loss_ratio!=null)document.getElementById('jq-pl').textContent=b.profit_loss_ratio.toFixed(2);
+    if(b.total_return_pct!=null)document.getElementById('jq-ret').textContent=(b.total_return_pct>0?'+':'')+b.total_return_pct.toFixed(2)+'%';
+    if(b.max_drawdown_pct!=null)document.getElementById('jq-mdd').textContent=b.max_drawdown_pct.toFixed(2)+'%';
+    if(b.expectancy!=null)document.getElementById('jq-exp').textContent=(b.expectancy>0?'+':'')+b.expectancy.toFixed(2);
+    var c=d.current||{}, el=document.getElementById('jq-current');
+    var picks=(c.picks||[]).map(function(x){return x.symbol.slice(0,6)+'('+x.score+')'}).join(' / ');
+    el.innerHTML='<b>当前状态：</b>'+ (c.regime||'—') +' · 510300='+c.bench_px+' vs MA60='+c.bench_ma60+
+      (picks?'<br><b>打分 Top-3：</b>'+picks+'<br><b>建议：</b>'+(c.position_advice||'—'):'');
+    var s=d.structure||{}, st=document.getElementById('jq-structure');
+    if(st){st.innerHTML='<b>五重防守：</b>'+[s.partial_tp,s.trailing,s.time_stop,s.hard_stop,s.regime_gate].filter(Boolean).join(' · ')}
+  }).catch(function(){
+    var el=document.getElementById('jq-current');
+    if(el)el.textContent='jq 数据尚未生成（首次 CI 运行后可用）';
+  });
   fetch('q75_signal.json',{cache:'no-store'}).then(function(r){return r.json()}).then(function(s){
     function fmt(n){return n==null?'—':n}
     document.getElementById('q75-wr').textContent=s.win_rate!=null?(s.win_rate*100).toFixed(1)+'%':'—';

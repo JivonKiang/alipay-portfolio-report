@@ -39,6 +39,8 @@ jobs:
           cp hub.html output/hub.html
           cp data.json output/main-data.json
           cp CNAME output/CNAME
+          # jivonQuant (jq) 主战系统面板数据（jq 侧 tests/export_panel.py 产出，随仓同步）
+          cp jq_panel.json output/jq_panel.json 2>/dev/null || echo '{"error":"jq_panel not generated"}' > output/jq_panel.json
 
       - name: Run Q75 quant executor (75% win-rate paper trading)
         run: |

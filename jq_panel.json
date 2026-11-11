@@ -1,0 +1,42 @@
+{
+  "updated": "2026-11-11 16:46",
+  "version": "v0.3",
+  "backtest": {
+    "win_rate": 56.2,
+    "profit_loss_ratio": 2.26,
+    "total_return_pct": 10.4,
+    "annual_return_pct": 8.35,
+    "max_drawdown_pct": -10.6,
+    "n_trades": 32,
+    "expectancy": 0.83,
+    "benchmark_return_pct": 0.24,
+    "note": "真实日K 301根 2025-08→2026-11 · 部分止盈+移动止盈+时间止损+regime闸"
+  },
+  "current": {
+    "regime": "L2 防守（MA60 下方）",
+    "bench_px": 4.15,
+    "bench_ma60": 4.443,
+    "picks": [
+      {
+        "symbol": "510300.SH",
+        "score": 0.68
+      },
+      {
+        "symbol": "512690.SH",
+        "score": 0.64
+      },
+      {
+        "symbol": "512010.SH",
+        "score": 0.58
+      }
+    ],
+    "position_advice": "打分达标则持有 Top-2"
+  },
+  "structure": {
+    "partial_tp": "浮盈+2% 卖一半锁胜",
+    "trailing": "余仓 2% 移动止盈",
+    "time_stop": "8 日无起色离场",
+    "hard_stop": "-8% 硬止损",
+    "regime_gate": "大盘 MA60 下方强制空仓"
+  }
+}
