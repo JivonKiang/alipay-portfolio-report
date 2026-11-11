@@ -45,33 +45,13 @@ DIR = {"mom_20": "pos", "mom_5": "pos", "amt_20": "pos", "vol_20": "neg", "bias_
 
 
 def fetch_kline(secid, count=320):
-    url = (
-        'https://push2his.eastmoney.com/api/qt/stock/kline/get?'
-        f'secid={secid}&fields1=f1,f2,f3,f4,f5&'
-        'fields2=f51,f52,f53,f54,f55,f56,f57&klt=101&fqt=1'
-        '&beg=20240101&end=20500101'
-    )
-    # 重试+备用主机：限速/抖动时退避重试，末次换 CDN 编号主机
-    import time
-    last_err = None
-    for attempt, host in enumerate(['push2his.eastmoney.com'] * 3 +
-                                   ['92.push2his.eastmoney.com']):
-        try:
-            req = urllib.request.Request(url.replace('push2his.eastmoney.com', host, 1),
-                                         headers=UA)
-            d = json.load(urllib.request.urlopen(req, timeout=20, context=CTX))
-            rows = [r.split(',') for r in d['data']['klines']]
-            df = pd.DataFrame(rows, columns=['date', 'open', 'close', 'high',
-                                             'low', 'vol', 'amt'])
-            for c in ['open', 'close', 'high', 'low', 'vol', 'amt']:
-                df[c] = pd.to_numeric(df[c])
-            df['date'] = pd.to_datetime(df['date'])
-            df = df.set_index('date')
-            return df.iloc[-count:]
-        except Exception as e:  # noqa: BLE001 — 网络层宽捕获重试
-            last_err = e
-            time.sleep(1.5 * (attempt + 1))
-    raise last_err
+    """v0.4.2: 统一走 em_fetch 双源（东财主源→腾讯降级）。
+    注意：本脚本 POOL 值是东财 secid（'1.510300'），em_fetch 吃 '510300.SH' 格式，须转换。"""
+    from em_fetch import fetch_kline as dual_fetch, _em_secid
+    # secid 形如 '1.510300'/'0.159327' → 转回 '510300.SH' 格式
+    num = secid.split('.', 1)[1]
+    code = num + ('.SZ' if secid.startswith('0.') else '.SH')
+    return dual_fetch(code, count)
 
 
 def factor_row(df):
@@ -153,7 +133,7 @@ def main():
         for sym, secid in all_pools.items():
             if not any(p['symbol'] == sym for p in pend):
                 continue
-            df = dfs_w5.get(sym) or dfs.get(sym)
+            df = dfs_w5.get(sym) if sym in dfs_w5 else dfs.get(sym)
             if df is None or entry_date not in df.index:
                 continue
             idx = df.index.get_loc(entry_date)
