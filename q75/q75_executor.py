@@ -44,14 +44,25 @@ def fetch_kline(secid, beg='20240101', end='20500101'):
         'fields2=f51,f52,f53,f54,f55,f56,f57&klt=101&fqt=1'
         f'&beg={beg}&end={end}'
     )
-    req = urllib.request.Request(url, headers=UA)
-    d = json.load(urllib.request.urlopen(req, timeout=20, context=CTX))
-    rows = [r.split(',') for r in d['data']['klines']]
-    df = pd.DataFrame(rows, columns=['date', 'open', 'close', 'high', 'low', 'vol', 'amt'])
-    for c in ['open', 'close', 'high', 'low', 'vol', 'amt']:
-        df[c] = pd.to_numeric(df[c])
-    df['date'] = pd.to_datetime(df['date'])
-    return df.set_index('date')
+    # 重试+备用主机：东财限速/断连时退避重试（RemoteDisconnected 常见）
+    import time
+    last_err = None
+    for attempt, host in enumerate(['push2his.eastmoney.com'] * 3 +
+                                   ['92.push2his.eastmoney.com']):
+        try:
+            req = urllib.request.Request(
+                url.replace('push2his.eastmoney.com', host, 1), headers=UA)
+            d = json.load(urllib.request.urlopen(req, timeout=20, context=CTX))
+            rows = [r.split(',') for r in d['data']['klines']]
+            df = pd.DataFrame(rows, columns=['date', 'open', 'close', 'high', 'low', 'vol', 'amt'])
+            for c in ['open', 'close', 'high', 'low', 'vol', 'amt']:
+                df[c] = pd.to_numeric(df[c])
+            df['date'] = pd.to_datetime(df['date'])
+            return df.set_index('date')
+        except Exception as e:  # noqa: BLE001 — 网络层宽捕获重试
+            last_err = e
+            time.sleep(2.0 * (attempt + 1))
+    raise last_err
 
 
 def load_state():
