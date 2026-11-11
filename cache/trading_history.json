@@ -1,43 +1,6 @@
 [
   {
     "date": "2026-07-14",
-    "time": "05:25",
-    "environment": "bear_lean",
-    "environment_cn": "偏熊 — 谨慎参与",
-    "position_ratio": 0.35,
-    "buy_signals": 3,
-    "exit_signals": 0,
-    "signals": [
-      {
-        "board": "科创芯片",
-        "type": "oversold",
-        "label": "🟡 超跌反弹",
-        "funds": [
-          "017560",
-          "017560"
-        ]
-      },
-      {
-        "board": "CPO",
-        "type": "oversold",
-        "label": "🟡 超跌反弹",
-        "funds": [
-          "017560"
-        ]
-      },
-      {
-        "board": "人形机器人",
-        "type": "oversold",
-        "label": "🟡 超跌反弹",
-        "funds": [
-          "002256",
-          "001643"
-        ]
-      }
-    ]
-  },
-  {
-    "date": "2026-07-14",
     "time": "08:34",
     "environment": "range",
     "environment_cn": "震荡市 — 快进快出赚差价",
@@ -3060,6 +3023,26 @@
   {
     "date": "2026-11-11",
     "time": "16:29",
+    "environment": "bear",
+    "environment_cn": "熊市 — 清仓做反弹",
+    "position_ratio": 0.2,
+    "scanned": 25,
+    "buy_signals": 1,
+    "exit_signals": 0,
+    "signals": [
+      {
+        "board": "汽车芯片",
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "funds": [
+          "008888"
+        ]
+      }
+    ]
+  },
+  {
+    "date": "2026-11-12",
+    "time": "01:06",
     "environment": "bear",
     "environment_cn": "熊市 — 清仓做反弹",
     "position_ratio": 0.2,

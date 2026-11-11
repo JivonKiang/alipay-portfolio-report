@@ -1,6 +1,6 @@
 {
-  "updated": "2026-11-11T16:26:26+08:00",
-  "run_time": "16:26",
+  "updated": "2026-11-12T01:04:08+08:00",
+  "run_time": "01:04",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
@@ -150,11 +150,12 @@
         "board": "PCB",
         "change_pct": 3.58,
         "change_5d": 3.33,
-        "vol_ratio": 1.09,
+        "vol_ratio": 1.0,
         "current": 3379.4,
         "ma10": 3190.9,
         "ma20": 3355.0,
         "ma60": 3827.5,
+        "from_cache": true,
         "funds": [
           {
             "code": "002256",
@@ -176,11 +177,12 @@
         "board": "商业航天",
         "change_pct": 3.81,
         "change_5d": 4.09,
-        "vol_ratio": 1.28,
+        "vol_ratio": 1.0,
         "current": 1953.17,
         "ma10": 1828.8,
         "ma20": 1887.5,
         "ma60": 2082.7,
+        "from_cache": true,
         "funds": [
           {
             "code": "001643",
@@ -202,7 +204,7 @@
     "exit_signals": [],
     "sell_alerts": [
       {
-        "id": "pe_l1_上证50_2026-11-11",
+        "id": "pe_l1_上证50_2026-11-12",
         "type": "pe",
         "severity": "info",
         "index": "上证50",
@@ -219,33 +221,33 @@
         "code": "005844",
         "name": "东方人工智能主题混合C",
         "state": "WAIT",
-        "buy_date": "2026-09-28",
+        "buy_date": "2026-09-29",
         "held_days": 44,
         "buy_nav": 3.2259,
         "latest_nav": 2.4874,
-        "latest_date": "2026-11-10",
+        "latest_date": "2026-11-11",
         "ret": -0.2289
       },
       {
         "code": "006503",
         "name": "财通集成电路产业股票C",
         "state": "WAIT",
-        "buy_date": "2026-09-17",
+        "buy_date": "2026-09-18",
         "held_days": 55,
         "buy_nav": 7.3421,
         "latest_nav": 4.2468,
-        "latest_date": "2026-11-10",
+        "latest_date": "2026-11-11",
         "ret": -0.4216
       },
       {
         "code": "025209",
         "name": "永赢先锋半导体智选混合C",
         "state": "WAIT",
-        "buy_date": "2026-09-28",
+        "buy_date": "2026-09-29",
         "held_days": 44,
         "buy_nav": 2.31,
         "latest_nav": 1.8986,
-        "latest_date": "2026-11-10",
+        "latest_date": "2026-11-11",
         "ret": -0.1781
       }
     ],
@@ -288,8 +290,8 @@
       "bear",
       "bear",
       "bear",
-      "bear",
       "range",
+      "bear",
       "bear"
     ]
   },
