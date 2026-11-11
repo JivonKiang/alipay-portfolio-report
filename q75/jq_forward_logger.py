@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-jq 前瞻记录器（生产池线性卡 ms0.75）— 自包含版（跑在 GitHub Actions）
+jq 前瞻记录器（双卡赛马：生产卡原池5 + 挑战卡宽基5，同口径 ms0.75）— 自包含版（跑在 GitHub Actions）
 用法: python q75/jq_forward_logger.py
 输出: q75/jq_forward_log.jsonl（append-only，同日重跑覆盖当日行，幂等）
 设计: 无 jq 仓库依赖；东财直连；只读行情无下单接口；红线 SIMU 零接触。
-逻辑: 记录每日 regime(510300 vs MA60) + 线性卡 score>=0.75 的 picks；
+逻辑: 记录每日 regime(510300 vs MA60) + 两卡各自 score>=0.75 的 picks
+      （picks=生产卡原池5 / picks_w5=挑战卡宽基5，v0.4.2 双卡赛马）；
       满 5 个交易日后回填各 pick 的实际 fwd5 收益（前瞻验证样本累积）。
 """
 import json
@@ -32,6 +33,13 @@ POOL = {
     '588170.SH': '1.588170',
     '159327.SZ': '0.159327',
 }
+POOL_WIDE5 = {
+    '510300.SH': '1.510300',
+    '510500.SH': '1.510500',
+    '510880.SH': '1.510880',
+    '512100.SH': '1.512100',
+    '560010.SH': '1.560010',
+}
 W = {"mom_20": 0.35, "mom_5": 0.15, "amt_20": 0.20, "vol_20": 0.20, "bias_ma20": 0.10}
 DIR = {"mom_20": "pos", "mom_5": "pos", "amt_20": "pos", "vol_20": "neg", "bias_ma20": "pos"}
 
@@ -43,15 +51,27 @@ def fetch_kline(secid, count=320):
         'fields2=f51,f52,f53,f54,f55,f56,f57&klt=101&fqt=1'
         '&beg=20240101&end=20500101'
     )
-    req = urllib.request.Request(url, headers=UA)
-    d = json.load(urllib.request.urlopen(req, timeout=20, context=CTX))
-    rows = [r.split(',') for r in d['data']['klines']]
-    df = pd.DataFrame(rows, columns=['date', 'open', 'close', 'high', 'low', 'vol', 'amt'])
-    for c in ['open', 'close', 'high', 'low', 'vol', 'amt']:
-        df[c] = pd.to_numeric(df[c])
-    df['date'] = pd.to_datetime(df['date'])
-    df = df.set_index('date')
-    return df.iloc[-count:]
+    # 重试+备用主机：限速/抖动时退避重试，末次换 CDN 编号主机
+    import time
+    last_err = None
+    for attempt, host in enumerate(['push2his.eastmoney.com'] * 3 +
+                                   ['92.push2his.eastmoney.com']):
+        try:
+            req = urllib.request.Request(url.replace('push2his.eastmoney.com', host, 1),
+                                         headers=UA)
+            d = json.load(urllib.request.urlopen(req, timeout=20, context=CTX))
+            rows = [r.split(',') for r in d['data']['klines']]
+            df = pd.DataFrame(rows, columns=['date', 'open', 'close', 'high',
+                                             'low', 'vol', 'amt'])
+            for c in ['open', 'close', 'high', 'low', 'vol', 'amt']:
+                df[c] = pd.to_numeric(df[c])
+            df['date'] = pd.to_datetime(df['date'])
+            df = df.set_index('date')
+            return df.iloc[-count:]
+        except Exception as e:  # noqa: BLE001 — 网络层宽捕获重试
+            last_err = e
+            time.sleep(1.5 * (attempt + 1))
+    raise last_err
 
 
 def factor_row(df):
@@ -94,6 +114,16 @@ def main():
     picks = [{'symbol': s, 'score': v} for s, v in sorted(scores.items(),
              key=lambda kv: -kv[1]) if v >= LINEAR_MS][:2]
 
+    # ---------- 挑战卡：宽基5 双卡赛马（主任批准 2026-11-11） ----------
+    # 注意：宽基5卡必须在自己的 5 只截面内排名（截面分位口径），禁与生产卡混池——
+    # 混 9 只排名就是"联合池追高集中"的迷你版（v0.4.1 扩池实验结论）。
+    # 复用已有 510300 K线，仅拉缺失的 4 只。
+    dfs_w5 = {sym: (dfs[sym] if sym in dfs else fetch_kline(secid))
+              for sym, secid in POOL_WIDE5.items()}
+    scores_w5 = score_cross_section(dfs_w5)
+    picks_w5 = [{'symbol': s, 'score': v} for s, v in sorted(scores_w5.items(),
+                key=lambda kv: -kv[1]) if v >= LINEAR_MS][:2]
+
     rec = {
         'date': today,
         'ts': datetime.now(timezone(timedelta(hours=8))).strftime('%Y-%m-%d %H:%M:%S'),
@@ -101,6 +131,7 @@ def main():
         'regime': ('L0 进攻' if px >= ma60 else 'L2 防守'),
         'bench_px': round(px, 3), 'bench_ma60': round(ma60, 3),
         'picks': picks, 'all_scores': scores,
+        'picks_w5': picks_w5, 'all_scores_w5': scores_w5,
         'fwd5_filled': {},
     }
 
@@ -111,27 +142,37 @@ def main():
             logs = [json.loads(l) for l in f if l.strip()]
 
     filled = 0
+    # 回填池字典映射：两卡标的全覆盖（old5 ∪ wide5）
+    all_pools = {**POOL, **POOL_WIDE5}
     for old in logs:
-        pend = [p for p in old.get('picks', []) if p.get('fwd5_ret') is None]
+        pend = [p for p in old.get('picks', []) + old.get('picks_w5', [])
+                if p.get('fwd5_ret') is None]
         if not pend:
             continue
         entry_date = old['date']
-        for sym, secid in POOL.items():
+        for sym, secid in all_pools.items():
             if not any(p['symbol'] == sym for p in pend):
                 continue
-            df = dfs[sym]
-            if entry_date not in df.index:
+            df = dfs_w5.get(sym) or dfs.get(sym)
+            if df is None or entry_date not in df.index:
                 continue
             idx = df.index.get_loc(entry_date)
             if idx + HORIZON < len(df):
                 entry_px = float(df['close'].iloc[idx])
                 exit_px = float(df['close'].iloc[idx + HORIZON])
-                for p in old['picks']:
-                    if p['symbol'] == sym:
-                        p['fwd5_ret'] = round(exit_px / entry_px - 1, 5)
-                        p['exit_date'] = df.index[idx + HORIZON].strftime('%Y-%m-%d')
-                        filled += 1
-        if not any(p.get('fwd5_ret') is None for p in old.get('picks', [])):
+                for pick_list in (old.get('picks', []), old.get('picks_w5', [])):
+                    for p in pick_list:
+                        if p['symbol'] == sym and p.get('fwd5_ret') is None:
+                            p['fwd5_ret'] = round(exit_px / entry_px - 1, 5)
+                            p['exit_date'] = df.index[idx + HORIZON].strftime('%Y-%m-%d')
+                            filled += 1
+        still_pending = [p for p in old.get('picks', []) + old.get('picks_w5', [])
+                         if p.get('fwd5_ret') is None]
+        if old.get('picks') and old.get('picks_w5') is not None:
+            # 双卡记录：两卡都回填完才算满
+            if not still_pending:
+                old['fwd5_filled'] = True
+        elif not any(p.get('fwd5_ret') is None for p in old.get('picks', [])):
             old['fwd5_filled'] = True
 
     # 幂等：替换当日已有记录
@@ -141,10 +182,12 @@ def main():
         for l in logs:
             f.write(json.dumps(l, ensure_ascii=False) + '\n')
 
-    print(f"记录 {today}: regime={rec['regime']} picks={len(picks)} | "
-          f"累计 {len(logs)} 天, 本轮回填 {filled} 笔")
+    print(f"记录 {today}: regime={rec['regime']} picks={len(picks)} "
+          f"(w5={len(picks_w5)}) | 累计 {len(logs)} 天, 本轮回填 {filled} 笔")
     if not picks:
-        print("  → 今日无达标 picks（宁缺毋滥空仓）")
+        print("  → 今日生产卡无达标 picks（宁缺毋滥空仓）")
+    if not picks_w5:
+        print("  → 今日挑战卡(宽基5)无达标 picks")
 
 
 if __name__ == '__main__':
