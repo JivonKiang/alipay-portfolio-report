@@ -105,7 +105,9 @@ jobs:
           git add q75_signal.json q75_trades.json q75_ledger.json 2>/dev/null || true
 
           git diff --staged --quiet || git commit -m "auto: trading system update $(TZ='Asia/Shanghai' date +'%Y-%m-%d %H:%M')"
-          git push
+          # 并行 run / 手动推送撞车时先 rebase 再推（checkout 默认 fetch 深度1，先 unshallow）
+          git fetch --unshallow origin main 2>/dev/null || git fetch origin main || true
+          git pull --rebase origin main && git push || { git pull --rebase origin main && git push; }
 
       - name: Data integrity gate (block deploy on incomplete scan)
         run: |
