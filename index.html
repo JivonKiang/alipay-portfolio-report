@@ -189,25 +189,22 @@
     .kpi4 { grid-template-columns:repeat(2,1fr); }
   }
 
-  /* ===== 修炼板块（深色风改写） ===== */
-  .coach-banner {
-    background:linear-gradient(135deg, rgba(255,176,46,0.10), rgba(255,176,46,0.03));
-    border:1px solid rgba(255,176,46,0.25); border-radius:12px;
+  /* ===== 文献实验室板块 ===== */
+  .lit-banner {
+    background:linear-gradient(135deg, rgba(77,141,255,0.12), rgba(162,107,255,0.06));
+    border:1px solid rgba(77,141,255,0.25); border-radius:12px;
     padding:1rem; text-align:center; margin-bottom:0.9rem;
   }
-  .coach-banner .greeting { font-size:0.78rem; color:var(--dim); }
-  .coach-banner .mission { font-size:1.3rem; font-weight:800; color:var(--gold); margin:0.25rem 0; }
-  .coach-banner .env-line { font-size:0.75rem; color:var(--dim); }
-  .todo-item { display:flex; align-items:flex-start; gap:0.6rem; padding:0.45rem 0; border-bottom:1px solid rgba(255,255,255,0.04); }
-  .todo-num { width:26px; height:26px; border-radius:50%; background:rgba(77,141,255,0.15); color:var(--blue); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.75rem; flex-shrink:0; }
-  .todo-text { font-size:0.8rem; }
-  .todo-hint { font-size:0.68rem; color:var(--dim); margin-top:0.15rem; }
-  .prompt-content {
-    background:#0a0f1a; border:1px solid var(--border); border-radius:8px;
-    padding:0.9rem; font-size:0.72rem; color:var(--dim); white-space:pre-wrap;
-    max-height:260px; overflow-y:auto; margin-bottom:0.7rem;
-    font-family:"SF Mono","Fira Code",monospace; line-height:1.5;
-  }
+  .lit-banner .lit-kicker { font-size:0.78rem; color:var(--dim); }
+  .lit-banner .lit-title { font-size:1.3rem; font-weight:800; color:#8fb3ff; margin:0.25rem 0; }
+  .lit-banner .lit-meta { font-size:0.72rem; color:var(--dim); }
+  .lit-ev { display:inline-block; font-size:0.58rem; font-weight:800; letter-spacing:0.5px; padding:0.12rem 0.4rem; border-radius:5px; white-space:nowrap; margin-top:0.1rem; }
+  .lit-ev.a { color:#8fb3ff; background:rgba(77,141,255,0.14); }
+  .lit-ev.b { color:var(--purple); background:rgba(162,107,255,0.14); }
+  .lit-ev.c { color:var(--dim); background:rgba(255,255,255,0.06); }
+  .lit-map { margin-top:0.5rem; font-size:0.72rem; padding:0.5rem 0.6rem; background:rgba(45,192,125,0.05); border:1px dashed rgba(45,192,125,0.25); border-radius:8px; line-height:1.65; color:var(--dim); }
+  .lit-map b { color:var(--down); }
+  .lit-src { font-size:0.64rem; color:#566078; margin-top:0.4rem; line-height:1.6; }
   .btn-act {
     display:inline-flex; align-items:center; gap:0.3rem; padding:0.45rem 0.9rem; margin-right:0.4rem;
     background:rgba(77,141,255,0.12); border:1px solid rgba(77,141,255,0.3);
@@ -217,16 +214,6 @@
   .btn-act.copied { background:rgba(45,192,125,0.12); border-color:rgba(45,192,125,0.3); color:var(--down); }
   .btn-act-gold { background:rgba(255,176,46,0.12); border-color:rgba(255,176,46,0.3); color:var(--gold); }
   .btn-act-gold:hover { background:rgba(255,176,46,0.2); }
-  .paste-area { margin-top:0.7rem; display:none; }
-  .paste-area.show { display:block; }
-  .paste-area textarea {
-    width:100%; background:#0a0f1a; border:1px dashed var(--gold); border-radius:8px;
-    padding:0.7rem; color:var(--gold); font-size:0.75rem; font-family:monospace; resize:vertical; min-height:80px;
-  }
-  .progress-row { display:flex; align-items:center; gap:0.6rem; padding:0.32rem 0; }
-  .phase-label { width:110px; font-size:0.75rem; color:var(--dim); flex-shrink:0; }
-  .phase-bar { font-size:0.8rem; letter-spacing:2px; }
-  .phase-pct { font-size:0.75rem; color:var(--gold); font-weight:700; width:40px; text-align:right; }
 
   /* ===== jq 报告 ===== */
   .evjq { display:flex; gap:0.55rem; align-items:flex-start; padding:0.5rem 0.6rem; background:rgba(255,255,255,0.02); border-left:3px solid var(--purple); border-radius:8px; margin-bottom:0.45rem; }
@@ -296,7 +283,7 @@
         <div class="ic" style="background:rgba(162,107,255,0.15)">🧭</div><div class="tx">模型</div>
       </div>
       <div class="nav-cell" data-target="practice">
-        <div class="ic" style="background:rgba(45,192,125,0.15)">📿</div><div class="tx">修炼</div>
+        <div class="ic" style="background:rgba(77,141,255,0.15)">📚</div><div class="tx">文献</div>
       </div>
       <div class="nav-cell" data-target="jq">
         <div class="ic" style="background:rgba(162,107,255,0.15)">🔬</div><div class="tx">jq 报告</div>
@@ -519,58 +506,76 @@
       </div>
     </section>
 
-    <!-- ⑥ 修炼（原 practice.html 融入） -->
+    <!-- ⑥ 前沿文献（2026-11-11 主任令：修炼 tab 替换为最新量化交易文献/方法） -->
     <section class="section" id="sec-practice">
-      <div class="coach-banner">
-        <div class="greeting">操盘手每日修炼</div>
-        <div class="mission">练心，而非练术</div>
-        <div class="env-line">今日市场：<span style="color:var(--up);font-weight:700">熊市 — 清仓做反弹</span> &nbsp;|&nbsp; 仓位建议：20% &nbsp;|&nbsp; 更新：11-09 16:43</div>
+      <div class="lit-banner">
+        <div class="lit-kicker">文献实验室 · 2024–2026 量化研究前沿</div>
+        <div class="lit-title">用最新的证据，校准手里的系统</div>
+        <div class="lit-meta">五支主流文献线 × 五条 jq 映射 · 检索时点 2026-11-11 · 证据分级：<span class="lit-ev a">A 同行评审</span> <span class="lit-ev b">B 工作论文/预印本</span> <span class="lit-ev c">C 自研回测</span></div>
       </div>
 
       <div class="card">
-        <div class="panel-head" style="margin-bottom:0.5rem"><h2>今日待办</h2><span class="ph-sub">同花顺 + 养基宝 + 支付宝</span></div>
-        <div class="todo-item"><div class="todo-num">1</div><div><div class="todo-text">截图三张：<strong>同花顺大盘</strong> + <strong>养基宝持仓</strong> + <strong>支付宝交易记录</strong></div></div></div>
-        <div class="todo-item"><div class="todo-num">2</div><div><div class="todo-text">打开豆包，粘贴下方 Prompt，同时上传三张截图，获取 JSON 分析结果</div></div></div>
-        <div class="todo-item"><div class="todo-num">3</div><div><div class="todo-text">复制豆包返回的 JSON，点击下方「粘贴分析结果」贴进去</div><div class="todo-hint">数据存浏览器 localStorage，合并修炼记录后进度自动更新</div></div></div>
-        <div class="todo-item" style="border-bottom:none"><div class="todo-num">4</div><div><div class="todo-text">今日扫描已完成。打开同花顺+养基宝+支付宝，截图做复盘</div><div class="todo-hint">每天坚持三步，两年轻舟已过万重山</div></div></div>
+        <div class="panel-head" style="margin-bottom:0.5rem"><h2>① 动量因子：从「是否失效」到「何时失效」</h2><span class="lit-ev a">A · JPM 2025</span></div>
+        <div class="theory-li"><b>159 年 × 46 国审计</b> — Baltussen 等（JPM 2025, 52(3)）：价格动量 1927–2024 年化 9.24%（t=4.31），4096 种构建规格 Sharpe 全为正，<b>未见发表后衰减</b>；但最大回撤 −88.4%，按波动率缩放可砍半不损收益。</div>
+        <div class="theory-li"><b>动量已多维化</b> — 锚定动量（52 周高点距离）贡献传统动量利润 80% 以上；残差动量 t 值 5.50 优于纯价格动量 4.31；等权多维组合对纯价格动量有 1.76%/年显著 alpha。</div>
+        <div class="theory-li"><b>中国市场：动量是状态依赖的</b> — 李松等（《金融经济学研究》2025）：动量收益由「构建期—持有期」联合市场状态决定，<b>趋势市有动量、震荡市没有</b>——A 股「动量消失」源于缺乏长期趋势演化，而非因子本身失效。</div>
+        <div class="lit-map"><b>→ jq 映射</b>：regime 闸（L0/L1/L2）正是「先判状态再谈动量」的工程实现——熊市空仓、震荡慎用、趋势才开卡；五因子打分卡的动量权重 0.35 恰与文献「多维动量」方向一致。</div>
+        <div class="lit-src">来源：The Journal of Portfolio Management 2025, 52(3)（Baltussen, Dom, Van Vliet, Vidojevic）；《金融经济学研究》2025 年第 4 期（李松、水晶石、王玉峰）。</div>
       </div>
 
       <div class="card">
-        <div class="panel-head" style="margin-bottom:0.5rem"><h2>豆包 Prompt</h2><span class="ph-sub">一键复制 · 三图版</span></div>
-        <div class="prompt-content" id="promptText">你是我的私人交易教练。我会给你三张截图：
-图1·同花顺大盘界面：指数行情、板块涨跌、市场情绪
-图2·养基宝持仓页：基金名称、代码、持仓金额、盈亏率
-图3·支付宝交易记录：今日买入/卖出操作截图
-
-请依次分析，然后输出严格JSON（不要markdown包裹）：
-
-1. 今日市场环境：【牛市/偏牛/震荡/偏熊/熊市】，依据是什么
-2. 我的操作是否符合规则：是否按交易系统信号操作？是否有冲动操作？
-3. 今日心态自评：【手不抖/有点慌/扛不住了】，简单描述感受
-4. 技能进阶：我今天在哪个阶段？（一阶练执行力/二阶找模式/三阶去无效）
-
-最终输出JSON：
-{"date":"2026-07-02","market_env":"震荡","market_reason":"五大指数涨跌各半","disciplined":true,"impulsive_count":0,"mindset_score":4,"mindset_note":"按信号买入，手不抖","stage":1,"try_new_mode":false,"mode_name":"","invalid_trade_desc":"","boring_index":1}
-
-只返回JSON，不要其他文字。</div>
-        <button class="btn-act" id="btnCopy" onclick="copyPrompt()"><span id="copyIcon">📋</span> <span id="copyLabel">复制 Prompt</span></button>
-        <button class="btn-act btn-act-gold" onclick="document.getElementById('pasteBox').classList.toggle('show')">粘贴分析结果</button>
-        <div class="paste-area" id="pasteBox">
-          <textarea id="jsonInput" placeholder="把豆包返回的 JSON 粘贴到这里..."></textarea>
-          <button class="btn-act btn-act-gold" onclick="mergeResult()" style="margin-top:0.4rem">合并到修炼记录</button>
-          <div id="mergeMsg" style="font-size:0.72rem;margin-top:0.3rem"></div>
-        </div>
+        <div class="panel-head" style="margin-bottom:0.5rem"><h2>② 因子拥挤：alpha 衰减与崩盘预测</h2><span class="lit-ev b">B · arXiv 2025</span></div>
+        <div class="theory-li"><b>双曲衰减律</b> — Lee（arXiv:2512.11913）：因子 alpha 按 α(t)=K/(1+λt) 衰减，动量拟合 R²=0.65；<b>2015 年后拥挤加速</b>（与因子 ETF 规模增长 ρ=−0.63），样本外模型高估剩余 alpha（预测 0.30 vs 实际 0.15）。</div>
+        <div class="theory-li"><b>拥挤能预测崩盘、不能预测均值</b> — 拥挤的反转因子崩盘概率高 1.7–1.8 倍；拥挤动量反而更低（0.38x, p=0.006）→ 拥挤度指标应用于<b>风险管理而非选因子</b>。</div>
+        <div class="lit-map"><b>→ jq 映射</b>：打分卡取池内 Top-2 而非全池满配，本身就是低拥挤结构；熔断器（连亏 3 笔停机）承接「崩盘风险管理」思想——拥挤时代宁可少赚不可连亏。</div>
+        <div class="lit-src">来源：arXiv:2512.11913（Lee, 2025）— 工作论文，未经同行评审，方向性参考。</div>
       </div>
 
       <div class="card">
-        <div class="panel-head" style="margin-bottom:0.5rem"><h2>修炼进度 · 三阶段</h2></div>
-        <div class="progress-row"><span class="phase-label">一阶·练执行力</span><span class="phase-bar"><span style="color:var(--blue)">■</span>□□□□□□□□□</span><span class="phase-pct">0%</span></div>
-        <div class="progress-row"><span class="phase-label">二阶·找交易模式</span><span class="phase-bar"><span style="color:#84cc16">■</span>□□□□□□□□□</span><span class="phase-pct">0%</span></div>
-        <div class="progress-row"><span class="phase-label">三阶·去无效交易</span><span class="phase-bar"><span style="color:var(--down)">■</span>□□□□□□□□□</span><span class="phase-pct">0%</span></div>
-        <div class="mut" style="margin-top:0.5rem;line-height:1.7">目标：第一阶段→买卖不抖 | 第二阶段→月成功率≥50% | 第三阶段→感觉交易很无聊</div>
-        <div class="mut" style="margin-top:0.75rem"><strong>近期修炼记录</strong>
-          <div class="empty-tip" style="margin-top:0.4rem">等待首次截图分析 — 按上方待办步骤开始</div>
-        </div>
+        <div class="panel-head" style="margin-bottom:0.5rem"><h2>③ 机器学习清算：成本与微盘，不是算法</h2><span class="lit-ev a">A · Management Science 2023 + SSRN 2026</span></div>
+        <div class="theory-li"><b>GKX(2020) 被系统复核</b> — Avramov 等（Management Science 2023）：剔除微盘/无评级/降级样本后 ML 信号缩水 64%/52%/77%，空头端受损最重；随机森林 Sharpe 2.19 公平检验下降至 0.86，而<b>近乎线性的 IPCA 最稳健（3.39→3.21）</b>。</div>
+        <div class="theory-li"><b>换手是致命项</b> — GKX 类模型月换手 98%–166%，30bp 成本下每年 3.6% 摩擦即可吃掉整个非线性溢价；无泄漏含成本基准（SSRN 6952859）：最好 MLP Sharpe 0.96 vs 无 ML 基线 0.94 vs 朴素等权 0.93，<b>ML 交易成本 15.13% vs 4.67%</b>。</div>
+        <div class="theory-li"><b>中国镜像</b> — 黄德金等（《投资研究》2025）：177 特征、2005–2022，机器学习不一定优于 OLS；<b>样本外 R² 与多空 Sharpe 无正向对应</b>——只报 R² 的研究要打折。</div>
+        <div class="lit-map"><b>→ jq 映射</b>：ML 分支 TRIPOD 评估 AUC 0.478 降级，与文献「线性基线打平 ML」结论完全同向；jq 固定 ms0.75/hold5 低换手参数 + Top-2 集中持仓，正是文献推荐的成本友好结构。</div>
+        <div class="lit-src">来源：Management Science 2023（Avramov, Cheng, Metzker）；SSRN 6952859（2026）；《投资研究》2025 年第 9 期（黄德金、韩博昱、王熙）。</div>
+      </div>
+
+      <div class="card">
+        <div class="panel-head" style="margin-bottom:0.5rem"><h2>④ Regime 识别：状态必须「可交易」</h2><span class="lit-ev a">A · JRFM 2026 + 美联储 2025</span></div>
+        <div class="theory-li"><b>分层 HMM 新方向</b> — AH-HMM（JRFM 2026）：在快状态之上加慢变「元状态」（VIX 划分不确定环境），2000–2024 三大指数样本外一步预测与 VaR 覆盖不劣于固定转移 HMM。</div>
+        <div class="theory-li"><b>三大失效源</b> — 检测滞后（等模型确信时行情已过半）、状态过多（样本切薄）、标签抖动（换手失控）→ 解法：<b>最小驻留时间 + 滞回带</b>（进出阈值不同）。<b>严禁用平滑概率交易</b>——必须 filtered probability，且信号滞后一根 K 线。</div>
+        <div class="theory-li"><b>简单模型未必输</b> — 美联储 2025：可解释的 regime-switching HAR 在有限预测变量下<b>持续优于各类 ML 方法</b>。</div>
+        <div class="lit-map"><b>→ jq 映射</b>：regime 闸用 MA20/MA60 双阈值天然构成滞回带（上穿才转 L0、下穿才降 L2）；三档而非 HMM 多状态，规避样本切薄；每日收盘后信号次日执行，正是文献要求的「滞后一根 K 线」。</div>
+        <div class="lit-src">来源：Journal of Risk and Financial Management 2026, 19(1):15；美联储研究 2025（已实现波动率预测比较）。</div>
+      </div>
+
+      <div class="card">
+        <div class="panel-head" style="margin-bottom:0.5rem"><h2>⑤ 止盈止损：证据高度「条件化」</h2><span class="lit-ev a">A · Quantitative Finance 2024 + JRFM 2026</span></div>
+        <div class="theory-li"><b>趋势市止损有效、震荡市反而有害</b> — Xiang &amp; Deng（Quantitative Finance 2024）：Hurst&gt;0.5（趋势态）止损提升风险调整收益，均值回复态反而降低；<b>最优止损宽度与波动率挂钩</b>——VIX&gt;25 时扩张到 3–4×ATR，按 regime 自适应后 Sharpe 0.62→0.71。</div>
+        <div class="theory-li"><b>非对称 TP/SL 只在本就盈利的模型上增益</b> — Kang（JRFM 2026）：多数 ATR 配置反而降低利润，改进集中在「较高止盈+中等止损」且依赖入场参数兼容性。</div>
+        <div class="theory-li"><b>警惕「最优参数」幻觉</b> — 点对时回测（J. Math. 2026）：NASDAQ-100 上 14 组 ATR 乘数的 CAGR 几乎不变（10.28%–10.39%），PBO=0.935 → ATR 乘数是<b>结构性冗余参数</b>，应做区间化理解而非单点优化；追踪止损全样本净效应接近中性。</div>
+        <div class="lit-map"><b>→ jq 映射</b>：−8% 硬止损 + trail 1.5% 追踪 + hold5 时间止损的三重出场结构，落在文献「趋势态止损有效」区间；regime 闸先过滤掉震荡市，出场结构才在有利状态下工作；不迷信单点参数（540 组网格取稳态非极值）。</div>
+        <div class="lit-src">来源：Quantitative Finance 2024（Xiang, Deng）；JRFM 2026, 19:554（Kang）；J. Math. 14(12):2182（点对时回测）；UCLouvain 硕士论文 2024（André）。</div>
+      </div>
+
+      <div class="card">
+        <div class="panel-head" style="margin-bottom:0.5rem"><h2>⑥ 交易纪律：行为金融的量化画像</h2><span class="lit-ev a">A · SSRN 2025 + CEPR 2025</span></div>
+        <div class="theory-li"><b>处置效应是稳定特质</b> — 《The Fixed Disposition Effect》（SSRN 5243056）：处置效应跨时间跨情境持续，所有投资者在<b>零收益阈值处卖出概率骤升</b>；大额亏损经历使其提高约 23%（Yeung 等，SSRN 5290196，19 万中国散户）。</div>
+        <div class="theory-li"><b>散户逆向交易创造因子</b> — Luo 等（CEPR DP20487）：散户在盈余惊喜后逆向交易是 PEAD 与动量的推手 → <b>散户行为结构本身就是可交易的横截面状态变量</b>。</div>
+        <div class="theory-li"><b>FOMO 的根因是「无交易计划」</b> — 中国期货 773 名活跃交易者调查（TPM 2025）：96.99% 经历过完整 FOMO 循环，止损失败占归因 42.7%，<b>62% 缺乏有纪律的交易计划才是根本成因</b>。</div>
+        <div class="theory-li"><b>过度交易代价仍是基准</b> — Barber-Odean 结论 2025 年仍被验证：最活跃交易者年化落后 6.5pp；DALBAR 2025：2024 平均投资者落后 S&amp;P 500 达 848bp。</div>
+        <div class="lit-map"><b>→ jq 映射</b>：原「修炼」模块练的「手不抖」，文献给的答案是结构而非意志——jq 把纪律全部固化进系统：regime 闸替代临场判断仓位、硬止损替代扛单决心、熔断器替代「再赌一把」、宁缺毋滥替代 FOMO 追高。规则替代意志力，正是行为金融 2025 年的终极结论。</div>
+        <div class="lit-src">来源：SSRN 5243056 / 5290196（2025）；CEPR DP20487（Luo, Ravina, Sammon, Viceira）；The Journal of Psychology and Financial Markets 2025；DALBAR 2025。</div>
+      </div>
+
+      <div class="card">
+        <div class="panel-head" style="margin-bottom:0.4rem"><h2>横向结论 · 五条</h2><span class="ph-sub">2024–2026 文献共识</span></div>
+        <div class="theory-li"><b>「因子是否有效」已让位于「状态 × 构建 × 成本」</b> —— 先判 regime、再选构建、最后算成本，三者齐备才谈 alpha。</div>
+        <div class="theory-li"><b>ML 的瓶颈是可交易性不是算法</b> —— 换手、微盘、空头端可行性比模型选择更决定成败；线性基线屡屡打平。</div>
+        <div class="theory-li"><b>评估标准硬化为可审计清单</b> —— point-in-time 数据、purged 交叉验证、DSR、PBO、含成本、只报 R² 的研究打折。</div>
+        <div class="theory-li"><b>regime 模块价值 = 因果性 + 驻留 + 接到决策</b> —— filtered 概率、滞回带、状态送进仓位层。</div>
+        <div class="theory-li"><b>行为金融终极结论：用规则替代临场判断</b> —— 用结构（仓位、止盈止损、状态门控）替代意志力。</div>
+        <div class="mut" style="margin-top:0.55rem;line-height:1.7">使用边界：证据分级 A（同行评审）可作设计依据；B（工作论文/预印本）方向性参考；C（平台自研回测）仅作线索。文献结论均基于其样本期与市场制度，A 股适用性需自行验证。原「修炼」复盘工作流已移回 <a href="/practice.html" target="_blank" style="color:var(--blue)">practice.html →</a></div>
       </div>
     </section>
 
@@ -672,41 +677,7 @@
   });
 })();
 
-/* ===== 修炼：Prompt 复制 + 修炼记录合并（localStorage 同原 practice.html） ===== */
-function copyPrompt() {
-  var text = document.getElementById('promptText').innerText;
-  navigator.clipboard.writeText(text).then(function() {
-    var btn = document.getElementById('btnCopy');
-    btn.classList.add('copied');
-    document.getElementById('copyIcon').innerText = 'OK';
-    document.getElementById('copyLabel').innerText = '已复制！去豆包粘贴吧';
-    setTimeout(function() {
-      btn.classList.remove('copied');
-      document.getElementById('copyIcon').innerText = '📋';
-      document.getElementById('copyLabel').innerText = '复制 Prompt';
-    }, 3000);
-  });
-}
-function mergeResult() {
-  var raw = document.getElementById('jsonInput').value.trim();
-  var msg = document.getElementById('mergeMsg');
-  if (!raw) { msg.innerText = '请先粘贴豆包返回的JSON'; msg.style.color = 'var(--up)'; return; }
-  try {
-    var obj = JSON.parse(raw);
-    var stored = localStorage.getItem('mindset_records');
-    var records = stored ? JSON.parse(stored) : [];
-    records = records.filter(function(r) { return r.date !== obj.date; });
-    records.push(obj);
-    records.sort(function(a, b) { return a.date.localeCompare(b.date); });
-    localStorage.setItem('mindset_records', JSON.stringify(records));
-    msg.innerText = '已合并！共 ' + records.length + ' 条记录。刷新页面查看更新后的进度。';
-    msg.style.color = 'var(--down)';
-    document.getElementById('jsonInput').value = '';
-  } catch (e) {
-    msg.innerText = 'JSON格式有误：' + e.message;
-    msg.style.color = 'var(--up)';
-  }
-}
+/* ===== 修炼 tab 已替换为「前沿文献」（2026-11-11 主任令）：豆包复盘工作流移回独立 practice.html；localStorage 读取逻辑保留在 practice.html，此处不再需要 ===== */
 
 /* ===== 数据渲染 ===== */
 (function() {
