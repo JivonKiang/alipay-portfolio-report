@@ -17,6 +17,7 @@
 """
 import json
 import os
+import re
 import time
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -160,25 +161,51 @@ def fetch_sector_list(fs_type, label):
 
 
 def fetch_kline(secid, lmt=KLINE_BARS):
-    """拉取日线 K 线，返回 dict 或 None"""
+    """拉取日线 K 线，返回 dict 或 None
+    （2026-11-11 修复：东财 HTTPS 间歇断连 → 三级降级
+    1. 东财 https  2. 东财 http  3. 腾讯 qfq（ETF/指数，板块码不支持））"""
     url = (
         f"https://push2his.eastmoney.com/api/qt/stock/kline/get?secid={secid}"
         f"&klt=101&fqt=1&lmt={lmt}&end=20500101"
         f"&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55"
     )
-    data = http_json(url)
-    kl = (data or {}).get("data") or {}
-    rows = kl.get("klines") or []
-    if len(rows) < 60:
-        return None
+    rows = None
+    # --- 1/2: 东财 https → http ---
+    for scheme in ("https", "http"):
+        data = http_json(url.replace("https://push2his", scheme + "://push2his", 1))
+        kl = (data or {}).get("data") or {}
+        rows = kl.get("klines") or []
+        if rows:
+            name = kl.get("name", "")
+            break
+        time.sleep(1.0)
+    # --- 3: 腾讯备源（板块码 90.BKxxxx 不支持） ---
+    if not rows:
+        m = re.match(r"^([10])\.(\d{6})$", secid or "")
+        if not m:
+            return None
+        tx_code = ("sh" if m.group(1) == "1" else "sz") + m.group(2)
+        n = min(lmt, 800)
+        tx_url = (f"https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?"
+                  f"param={tx_code},day,,,{n},qfq")
+        data = http_json(tx_url)
+        node = ((data or {}).get("data") or {}).get(tx_code) or {}
+        rows = node.get("qfqday") or node.get("day") or []
+        if not rows or len(rows) < 60:
+            return None
+        name = ""
+        # 腾讯 qfq 行格式: [date, open, close, high, low, volume, ...]
+    else:
+        if len(rows) < 60:
+            return None
     dates, closes, highs, lows = [], [], [], []
     for row in rows:
-        parts = row.split(",")
+        parts = row.split(",") if isinstance(row, str) else row
         dates.append(parts[0])
         closes.append(_f(parts[2]))
         highs.append(_f(parts[3]))
         lows.append(_f(parts[4]))
-    return {"name": kl.get("name", ""), "dates": dates, "close": closes, "high": highs, "low": lows}
+    return {"name": name, "dates": dates, "close": closes, "high": highs, "low": lows}
 
 
 # ---------- 指标计算（纯 Python，无第三方依赖） ----------

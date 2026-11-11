@@ -34,6 +34,20 @@ jobs:
           MAIL_TO: ${{ secrets.MAIL_TO }}
         run: python3 trading_system.py
 
+      - name: Data integrity gate (block deploy on incomplete scan)
+        run: |
+          # 2026-11-11 闸门：防东财限流时残缺数据(如 scanned=19)上线面板
+          python3 - <<'EOF'
+          import json, sys
+          with open("output/trading_data.json", encoding="utf-8") as f:
+              d = json.load(f)
+          sel = (d.get("module_2_selection") or {})
+          scanned = sel.get("scanned") or 0
+          if scanned < 20:
+              sys.exit(f"GATE FAIL: module_2_selection.scanned={scanned} < 20 (data incomplete, refusing to publish)")
+          print(f"GATE PASS: scanned={scanned}")
+          EOF
+
       - name: Copy investment hub panel to output
         run: |
           cp hub.html output/hub.html

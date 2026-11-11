@@ -37,7 +37,7 @@ BOARDS = {
     "存储芯片": "90.BK1135", 
     "半导体": "90.BK1036",
     "先进封装": "90.BK1032",
-    "汽车芯片": "90.BK0962",
+    "汽车芯片": "90.BK0969",   # 2026-11-11 退役码 BK0962→BK0969 (ulist 实测名称匹配)
     # AI算力链
     "CPO": "90.BK1099",
     "光通信": "90.BK1098",
@@ -47,8 +47,8 @@ BOARDS = {
     # 消费电子
     "PCB": "90.BK0877",
     "AI手机": "90.BK1162",
-    "智能穿戴": "90.BK0862",
-    "消费电子": "90.BK0878",
+    "智能穿戴": "90.BK0641",   # 2026-11-11 退役码 BK0862→BK0641 (ulist 实测)
+    "消费电子": "90.BK1037",   # 2026-11-11 退役码 BK0878→BK1037 (个股页源码实锤, BK0975 是磁悬浮概念勿用)
     "AI眼镜": "90.BK1170",
     # 新能源/新质生产力
     "固态电池": "90.BK0968",
@@ -61,7 +61,7 @@ BOARDS = {
     "数据要素": "90.BK1142",
     "量子科技": "90.BK1076",
     "脑机接口": "90.BK1124",
-    "数字货币": "90.BK0903",
+    "数字货币": "90.BK0883",   # 2026-11-11 退役码 BK0903→BK0883 (ulist 实测)
 }
 
 # 用户已持仓基金（用于避免重复推荐）
@@ -484,25 +484,21 @@ def adjust_position_by_volatility(signal, closes):
 
 # ========== 东方财富API ==========
 def fetch_eastmoney_kline(secid, count=60, max_retries=2):
-    """获取日K线数据（带重试）"""
-    url = "https://push2his.eastmoney.com/api/qt/stock/kline/get"
-    params = {
-        "secid": secid,
-        "fields1": "f1,f2,f3,f4,f5,f6",
-        "fields2": "f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61",
-        "klt": "101",
-        "fqt": "1",
-        "end": "20500101",
-        "lmt": str(count),
-    }
-    full_url = url + "?" + urllib.parse.urlencode(params)
-    
-    for attempt in range(max_retries + 1):
+    """获取日K线数据（2026-11-11 修复：东财 HTTPS 间歇断连 → 三级降级
+    1. 东财 https  2. 东财 http  3. 腾讯 qfq（ETF/指数，板块码不支持）
+    返回与原格式一致的 dict 列表；全源失败返回 []（调用方按数据不足跳过）
+    """
+    url = (
+        f"https://push2his.eastmoney.com/api/qt/stock/kline/get?"
+        f"secid={secid}&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61"
+        f"&klt=101&fqt=1&end=20500101&lmt={count}"
+    )
+    # --- 1/2: 东财 https → http ---
+    for scheme in ("https", "http"):
         try:
-            if attempt > 0:
-                time.sleep(1.5)
-            req = urllib.request.Request(full_url, headers={"User-Agent": "Mozilla/5.0"})
-            with urllib.request.urlopen(req, timeout=20) as resp:
+            req = urllib.request.Request(url.replace("https://push2his", scheme + "://push2his", 1),
+                                         headers={"User-Agent": "Mozilla/5.0"})
+            with urllib.request.urlopen(req, timeout=15) as resp:
                 data = json.loads(resp.read().decode())
             if data.get("data") and data["data"].get("klines"):
                 klines = []
@@ -518,12 +514,30 @@ def fetch_eastmoney_kline(secid, count=60, max_retries=2):
                         "amount": float(parts[6]),
                     })
                 return klines
-            else:
-                return []
-        except Exception as e:
-            if attempt < max_retries:
-                continue
-            print(f"  [ERROR] {e}")
+        except Exception:
+            time.sleep(1.0)
+    # --- 3: 腾讯备源（板块码 90.BKxxxx 不支持，直接放弃） ---
+    import re as _re
+    m = _re.match(r"^([10])\.(\d{6})$", secid)
+    if not m:
+        return []
+    tx_code = ("sh" if m.group(1) == "1" else "sz") + m.group(2)
+    n = min(count, 800)
+    tx_url = (f"https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?"
+              f"param={tx_code},day,,,{n},qfq")
+    try:
+        req = urllib.request.Request(tx_url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=20) as resp:
+            data = json.loads(resp.read().decode())
+        node = data.get("data", {}).get(tx_code) or {}
+        rows = node.get("qfqday") or node.get("day") or []
+        return [{
+            "date": r[0], "open": float(r[1]), "close": float(r[2]),
+            "high": float(r[3]), "low": float(r[4]), "volume": float(r[5]),
+            "amount": 0.0,
+        } for r in rows]
+    except Exception as e:
+        print(f"  [ERROR] fetch {secid}: all sources failed ({type(e).__name__})")
     return []
 
 

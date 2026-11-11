@@ -10,6 +10,7 @@ jq 前瞻记录器（双卡赛马：生产卡原池5 + 挑战卡宽基5，同口
 """
 import json
 import os
+import sys
 import urllib.request
 import ssl
 from datetime import datetime, timezone, timedelta
@@ -23,6 +24,9 @@ UA = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Firefox/126.0'}
 
 OUT_DIR = os.path.dirname(os.path.abspath(__file__))
 LOG_FILE = os.path.join(OUT_DIR, 'jq_forward_log.jsonl')
+
+sys.path.insert(0, OUT_DIR)
+from _kline_source import fetch_kline_df  # noqa: E402  东财https→http→腾讯 三级降级
 LINEAR_MS = 0.75
 HORIZON = 5
 
@@ -45,13 +49,8 @@ DIR = {"mom_20": "pos", "mom_5": "pos", "amt_20": "pos", "vol_20": "neg", "bias_
 
 
 def fetch_kline(secid, count=320):
-    """v0.4.2: 统一走 em_fetch 双源（东财主源→腾讯降级）。
-    注意：本脚本 POOL 值是东财 secid（'1.510300'），em_fetch 吃 '510300.SH' 格式，须转换。"""
-    from em_fetch import fetch_kline as dual_fetch, _em_secid
-    # secid 形如 '1.510300'/'0.159327' → 转回 '510300.SH' 格式
-    num = secid.split('.', 1)[1]
-    code = num + ('.SZ' if secid.startswith('0.') else '.SH')
-    return dual_fetch(code, count)
+    """东财 https→http→腾讯 三级降级（2026-11-11 修复东财 HTTPS 间歇断连）"""
+    return fetch_kline_df(secid, count=count)
 
 
 def factor_row(df):
@@ -133,7 +132,7 @@ def main():
         for sym, secid in all_pools.items():
             if not any(p['symbol'] == sym for p in pend):
                 continue
-            df = dfs_w5.get(sym) if sym in dfs_w5 else dfs.get(sym)
+            df = dfs_w5.get(sym) or dfs.get(sym)
             if df is None or entry_date not in df.index:
                 continue
             idx = df.index.get_loc(entry_date)

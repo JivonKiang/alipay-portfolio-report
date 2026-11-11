@@ -14,6 +14,9 @@ from datetime import date
 
 import pandas as pd
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _kline_source import fetch_kline_df  # noqa: E402  东财https→http→腾讯 三级降级
+
 CTX = ssl.create_default_context()
 CTX.check_hostname = False
 CTX.verify_mode = ssl.CERT_NONE
@@ -38,12 +41,8 @@ POOL = {
 
 
 def fetch_kline(secid, beg='20240101', end='20500101'):
-    """v0.4.2: 统一走 em_fetch 双源（东财主源→腾讯降级）。
-    注意：本脚本 POOL 值是东财 secid（'1.510300'），em_fetch 吃 '510300.SH' 格式，须转换。"""
-    from em_fetch import fetch_kline as dual_fetch
-    num = secid.split('.', 1)[1]
-    code = num + ('.SZ' if secid.startswith('0.') else '.SH')
-    return dual_fetch(code)
+    """东财 https→http→腾讯 三级降级（2026-11-11 修复东财 HTTPS 间歇断连）"""
+    return fetch_kline_df(secid, count=800)
 
 
 def load_state():
