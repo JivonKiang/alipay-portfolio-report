@@ -1,20 +1,20 @@
 {
-  "updated": "2026-11-11 17:43",
+  "updated": "2026-11-11 18:15",
   "version": "v0.4",
   "backtest": {
-    "win_rate": 63.6,
-    "profit_loss_ratio": 1.35,
-    "total_return_pct": 2.88,
-    "annual_return_pct": 2.33,
+    "win_rate": 66.7,
+    "profit_loss_ratio": 1.24,
+    "total_return_pct": 3.9,
+    "annual_return_pct": 3.16,
     "max_drawdown_pct": -9.13,
-    "n_trades": 22,
+    "n_trades": 21,
     "expectancy": 0.49,
     "benchmark_return_pct": 0.24,
     "win_rate_ci95": [
-      43.0,
-      80.3
+      45.4,
+      82.8
     ],
-    "note": "真实日K 301根 2025-08→2026-11 · 线性卡 ms0.75 · 部分止盈+移动止盈+时间止损+regime闸 · Wilson CI 95%"
+    "note": "真实日K 300根 2025-08→2026-11 · 线性卡 ms0.75 · 部分止盈+移动止盈+时间止损+regime闸 · Wilson CI 95%"
   },
   "current": {
     "regime": "L2 防守（MA60 下方）",
@@ -27,11 +27,11 @@
       },
       {
         "symbol": "512690.SH",
-        "score": 0.64
+        "score": 0.62
       },
       {
         "symbol": "512010.SH",
-        "score": 0.58
+        "score": 0.6
       }
     ],
     "position_advice": "打分达标则持有 Top-2"
@@ -48,5 +48,11 @@
     "auc": 0.478,
     "verdict": "临床级评估(TRIPOD口径)评级C: AUC 0.478<0.55, 校准失效 —— 82.6%胜率由出场结构贡献非预测能力; 生产卡=线性ms0.75+出场纪律",
     "control": "随机标的+同出场结构: -24.2%/胜率40.9% vs 卡选+2.9%/胜率63.6% → 结构+选股缺一不可"
+  },
+  "pool_experiment": {
+    "joint_18": "win41.7%/exp-0.14 → 联合选股禁用（截面追高集中）",
+    "subgroups": "分池全部正期望: 宽基5 exp+0.61/mdd-4.48% · 行业7 +0.25 · 科创3 +0.52 · 跨境商品3 +0.16",
+    "walkforward": "原池5 OOS-2 win73.7% PASS（生产）; 宽基5 OOS-2 win47.8%/exp+0.23 PASS（后备）",
+    "verdict": "扩池结论: 分池运行健康、联合选股失败 → 生产池维持原池5只, 宽基5作后备池"
   }
 }
