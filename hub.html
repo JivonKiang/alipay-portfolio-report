@@ -175,7 +175,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 34px;display:flex;justify
     <!-- jivonQuant 主战系统 -->
     <div class="card span12 reveal d2">
       <div class="seal">量</div>
-      <div class="tag">jivonQuant (jq) v0.3 · 主战多因子系统 · 幻方蒸馏</div>
+      <div class="tag">jivonQuant (jq) v0.4.2 · 双卡赛马 · 幻方蒸馏</div>
       <h3>jivonQuant — 主战量化系统</h3>
       <div class="stats" style="margin-top:14px">
         <div class="s"><span class="v" id="jq-wr">—</span><span class="k">回测胜率</span></div>
@@ -185,8 +185,9 @@ footer{border-top:1px solid var(--line);padding:22px 0 34px;display:flex;justify
         <div class="s"><span class="v" id="jq-exp">—</span><span class="k">期望值</span></div>
       </div>
       <div id="jq-current" class="foot-note" style="margin-top:12px;font-size:13px;color:var(--ink-dim)">状态加载中…</div>
+      <div id="jq-wide5" class="foot-note" style="margin-top:8px;font-size:12.5px;color:var(--ink-dim)">挑战卡数据加载中…</div>
       <div id="jq-structure" class="foot-note" style="margin-top:8px;font-size:12.5px;color:var(--ink-faint)"></div>
-      <div class="foot-note">真实日K 301 根回测（2025-08→2026-11）· 对比同期持有 510300 仅 +0.24% · 五重防守结构：部分止盈/移动止盈/时间止损/硬止损/regime 闸 · <a class="plainlink" href="https://github.com/JivonKiang">代码仓库</a></div>
+      <div class="foot-note">真实日K 300 根回测（2025-08→2026-11）· 生产卡=原池5（OOS-2 胜率 73.7%）· 挑战卡=宽基5 · 赛马判据：前瞻账本 ≥20 交易日按 fwd5 胜率+期望定夺 · 五重防守：部分止盈/移动止盈/时间止损/硬止损/regime 闸 · <a class="plainlink" href="https://github.com/JivonKiang">代码仓库</a></div>
     </div>
 
     <!-- Q75 量化信号 -->
@@ -305,8 +306,20 @@ footer{border-top:1px solid var(--line);padding:22px 0 34px;display:flex;justify
     if(b.expectancy!=null)document.getElementById('jq-exp').textContent=(b.expectancy>0?'+':'')+b.expectancy.toFixed(2);
     var c=d.current||{}, el=document.getElementById('jq-current');
     var picks=(c.picks||[]).map(function(x){return x.symbol.slice(0,6)+'('+x.score+')'}).join(' / ');
+    var picksW=(c.picks_wide5||[]).map(function(x){return x.symbol.slice(0,6)+'('+x.score+')'}).join(' / ');
     el.innerHTML='<b>当前状态：</b>'+ (c.regime||'—') +' · 510300='+c.bench_px+' vs MA60='+c.bench_ma60+
-      (picks?'<br><b>打分 Top-3：</b>'+picks+'<br><b>建议：</b>'+(c.position_advice||'—'):'');
+      (picks?'<br><b>生产卡 Top-3：</b>'+picks:'<br><b>生产卡：</b>无达标标的（宁缺毋滥）')+
+      '<br><b>建议：</b>'+(c.position_advice||'—')+
+      (picksW?'<br><b>挑战卡达标：</b>'+picksW:'');
+    var w=d.wide5_card||{}, wl=document.getElementById('jq-wide5');
+    if(wl){
+      if(w.win_rate!=null){
+        wl.innerHTML='<b>⚔️ 挑战卡 · 宽基5（赛马中）：</b>胜率 '+w.win_rate.toFixed(1)+'% (CI '+
+          (w.win_rate_ci95||[]).join('~')+') · 盈亏比 '+(w.profit_loss_ratio!=null?w.profit_loss_ratio.toFixed(2):'—')+
+          ' · 收益 '+(w.total_return_pct>0?'+':'')+w.total_return_pct.toFixed(2)+'% · 回撤 '+w.max_drawdown_pct.toFixed(2)+'%'+
+          ' · 期望 '+(w.expectancy>0?'+':'')+w.expectancy.toFixed(2)+' · '+w.n_trades+' 笔';
+      } else {wl.textContent='挑战卡数据尚未生成';}
+    }
     var s=d.structure||{}, st=document.getElementById('jq-structure');
     if(st){st.innerHTML='<b>五重防守：</b>'+[s.partial_tp,s.trailing,s.time_stop,s.hard_stop,s.regime_gate].filter(Boolean).join(' · ')}
   }).catch(function(){
