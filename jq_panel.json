@@ -1,7 +1,14 @@
 {
-  "updated": "2026-11-11 18:15",
-  "version": "v0.4",
+  "updated": "2026-11-11 19:36",
+  "version": "v0.4.2-dual",
   "backtest": {
+    "pool": [
+      "510300.SH",
+      "512010.SH",
+      "512690.SH",
+      "588170.SH",
+      "159327.SZ"
+    ],
     "win_rate": 66.7,
     "profit_loss_ratio": 1.24,
     "total_return_pct": 3.9,
@@ -9,32 +16,54 @@
     "max_drawdown_pct": -9.13,
     "n_trades": 21,
     "expectancy": 0.49,
-    "benchmark_return_pct": 0.24,
     "win_rate_ci95": [
       45.4,
       82.8
     ],
-    "note": "真实日K 300根 2025-08→2026-11 · 线性卡 ms0.75 · 部分止盈+移动止盈+时间止损+regime闸 · Wilson CI 95%"
+    "benchmark_return_pct": 0.24,
+    "note": "真实日K 300根 2025-08→2026-11 · 线性卡 ms0.75 · 部分止盈+移动止盈+时间止损+regime闸 · Wilson CI 95% · 生产卡=原池5"
+  },
+  "wide5_card": {
+    "pool": [
+      "510300.SH",
+      "510500.SH",
+      "510880.SH",
+      "512100.SH",
+      "560010.SH"
+    ],
+    "win_rate": 60.5,
+    "profit_loss_ratio": 1.67,
+    "total_return_pct": 4.09,
+    "annual_return_pct": 3.31,
+    "max_drawdown_pct": -4.48,
+    "n_trades": 38,
+    "expectancy": 0.62,
+    "win_rate_ci95": [
+      44.7,
+      74.4
+    ],
+    "role": "挑战卡（赛马中）",
+    "note": "同参数同出场结构 · 全样本 exp+0.61/mdd-4.48% 回测最优 · OOS-2 win47.8% PASS 后备 · 前瞻账本≥20交易日后按 fwd 胜率赛马定夺"
+  },
+  "race": {
+    "mode": "双卡赛马（主任批准 2026-11-11）",
+    "prod": "原池5（OOS-2 win73.7%）",
+    "challenger": "宽基5（exp+0.61/mdd-4.48%）",
+    "criteria": "前瞻账本≥20交易日+picks后按 fwd5 胜率与期望定夺，禁提前切换",
+    "audit_gate": "≥20 交易日"
   },
   "current": {
     "regime": "L2 防守（MA60 下方）",
     "bench_px": 4.15,
     "bench_ma60": 4.443,
-    "picks": [
+    "picks": [],
+    "picks_wide5": [
       {
         "symbol": "510300.SH",
-        "score": 0.68
-      },
-      {
-        "symbol": "512690.SH",
-        "score": 0.62
-      },
-      {
-        "symbol": "512010.SH",
-        "score": 0.6
+        "score": 0.81
       }
     ],
-    "position_advice": "打分达标则持有 Top-2"
+    "position_advice": "regime L2 防守 · 双卡统一空仓（闸优先于打分）"
   },
   "structure": {
     "partial_tp": "浮盈+2% 卖一半锁胜",
@@ -53,6 +82,6 @@
     "joint_18": "win41.7%/exp-0.14 → 联合选股禁用（截面追高集中）",
     "subgroups": "分池全部正期望: 宽基5 exp+0.61/mdd-4.48% · 行业7 +0.25 · 科创3 +0.52 · 跨境商品3 +0.16",
     "walkforward": "原池5 OOS-2 win73.7% PASS（生产）; 宽基5 OOS-2 win47.8%/exp+0.23 PASS（后备）",
-    "verdict": "扩池结论: 分池运行健康、联合选股失败 → 生产池维持原池5只, 宽基5作后备池"
+    "verdict": "扩池结论: 分池运行健康、联合选股失败 → 双卡赛马（v0.4.2 主任批准）"
   }
 }
