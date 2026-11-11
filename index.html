@@ -621,7 +621,8 @@ function mergeResult() {
 
 /* ===== 数据渲染 ===== */
 (function() {
-  var fmtPct = function(v) { return v === null || v === undefined ? '—' : (v >= 0 ? '+' : '') + (v * 100).toFixed(2) + '%'; };
+  /* return_pct 后端已存百分数值（-1.31 即 -1.31%），前端只补符号与 %（2026-11-11 主任纠错：此前二次乘100变成 -131.00%） */
+  var fmtPct = function(v) { return v === null || v === undefined ? '—' : (v >= 0 ? '+' : '') + Number(v).toFixed(2) + '%'; };
   var setNum = function(id, txt, cls) {
     var el = document.getElementById(id);
     if (!el) return;
