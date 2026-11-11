@@ -1,15 +1,5 @@
 [
   {
-    "date": "2026-07-09",
-    "time": "10:03",
-    "environment": "range",
-    "environment_cn": "震荡市 — 快进快出赚差价",
-    "position_ratio": 0.45,
-    "buy_signals": 0,
-    "exit_signals": 0,
-    "signals": []
-  },
-  {
     "date": "2026-07-10",
     "time": "06:41",
     "environment": "range",
@@ -3092,5 +3082,15 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-11-11",
+    "time": "08:49",
+    "environment": "bear",
+    "environment_cn": "熊市 — 清仓做反弹",
+    "position_ratio": 0.2,
+    "buy_signals": 0,
+    "exit_signals": 0,
+    "signals": []
   }
 ]
