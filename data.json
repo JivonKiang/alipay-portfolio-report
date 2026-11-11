@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-11T10:07:24+08:00",
+  "updated": "2026-11-11T12:54:35+08:00",
   "portfolio": {
     "total": 677301,
     "steady": 512111,
@@ -103,13 +103,13 @@
       "name": "中证500",
       "index": "中证500",
       "index_code": "000905",
-      "current": 6645.9,
-      "ma10": 6530.0,
-      "ma20": 6650.0,
-      "change_pct": 0.91,
-      "distance_ma10": 1.77,
+      "current": 6713.2,
+      "ma10": 6537.3,
+      "ma20": 6636.6,
+      "change_pct": 1.01,
+      "distance_ma10": 2.69,
       "signal": "dca",
-      "signal_text": "站上10日线+1.8%，定投正常执行",
+      "signal_text": "站上10日线+2.7%，定投正常执行",
       "funds": [
         {
           "code": "001557",
@@ -122,7 +122,7 @@
         "detail": "定投正常执行",
         "path": "支付宝 → 理财 → 基金 → 我的定投"
       },
-      "volume_ratio": 0.95
+      "volume_ratio": 1.02
     }
   },
   "nasdaq": {
