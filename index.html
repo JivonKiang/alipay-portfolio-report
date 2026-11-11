@@ -130,6 +130,28 @@
   .tbl td { padding:0.38rem 0.55rem; border-bottom:1px solid rgba(255,255,255,0.03); white-space:nowrap; }
   .tbl tr:last-child td { border-bottom:none; }
   .tbl .r { text-align:right; }
+
+  /* ===== 持仓/成交卡片流（手机一眼可见，零横滑） ===== */
+  .pos-cards { display:flex; flex-direction:column; gap:0.55rem; }
+  .pcard { background:rgba(255,255,255,0.02); border:1px solid var(--border); border-left:3px solid var(--up); border-radius:10px; padding:0.62rem 0.7rem; }
+  .pcard.dn { border-left-color:var(--down); }
+  .pcard .prow1 { display:flex; align-items:baseline; gap:0.4rem; min-width:0; }
+  .pcard .pname { font-weight:700; font-size:0.86rem; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; min-width:0; }
+  .pcard .pcode { font-size:0.62rem; color:var(--dim); white-space:nowrap; }
+  .pcard .ppl { margin-left:auto; font-weight:800; font-size:0.95rem; white-space:nowrap; }
+  .pcard .pgrid { display:grid; grid-template-columns:1.1fr 1.3fr 1fr; gap:0.4rem; margin-top:0.45rem; }
+  .pcard .pgrid i { display:block; font-style:normal; font-size:0.6rem; color:var(--dim); margin-bottom:1px; }
+  .pcard .pgrid b { font-size:0.76rem; font-weight:600; }
+  .pcard .pgrid b.up { color:var(--up); } .pcard .pgrid b.down { color:var(--down); }
+  .tcard { background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:10px; padding:0.55rem 0.7rem; }
+  .tcard .trow1 { display:flex; align-items:center; gap:0.45rem; min-width:0; }
+  .tcard .tname { font-weight:700; font-size:0.84rem; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; min-width:0; }
+  .tcard .tamt { margin-left:auto; font-weight:800; font-size:0.88rem; color:var(--text); white-space:nowrap; }
+  .tcard .tsub { margin-top:0.3rem; font-size:0.66rem; color:var(--dim); display:flex; flex-wrap:wrap; gap:0.15rem 0.7rem; }
+  .tcard .tsub .num { color:var(--text); }
+  .badge { font-size:0.62rem; font-weight:700; padding:0.1rem 0.42rem; border-radius:6px; white-space:nowrap; }
+  .badge.buy { background:rgba(255,91,91,0.14); color:var(--up); }
+  .badge.sell { background:rgba(45,192,125,0.14); color:var(--down); }
   .gold-t { color:var(--gold); font-weight:600; }
   .mut { color:#8a94a8; font-size:0.7rem; }
 
@@ -160,7 +182,7 @@
     .nav-cell .tx { font-size:0.56rem; }
     .side .foot { font-size:0.5rem; }
     .main { padding:0.75rem 0.6rem 1.4rem; }
-    .card { overflow-x:auto; }
+    .card { overflow-x:visible; }
     .vs-wrap { padding:0.7rem 0 0.3rem; }
     .vs-wrap .vs-title { font-size:1.12rem; }
     .vs-wrap .vs-title .vsx { font-size:0.85rem; margin:0 0.3rem; }
@@ -374,9 +396,7 @@
     <section class="section" id="sec-positions">
       <div class="panel-head"><h2>V2 模拟盘持仓</h2><span class="ph-sub" id="posUpdated">—</span></div>
       <div class="card">
-        <table class="tbl" id="posTable">
-          <tr><th>代码</th><th>名称</th><th class="r">持仓/市值</th><th class="r">成本价</th><th class="r">现价</th><th class="r">盈亏率</th></tr>
-        </table>
+        <div class="pos-cards" id="posCards"></div>
         <div class="empty-tip" id="posEmpty">
           模拟盘运行中 · 等待首次调仓<br><b>11-11 开盘</b> V2 策略将执行首个 ISO 周轮动（12 ETF 池 + 511010 防守）
         </div>
@@ -388,9 +408,7 @@
     <section class="section" id="sec-trades">
       <div class="panel-head"><h2>成交记录</h2><span class="ph-sub" id="trdUpdated">—</span></div>
       <div class="card">
-        <table class="tbl" id="trdTable">
-          <tr><th>日期</th><th>代码</th><th>名称</th><th>方向</th><th class="r">价格</th><th class="r">数量</th><th class="r">金额</th></tr>
-        </table>
+        <div class="pos-cards" id="trdCards"></div>
         <div class="empty-tip" id="trdEmpty">
           0 笔成交 · 起跑线状态<br>策略信号触发后此处自动出现流水，同步推送通知
         </div>
@@ -673,9 +691,9 @@ function mergeResult() {
     box.innerHTML = svg;
   }
 
-  /* 持仓表（字段适配 simupaper getposition：asset_code/stock_name/pos_value/avg_price/close_price/profit_and_loss） */
+  /* 持仓卡片流（字段适配 simupaper getposition；手机零横滑，一眼可见） */
   function renderPositions(list) {
-    var tbl = document.getElementById('posTable');
+    var box = document.getElementById('posCards');
     var empty = document.getElementById('posEmpty');
     if (!list || !list.length) {
       document.getElementById('posUpdated').innerText = '当前空仓';
@@ -685,7 +703,7 @@ function mergeResult() {
     empty.style.display = 'none';
     function n2(v, d) { var x = parseFloat(v); return isNaN(x) ? '—' : x.toFixed(d === undefined ? 2 : d); }
     function n0(v) { var x = parseFloat(v); return isNaN(x) ? '—' : x.toLocaleString('en-US', {maximumFractionDigits: 0}); }
-    var rows = list.map(function(p) {
+    var cards = list.map(function(p) {
       var code = p.asset_code || p.stock_code || p.code || '—';
       var name = p.stock_name || p.name || '—';
       var amt = parseFloat(p.pos_amount);
@@ -698,23 +716,30 @@ function mergeResult() {
       var cls = (!isNaN(pl) && pl < 0) ? 'down' : 'up';
       var pnlStr = isNaN(pnl) ? '—' : (pnl >= 0 ? '+' : '') + n0(pnl);
       var plStr = isNaN(pl) ? '—' : (pl >= 0 ? '+' : '') + pl.toFixed(2) + '%';
-      var hold = isNaN(amt) ? '—' : n0(amt) + ' 股<br><span style="color:#7a8499;font-size:10px">市值 ' + mv + '</span>';
-      return '<tr><td class="num">' + esc(code) + '</td><td>' + esc(name) + '</td><td class="r num">' + hold +
-        '</td><td class="r num">' + cost + '</td><td class="r num">' + px +
-        '</td><td class="r num ' + cls + '">' + plStr + '<br><span style="font-size:10px">' + pnlStr + '</span></td></tr>';
+      var holdS = isNaN(amt) ? '—' : n0(amt) + ' 股';
+      return '<div class="pcard ' + (cls === 'down' ? 'dn' : '') + '">' +
+        '<div class="prow1"><span class="pname">' + esc(name) + '</span>' +
+        '<span class="pcode">' + esc(code) + '</span>' +
+        '<span class="ppl ' + cls + '">' + plStr + '</span></div>' +
+        '<div class="pgrid">' +
+        '<div><i>持仓</i><b>' + holdS + '</b></div>' +
+        '<div><i>成本 → 现价</i><b>' + cost + ' → ' + px + '</b></div>' +
+        '<div><i>盈亏 / 市值</i><b class="' + cls + '">' + pnlStr + '</b><b style="color:var(--dim);font-weight:500"> / ' + mv + '</b></div>' +
+        '</div></div>';
     }).join('');
-    tbl.insertAdjacentHTML('beforeend', rows);
+    box.innerHTML = cards;
   }
 
-  /* 成交表（字段适配 simupaper gettradelog：trade_date/asset_code/stock_name/operation_type/trade_price/trade_amount/trade_value） */
+  /* 成交卡片流（字段适配 simupaper gettradelog；手机零横滑） */
   function renderTrades(list, d) {
-    var tbl = document.getElementById('trdTable');
+    var box = document.getElementById('trdCards');
     var empty = document.getElementById('trdEmpty');
     document.getElementById('trdUpdated').innerText = '累计 ' + ((d && d.quant && d.quant.trades) || (list ? list.length : 0)) + ' 笔';
     if (!list || !list.length) return;
     empty.style.display = 'none';
-    var rows = list.slice().reverse().map(function(t) {
-      var dt = t.trade_date || t.date || t.deal_date || '—';
+    var cards = list.slice().reverse().map(function(t) {
+      var dt = String(t.trade_date || t.date || t.deal_date || '—');
+      var timeS = dt.length >= 16 ? dt.slice(5, 16) : dt;           // MM-DD HH:MM
       var code = t.asset_code || t.stock_code || t.code || '—';
       var name = t.stock_name || t.name || '—';
       var act = t.operation_type || t.business || t.bs_flag || t.trade_type || t.type || '—';
@@ -727,12 +752,16 @@ function mergeResult() {
       var pxS = isNaN(px) ? '—' : px.toFixed(4).replace(/0+$/, '').replace(/\.$/, '');
       var volS = isNaN(vol) ? '—' : vol.toLocaleString('en-US', {maximumFractionDigits: 0});
       var amtS = isNaN(amt) ? '—' : amt.toLocaleString('en-US', {maximumFractionDigits: 0});
-      var feeS = isNaN(fee) ? '' : '<br><span style="color:#7a8499;font-size:10px">佣 ' + fee.toFixed(2) + '</span>';
-      return '<tr><td class="num">' + esc(String(dt).replace('2026-', '')) + '</td><td class="num">' + esc(code) + '</td><td>' + esc(name) +
-        '</td><td style="color:' + (isBuy ? 'var(--up)' : 'var(--down)') + ';font-weight:600">' + esc(actCn) +
-        '</td><td class="r num">' + pxS + feeS + '</td><td class="r num">' + volS + '</td><td class="r num">' + amtS + '</td></tr>';
+      var feeS = isNaN(fee) ? '' : '<span>佣 <span class="num">' + fee.toFixed(2) + '</span></span>';
+      return '<div class="tcard">' +
+        '<div class="trow1"><span class="badge ' + (isBuy ? 'buy">买入' : 'sell">卖出') + '</span>' +
+        '<span class="tname">' + esc(name) + '</span>' +
+        '<span class="tamt num">¥' + amtS + '</span></div>' +
+        '<div class="tsub"><span>' + esc(timeS) + '</span><span class="num">' + esc(code) + '</span>' +
+        '<span><span class="num">' + pxS + '</span> × <span class="num">' + volS + '</span> 股</span>' + feeS + '</div>' +
+        '</div>';
     }).join('');
-    tbl.insertAdjacentHTML('beforeend', rows);
+    box.innerHTML = cards;
   }
 })();
 </script>
