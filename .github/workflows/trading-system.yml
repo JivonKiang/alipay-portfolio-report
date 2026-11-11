@@ -61,20 +61,6 @@ jobs:
           MAIL_TO: ${{ secrets.MAIL_TO }}
         run: python3 trading_system.py
 
-      - name: Data integrity gate (block deploy on incomplete scan)
-        run: |
-          # 2026-11-11 闸门：防东财限流时残缺数据(如 scanned=19)上线面板
-          python3 - <<'EOF'
-          import json, sys
-          with open("output/trading_data.json", encoding="utf-8") as f:
-              d = json.load(f)
-          sel = (d.get("module_2_selection") or {})
-          scanned = sel.get("scanned") or 0
-          if scanned < 20:
-              sys.exit(f"GATE FAIL: module_2_selection.scanned={scanned} < 20 (data incomplete, refusing to publish)")
-          print(f"GATE PASS: scanned={scanned}")
-          EOF
-
       - name: Copy investment hub panel to output
         run: |
           cp hub.html output/hub.html
@@ -101,6 +87,21 @@ jobs:
           # 前瞻验证账本同步到面板输出（手机端可查）
           cp q75/jq_forward_log.jsonl output/jq_forward_log.jsonl 2>/dev/null || true
           cp q75/jq_forward_log.jsonl jq_forward_log.jsonl 2>/dev/null || true
+
+      - name: Data integrity gate (block deploy on incomplete scan)
+        run: |
+          # 2026-11-11 闸门：防东财限流时残缺数据(如 scanned=19)上线面板
+          # 位置在 q75/前瞻记录之后：板块数据残缺不应连坐 q75（腾讯源独立存活）
+          python3 - <<'EOF'
+          import json, sys
+          with open("output/trading_data.json", encoding="utf-8") as f:
+              d = json.load(f)
+          sel = (d.get("module_2_selection") or {})
+          scanned = sel.get("scanned") or 0
+          if scanned < 20:
+              sys.exit(f"GATE FAIL: module_2_selection.scanned={scanned} < 20 (data incomplete, refusing to publish)")
+          print(f"GATE PASS: scanned={scanned}")
+          EOF
 
       - name: Commit updated data & dashboard
         run: |
