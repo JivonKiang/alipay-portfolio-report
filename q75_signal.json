@@ -12,9 +12,7 @@
     "sl": 5.0,
     "hold": 10
   },
-  "actions": [
-    "BUY 512690.SH @0.433 x76900 (rsi=22)"
-  ],
+  "actions": [],
   "positions": {
     "512690.SH": {
       "entry_px": 0.433,
