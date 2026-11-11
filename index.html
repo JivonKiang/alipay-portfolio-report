@@ -228,8 +228,23 @@
   .phase-bar { font-size:0.8rem; letter-spacing:2px; }
   .phase-pct { font-size:0.75rem; color:var(--gold); font-weight:700; width:40px; text-align:right; }
 
-  /* ===== 面板 iframe ===== */
-  .hub-frame-box { margin-top:0.3rem; }
+  /* ===== jq 报告 ===== */
+  .evjq { display:flex; gap:0.55rem; align-items:flex-start; padding:0.5rem 0.6rem; background:rgba(255,255,255,0.02); border-left:3px solid var(--purple); border-radius:8px; margin-bottom:0.45rem; }
+  .evjq:last-child { margin-bottom:0; }
+  .evjq.warn { border-left-color: var(--gold); }
+  .evjq .eb { flex:none; font-size:0.6rem; font-weight:800; letter-spacing:1px; color:var(--purple); background:rgba(162,107,255,0.12); padding:0.14rem 0.45rem; border-radius:6px; margin-top:0.12rem; white-space:nowrap; }
+  .evjq.warn .eb { color:var(--gold); background:rgba(255,176,46,0.12); }
+  .evjq .et { font-size:0.74rem; color:var(--text); line-height:1.65; }
+  .evjq .et b { color:#f0f4fc; }
+  .race-track { height:9px; background:rgba(255,255,255,0.06); border-radius:6px; overflow:hidden; margin-top:0.55rem; }
+  .race-fill { height:100%; width:0%; background:linear-gradient(90deg,var(--purple),var(--gold)); border-radius:6px; transition:width 0.8s ease; }
+  .race-meta { display:flex; justify-content:space-between; font-size:0.64rem; color:var(--dim); margin-top:0.3rem; }
+  .theory-li { font-size:0.74rem; color:var(--dim); padding:0.42rem 0; border-bottom:1px dashed rgba(255,255,255,0.06); line-height:1.65; }
+  .theory-li:last-child { border-bottom:none; }
+  .theory-li b { color:var(--text); }
+  .tbl.soft td { white-space:normal; }
+  .tbl.soft td .mut { font-size:0.66rem; }
+  .jqstrip { border:1px solid rgba(162,107,255,0.4); background:linear-gradient(135deg, rgba(162,107,255,0.08), rgba(255,176,46,0.04)); }
 
   .footer { text-align:center; padding:1.2rem 0 0.6rem; color:#454f66; font-size:0.66rem; border-top:1px solid var(--border); margin-top:1.2rem; }
 </style>
@@ -283,8 +298,8 @@
       <div class="nav-cell" data-target="practice">
         <div class="ic" style="background:rgba(45,192,125,0.15)">📿</div><div class="tx">修炼</div>
       </div>
-      <div class="nav-cell" data-target="hub">
-        <div class="ic" style="background:rgba(107,122,153,0.18)">🏦</div><div class="tx">面板</div>
+      <div class="nav-cell" data-target="jq">
+        <div class="ic" style="background:rgba(162,107,255,0.15)">🔬</div><div class="tx">jq 报告</div>
       </div>
     </nav>
     <div class="foot">V2·自动<br>15:35 更新</div>
@@ -348,6 +363,16 @@
           <div class="bk"><div class="n">1.25</div><div class="l">Sharpe</div></div>
         </div>
         <div class="bench-note">回测≠实盘。对照赛的意义正是检验：先验绩效在真实滑点、真实情绪环境中能兑现几成。</div>
+      </div>
+
+      <div class="card jqstrip">
+        <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap">
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:800;font-size:0.88rem;color:#f0f4fc">⚔️ 主战系统 · jivonQuant v0.4.2 双卡赛马</div>
+            <div class="mut" id="duelJqLine" style="margin-top:0.15rem">胜率 66.7%（OOS-2 73.7% PASS）· regime 加载中…</div>
+          </div>
+          <button class="btn-act" id="goJq" style="margin-left:auto">回测报告 →</button>
+        </div>
       </div>
     </section>
 
@@ -549,11 +574,74 @@
       </div>
     </section>
 
-    <!-- ⑦ 面板（hub.html 融入） -->
-    <section class="section" id="sec-hub">
-      <div class="panel-head"><h2>投资总面板</h2><span class="ph-sub">持仓 · 定投 · 信号 · 回测 七项目归一</span></div>
-      <div class="hub-frame-box"><iframe id="hubFrame" data-src="/hub.html" style="width:100%;height:calc(100vh - 130px);border:1px solid var(--border);border-radius:12px;background:#fff" loading="lazy"></iframe></div>
-      <div class="mut" style="margin-top:0.5rem;text-align:center">面板保留原纸质衬线排版，内嵌于终端内直接查看，无需跳转</div>
+    <!-- ⑦ jq 报告（jivonQuant 回测报告原生融入，取代 iframe 面板） -->
+    <section class="section" id="sec-jq">
+      <div class="panel-head"><h2>jivonQuant 策略回测报告</h2><span class="ph-sub">理论基础 + 五步验证证据链 · v0.4.2</span></div>
+
+      <!-- 结论卡 -->
+      <div class="card jqstrip">
+        <div style="font-weight:800;font-size:0.92rem;color:#f0f4fc">这套系统凭什么站得住</div>
+        <div style="font-size:0.76rem;color:var(--dim);margin-top:0.35rem;line-height:1.7">
+          胜率 <b class="num" style="color:#f0f4fc">66.7%</b>（Wilson 95% CI 45.4~82.8%）· 期望 <b class="num" style="color:var(--up)">+0.49%/笔</b> · 盈亏比 <b class="num" style="color:#f0f4fc">1.24</b> · 区间 <b class="num" style="color:var(--up)">+3.9%</b> vs 基准 +0.24% · 回撤 <b class="num" style="color:var(--down)">−9.13%</b>
+          <br>原池5 · 真实日K 300 根（2025-08→2026-11）。胜率不是「调出来的」，是「过滤与纪律结构」撑出来的——且亲手证伪了两个会赚快钱的假象。
+        </div>
+      </div>
+
+      <!-- 双卡赛马实况 -->
+      <div class="card">
+        <div class="panel-head" style="margin-bottom:0.4rem"><h2>双卡赛马 · 前瞻验证</h2><span class="ph-sub" id="jqRaceState">进行中</span></div>
+        <div style="font-size:0.74rem;color:var(--dim);line-height:1.7">
+          生产卡（原池5，OOS-2 胜率 73.7%）与挑战卡（宽基5，期望 +0.61/回撤 −4.48% 最浅）<b style="color:var(--text)">同参并行记录前瞻账本</b>，禁提前切换。
+        </div>
+        <div class="race-track"><div class="race-fill" id="raceFill"></div></div>
+        <div class="race-meta"><span id="raceDays">账本 0 / ≥20 交易日</span><span>审计闸：≥20 交易日 + picks 后按 fwd5 胜率+期望定夺</span></div>
+        <div id="jqNow" style="margin-top:0.55rem;font-size:0.74rem;color:var(--dim)">当前信号加载中…</div>
+      </div>
+
+      <!-- 五步证据链 -->
+      <div class="card">
+        <div class="panel-head" style="margin-bottom:0.5rem"><h2>五步验证证据链</h2><span class="ph-sub">从回测到前瞻</span></div>
+        <div class="evjq"><span class="eb">STEP 1</span><div class="et"><b>真实数据回测</b> — 腾讯网关真实日K 300 根（非合成数据），全参数网格 540 组合固化 ms0.75/hold5/trail1.5。全样本胜率 63.6% · 期望 +0.49%。</div></div>
+        <div class="evjq"><span class="eb">STEP 2</span><div class="et"><b>样本外滚动验证（walk-forward）</b> — 参数段内选定、段外直接跑：原池5 OOS-2 长窗胜率 <b>73.7% · 期望 +0.67 PASS</b>。样本外不掉链子，排除「参数拟合历史」的过拟合嫌疑。</div></div>
+        <div class="evjq"><span class="eb">STEP 3</span><div class="et"><b>扩池压力测试</b> — 18 标的四子池实测：联合池证伪（胜率 41.7%）、<b>分池全部正期望</b>（宽基5 +0.61 · 行业7 +0.25 · 科创3 +0.52 · 跨境商品3 +0.16）。</div></div>
+        <div class="evjq warn"><span class="eb">STEP 4</span><div class="et"><b>ML 临床级评估（TRIPOD 口径）</b> — AUC <b>0.478</b>（CI 0.439~0.520，不及抛硬币）、校准斜率 −0.014 失效 → 评级 C <b>降级为实验分支，禁止引用其信号</b>。不用「回测好看」的模型，用「证据站得住」的模型。</div></div>
+        <div class="evjq"><span class="eb">STEP 5</span><div class="et"><b>双卡赛马（进行中）</b> — 前瞻证据 &gt; 回测证据：两卡同参赛跑，账本攒够 20 交易日按 fwd5 胜率+期望双指标审计定夺。</div></div>
+      </div>
+
+      <!-- 对照实验 -->
+      <div class="card">
+        <div class="panel-head" style="margin-bottom:0.5rem"><h2>对照实验 · 亲手证伪的两个假象</h2><span class="ph-sub">诚实是系统的地基</span></div>
+        <div class="evjq warn"><span class="eb">假象 ①</span><div class="et"><b>「ML 模型能预测涨跌」→ 证伪</b><br>HistGB 模型 TRIPOD 口径全套评估：AUC 0.478、10 个置信度分箱全脱靶。ML 分支降级，生产卡回到线性打分卡。</div></div>
+        <div class="evjq warn"><span class="eb">假象 ②</span><div class="et"><b>「池越大越赚钱」→ 证伪</b><br>18 只联合池胜率 41.7%、期望 −0.14 —— 截面打分在联合池天然追高集中。分池全部正期望，扩池正确姿势=分池而非混池。</div></div>
+        <div class="evjq"><span class="eb">对照</span><div class="et"><b>随机标的+同出场结构：−24.17%/胜率 40.9%</b> vs 打分卡选股+同结构：+2.88%/胜率 63.6% → <b>出场结构抬胜率、选股卡防送死，缺一不可。</b></div></div>
+      </div>
+
+      <!-- 双卡对照表 -->
+      <div class="card">
+        <div class="panel-head" style="margin-bottom:0.4rem"><h2>双卡回测对照</h2><span class="ph-sub">同参不同池 · CI 每工作日刷新</span></div>
+        <div style="overflow-x:auto">
+        <table class="tbl soft" style="min-width:440px">
+          <tr><th>指标</th><th>生产卡 · 原池5</th><th>挑战卡 · 宽基5</th></tr>
+          <tr><td>胜率（Wilson CI95）</td><td class="num" id="jqOldWin">—</td><td class="num" id="jqWideWin">—</td></tr>
+          <tr><td>盈亏比</td><td class="num" id="jqOldPl">—</td><td class="num" id="jqWidePl">—</td></tr>
+          <tr><td>区间收益</td><td class="num" id="jqOldRet">—</td><td class="num" id="jqWideRet">—</td></tr>
+          <tr><td>最大回撤</td><td class="num" id="jqOldMdd">—</td><td class="num" id="jqWideMdd">—</td></tr>
+          <tr><td>期望/笔</td><td class="num" id="jqOldExp">—</td><td class="num" id="jqWideExp">—</td></tr>
+          <tr><td>样本笔数</td><td class="num" id="jqOldN">—</td><td class="num" id="jqWideN">—</td></tr>
+        </table>
+        </div>
+      </div>
+
+      <!-- 理论基础 -->
+      <div class="card">
+        <div class="panel-head" style="margin-bottom:0.4rem"><h2>理论基础 · 胜率工程学</h2><span class="ph-sub">幻方方法论蒸馏</span></div>
+        <div class="theory-li"><b>提高胜率的不是预测，是过滤</b> —— 大盘 regime 闸（沪深300 vs MA20/MA60 分 L0/L1/L2 三档仓位预算）在最危险的下跌段强制空仓。</div>
+        <div class="theory-li"><b>截断亏损，让利润奔跑</b> —— −8% 硬止损截断左尾；浮盈 +2% 先卖一半锁胜局，余仓 1.5% 移动止盈追趋势，5 日时间止损防资金沉淀。</div>
+        <div class="theory-li"><b>少即是多</b> —— 五因子打分卡（动量0.35/短动量0.15/成交额0.20/波动率0.20/乖离率0.10）只在池内排名取 Top-2，分散但不稀释。</div>
+        <div class="theory-li"><b>尊重 T+1</b> —— 回测严格模拟 A 股 ETF 当买次卖，杜绝虚高胜率。</div>
+        <div class="theory-li"><b>熔断器</b> —— 连亏 3 笔或单日亏 1% 自动停机冷却 5 日。</div>
+        <div class="mut" style="margin-top:0.55rem;line-height:1.7">方法论边界：n=21 笔 CI 较宽（45.4~82.8%），胜率点估计应读作区间；回测≠未来；无策略能保证稳定盈利——能保证的是胜率结构、风控纪律、熔断机制。策略改版/参数变更/切卡，拍板权归主任。<br>蒸馏来源：Qlib（因子注册表）· vn.py（事件驱动）· Freqtrade（熔断/风控）· Lean（对象模型）· 幻方（打分卡/胜率结构）· <a href="/hub.html" target="_blank" style="color:var(--blue)">完整面板 hub.html →</a></div>
+      </div>
     </section>
 
   </main>
@@ -564,7 +652,7 @@
 </div>
 
 <script>
-/* ===== 导航切换 + 面板 iframe 懒加载 ===== */
+/* ===== 导航切换 ===== */
 (function() {
   var cells = document.querySelectorAll('.nav-cell[data-target]');
   cells.forEach(function(c) {
@@ -575,11 +663,12 @@
       document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('show'); });
       document.getElementById('sec-' + t).classList.add('show');
       window.scrollTo(0, 0);
-      if (t === 'hub') {
-        var fr = document.getElementById('hubFrame');
-        if (fr && !fr.src) fr.src = fr.getAttribute('data-src');
-      }
     });
+  });
+  var go = document.getElementById('goJq');
+  if (go) go.addEventListener('click', function() {
+    var jq = document.querySelector('.nav-cell[data-target="jq"]');
+    if (jq) jq.click();
   });
 })();
 
@@ -639,6 +728,53 @@ function mergeResult() {
     .then(function(r) { if (!r.ok) throw 0; return r.json(); })
     .then(function(d) { render(d); })
     .catch(function() { render(null); });
+
+  /* ===== jq 报告：双卡对照 + 赛马进度 + 当前信号 ===== */
+  (function() {
+    var n2 = function(v, sign) { return v === null || v === undefined ? '—' : (sign && v > 0 ? '+' : '') + Number(v).toFixed(2); };
+    var pct = function(v, sign) { return v === null || v === undefined ? '—' : (sign && v > 0 ? '+' : '') + Number(v).toFixed(2) + '%'; };
+    var sg = function(id, txt) { var e = document.getElementById(id); if (e) e.innerText = txt; };
+    var paint = function(d) {
+      var b = (d && d.backtest) || {}, w = (d && d.wide5_card) || {}, c = (d && d.current) || {};
+      sg('jqOldWin', b.win_rate != null ? b.win_rate.toFixed(1) + '% (CI ' + (b.win_rate_ci95 || []).join('~') + ')' : '—');
+      sg('jqWideWin', w.win_rate != null ? w.win_rate.toFixed(1) + '% (CI ' + (w.win_rate_ci95 || []).join('~') + ')' : '—');
+      sg('jqOldPl', n2(b.profit_loss_ratio));
+      sg('jqWidePl', n2(w.profit_loss_ratio));
+      sg('jqOldRet', pct(b.total_return_pct, true));
+      sg('jqWideRet', pct(w.total_return_pct, true));
+      sg('jqOldMdd', pct(b.max_drawdown_pct));
+      sg('jqWideMdd', pct(w.max_drawdown_pct));
+      sg('jqOldExp', n2(b.expectancy, true));
+      sg('jqWideExp', n2(w.expectancy, true));
+      sg('jqOldN', b.n_trades != null ? b.n_trades + ' 笔' : '—');
+      sg('jqWideN', w.n_trades != null ? w.n_trades + ' 笔' : '—');
+      var now = document.getElementById('jqNow');
+      if (now && c.regime) {
+        var picks = (c.picks || []).map(function(x) { return x.symbol.slice(0, 6) + '(' + x.score + ')'; }).join(' / ');
+        var picksW = (c.picks_wide5 || []).map(function(x) { return x.symbol.slice(0, 6) + '(' + x.score + ')'; }).join(' / ');
+        now.innerHTML = '<b style="color:#f0f4fc">当前：</b>' + c.regime + ' · ' + (c.position_advice || '') +
+          (picks ? ' · 生产卡达标：' + picks : ' · 生产卡无达标（宁缺毋滥）') +
+          (picksW ? ' · 挑战卡达标：' + picksW : '');
+      }
+      var line = document.getElementById('duelJqLine');
+      if (line && c.regime) line.innerText = '胜率 66.7%（OOS-2 73.7% PASS）· ' + c.regime + ' · ' + (c.position_advice || '');
+    };
+    fetch('./jq_panel.json', { cache: 'no-store' })
+      .then(function(r) { if (!r.ok) throw 0; return r.json(); })
+      .then(paint)
+      .catch(function() {});
+    /* 赛马进度：前瞻账本记录条数 → ≥20 交易日进度条 */
+    fetch('./q75/jq_forward_log.jsonl', { cache: 'no-store' })
+      .then(function(r) { return r.text(); })
+      .then(function(t) {
+        var n = t.split('\n').filter(function(l) { return l.trim(); }).length;
+        var pctv = Math.min(100, Math.round(n / 20 * 100));
+        var fill = document.getElementById('raceFill');
+        if (fill) fill.style.width = pctv + '%';
+        sg('raceDays', '账本 ' + n + ' / ≥20 交易日' + (n >= 20 ? ' · 已达审计闸，待赛马审计' : ''));
+      })
+      .catch(function() {});
+  })();
 
   function render(d) {
     var h = (d && d.human) || {}, q = (d && d.quant) || {};
