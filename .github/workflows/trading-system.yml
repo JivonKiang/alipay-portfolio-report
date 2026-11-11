@@ -54,6 +54,13 @@ jobs:
           cp q75/q75_trades.json q75_trades.json 2>/dev/null || echo "[]" > q75_trades.json
           cp q75/q75_ledger.json q75_ledger.json 2>/dev/null || true
 
+      - name: Run jq forward logger (生产池线性卡 ms0.75 前瞻记录)
+        run: |
+          python3 q75/jq_forward_logger.py
+          # 前瞻验证账本同步到面板输出（手机端可查）
+          cp q75/jq_forward_log.jsonl output/jq_forward_log.jsonl 2>/dev/null || true
+          cp q75/jq_forward_log.jsonl jq_forward_log.jsonl 2>/dev/null || true
+
       - name: Commit updated data & dashboard
         run: |
           git config user.name "github-actions[bot]"
@@ -65,6 +72,7 @@ jobs:
           git add index.html
           git add cache/trading_history.json 2>/dev/null || true
           git add q75/q75_signal.json q75/q75_trades.json q75/q75_ledger.json 2>/dev/null || true
+          git add q75/jq_forward_log.jsonl q75_signal.json q75_trades.json q75_ledger.json jq_forward_log.jsonl 2>/dev/null || true
           git add q75_signal.json q75_trades.json q75_ledger.json 2>/dev/null || true
 
           git diff --staged --quiet || git commit -m "auto: trading system update $(TZ='Asia/Shanghai' date +'%Y-%m-%d %H:%M')"
