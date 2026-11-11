@@ -660,14 +660,12 @@ def main():
 
     # ===== 模块2: 标的筛选 =====
     print(f"\n[模块2] 板块扫描与标的筛选...")
-    all_signals = []
-    boards_ok = 0
 
-    for board_name, secid in BOARDS.items():
+    def _scan_board(board_name, secid):
+        """扫单板块，成功返回 signal dict，数据不足返回 None"""
         klines = fetch_eastmoney_kline(secid, count=130)
         if len(klines) < 25:
-            continue
-        boards_ok += 1
+            return None
         signal = detect_board_signal(klines, board_name)
         if signal:
             # 匹配基金
@@ -676,9 +674,38 @@ def main():
             if not funds:
                 # 没有预设基金的板块，尝试用相关性高的基金
                 signal["funds"] = FUND_MAP.get("半导体", [("008888", "国联安中证半导体ETF联接C")])[:1]
-            all_signals.append(signal)
+        return signal
 
-    print(f"  成功扫描: {boards_ok}/{len(BOARDS)} 板块")
+    all_signals = []
+    boards_ok = 0
+    failed_boards = []  # (name, secid) 限流/断连失败队列
+
+    for board_name, secid in BOARDS.items():
+        signal = _scan_board(board_name, secid)
+        if signal is not None:
+            boards_ok += 1
+            if signal:
+                all_signals.append(signal)
+        else:
+            failed_boards.append((board_name, secid))
+
+    # 冷却重试：东财限流窗口期批量断连时，隔 25s 再补扫一轮（2026-11-11）
+    if failed_boards:
+        print(f"  首轮失败 {len(failed_boards)} 板块，冷却 25s 后补扫...")
+        time.sleep(25)
+        retried = []
+        for board_name, secid in failed_boards:
+            signal = _scan_board(board_name, secid)
+            if signal is not None:
+                boards_ok += 1
+                if signal:
+                    all_signals.append(signal)
+            else:
+                retried.append((board_name, secid))
+        failed_boards = retried
+
+    print(f"  成功扫描: {boards_ok}/{len(BOARDS)} 板块"
+          + (f" (补扫后仍失败: {', '.join(n for n, _ in failed_boards)})" if failed_boards else ""))
     print(f"  原始信号: {len(all_signals)} 个")
 
     # 门控过滤
