@@ -132,7 +132,9 @@ def main():
         for sym, secid in all_pools.items():
             if not any(p['symbol'] == sym for p in pend):
                 continue
-            df = dfs_w5.get(sym) or dfs.get(sym)
+            df = dfs_w5.get(sym)
+            if df is None:
+                df = dfs.get(sym)
             if df is None or entry_date not in df.index:
                 continue
             idx = df.index.get_loc(entry_date)
