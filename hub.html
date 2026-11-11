@@ -90,6 +90,25 @@ tr:last-child td{border-bottom:none}
 .num{font-family:"JetBrains Mono",Consolas,monospace}
 .up{color:var(--up)}.down{color:var(--down)}
 
+/* 策略回测报告模块 */
+.rp-lead{font-size:13px;color:var(--ink-dim);margin-top:6px;max-width:none}
+.rp-lead b{color:var(--ink);font-weight:600}
+.rp-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:16px}
+.rp-h{font-size:12.5px;letter-spacing:.06em;color:var(--accent);margin-bottom:10px;font-weight:600}
+.rp-list{list-style:none}
+.rp-list li{font-size:12.8px;color:var(--ink-dim);padding:6px 0;border-bottom:1px dashed var(--line)}
+.rp-list li:last-child{border-bottom:none}
+.rp-list b{color:var(--ink);font-weight:600}
+.rp-table{margin-top:0}
+.rp-table td{font-size:12.3px}
+.ev-chain{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.ev{display:flex;gap:12px;align-items:flex-start;background:var(--accent-soft);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+.ev-badge{flex:none;font-family:"JetBrains Mono",Consolas,monospace;font-size:10.5px;letter-spacing:.08em;padding:3px 8px;border-radius:6px;background:var(--panel);border:1px solid var(--accent-line);color:var(--accent);margin-top:3px}
+.ev-badge.warn{color:var(--warn);border-color:var(--warn)}
+.ev-body{font-size:12.8px;color:var(--ink-dim);line-height:1.7}
+.ev-body b{color:var(--ink);font-weight:600}
+@media (max-width:760px){.rp-grid{grid-template-columns:1fr}}
+
 .foot-note{margin-top:14px;font-size:11.5px;color:var(--ink-faint)}
 a.plainlink{color:var(--accent);text-decoration:none}
 a.plainlink:hover{text-decoration:underline}
@@ -190,6 +209,71 @@ footer{border-top:1px solid var(--line);padding:22px 0 34px;display:flex;justify
       <div class="foot-note">真实日K 300 根回测（2025-08→2026-11）· 生产卡=原池5（OOS-2 胜率 73.7%）· 挑战卡=宽基5 · 赛马判据：前瞻账本 ≥20 交易日按 fwd5 胜率+期望定夺 · 五重防守：部分止盈/移动止盈/时间止损/硬止损/regime 闸 · <a class="plainlink" href="https://github.com/JivonKiang">代码仓库</a></div>
     </div>
 
+    <!-- 策略回测报告：理论基础 + 证据链 -->
+    <div class="card span12 reveal d2">
+      <div class="seal">证</div>
+      <div class="tag">Backtest Report · 理论基础与验证证据链 · jivonQuant v0.4.2</div>
+      <h3>策略回测报告 — 这套系统凭什么站得住</h3>
+      <p class="rp-lead">结论先行：<b>胜率 66.7%（Wilson 95% CI 45.4~82.8%）· 期望 +0.49%/笔 · 盈亏比 1.24 · 区间 +3.9% vs 基准 +0.24% · 最大回撤 −9.13%</b>（原池5，真实日K 300 根，2025-08→2026-11）。数字本身不神奇，神奇的是每个数字都经过了下面五步独立验证——<b>胜率不是「调出来的」，是「过滤与纪律结构」撑出来的</b>，且我们亲手证伪了两个会赚快钱的假象。</p>
+
+      <div class="rp-grid">
+        <div>
+          <div class="rp-h">Ⅰ · 理论基础 —— 胜率工程学（幻方方法论蒸馏）</div>
+          <ul class="rp-list">
+            <li><b>提高胜率的不是预测，是过滤</b> —— 大盘 regime 闸（沪深300 vs MA20/MA60 分 L0/L1/L2 三档仓位预算）在最危险的下跌段强制空仓。今天实测：510300 于 MA60 下方 → 系统给「空仓」而非「抄底」。</li>
+            <li><b>截断亏损，让利润奔跑</b> —— −8% 硬止损截断左尾；浮盈 +2% 先卖一半锁定胜局，余仓 1.5% 移动止盈追趋势，5 日时间止损防资金沉淀。</li>
+            <li><b>少即是多</b> —— 多因子打分卡（动量 0.35/短动量 0.15/成交额 0.20/波动率 0.20/乖离率 0.10）只在 5 只池内排名取 Top-2，分散但不稀释。</li>
+            <li><b>尊重 T+1</b> —— 回测引擎严格模拟 A 股 ETF 当买次卖规则，杜绝虚高胜率。</li>
+            <li><b>熔断器</b> —— 连亏 3 笔或单日亏 1% 自动停机冷却 5 日（幻方单策略熔断蒸馏）。</li>
+          </ul>
+        </div>
+        <div>
+          <div class="rp-h">Ⅱ · 对照实验 —— 亲手证伪的两个假象</div>
+          <ul class="rp-list">
+            <li><b>假象一：「ML 模型能预测涨跌」→ 证伪</b>。HistGB 模型 TRIPOD 口径临床级评估：<b>AUC 0.478</b>（CI 0.439~0.520，不及抛硬币），校准斜率 −0.014（失效），10 个置信度分箱全脱靶。诚实的处理：<b>ML 分支降级为实验分支</b>，生产卡回到线性打分卡。</li>
+            <li><b>假象二：「池越大越赚钱」→ 证伪</b>。18 只联合池回测 <b>胜率 41.7%、期望 −0.14</b>——截面打分在联合池会天然追高集中（Top-2 全是动量最热标的）。分池运行全部正期望，扩池正确姿势=分池而非混池。</li>
+            <li><b>对照组实验</b>：随机选标的+同出场结构 → <b>−24.17%/胜率 40.9%</b>；打分卡选股+同结构 → +2.88%/胜率 63.6%。<b>结论：出场结构抬胜率、选股卡防送死，缺一不可。</b></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="rp-h" style="margin-top:18px">Ⅲ · 五步验证证据链（从回测到前瞻）</div>
+      <div class="ev-chain">
+        <div class="ev"><span class="ev-badge">STEP 1</span><div class="ev-body"><b>真实数据回测</b> — 腾讯网关真实日K 300 根（非合成数据），全参数网格 540 组合中固化 ms0.75/hold5/trail1.5。全样本：胜率 63.6% · 期望 +0.49%。</div></div>
+        <div class="ev"><span class="ev-badge">STEP 2</span><div class="ev-body"><b>样本外滚动验证（walk-forward）</b> — 参数在段内选定、段外直接跑：<b>原池5 OOS-2 长窗胜率 73.7% · 期望 +0.67 PASS</b>（判据 OOS≥70%×IS 且期望>0）。样本外不掉链子，排除了「参数拟合历史」的过拟合嫌疑。</div></div>
+        <div class="ev"><span class="ev-badge">STEP 3</span><div class="ev-body"><b>扩池压力测试</b> — 18 标的四子池实测：联合池证伪（见上）、<b>分池全部正期望</b>（宽基5 exp+0.61/回撤 −4.48% · 行业7 +0.25 · 科创3 +0.52 · 跨境商品3 +0.16）。策略对池结构敏感但可解释、可拆分。</div></div>
+        <div class="ev"><span class="ev-badge warn">STEP 4</span><div class="ev-body"><b>ML 临床级评估（TRIPOD 口径）</b> — AUC/BootstrapCI/校准曲线/亚组/敏感性全套：AUC 0.478、种子扰动波动 0.0、LOSO 按标的留一 0.43~0.53。评级 <b>C → 降级为实验分支，禁止引用其信号</b>。这一步的意义：<b>我们不用「回测好看」的模型，我们用「证据站得住」的模型。</b></div></div>
+        <div class="ev"><span class="ev-badge">STEP 5</span><div class="ev-body"><b>双卡赛马（前瞻验证，进行中）</b> — 生产卡（原池5，OOS-2 win 73.7%）与挑战卡（宽基5，exp+0.61/回撤最浅）同参并行记录前瞻账本。<b>审计闸：账本 ≥20 交易日 + picks 后按 fwd5 胜率+期望双指标定夺，禁提前切换。</b>当下：<span id="rp-cur" style="color:var(--ink)">加载中…</span></div></div>
+      </div>
+
+      <div class="rp-grid" style="margin-top:18px">
+        <div>
+          <div class="rp-h">Ⅳ · 双卡回测对照（同参不同池）</div>
+          <table class="rp-table">
+            <tr><th>指标</th><th>生产卡 · 原池5</th><th>挑战卡 · 宽基5</th></tr>
+            <tr><td>胜率（Wilson CI95）</td><td class="num" id="rp-old-win">—</td><td class="num" id="rp-wide-win">—</td></tr>
+            <tr><td>盈亏比</td><td class="num" id="rp-old-pl">—</td><td class="num" id="rp-wide-pl">—</td></tr>
+            <tr><td>区间收益</td><td class="num" id="rp-old-ret">—</td><td class="num" id="rp-wide-ret">—</td></tr>
+            <tr><td>最大回撤</td><td class="num" id="rp-old-mdd">—</td><td class="num" id="rp-wide-mdd">—</td></tr>
+            <tr><td>期望/笔</td><td class="num" id="rp-old-exp">—</td><td class="num" id="rp-wide-exp">—</td></tr>
+            <tr><td>样本笔数</td><td class="num" id="rp-old-n">—</td><td class="num" id="rp-wide-n">—</td></tr>
+          </table>
+          <div class="foot-note">数据源 jq_panel.json（CI 每工作日刷新）· 静态结论部分来自 config.json 落账的验证记录</div>
+        </div>
+        <div>
+          <div class="rp-h">Ⅴ · 方法论边界（诚实声明）</div>
+          <ul class="rp-list">
+            <li><b>样本量有限</b>：n=21 笔，CI 较宽（45.4~82.8%），胜率点估计应读作「区间」而非单点。</li>
+            <li><b>无任何策略能保证稳定盈利</b>——幻方 2026-07 也有单月 −20%+ 回撤。能保证的是胜率结构、风控纪律、熔断机制。</li>
+            <li><b>回测≠未来</b>：一切以 ≥20 交易日前瞻账本审计为准，前瞻证据 &gt; 回测证据。</li>
+            <li><b>拍板权归主任</b>：策略改版/参数变更/切换生产卡，一律主任批准。</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="foot-note">蒸馏来源：Microsoft Qlib（因子注册表）· vn.py（事件驱动/时钟）· Freqtrade（风控保护器/熔断）· QuantConnect Lean（统一对象模型）· 幻方量化（多因子打分/熔断/胜率结构）—— 完整蒸馏矩阵见 <a class="plainlink" href="https://github.com/JivonKiang">jivonQuant 仓库 README</a></div>
+    </div>
+
     <!-- Q75 量化信号 -->
     <div class="card span12 reveal d3">
       <div class="seal">Q</div>
@@ -213,7 +297,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 34px;display:flex;justify
       <div class="strategy-list">
         <a class="strat" href="#" onclick="return false">
           <span class="ico">量</span>
-          <span class="body"><b>jivonQuant (jq)</b><span class="d">主战多因子打分系统 · 部分止盈+移动止盈结构 · 胜率 56.2% · 本页面顶部主卡</span></span>
+          <span class="body"><b>jivonQuant (jq)</b><span class="d">主战多因子打分系统 · 部分止盈+移动止盈结构 · 回测胜率 66.7%（详见上方回测报告模块）</span></span>
           <span class="st"><span class="v">running</span><span class="k">主战系统</span></span>
         </a>
         <a class="strat" href="https://jivonkiang.github.io/etf-quant-auto/">
@@ -322,6 +406,25 @@ footer{border-top:1px solid var(--line);padding:22px 0 34px;display:flex;justify
     }
     var s=d.structure||{}, st=document.getElementById('jq-structure');
     if(st){st.innerHTML='<b>五重防守：</b>'+[s.partial_tp,s.trailing,s.time_stop,s.hard_stop,s.regime_gate].filter(Boolean).join(' · ')}
+    /* 回测报告模块：双卡对照表 + 当前 regime 行 */
+    function sg(id,txt){var e=document.getElementById(id);if(e)e.textContent=txt}
+    var w5=d.wide5_card||{};
+    function pct(v,sign){return v==null?'—':(sign&&v>0?'+':'')+v.toFixed(2)+'%'}
+    function n2(v,sign){return v==null?'—':(sign&&v>0?'+':'')+v.toFixed(2)}
+    sg('rp-old-win', b.win_rate!=null?b.win_rate.toFixed(1)+'% (CI '+(b.win_rate_ci95||[]).join('~')+')':'—');
+    sg('rp-wide-win', w5.win_rate!=null?w5.win_rate.toFixed(1)+'% (CI '+(w5.win_rate_ci95||[]).join('~')+')':'—');
+    sg('rp-old-pl', n2(b.profit_loss_ratio));
+    sg('rp-wide-pl', n2(w5.profit_loss_ratio));
+    sg('rp-old-ret', pct(b.total_return_pct,true));
+    sg('rp-wide-ret', pct(w5.total_return_pct,true));
+    sg('rp-old-mdd', pct(b.max_drawdown_pct));
+    sg('rp-wide-mdd', pct(w5.max_drawdown_pct));
+    sg('rp-old-exp', n2(b.expectancy,true));
+    sg('rp-wide-exp', n2(w5.expectancy,true));
+    sg('rp-old-n', b.n_trades!=null?b.n_trades+' 笔':'—');
+    sg('rp-wide-n', w5.n_trades!=null?w5.n_trades+' 笔':'—');
+    var rc=document.getElementById('rp-cur');
+    if(rc&&c.regime){rc.textContent=c.regime+' · '+(c.position_advice||'')}
   }).catch(function(){
     var el=document.getElementById('jq-current');
     if(el)el.textContent='jq 数据尚未生成（首次 CI 运行后可用）';
