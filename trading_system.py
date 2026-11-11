@@ -108,6 +108,26 @@ SINGLE_MAX_RATIO = 0.30   # 单票上限 30%
 # 统一费率管理器（C类基金）
 FEE_MANAGER = FeeManager()
 
+# 板块K线落盘缓存（2026-11-11：东财对 GitHub Runner 出口 IP 常态限流，
+# 板块码 90.BKxxxx 无腾讯备源 → 增量缓存持久化到仓库，限流日也能算指标）
+BOARD_KLINE_CACHE = os.path.join(SCRIPT_DIR, "cache", "ts_board_kline_cache.json")
+
+
+def _load_board_cache():
+    if os.path.exists(BOARD_KLINE_CACHE):
+        try:
+            with open(BOARD_KLINE_CACHE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {"boards": {}}
+
+
+def _save_board_cache(cache):
+    os.makedirs(os.path.dirname(BOARD_KLINE_CACHE), exist_ok=True)
+    with open(BOARD_KLINE_CACHE, "w", encoding="utf-8") as f:
+        json.dump(cache, f, ensure_ascii=False, indent=1)
+
 
 # ===================== 数据获取 =====================
 
@@ -603,8 +623,8 @@ def run_risk_suite(positions_file):
 
 # ===================== 模块5: 动态优化 =====================
 
-def update_signal_history(signals, exit_signals, env):
-    """记录信号历史供复盘"""
+def update_signal_history(signals, exit_signals, env, scanned=None):
+    """记录信号历史供复盘（2026-11-11：加 scanned 字段，限流日残缺扫描可追溯）"""
     history_file = os.path.join(CACHE_DIR, "trading_history.json")
     history = []
     if os.path.exists(history_file):
@@ -618,6 +638,7 @@ def update_signal_history(signals, exit_signals, env):
         "environment": env["environment"],
         "environment_cn": env["environment_cn"],
         "position_ratio": env["total_position_ratio"],
+        "scanned": scanned,
         "buy_signals": len(signals),
         "exit_signals": len(exit_signals),
         "signals": [{
@@ -662,19 +683,55 @@ def main():
     print(f"\n[模块2] 板块扫描与标的筛选...")
 
     def _scan_board(board_name, secid):
-        """扫单板块，成功返回 signal dict，数据不足返回 None"""
+        """扫单板块：东财直取 → 失败时回退落盘缓存（+缓存增量合并）
+        成功返回 signal dict（缓存回退时用缓存K线），全败返回 None"""
         klines = fetch_eastmoney_kline(secid, count=130)
-        if len(klines) < 25:
-            return None
-        signal = detect_board_signal(klines, board_name)
-        if signal:
-            # 匹配基金
-            funds = match_funds(signal)
-            signal["funds"] = funds
-            if not funds:
-                # 没有预设基金的板块，尝试用相关性高的基金
-                signal["funds"] = FUND_MAP.get("半导体", [("008888", "国联安中证半导体ETF联接C")])[:1]
-        return signal
+        if len(klines) >= 25:
+            # 写入板块OHLC缓存（保留最近160根，指标需130根留余量）
+            try:
+                bc = _load_board_cache()
+                bc.setdefault("boards", {})[board_name] = {
+                    "secid": secid,
+                    "dates": [k["date"] for k in klines][-160:],
+                    "open": [k["open"] for k in klines][-160:],
+                    "close": [k["close"] for k in klines][-160:],
+                    "high": [k["high"] for k in klines][-160:],
+                    "low": [k["low"] for k in klines][-160:],
+                }
+                _save_board_cache(bc)
+            except Exception as _e:
+                print(f"  [WARN] cache write {board_name}: {type(_e).__name__}")
+            signal = detect_board_signal(klines, board_name)
+            if signal:
+                # 匹配基金
+                funds = match_funds(signal)
+                signal["funds"] = funds
+                if not funds:
+                    # 没有预设基金的板块，尝试用相关性高的基金
+                    signal["funds"] = FUND_MAP.get("半导体", [("008888", "国联安中证半导体ETF联接C")])[:1]
+            return signal
+
+        # --- 东财失败：板块码无备源，回退落盘缓存 ---
+        try:
+            bc = _load_board_cache().get("boards", {}).get(board_name) or {}
+            cached_dates = bc.get("dates") or []
+            if len(cached_dates) >= 25:
+                print(f"  [{board_name}] 东财限流 → 用缓存K线({len(cached_dates)}根)")
+                klines = [{"date": d, "open": o, "close": c, "high": h, "low": lo,
+                           "volume": 0.0, "amount": 0.0}
+                          for d, o, c, h, lo in zip(cached_dates, bc["open"], bc["close"],
+                                                    bc["high"], bc["low"])]
+                signal = detect_board_signal(klines, board_name)
+                if signal:
+                    signal["from_cache"] = True
+                    funds = match_funds(signal)
+                    signal["funds"] = funds
+                    if not funds:
+                        signal["funds"] = FUND_MAP.get("半导体", [("008888", "国联安中证半导体ETF联接C")])[:1]
+                return signal if signal is not None else {}
+        except Exception as _e:
+            print(f"  [WARN] cache read {board_name}: {type(_e).__name__}")
+        return None
 
     all_signals = []
     boards_ok = 0
@@ -767,7 +824,7 @@ def main():
 
     # ===== 模块5: 动态优化 =====
     print(f"\n[模块5] 记录历史...")
-    history = update_signal_history(actionable_signals, exit_signals, env)
+    history = update_signal_history(actionable_signals, exit_signals, env, scanned=boards_ok)
     print(f"  累计记录: {len(history)} 个交易日")
 
     # ===== 构建输出 =====
