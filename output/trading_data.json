@@ -1,6 +1,6 @@
 {
-  "updated": "2026-11-11T10:13:10+08:00",
-  "run_time": "10:13",
+  "updated": "2026-11-11T10:39:16+08:00",
+  "run_time": "10:39",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
@@ -172,15 +172,15 @@
     "exit_signals": [],
     "sell_alerts": [
       {
-        "id": "pe_l2_上证50_2026-11-11",
+        "id": "pe_l1_上证50_2026-11-11",
         "type": "pe",
-        "severity": "warning",
+        "severity": "info",
         "index": "上证50",
-        "title": "上证50 高估 — 建议减仓",
-        "message": "上证50 PE=11.58（百分位81%），建议减仓 50%",
-        "pe": 11.58,
-        "reduce_percent": 50,
-        "action": "reduce"
+        "title": "上证50 偏高 — 关注市场",
+        "message": "上证50 PE=11.54（百分位80%），做好减仓准备",
+        "pe": 11.54,
+        "reduce_percent": 0,
+        "action": "watch"
       }
     ],
     "position_alerts": [],
@@ -222,20 +222,20 @@
     "fee_calendar": [],
     "index_pe": {
       "创业板指": {
-        "pe": 28.29,
-        "pe_percentile": 0.085
+        "pe": 28.99,
+        "pe_percentile": 0.114
       },
       "沪深300": {
-        "pe": 13.46,
-        "pe_percentile": 0.664
+        "pe": 13.45,
+        "pe_percentile": 0.662
       },
       "上证50": {
-        "pe": 11.58,
-        "pe_percentile": 0.811
+        "pe": 11.54,
+        "pe_percentile": 0.795
       },
       "中证500": {
-        "pe": 28.12,
-        "pe_percentile": 0.613
+        "pe": 28.38,
+        "pe_percentile": 0.626
       }
     },
     "rules": {
@@ -252,8 +252,8 @@
     "history_days": 180,
     "recent_environments": [
       "bear",
-      "bear",
       "bear_lean",
+      "bear",
       "bear",
       "bear",
       "bear",
