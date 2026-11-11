@@ -88,21 +88,6 @@ jobs:
           cp q75/jq_forward_log.jsonl output/jq_forward_log.jsonl 2>/dev/null || true
           cp q75/jq_forward_log.jsonl jq_forward_log.jsonl 2>/dev/null || true
 
-      - name: Data integrity gate (block deploy on incomplete scan)
-        run: |
-          # 2026-11-11 闸门：防东财限流时残缺数据(如 scanned=19)上线面板
-          # 位置在 q75/前瞻记录之后：板块数据残缺不应连坐 q75（腾讯源独立存活）
-          python3 - <<'EOF'
-          import json, sys
-          with open("output/trading_data.json", encoding="utf-8") as f:
-              d = json.load(f)
-          sel = (d.get("module_2_selection") or {})
-          scanned = sel.get("scanned") or 0
-          if scanned < 20:
-              sys.exit(f"GATE FAIL: module_2_selection.scanned={scanned} < 20 (data incomplete, refusing to publish)")
-          print(f"GATE PASS: scanned={scanned}")
-          EOF
-
       - name: Commit updated data & dashboard
         run: |
           git config user.name "github-actions[bot]"
@@ -121,6 +106,21 @@ jobs:
 
           git diff --staged --quiet || git commit -m "auto: trading system update $(TZ='Asia/Shanghai' date +'%Y-%m-%d %H:%M')"
           git push
+
+      - name: Data integrity gate (block deploy on incomplete scan)
+        run: |
+          # 2026-11-11 闸门：残缺板块数据不许上 Pages 面板，但 commit 照常
+          # （q75 账本/前瞻日志/板块缓存是逐日累积资产，拦截 commit 会造成永久缺口）
+          python3 - <<'EOF'
+          import json, sys
+          with open("output/trading_data.json", encoding="utf-8") as f:
+              d = json.load(f)
+          sel = (d.get("module_2_selection") or {})
+          scanned = sel.get("scanned") or 0
+          if scanned < 20:
+              sys.exit(f"GATE FAIL: module_2_selection.scanned={scanned} < 20 (data incomplete, panel NOT deployed)")
+          print(f"GATE PASS: scanned={scanned}")
+          EOF
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
