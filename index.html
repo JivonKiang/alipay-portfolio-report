@@ -681,6 +681,7 @@ function mergeResult() {
       document.getElementById('posUpdated').innerText = '当前空仓';
       return;
     }
+    document.getElementById('posUpdated').innerText = '当前持仓 ' + list.length + ' 只';
     empty.style.display = 'none';
     function n2(v, d) { var x = parseFloat(v); return isNaN(x) ? '—' : x.toFixed(d === undefined ? 2 : d); }
     function n0(v) { var x = parseFloat(v); return isNaN(x) ? '—' : x.toLocaleString('en-US', {maximumFractionDigits: 0}); }
