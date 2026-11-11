@@ -12,6 +12,9 @@ permissions:
 jobs:
   scan:
     runs-on: ubuntu-latest
+    # 2026-11-12: naive datetime.now() 在 UTC Runner 偏 8h
+    env:
+      TZ: Asia/Shanghai
     steps:
       - uses: actions/checkout@v4
 

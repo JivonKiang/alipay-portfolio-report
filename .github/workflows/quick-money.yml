@@ -12,6 +12,9 @@ permissions:
 jobs:
   scan:
     runs-on: ubuntu-latest
+    # 2026-11-12: naive datetime.now() 在 UTC Runner 偏 8h（quick_money.py 用 now().hour 判盘中盘后）
+    env:
+      TZ: Asia/Shanghai
     steps:
       - name: Checkout
         uses: actions/checkout@v4

@@ -11,6 +11,11 @@ on:
 jobs:
   run:
     runs-on: ubuntu-latest
+    # 2026-11-12: Runner 默认 UTC，naive datetime.now()/date.today() 全偏 8h
+    #（实锤: 面板 updated 标 16:26 实际北京 00:26; q75_signal 记 11-11 而 forward_log 记 11-12 口径分裂）
+    # job 级 TZ 使全部 Python naive 时间与 shell date 均为北京墙钟时间
+    env:
+      TZ: Asia/Shanghai
     permissions:
       contents: write
       pages: write

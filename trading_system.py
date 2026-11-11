@@ -829,7 +829,9 @@ def main():
 
     # ===== 构建输出 =====
     output = {
-        "updated": now.strftime("%Y-%m-%dT%H:%M:%S+08:00"),
+        # 2026-11-12: 硬编码 +08:00 在 UTC Runner 上错标 8h（实锤 16:26 vs 北京 00:26）
+        # 改 astimezone 自标真实偏移；workflow 已加 TZ=Asia/Shanghai，此处输出 +08:00
+        "updated": now.astimezone().isoformat(timespec="seconds"),
         "run_time": now.strftime("%H:%M"),
         "total_assets": TOTAL_ASSETS,
         "total_flexible": TOTAL_FLEXIBLE,
