@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JIVONLAB 量化终端 · 人机对照赛</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
 <style>
   :root {
     --bg:#0e1320; --bg2:#121828; --panel:#161d31; --panel2:#1a2238;
@@ -67,11 +68,11 @@
   @keyframes fadein { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:none; } }
 
   .panel-head {
-    display:flex; align-items:center; gap:0.5rem; margin:0.2rem 0 0.75rem;
+    display:flex; align-items:center; gap:0.5rem; margin:0.2rem 0 0.75rem; flex-wrap:wrap; row-gap:0.1rem;
   }
-  .panel-head::before { content:''; width:4px; height:16px; border-radius:2px; background:var(--gold); }
-  .panel-head h2 { font-size:1rem; font-weight:800; color:#f0f4fc; }
-  .panel-head .ph-sub { font-size:0.7rem; color:var(--dim); margin-left:auto; }
+  .panel-head::before { content:''; width:4px; height:16px; border-radius:2px; background:var(--gold); flex-shrink:0; }
+  .panel-head h2 { font-size:1rem; font-weight:800; color:#f0f4fc; white-space:nowrap; flex-shrink:0; max-width:100%; overflow:hidden; text-overflow:ellipsis; }
+  .panel-head .ph-sub { font-size:0.7rem; color:var(--dim); margin-left:auto; min-width:0; word-break:break-word; }
 
   .card { background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:1rem; margin-bottom:0.9rem; }
 
@@ -187,6 +188,9 @@
     .vs-wrap .vs-title { font-size:1.12rem; }
     .vs-wrap .vs-title .vsx { font-size:0.85rem; margin:0 0.3rem; }
     .kpi4 { grid-template-columns:repeat(2,1fr); }
+    .panel-head .ph-sub { flex-basis:100%; margin-left:0; }
+    .tbl td { white-space:normal; }
+    .ech-box { height:190px; }
   }
 
   /* ===== 文献实验室板块 ===== */
@@ -232,6 +236,20 @@
   .tbl.soft td { white-space:normal; }
   .tbl.soft td .mut { font-size:0.66rem; }
   .jqstrip { border:1px solid rgba(162,107,255,0.4); background:linear-gradient(135deg, rgba(162,107,255,0.08), rgba(255,176,46,0.04)); }
+
+  /* ===== 今日决策卡 + 图文对照（v0.4.3） ===== */
+  .dec-action { font-size:1rem; font-weight:800; color:var(--gold); background:rgba(255,176,46,0.08); border:1px solid rgba(255,176,46,0.3); border-radius:10px; padding:0.65rem 0.85rem; margin-bottom:0.6rem; }
+  .dec-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.55rem; }
+  @media (max-width:680px) { .dec-grid { grid-template-columns:1fr; } }
+  .dec-cell { background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:9px; padding:0.55rem 0.7rem; font-size:0.72rem; line-height:1.75; color:var(--dim); }
+  .dec-cell i { display:block; font-style:normal; font-weight:700; color:var(--text); font-size:0.76rem; margin-bottom:0.3rem; }
+  .dec-cell b { color:var(--text); margin-right:0.35rem; }
+  .dec-why { font-size:0.72rem; color:var(--dim); line-height:1.75; margin-top:0.6rem; padding:0.5rem 0.7rem; background:rgba(162,107,255,0.06); border-left:3px solid var(--purple); border-radius:6px; }
+  .dec-why b { color:#c9a4ff; }
+  .chart-t { font-size:0.72rem; color:var(--dim); font-weight:700; margin:0.7rem 0 0.25rem; }
+  .chart-t:first-of-type { margin-top:0.15rem; }
+  .ech-box { height:230px; border:1px solid var(--border); border-radius:8px; background:#0a0f1a; overflow:hidden; }
+  .ech-loading { height:100%; display:flex; align-items:center; justify-content:center; color:var(--dim); font-size:0.75rem; }
 
   .footer { text-align:center; padding:1.2rem 0 0.6rem; color:#454f66; font-size:0.66rem; border-top:1px solid var(--border); margin-top:1.2rem; }
 </style>
@@ -516,55 +534,50 @@
 
       <div class="card">
         <div class="panel-head" style="margin-bottom:0.5rem"><h2>① 动量因子：从「是否失效」到「何时失效」</h2><span class="lit-ev a">A · JPM 2025</span></div>
-        <div class="theory-li"><b>159 年 × 46 国审计</b> — Baltussen 等（JPM 2025, 52(3)）：价格动量 1927–2024 年化 9.24%（t=4.31），4096 种构建规格 Sharpe 全为正，<b>未见发表后衰减</b>；但最大回撤 −88.4%，按波动率缩放可砍半不损收益。</div>
-        <div class="theory-li"><b>动量已多维化</b> — 锚定动量（52 周高点距离）贡献传统动量利润 80% 以上；残差动量 t 值 5.50 优于纯价格动量 4.31；等权多维组合对纯价格动量有 1.76%/年显著 alpha。</div>
-        <div class="theory-li"><b>中国市场：动量是状态依赖的</b> — 李松等（《金融经济学研究》2025）：动量收益由「构建期—持有期」联合市场状态决定，<b>趋势市有动量、震荡市没有</b>——A 股「动量消失」源于缺乏长期趋势演化，而非因子本身失效。</div>
-        <div class="lit-map"><b>→ jq 映射</b>：regime 闸（L0/L1/L2）正是「先判状态再谈动量」的工程实现——熊市空仓、震荡慎用、趋势才开卡；五因子打分卡的动量权重 0.35 恰与文献「多维动量」方向一致。</div>
+        <div class="theory-li"><b>159 年×46 国审计</b> — Baltussen（JPM 2025）：动量 1927–2024 年化 9.24%，4096 种规格 Sharpe 全为正，<b>未见衰减</b>；但最大回撤 −88.4%，波动率缩放可砍半不损收益。锚定动量（52周高点）贡献传统动量 80% 以上利润。</div>
+        <div class="theory-li"><b>中国市场：动量是状态依赖的</b> — 李松等（2025）：趋势市有动量、震荡市没有——A 股「动量消失」源于缺乏长期趋势，而非因子失效。</div>
+        <div class="lit-map"><b>→ jq 映射</b>：regime 闸正是「先判状态再谈动量」——熊市空仓、震荡慎用、趋势才开卡。</div>
         <div class="lit-src">来源：The Journal of Portfolio Management 2025, 52(3)（Baltussen, Dom, Van Vliet, Vidojevic）；《金融经济学研究》2025 年第 4 期（李松、水晶石、王玉峰）。</div>
       </div>
 
       <div class="card">
         <div class="panel-head" style="margin-bottom:0.5rem"><h2>② 因子拥挤：alpha 衰减与崩盘预测</h2><span class="lit-ev b">B · arXiv 2025</span></div>
-        <div class="theory-li"><b>双曲衰减律</b> — Lee（arXiv:2512.11913）：因子 alpha 按 α(t)=K/(1+λt) 衰减，动量拟合 R²=0.65；<b>2015 年后拥挤加速</b>（与因子 ETF 规模增长 ρ=−0.63），样本外模型高估剩余 alpha（预测 0.30 vs 实际 0.15）。</div>
-        <div class="theory-li"><b>拥挤能预测崩盘、不能预测均值</b> — 拥挤的反转因子崩盘概率高 1.7–1.8 倍；拥挤动量反而更低（0.38x, p=0.006）→ 拥挤度指标应用于<b>风险管理而非选因子</b>。</div>
-        <div class="lit-map"><b>→ jq 映射</b>：打分卡取池内 Top-2 而非全池满配，本身就是低拥挤结构；熔断器（连亏 3 笔停机）承接「崩盘风险管理」思想——拥挤时代宁可少赚不可连亏。</div>
+        <div class="theory-li"><b>双曲衰减律</b> — Lee（arXiv 2025）：alpha 按 α(t)=K/(1+λt) 衰减，2015 年后拥挤加速；样本外模型高估剩余 alpha（预测 0.30 vs 实际 0.15）。</div>
+        <div class="theory-li"><b>拥挤能预测崩盘、不能预测均值</b> — 拥挤的反转因子崩盘概率高 1.7–1.8 倍 → 拥挤度应用于<b>风险管理而非选因子</b>。</div>
+        <div class="lit-map"><b>→ jq 映射</b>：打分卡只取 Top-2（低拥挤结构）；熔断器承接「崩盘风险」思想——拥挤时代宁可少赚不可连亏。</div>
         <div class="lit-src">来源：arXiv:2512.11913（Lee, 2025）— 工作论文，未经同行评审，方向性参考。</div>
       </div>
 
       <div class="card">
         <div class="panel-head" style="margin-bottom:0.5rem"><h2>③ 机器学习清算：成本与微盘，不是算法</h2><span class="lit-ev a">A · Management Science 2023 + SSRN 2026</span></div>
-        <div class="theory-li"><b>GKX(2020) 被系统复核</b> — Avramov 等（Management Science 2023）：剔除微盘/无评级/降级样本后 ML 信号缩水 64%/52%/77%，空头端受损最重；随机森林 Sharpe 2.19 公平检验下降至 0.86，而<b>近乎线性的 IPCA 最稳健（3.39→3.21）</b>。</div>
-        <div class="theory-li"><b>换手是致命项</b> — GKX 类模型月换手 98%–166%，30bp 成本下每年 3.6% 摩擦即可吃掉整个非线性溢价；无泄漏含成本基准（SSRN 6952859）：最好 MLP Sharpe 0.96 vs 无 ML 基线 0.94 vs 朴素等权 0.93，<b>ML 交易成本 15.13% vs 4.67%</b>。</div>
-        <div class="theory-li"><b>中国镜像</b> — 黄德金等（《投资研究》2025）：177 特征、2005–2022，机器学习不一定优于 OLS；<b>样本外 R² 与多空 Sharpe 无正向对应</b>——只报 R² 的研究要打折。</div>
-        <div class="lit-map"><b>→ jq 映射</b>：ML 分支 TRIPOD 评估 AUC 0.478 降级，与文献「线性基线打平 ML」结论完全同向；jq 固定 ms0.75/hold5 低换手参数 + Top-2 集中持仓，正是文献推荐的成本友好结构。</div>
+        <div class="theory-li"><b>GKX(2020) 被系统复核</b> — Avramov（MS 2023）：剔除微盘/降级样本后 ML 信号缩水 64%–77%；随机森林 Sharpe 2.19→0.86，<b>近乎线性的 IPCA 最稳健</b>。</div>
+        <div class="theory-li"><b>换手是致命项</b> — ML 交易成本 15.13% vs 基线 4.67%：30bp 成本即可吃掉整个非线性溢价；<b>只报样本外 R² 的研究要打折</b>（R² 与 Sharpe 无正向对应）。</div>
+        <div class="lit-map"><b>→ jq 映射</b>：ML 分支已降级（AUC 0.478）；固定 ms0.75/hold5 低换手 + Top-2 集中持仓，正是文献推荐的成本友好结构。</div>
         <div class="lit-src">来源：Management Science 2023（Avramov, Cheng, Metzker）；SSRN 6952859（2026）；《投资研究》2025 年第 9 期（黄德金、韩博昱、王熙）。</div>
       </div>
 
       <div class="card">
         <div class="panel-head" style="margin-bottom:0.5rem"><h2>④ Regime 识别：状态必须「可交易」</h2><span class="lit-ev a">A · JRFM 2026 + 美联储 2025</span></div>
-        <div class="theory-li"><b>分层 HMM 新方向</b> — AH-HMM（JRFM 2026）：在快状态之上加慢变「元状态」（VIX 划分不确定环境），2000–2024 三大指数样本外一步预测与 VaR 覆盖不劣于固定转移 HMM。</div>
-        <div class="theory-li"><b>三大失效源</b> — 检测滞后（等模型确信时行情已过半）、状态过多（样本切薄）、标签抖动（换手失控）→ 解法：<b>最小驻留时间 + 滞回带</b>（进出阈值不同）。<b>严禁用平滑概率交易</b>——必须 filtered probability，且信号滞后一根 K 线。</div>
-        <div class="theory-li"><b>简单模型未必输</b> — 美联储 2025：可解释的 regime-switching HAR 在有限预测变量下<b>持续优于各类 ML 方法</b>。</div>
-        <div class="lit-map"><b>→ jq 映射</b>：regime 闸用 MA20/MA60 双阈值天然构成滞回带（上穿才转 L0、下穿才降 L2）；三档而非 HMM 多状态，规避样本切薄；每日收盘后信号次日执行，正是文献要求的「滞后一根 K 线」。</div>
+        <div class="theory-li"><b>三大失效源</b> — 检测滞后、状态过多（样本切薄）、标签抖动（换手失控）→ 解法：<b>最小驻留时间 + 滞回带</b>；<b>严禁用平滑概率交易</b>。</div>
+        <div class="theory-li"><b>简单模型未必输</b> — 美联储 2025：可解释的 regime-switching HAR <b>持续优于各类 ML</b>。</div>
+        <div class="lit-map"><b>→ jq 映射</b>：MA20/MA60 双阈值天然构成滞回带；三档而非多状态；每日收盘信号次日执行=文献要求的「滞后一根 K 线」。</div>
         <div class="lit-src">来源：Journal of Risk and Financial Management 2026, 19(1):15；美联储研究 2025（已实现波动率预测比较）。</div>
       </div>
 
       <div class="card">
         <div class="panel-head" style="margin-bottom:0.5rem"><h2>⑤ 止盈止损：证据高度「条件化」</h2><span class="lit-ev a">A · Quantitative Finance 2024 + JRFM 2026</span></div>
-        <div class="theory-li"><b>趋势市止损有效、震荡市反而有害</b> — Xiang &amp; Deng（Quantitative Finance 2024）：Hurst&gt;0.5（趋势态）止损提升风险调整收益，均值回复态反而降低；<b>最优止损宽度与波动率挂钩</b>——VIX&gt;25 时扩张到 3–4×ATR，按 regime 自适应后 Sharpe 0.62→0.71。</div>
-        <div class="theory-li"><b>非对称 TP/SL 只在本就盈利的模型上增益</b> — Kang（JRFM 2026）：多数 ATR 配置反而降低利润，改进集中在「较高止盈+中等止损」且依赖入场参数兼容性。</div>
-        <div class="theory-li"><b>警惕「最优参数」幻觉</b> — 点对时回测（J. Math. 2026）：NASDAQ-100 上 14 组 ATR 乘数的 CAGR 几乎不变（10.28%–10.39%），PBO=0.935 → ATR 乘数是<b>结构性冗余参数</b>，应做区间化理解而非单点优化；追踪止损全样本净效应接近中性。</div>
-        <div class="lit-map"><b>→ jq 映射</b>：−8% 硬止损 + trail 1.5% 追踪 + hold5 时间止损的三重出场结构，落在文献「趋势态止损有效」区间；regime 闸先过滤掉震荡市，出场结构才在有利状态下工作；不迷信单点参数（540 组网格取稳态非极值）。</div>
+        <div class="theory-li"><b>趋势市止损有效、震荡市有害</b> — Xiang &amp; Deng（QF 2024）：Hurst&gt;0.5 时止损提升收益，均值回复态反而降低；<b>最优止损宽度随波动率自适应</b>（VIX&gt;25 扩到 3–4×ATR，Sharpe 0.62→0.71）。</div>
+        <div class="theory-li"><b>警惕「最优参数」幻觉</b> — NASDAQ-100 上 14 组 ATR 乘数 CAGR 几乎不变，PBO=0.935 → 乘数是<b>结构性冗余参数</b>，应区间化理解。</div>
+        <div class="lit-map"><b>→ jq 映射</b>：−8% 硬止损 + trail 1.5% 追踪 + hold5 时间止损落在文献有效区间；不迷信单点参数（540 组网格取稳态非极值）。</div>
         <div class="lit-src">来源：Quantitative Finance 2024（Xiang, Deng）；JRFM 2026, 19:554（Kang）；J. Math. 14(12):2182（点对时回测）；UCLouvain 硕士论文 2024（André）。</div>
       </div>
 
       <div class="card">
         <div class="panel-head" style="margin-bottom:0.5rem"><h2>⑥ 交易纪律：行为金融的量化画像</h2><span class="lit-ev a">A · SSRN 2025 + CEPR 2025</span></div>
-        <div class="theory-li"><b>处置效应是稳定特质</b> — 《The Fixed Disposition Effect》（SSRN 5243056）：处置效应跨时间跨情境持续，所有投资者在<b>零收益阈值处卖出概率骤升</b>；大额亏损经历使其提高约 23%（Yeung 等，SSRN 5290196，19 万中国散户）。</div>
-        <div class="theory-li"><b>散户逆向交易创造因子</b> — Luo 等（CEPR DP20487）：散户在盈余惊喜后逆向交易是 PEAD 与动量的推手 → <b>散户行为结构本身就是可交易的横截面状态变量</b>。</div>
-        <div class="theory-li"><b>FOMO 的根因是「无交易计划」</b> — 中国期货 773 名活跃交易者调查（TPM 2025）：96.99% 经历过完整 FOMO 循环，止损失败占归因 42.7%，<b>62% 缺乏有纪律的交易计划才是根本成因</b>。</div>
-        <div class="theory-li"><b>过度交易代价仍是基准</b> — Barber-Odean 结论 2025 年仍被验证：最活跃交易者年化落后 6.5pp；DALBAR 2025：2024 平均投资者落后 S&amp;P 500 达 848bp。</div>
-        <div class="lit-map"><b>→ jq 映射</b>：原「修炼」模块练的「手不抖」，文献给的答案是结构而非意志——jq 把纪律全部固化进系统：regime 闸替代临场判断仓位、硬止损替代扛单决心、熔断器替代「再赌一把」、宁缺毋滥替代 FOMO 追高。规则替代意志力，正是行为金融 2025 年的终极结论。</div>
+        <div class="theory-li"><b>处置效应是稳定特质</b> — SSRN 2025：所有投资者在<b>零收益阈值处卖出概率骤升</b>；大额亏损经历使其提高约 23%（19 万中国散户）。</div>
+        <div class="theory-li"><b>FOMO 根因是「无交易计划」</b> — 773 名期货活跃交易者调查：96.99% 经历 FOMO 循环，<b>62% 缺乏有纪律的计划才是根本成因</b>。</div>
+        <div class="theory-li"><b>过度交易代价仍是基准</b> — 最活跃交易者年化落后 6.5pp；2024 平均投资者落后 S&amp;P 500 达 848bp。</div>
+        <div class="lit-map"><b>→ jq 映射</b>：文献答案是用结构而非意志——regime 闸替代临场判断、硬止损替代扛单决心、熔断器替代「再赌一把」。<b>规则替代意志力，正是行为金融的终极结论。</b></div>
         <div class="lit-src">来源：SSRN 5243056 / 5290196（2025）；CEPR DP20487（Luo, Ravina, Sammon, Viceira）；The Journal of Psychology and Financial Markets 2025；DALBAR 2025。</div>
       </div>
 
@@ -581,7 +594,34 @@
 
     <!-- ⑦ jq 报告（jivonQuant 回测报告原生融入，取代 iframe 面板） -->
     <section class="section" id="sec-jq">
-      <div class="panel-head"><h2>jivonQuant 策略回测报告</h2><span class="ph-sub">理论基础 + 五步验证证据链 · v0.4.2</span></div>
+      <div class="panel-head"><h2>jivonQuant 策略回测报告</h2><span class="ph-sub">图表对照 + 今日决策 + 证据链 · v0.4.3</span></div>
+
+      <!-- 今日决策卡（v0.4.3：把文献与环境落成「今天怎么执行」） -->
+      <div class="card jqstrip">
+        <div class="panel-head" style="margin-bottom:0.5rem"><h2>⚡ 今日决策</h2><span class="ph-sub" id="decDate">—</span></div>
+        <div class="dec-action" id="decAction">加载中…</div>
+        <div class="dec-grid">
+          <div class="dec-cell"><i>🇺🇸 美联储与全球流动性</i><span id="decUs">—</span></div>
+          <div class="dec-cell"><i>🇨🇳 A股资金面与 regime 闸</i><span id="decCn">—</span></div>
+        </div>
+        <div class="dec-why" id="decWhy">—</div>
+        <div class="mut" id="decAnchor" style="margin-top:0.5rem">—</div>
+        <div class="mut" style="margin-top:0.4rem">数据时点以各来源标注为准 · 本卡为纪律提示，不构成投资建议</div>
+      </div>
+
+      <!-- 图文对照（v0.4.3：权益曲线 / 回撤 / 月度 / 成交） -->
+      <div class="card">
+        <div class="panel-head" style="margin-bottom:0.4rem"><h2>回测图表 · 生产卡（原池5）</h2><span class="ph-sub">真实日K 2025-08 → 2026-11</span></div>
+        <div class="chart-t">双卡权益曲线 vs 基准（归一）</div>
+        <div class="ech-box"><div id="echEquity" class="ech-loading">图表加载中…</div></div>
+        <div class="chart-t">回撤面积（水下曲线）</div>
+        <div class="ech-box"><div id="echDrawdown" class="ech-loading">图表加载中…</div></div>
+        <div class="chart-t">月度收益（月末环比 %）</div>
+        <div class="ech-box"><div id="echMonthly" class="ech-loading">图表加载中…</div></div>
+        <div class="chart-t">每笔交易盈亏散点（按出场原因）</div>
+        <div class="ech-box"><div id="echTrades" class="ech-loading">图表加载中…</div></div>
+        <div class="legend-row"><span class="lq" style="color:#c9a4ff">生产卡 原池5</span><span style="color:var(--teal)">挑战卡 宽基5</span><span class="lh">基准</span></div>
+      </div>
 
       <!-- 结论卡 -->
       <div class="card jqstrip">
@@ -705,6 +745,7 @@
     var n2 = function(v, sign) { return v === null || v === undefined ? '—' : (sign && v > 0 ? '+' : '') + Number(v).toFixed(2); };
     var pct = function(v, sign) { return v === null || v === undefined ? '—' : (sign && v > 0 ? '+' : '') + Number(v).toFixed(2) + '%'; };
     var sg = function(id, txt) { var e = document.getElementById(id); if (e) e.innerText = txt; };
+    var sh = function(id, html) { var e = document.getElementById(id); if (e) e.innerHTML = html; };
     var paint = function(d) {
       var b = (d && d.backtest) || {}, w = (d && d.wide5_card) || {}, c = (d && d.current) || {};
       sg('jqOldWin', b.win_rate != null ? b.win_rate.toFixed(1) + '% (CI ' + (b.win_rate_ci95 || []).join('~') + ')' : '—');
@@ -729,6 +770,107 @@
       }
       var line = document.getElementById('duelJqLine');
       if (line && c.regime) line.innerText = '胜率 66.7%（OOS-2 73.7% PASS）· ' + c.regime + ' · ' + (c.position_advice || '');
+
+      /* ===== 今日决策卡（v0.4.3 decision 块） ===== */
+      var dec = (d && d.decision) || null;
+      if (dec) {
+        sg('decDate', dec.updated || dec.date || '—');
+        sg('decAction', '【' + (dec.regime || '—') + '】' + (dec.action || '—'));
+        var us = dec.macro_us || {}, cn = dec.macro_cn || {};
+        sh('decUs', '<b>利率</b>' + esc(us.fed_rate || '—') + '<br><b>下次议息</b>' + esc(us.next_fomc || '—') + '<br><b>立场</b>' + esc(us.stance || '—') + '<br><b>影响</b>' + esc(us.impact || '—'));
+        sh('decCn', '<b>regime 闸</b>' + esc(cn.regime_gate || '—') + '<br><b>闸位</b>' + esc(cn.bench_vs_ma60 || '—') + '<br><b>资金</b>' + esc(cn.liquidity || '—') + '<br><b>信号</b>' + esc(cn.signal || '—'));
+        sg('decWhy', esc(dec.why_hold || '—'));
+        sg('decAnchor', esc(dec.benchmark_vs_manual || '—'));
+      }
+
+      /* ===== ECharts 四图（v0.4.3 charts 块） ===== */
+      var charts = (d && d.charts) || {};
+      if (window.echarts) {
+        var AXIS = '#7a8499', SPLIT = '#232c44', TOOLTIP_BG = '#161d31';
+        var baseOpt = {
+          backgroundColor: 'transparent',
+          grid: { left: 46, right: 14, top: 16, bottom: 24 },
+          tooltip: { trigger: 'axis', backgroundColor: TOOLTIP_BG, borderColor: SPLIT, textStyle: { color: '#d6dce8', fontSize: 11 }, axisPointer: { lineStyle: { color: SPLIT } } },
+          xAxis: { type: 'category', axisLine: { lineStyle: { color: SPLIT } }, axisLabel: { color: AXIS, fontSize: 10 }, axisTick: { show: false } },
+          yAxis: { type: 'value', axisLabel: { color: AXIS, fontSize: 10 }, splitLine: { lineStyle: { color: SPLIT, opacity: 0.5 } }, scale: true },
+          legend: { show: false }
+        };
+        var mk = function(id) {
+          var el = document.getElementById(id);
+          if (!el) return null;
+          var inst = echarts.init(el);
+          return inst;
+        };
+        var equityC = mk('echEquity'), ddC = mk('echDrawdown'), monC = mk('echMonthly'), trdC = mk('echTrades');
+
+        /* 图1：双卡权益 vs 基准 */
+        var o5 = charts.old5 || {}, w5 = charts.wide5 || {};
+        if (equityC && o5.equity && o5.equity.length) {
+          equityC.setOption(Object.assign({}, baseOpt, {
+            xAxis: Object.assign({}, baseOpt.xAxis, { data: o5.equity_dates || [] }),
+            series: [
+              { name: '生产卡', type: 'line', data: o5.equity, symbol: 'none', lineStyle: { width: 2, color: '#c9a4ff' }, itemStyle: { color: '#c9a4ff' } },
+              { name: '挑战卡', type: 'line', data: w5.equity || [], symbol: 'none', lineStyle: { width: 1.5, color: '#2dd4bf' }, itemStyle: { color: '#2dd4bf' } },
+              { name: '基准', type: 'line', data: o5.benchmark || [], symbol: 'none', lineStyle: { width: 1.2, type: 'dashed', color: '#4d8dff' }, itemStyle: { color: '#4d8dff' } }
+            ],
+            tooltip: { trigger: 'axis', backgroundColor: TOOLTIP_BG, borderColor: SPLIT, textStyle: { color: '#d6dce8', fontSize: 11 }, valueFormatter: function(v) { return v == null ? '—' : Number(v).toFixed(4); } }
+          }));
+        } else if (equityC) { equityC.setOption({ xAxis: { show: false }, yAxis: { show: false }, series: [] }); }
+
+        /* 图2：回撤面积（生产卡） */
+        if (ddC && o5.drawdown && o5.drawdown.length) {
+          ddC.setOption(Object.assign({}, baseOpt, {
+            xAxis: Object.assign({}, baseOpt.xAxis, { data: o5.equity_dates || [] }),
+            yAxis: Object.assign({}, baseOpt.yAxis, { axisLabel: { color: AXIS, fontSize: 10, formatter: '{value}%' }, max: 0, scale: false }),
+            series: [{ name: '回撤', type: 'line', data: o5.drawdown, symbol: 'none', lineStyle: { width: 1.2, color: '#ff5b5b' }, itemStyle: { color: '#ff5b5b' }, areaStyle: { color: 'rgba(255,91,91,0.18)' } }],
+            tooltip: { trigger: 'axis', backgroundColor: TOOLTIP_BG, borderColor: SPLIT, textStyle: { color: '#d6dce8', fontSize: 11 }, valueFormatter: function(v) { return v == null ? '—' : Number(v).toFixed(2) + '%'; } }
+          }));
+        } else if (ddC) { ddC.setOption({ xAxis: { show: false }, yAxis: { show: false }, series: [] }); }
+
+        /* 图3：月度收益（生产卡柱状） */
+        var mon = o5.monthly || [];
+        if (monC && mon.length) {
+          monC.setOption(Object.assign({}, baseOpt, {
+            grid: { left: 46, right: 14, top: 16, bottom: 34 },
+            xAxis: Object.assign({}, baseOpt.xAxis, { data: mon.map(function(m) { return m.month.slice(2); }), axisLabel: { color: AXIS, fontSize: 9, rotate: 45 } }),
+            yAxis: Object.assign({}, baseOpt.yAxis, { axisLabel: { color: AXIS, fontSize: 10, formatter: '{value}%' } }),
+            series: [{ name: '月收益', type: 'bar', data: mon.map(function(m) { return m.ret_pct; }), barMaxWidth: 16, itemStyle: { color: function(p) { return p.value >= 0 ? '#ff5b5b' : '#2dc07d'; }, borderRadius: 2 } }],
+            tooltip: { trigger: 'axis', backgroundColor: TOOLTIP_BG, borderColor: SPLIT, textStyle: { color: '#d6dce8', fontSize: 11 }, valueFormatter: function(v) { return v == null ? '—' : Number(v).toFixed(2) + '%'; } }
+          }));
+        } else if (monC) { monC.setOption({ xAxis: { show: false }, yAxis: { show: false }, series: [] }); }
+
+        /* 图4：每笔盈亏散点（生产卡按出场原因着色） */
+        var trades = o5.trades || [];
+        if (trdC && trades.length) {
+          var reasons = ['take_profit', 'partial_tp', 'trailing_stop', 'stop_loss', 'hold_expired', 'gate_or_breaker', 'rotate'];
+          var rName = { take_profit: '止盈', partial_tp: '部分止盈', trailing_stop: '移动止盈', stop_loss: '止损', hold_expired: '到期', gate_or_breaker: '闸/熔断', rotate: '轮动' };
+          var rColor = { take_profit: '#ff5b5b', partial_tp: '#ff8b5b', trailing_stop: '#ffb02e', stop_loss: '#2dc07d', hold_expired: '#4d8dff', gate_or_breaker: '#a26bff', rotate: '#7a8499' };
+          var series = reasons.filter(function(r) { return trades.some(function(t) { return t.reason === r; }); }).map(function(r) {
+            return { name: rName[r] || r, type: 'scatter', data: trades.filter(function(t) { return t.reason === r; }).map(function(t) { return [t.dt, t.pnl_pct]; }), symbolSize: 9, itemStyle: { color: rColor[r], opacity: 0.85 } };
+          });
+          trdC.setOption(Object.assign({}, baseOpt, {
+            xAxis: Object.assign({}, baseOpt.xAxis, { type: 'category', data: trades.map(function(t) { return t.dt; }), axisLabel: { color: AXIS, fontSize: 9, rotate: 40, formatter: function(v) { return v.slice(5); } } }),
+            yAxis: Object.assign({}, baseOpt.yAxis, { axisLabel: { color: AXIS, fontSize: 10, formatter: '{value}%' } }),
+            legend: { show: true, top: 0, right: 6, textStyle: { color: AXIS, fontSize: 10 }, itemWidth: 10, itemHeight: 8 },
+            grid: { left: 46, right: 14, top: 34, bottom: 34 },
+            series: series
+          }));
+        } else if (trdC) { trdC.setOption({ xAxis: { show: false }, yAxis: { show: false }, series: [] }); }
+
+        /* 切到 jq tab 时自适应宽度（display:none 时 init 得到 0 宽） */
+        var jqCell = document.querySelector('.nav-cell[data-target="jq"]');
+        if (jqCell && !jqCell.dataset.echBound) {
+          jqCell.dataset.echBound = '1';
+          jqCell.addEventListener('click', function() {
+            setTimeout(function() {
+              [equityC, ddC, monC, trdC].forEach(function(inst) { if (inst) inst.resize(); });
+            }, 60);
+          });
+        }
+        window.addEventListener('resize', function() {
+          [equityC, ddC, monC, trdC].forEach(function(inst) { if (inst) inst.resize(); });
+        });
+      }
     };
     fetch('./jq_panel.json', { cache: 'no-store' })
       .then(function(r) { if (!r.ok) throw 0; return r.json(); })
