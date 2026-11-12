@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-11T12:54:35+08:00",
+  "updated": "2026-11-12T13:30:52+08:00",
   "portfolio": {
     "total": 677301,
     "steady": 512111,
@@ -41,14 +41,14 @@
       "name": "PCB/HDI板",
       "index": "PCB概念",
       "index_code": "BK0877",
-      "current": 3379.4,
-      "ma10": 3190.9,
-      "ma20": 3355.0,
-      "change_pct": 3.58,
-      "distance_ma10": 5.91,
-      "volume_ratio": 1.22,
+      "current": 3353.7,
+      "ma10": 3205.2,
+      "ma20": 3340.0,
+      "change_pct": -0.76,
+      "distance_ma10": 4.63,
+      "volume_ratio": 0.82,
       "signal": "dca",
-      "signal_text": "站上10日线+5.9%，定投正常执行",
+      "signal_text": "站上10日线+4.6%，定投正常执行",
       "funds": [
         {
           "code": "017811",
@@ -103,13 +103,13 @@
       "name": "中证500",
       "index": "中证500",
       "index_code": "000905",
-      "current": 6713.2,
-      "ma10": 6537.3,
-      "ma20": 6636.6,
-      "change_pct": 1.01,
-      "distance_ma10": 2.69,
+      "current": 6665.2,
+      "ma10": 6558.4,
+      "ma20": 6631.4,
+      "change_pct": -0.71,
+      "distance_ma10": 1.63,
       "signal": "dca",
-      "signal_text": "站上10日线+2.7%，定投正常执行",
+      "signal_text": "站上10日线+1.6%，定投正常执行",
       "funds": [
         {
           "code": "001557",
@@ -122,7 +122,7 @@
         "detail": "定投正常执行",
         "path": "支付宝 → 理财 → 基金 → 我的定投"
       },
-      "volume_ratio": 1.02
+      "volume_ratio": 0.86
     }
   },
   "nasdaq": {
