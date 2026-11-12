@@ -1,0 +1,305 @@
+{
+  "updated": "2026-11-12T11:49:07+08:00",
+  "run_time": "11:49",
+  "total_assets": 146000,
+  "total_flexible": 96000,
+  "module_1_environment": {
+    "env": "bear",
+    "env_cn": "熊市 — 清仓做反弹",
+    "position_ratio": 0.2,
+    "max_position": 19200,
+    "bullish_count": 0,
+    "bearish_count": 5,
+    "index_details": {
+      "上证50": {
+        "status": "bearish",
+        "current": 2780.31,
+        "ma60": 2840.09,
+        "ma120": 2884.44,
+        "above_ma60": false,
+        "above_ma120": false,
+        "golden_cross": false,
+        "ma60_trend": "down"
+      },
+      "沪深300": {
+        "status": "bearish",
+        "current": 4080.14,
+        "ma60": 4363.51,
+        "ma120": 4576.96,
+        "above_ma60": false,
+        "above_ma120": false,
+        "golden_cross": false,
+        "ma60_trend": "down"
+      },
+      "中证500": {
+        "status": "bearish",
+        "current": 6721.06,
+        "ma60": 7319.13,
+        "ma120": 7777.09,
+        "above_ma60": false,
+        "above_ma120": false,
+        "golden_cross": false,
+        "ma60_trend": "down"
+      },
+      "创业板指": {
+        "status": "bearish",
+        "current": 2573.52,
+        "ma60": 3072.96,
+        "ma120": 3461.4,
+        "above_ma60": false,
+        "above_ma120": false,
+        "golden_cross": false,
+        "ma60_trend": "down"
+      },
+      "科创50": {
+        "status": "bearish",
+        "current": 1330.95,
+        "ma60": 1492.09,
+        "ma120": 1659.88,
+        "above_ma60": false,
+        "above_ma120": false,
+        "golden_cross": false,
+        "ma60_trend": "down"
+      }
+    }
+  },
+  "module_2_selection": {
+    "scanned": 25,
+    "total": 25,
+    "raw_signals": 5,
+    "actionable_signals": 4,
+    "blocked_signals": 1,
+    "signals": [
+      {
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "strength": "weak",
+        "reason": "60日最大回撤-21.7%，今日反弹",
+        "board": "半导体",
+        "change_pct": 1.58,
+        "change_5d": 8.34,
+        "vol_ratio": 0.89,
+        "current": 2309.65,
+        "ma10": 2138.7,
+        "ma20": 2185.1,
+        "ma60": 2529.7,
+        "funds": [
+          {
+            "code": "008888",
+            "name": "国联安中证半导体ETF联接C"
+          },
+          {
+            "code": "008282",
+            "name": "国泰CES半导体芯片ETF联接C"
+          }
+        ],
+        "gate_passed": true,
+        "position": 500
+      },
+      {
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "strength": "weak",
+        "reason": "60日最大回撤-16.5%，今日反弹",
+        "board": "汽车芯片",
+        "change_pct": 0.26,
+        "change_5d": 6.54,
+        "vol_ratio": 0.74,
+        "current": 1408.18,
+        "ma10": 1331.8,
+        "ma20": 1353.0,
+        "ma60": 1495.8,
+        "funds": [
+          {
+            "code": "008888",
+            "name": "国联安中证半导体ETF联接C"
+          }
+        ],
+        "gate_passed": true,
+        "position": 500
+      },
+      {
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "strength": "weak",
+        "reason": "60日最大回撤-23.2%，今日反弹",
+        "board": "铜缆高速连接",
+        "change_pct": 0.28,
+        "change_5d": 8.95,
+        "vol_ratio": 0.7,
+        "current": 2184.87,
+        "ma10": 2049.4,
+        "ma20": 2111.4,
+        "ma60": 2440.1,
+        "funds": [
+          {
+            "code": "012629",
+            "name": "广发国证半导体芯片ETF联接C"
+          }
+        ],
+        "gate_passed": true,
+        "position": 500
+      },
+      {
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "strength": "weak",
+        "reason": "60日最大回撤-23.9%，今日反弹",
+        "board": "PCB",
+        "change_pct": 0.62,
+        "change_5d": 8.38,
+        "vol_ratio": 0.75,
+        "current": 3400.32,
+        "ma10": 3209.9,
+        "ma20": 3342.4,
+        "ma60": 3816.9,
+        "funds": [
+          {
+            "code": "002256",
+            "name": "金信新能源汽车混合C"
+          },
+          {
+            "code": "008282",
+            "name": "国泰CES半导体芯片ETF联接C"
+          }
+        ],
+        "gate_passed": true,
+        "position": 500
+      }
+    ],
+    "blocked": [
+      {
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "strength": "weak",
+        "reason": "60日最大回撤-15.1%，今日反弹",
+        "board": "商业航天",
+        "change_pct": 3.81,
+        "change_5d": 4.09,
+        "vol_ratio": 1.0,
+        "current": 1953.17,
+        "ma10": 1828.8,
+        "ma20": 1887.5,
+        "ma60": 2082.7,
+        "from_cache": true,
+        "funds": [
+          {
+            "code": "001643",
+            "name": "汇丰晋信智造先锋股票C"
+          }
+        ],
+        "gate_passed": false,
+        "block_reason": "涨幅3.81%≥3%"
+      }
+    ]
+  },
+  "module_3_position": {
+    "total_suggested": 2000,
+    "single_max": 5760,
+    "strategy": "熊市 — 清仓做反弹",
+    "diversification_note": "建议分散到4只基金"
+  },
+  "module_4_exit": {
+    "exit_signals": [],
+    "sell_alerts": [
+      {
+        "id": "pe_l1_上证50_2026-11-12",
+        "type": "pe",
+        "severity": "info",
+        "index": "上证50",
+        "title": "上证50 偏高 — 关注市场",
+        "message": "上证50 PE=11.54（百分位80%），做好减仓准备",
+        "pe": 11.54,
+        "reduce_percent": 0,
+        "action": "watch"
+      }
+    ],
+    "position_alerts": [],
+    "signal_states": [
+      {
+        "code": "005844",
+        "name": "东方人工智能主题混合C",
+        "state": "WAIT",
+        "buy_date": "2026-09-29",
+        "held_days": 44,
+        "buy_nav": 3.2259,
+        "latest_nav": 2.4874,
+        "latest_date": "2026-11-11",
+        "ret": -0.2289
+      },
+      {
+        "code": "006503",
+        "name": "财通集成电路产业股票C",
+        "state": "WAIT",
+        "buy_date": "2026-09-18",
+        "held_days": 55,
+        "buy_nav": 7.3421,
+        "latest_nav": 4.2468,
+        "latest_date": "2026-11-11",
+        "ret": -0.4216
+      },
+      {
+        "code": "025209",
+        "name": "永赢先锋半导体智选混合C",
+        "state": "WAIT",
+        "buy_date": "2026-09-29",
+        "held_days": 44,
+        "buy_nav": 2.31,
+        "latest_nav": 1.8986,
+        "latest_date": "2026-11-11",
+        "ret": -0.1781
+      }
+    ],
+    "fee_calendar": [],
+    "index_pe": {
+      "创业板指": {
+        "pe": 28.99,
+        "pe_percentile": 0.114
+      },
+      "沪深300": {
+        "pe": 13.45,
+        "pe_percentile": 0.662
+      },
+      "上证50": {
+        "pe": 11.54,
+        "pe_percentile": 0.795
+      },
+      "中证500": {
+        "pe": 28.38,
+        "pe_percentile": 0.626
+      }
+    },
+    "rules": {
+      "stop_loss": "-8% 硬止损",
+      "take_profit_short": "12% 短线止盈",
+      "take_profit_trend": "18% 趋势止盈",
+      "trailing_stop": "从高点回撤>5% 移动止盈",
+      "pe_percentile": "宽基PE百分位>70/80/90% 关注/减仓50%/减仓70%",
+      "profit_take": "持仓收益>20% 分批止盈 / >35% 强止盈",
+      "fee": "C类 <7天赎回费1.5% / 7-30天0.5% / ≥30天0%"
+    }
+  },
+  "module_5_optimization": {
+    "history_days": 180,
+    "recent_environments": [
+      "bear",
+      "bear",
+      "bear",
+      "bear",
+      "bear",
+      "bear",
+      "range",
+      "bear",
+      "bear",
+      "bear"
+    ]
+  },
+  "summary": {
+    "environment": "熊市 — 清仓做反弹",
+    "buy_signals": 4,
+    "exit_signals": 0,
+    "today_budget": 2000,
+    "action_required": true,
+    "key_action": "优先关注 半导体 (🟡 超跌反弹)"
+  }
+}

@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Jivon Lab · 投资面板</title>
+<meta name="description" content="Jivon Lab 投资面板 — 持仓、纳指定投、ETF 量化信号与资产配置回测的统一视图（七个投资项目归一）">
+<style>
+:root{
+  --bg:#F7F5EF; --panel:#FFFFFF; --panel-2:#F1EFE8;
+  --line:rgba(25,27,30,.10);
+  --ink:#191B1E; --ink-dim:#454A51; --ink-faint:#84898F;
+  --accent:#0E5A50; --accent-soft:rgba(14,90,80,.10); --accent-line:rgba(14,90,80,.45);
+  --up:#C0392B; --down:#1E8449;   /* 涨红跌绿（A股惯例） */
+  --warn:#B45309;
+}
+@media (prefers-color-scheme:dark){
+:root{
+  --bg:#0B0D0E; --panel:#14171B; --panel-2:#1B1F24;
+  --line:rgba(234,234,230,.09);
+  --ink:#EAEAE6; --ink-dim:#B4B8BC; --ink-faint:#7E848B;
+  --accent:#6FC7B9; --accent-soft:rgba(111,199,185,.12); --accent-line:rgba(111,199,185,.45);
+  --up:#EF5350; --down:#26A69A;
+  --warn:#F2B544;
+}
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:hidden;overscroll-behavior:none}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:Georgia,"Noto Serif SC","Songti SC",serif;
+  line-height:1.6;min-height:100vh;
+}
+.wrap{max-width:1120px;margin:0 auto;padding:0 28px;position:relative}
+.mono{font-family:"JetBrains Mono","SF Mono",Consolas,monospace}
+
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:20px 0;border-bottom:1px solid var(--line)}
+.topbar .brand{font-size:14px;letter-spacing:.12em;color:var(--ink-dim);text-decoration:none}
+.topbar .brand b{color:var(--ink);font-weight:400}
+.back{font-size:12px;color:var(--accent);text-decoration:none;letter-spacing:.08em}
+.back:hover{text-decoration:underline}
+
+.hero{padding:52px 0 36px}
+.kicker{font-size:12px;letter-spacing:.32em;color:var(--accent);font-family:"JetBrains Mono",Consolas,monospace;text-transform:uppercase;margin-bottom:16px}
+.hero h1{font-size:clamp(26px,4vw,40px);font-weight:400;letter-spacing:.02em}
+.hero .sub{margin-top:10px;font-size:14px;color:var(--ink-dim);max-width:44em}
+.hero .rule{margin-top:26px;height:1px;background:linear-gradient(90deg,var(--accent),transparent)}
+
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:18px;padding:8px 0 72px}
+.span12{grid-column:span 12}.span7{grid-column:span 7}.span5{grid-column:span 5}
+.span6{grid-column:span 6}.span4{grid-column:span 4}
+
+.card{background:linear-gradient(160deg,var(--panel),var(--panel-2));border:1px solid var(--line);border-radius:14px;padding:24px 24px 22px;position:relative;overflow:hidden}
+.tag{font-family:"JetBrains Mono",Consolas,monospace;font-size:11px;letter-spacing:.22em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:12px}
+.card h3{font-size:19px;font-weight:400;letter-spacing:.03em;margin-bottom:8px}
+.card p{font-size:13.5px;color:var(--ink-dim);max-width:36em}
+.seal{position:absolute;top:20px;right:20px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;border:1px solid var(--accent-line);border-radius:8px;color:var(--accent);font-size:17px;background:var(--accent-soft);font-family:"Noto Serif SC",serif}
+
+.stats{display:flex;gap:24px;margin-top:18px;flex-wrap:wrap}
+.stats .s{display:flex;flex-direction:column;gap:2px}
+.stats .v{font-family:"JetBrains Mono",Consolas,monospace;font-size:15px;color:var(--ink)}
+.stats .k{font-size:11px;color:var(--ink-faint);letter-spacing:.1em}
+
+/* 持仓三层结构条 */
+.alloc-bar{display:flex;height:34px;border-radius:9px;overflow:hidden;margin-top:16px;border:1px solid var(--line)}
+.alloc-bar .seg{display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;font-family:"JetBrains Mono",Consolas,monospace;letter-spacing:.04em}
+.seg.steady{background:#0E5A50}.seg.flexible{background:#946B00}.seg.growth{background:#7A4FBF}
+.alloc-legend{display:flex;gap:18px;margin-top:10px;flex-wrap:wrap}
+.alloc-legend .lg{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink-dim)}
+.alloc-legend .dot{width:9px;height:9px;border-radius:3px}
+
+/* 策略实验室卡 */
+.strategy-list{display:flex;flex-direction:column;margin-top:6px}
+.strat{display:flex;align-items:center;gap:14px;padding:13px 2px;border-bottom:1px solid var(--line);text-decoration:none;color:inherit}
+.strat:last-child{border-bottom:none}
+.strat .ico{flex:none;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:10px;font-size:16px;font-family:"Noto Serif SC",serif;background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent-line)}
+.strat .body{flex:1;min-width:0}
+.strat .body b{font-size:14.5px;font-weight:600;letter-spacing:.02em}
+.strat .body .d{font-size:12px;color:var(--ink-faint);margin-top:1px}
+.strat .st{flex:none;text-align:right}
+.strat .st .v{font-family:"JetBrains Mono",Consolas,monospace;font-size:13px}
+.strat .st .k{font-size:10.5px;color:var(--ink-faint);letter-spacing:.08em}
+.strat:hover{background:var(--accent-soft);border-radius:10px}
+
+/* 表格 */
+table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:14px}
+th{padding:7px 8px;text-align:left;font-weight:600;color:var(--ink-faint);border-bottom:1px solid var(--line);font-size:11.5px;letter-spacing:.04em}
+td{padding:7px 8px;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:none}
+.num{font-family:"JetBrains Mono",Consolas,monospace}
+.up{color:var(--up)}.down{color:var(--down)}
+
+/* 策略回测报告模块 */
+.rp-lead{font-size:13px;color:var(--ink-dim);margin-top:6px;max-width:none}
+.rp-lead b{color:var(--ink);font-weight:600}
+.rp-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:16px}
+.rp-h{font-size:12.5px;letter-spacing:.06em;color:var(--accent);margin-bottom:10px;font-weight:600}
+.rp-list{list-style:none}
+.rp-list li{font-size:12.8px;color:var(--ink-dim);padding:6px 0;border-bottom:1px dashed var(--line)}
+.rp-list li:last-child{border-bottom:none}
+.rp-list b{color:var(--ink);font-weight:600}
+.rp-table{margin-top:0}
+.rp-table td{font-size:12.3px}
+.ev-chain{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.ev{display:flex;gap:12px;align-items:flex-start;background:var(--accent-soft);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+.ev-badge{flex:none;font-family:"JetBrains Mono",Consolas,monospace;font-size:10.5px;letter-spacing:.08em;padding:3px 8px;border-radius:6px;background:var(--panel);border:1px solid var(--accent-line);color:var(--accent);margin-top:3px}
+.ev-badge.warn{color:var(--warn);border-color:var(--warn)}
+.ev-body{font-size:12.8px;color:var(--ink-dim);line-height:1.7}
+.ev-body b{color:var(--ink);font-weight:600}
+@media (max-width:760px){.rp-grid{grid-template-columns:1fr}}
+
+.foot-note{margin-top:14px;font-size:11.5px;color:var(--ink-faint)}
+a.plainlink{color:var(--accent);text-decoration:none}
+a.plainlink:hover{text-decoration:underline}
+
+footer{border-top:1px solid var(--line);padding:22px 0 34px;display:flex;justify-content:space-between;font-size:12px;color:var(--ink-faint);letter-spacing:.08em}
+
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.reveal{opacity:0;animation:rise .6s cubic-bezier(.2,.7,.2,1) forwards}
+.d1{animation-delay:.05s}.d2{animation-delay:.12s}.d3{animation-delay:.2s}.d4{animation-delay:.28s}
+
+@media (max-width:900px){
+  .span7,.span5,.span6{grid-column:span 12}
+  .span4{grid-column:span 6}
+  .hero{padding:36px 0 24px}
+  .wrap{padding:0 18px}
+}
+@media (max-width:560px){
+  .span4{grid-column:span 12}
+  .stats{gap:16px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="topbar">
+    <a class="brand mono" href="https://jivonlab.com"><b>jivonlab.com</b> · 投资面板</a>
+    <a class="back mono" href="https://jivonlab.com">← 返回工作台</a>
+  </header>
+
+  <section class="hero reveal d1">
+    <div class="kicker">Investment · Unified Asset Panel</div>
+    <h1>七个投资项目，一张桌子。</h1>
+    <div class="sub">持仓速览 · 纳指定投 · ETF 量化信号 · 资产配置回测。数据由各系统自动更新，本页只做归一视图。</div>
+    <div class="env-strip reveal d1" style="display:flex;gap:14px;flex-wrap:wrap;margin-top:18px">
+      <span class="mono" style="font-size:12px;color:var(--ink-dim)">市场环境：<b id="env-cn" style="color:var(--warn)">加载中…</b></span>
+      <span class="mono" style="font-size:12px;color:var(--ink-dim)">建议仓位：<b id="env-pos" class="mono">—</b></span>
+      <span class="mono" style="font-size:12px;color:var(--ink-faint)">交易系统更新：<span id="env-upd">—</span></span>
+    </div>
+    <div class="rule"></div>
+  </section>
+
+  <main class="grid">
+
+    <!-- 资产总览 -->
+    <div class="card span7 reveal d2">
+      <div class="seal">产</div>
+      <div class="tag">Assets · data.json 自动更新</div>
+      <h3>资产总览</h3>
+      <div class="stats" style="margin-top:14px">
+        <div class="s"><span class="v" id="st-total">—</span><span class="k">总资产</span></div>
+        <div class="s"><span class="v" id="st-steady">—</span><span class="k">稳健层</span></div>
+        <div class="s"><span class="v" id="st-flex">—</span><span class="k">灵活层</span></div>
+        <div class="s"><span class="v" id="st-growth">—</span><span class="k">进攻层</span></div>
+      </div>
+      <div class="alloc-bar" id="alloc-bar">
+        <div class="seg steady" style="width:75.6%">75.6%</div>
+        <div class="seg flexible" style="width:22.9%">22.9%</div>
+        <div class="seg growth" data-seg="growth" style="width:1.5%">1.5%</div>
+      </div>
+      <div class="alloc-legend">
+        <div class="lg"><span class="dot" style="background:#0E5A50"></span>稳健 · 债券/货币（512,111）</div>
+        <div class="lg"><span class="dot" style="background:#946B00"></span>灵活 · 货币理财（155,106）</div>
+        <div class="lg"><span class="dot" style="background:#7A4FBF"></span>进攻 · QDII（10,084）</div>
+      </div>
+      <div class="foot-note">数据快照 2026-11-06 · <a class="plainlink" href="./index.html">操盘手修炼页</a> 为每日实操入口</div>
+    </div>
+
+    <!-- 纳指定投 -->
+    <div class="card span5 reveal d2">
+      <div class="seal">投</div>
+      <div class="tag">NASDAQ DCA · 周四定投</div>
+      <h3>纳指定投</h3>
+      <div class="stats" style="margin-top:14px">
+        <div class="s"><span class="v" id="dca-ndx">—</span><span class="k">NDX 点位</span></div>
+        <div class="s"><span class="v" id="dca-dd">—</span><span class="k">距高点回撤</span></div>
+        <div class="s"><span class="v" id="dca-wk">—</span><span class="k">周涨跌</span></div>
+      </div>
+      <div id="dca-signal" class="foot-note" style="margin-top:12px;font-size:13px;color:var(--ink-dim)">信号加载中…</div>
+      <div class="foot-note">周四定投日 · PE 阈值定档 · 仅工作日扣款</div>
+    </div>
+
+    <!-- jivonQuant 主战系统 -->
+    <div class="card span12 reveal d2">
+      <div class="seal">量</div>
+      <div class="tag">jivonQuant (jq) v0.4.2 · 双卡赛马 · 幻方蒸馏</div>
+      <h3>jivonQuant — 主战量化系统</h3>
+      <div class="stats" style="margin-top:14px">
+        <div class="s"><span class="v" id="jq-wr">—</span><span class="k">回测胜率</span></div>
+        <div class="s"><span class="v" id="jq-pl">—</span><span class="k">盈亏比</span></div>
+        <div class="s"><span class="v" id="jq-ret">—</span><span class="k">区间收益</span></div>
+        <div class="s"><span class="v" id="jq-mdd">—</span><span class="k">最大回撤</span></div>
+        <div class="s"><span class="v" id="jq-exp">—</span><span class="k">期望值</span></div>
+      </div>
+      <div id="jq-current" class="foot-note" style="margin-top:12px;font-size:13px;color:var(--ink-dim)">状态加载中…</div>
+      <div id="jq-wide5" class="foot-note" style="margin-top:8px;font-size:12.5px;color:var(--ink-dim)">挑战卡数据加载中…</div>
+      <div id="jq-structure" class="foot-note" style="margin-top:8px;font-size:12.5px;color:var(--ink-faint)"></div>
+      <div class="foot-note">真实日K 300 根回测（2025-08→2026-11）· 生产卡=原池5（OOS-2 胜率 73.7%）· 挑战卡=宽基5 · 赛马判据：前瞻账本 ≥20 交易日按 fwd5 胜率+期望定夺 · 五重防守：部分止盈/移动止盈/时间止损/硬止损/regime 闸 · <a class="plainlink" href="https://github.com/JivonKiang">代码仓库</a></div>
+    </div>
+
+    <!-- 策略回测报告：理论基础 + 证据链 -->
+    <div class="card span12 reveal d2">
+      <div class="seal">证</div>
+      <div class="tag">Backtest Report · 理论基础与验证证据链 · jivonQuant v0.4.2</div>
+      <h3>策略回测报告 — 这套系统凭什么站得住</h3>
+      <p class="rp-lead">结论先行：<b>胜率 66.7%（Wilson 95% CI 45.4~82.8%）· 期望 +0.49%/笔 · 盈亏比 1.24 · 区间 +3.9% vs 基准 +0.24% · 最大回撤 −9.13%</b>（原池5，真实日K 300 根，2025-08→2026-11）。数字本身不神奇，神奇的是每个数字都经过了下面五步独立验证——<b>胜率不是「调出来的」，是「过滤与纪律结构」撑出来的</b>，且我们亲手证伪了两个会赚快钱的假象。</p>
+
+      <div class="rp-grid">
+        <div>
+          <div class="rp-h">Ⅰ · 理论基础 —— 胜率工程学（幻方方法论蒸馏）</div>
+          <ul class="rp-list">
+            <li><b>提高胜率的不是预测，是过滤</b> —— 大盘 regime 闸（沪深300 vs MA20/MA60 分 L0/L1/L2 三档仓位预算）在最危险的下跌段强制空仓。今天实测：510300 于 MA60 下方 → 系统给「空仓」而非「抄底」。</li>
+            <li><b>截断亏损，让利润奔跑</b> —— −8% 硬止损截断左尾；浮盈 +2% 先卖一半锁定胜局，余仓 1.5% 移动止盈追趋势，5 日时间止损防资金沉淀。</li>
+            <li><b>少即是多</b> —— 多因子打分卡（动量 0.35/短动量 0.15/成交额 0.20/波动率 0.20/乖离率 0.10）只在 5 只池内排名取 Top-2，分散但不稀释。</li>
+            <li><b>尊重 T+1</b> —— 回测引擎严格模拟 A 股 ETF 当买次卖规则，杜绝虚高胜率。</li>
+            <li><b>熔断器</b> —— 连亏 3 笔或单日亏 1% 自动停机冷却 5 日（幻方单策略熔断蒸馏）。</li>
+          </ul>
+        </div>
+        <div>
+          <div class="rp-h">Ⅱ · 对照实验 —— 亲手证伪的两个假象</div>
+          <ul class="rp-list">
+            <li><b>假象一：「ML 模型能预测涨跌」→ 证伪</b>。HistGB 模型 TRIPOD 口径临床级评估：<b>AUC 0.478</b>（CI 0.439~0.520，不及抛硬币），校准斜率 −0.014（失效），10 个置信度分箱全脱靶。诚实的处理：<b>ML 分支降级为实验分支</b>，生产卡回到线性打分卡。</li>
+            <li><b>假象二：「池越大越赚钱」→ 证伪</b>。18 只联合池回测 <b>胜率 41.7%、期望 −0.14</b>——截面打分在联合池会天然追高集中（Top-2 全是动量最热标的）。分池运行全部正期望，扩池正确姿势=分池而非混池。</li>
+            <li><b>对照组实验</b>：随机选标的+同出场结构 → <b>−24.17%/胜率 40.9%</b>；打分卡选股+同结构 → +2.88%/胜率 63.6%。<b>结论：出场结构抬胜率、选股卡防送死，缺一不可。</b></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="rp-h" style="margin-top:18px">Ⅲ · 五步验证证据链（从回测到前瞻）</div>
+      <div class="ev-chain">
+        <div class="ev"><span class="ev-badge">STEP 1</span><div class="ev-body"><b>真实数据回测</b> — 腾讯网关真实日K 300 根（非合成数据），全参数网格 540 组合中固化 ms0.75/hold5/trail1.5。全样本：胜率 63.6% · 期望 +0.49%。</div></div>
+        <div class="ev"><span class="ev-badge">STEP 2</span><div class="ev-body"><b>样本外滚动验证（walk-forward）</b> — 参数在段内选定、段外直接跑：<b>原池5 OOS-2 长窗胜率 73.7% · 期望 +0.67 PASS</b>（判据 OOS≥70%×IS 且期望>0）。样本外不掉链子，排除了「参数拟合历史」的过拟合嫌疑。</div></div>
+        <div class="ev"><span class="ev-badge">STEP 3</span><div class="ev-body"><b>扩池压力测试</b> — 18 标的四子池实测：联合池证伪（见上）、<b>分池全部正期望</b>（宽基5 exp+0.61/回撤 −4.48% · 行业7 +0.25 · 科创3 +0.52 · 跨境商品3 +0.16）。策略对池结构敏感但可解释、可拆分。</div></div>
+        <div class="ev"><span class="ev-badge warn">STEP 4</span><div class="ev-body"><b>ML 临床级评估（TRIPOD 口径）</b> — AUC/BootstrapCI/校准曲线/亚组/敏感性全套：AUC 0.478、种子扰动波动 0.0、LOSO 按标的留一 0.43~0.53。评级 <b>C → 降级为实验分支，禁止引用其信号</b>。这一步的意义：<b>我们不用「回测好看」的模型，我们用「证据站得住」的模型。</b></div></div>
+        <div class="ev"><span class="ev-badge">STEP 5</span><div class="ev-body"><b>双卡赛马（前瞻验证，进行中）</b> — 生产卡（原池5，OOS-2 win 73.7%）与挑战卡（宽基5，exp+0.61/回撤最浅）同参并行记录前瞻账本。<b>审计闸：账本 ≥20 交易日 + picks 后按 fwd5 胜率+期望双指标定夺，禁提前切换。</b>当下：<span id="rp-cur" style="color:var(--ink)">加载中…</span></div></div>
+      </div>
+
+      <div class="rp-grid" style="margin-top:18px">
+        <div>
+          <div class="rp-h">Ⅳ · 双卡回测对照（同参不同池）</div>
+          <table class="rp-table">
+            <tr><th>指标</th><th>生产卡 · 原池5</th><th>挑战卡 · 宽基5</th></tr>
+            <tr><td>胜率（Wilson CI95）</td><td class="num" id="rp-old-win">—</td><td class="num" id="rp-wide-win">—</td></tr>
+            <tr><td>盈亏比</td><td class="num" id="rp-old-pl">—</td><td class="num" id="rp-wide-pl">—</td></tr>
+            <tr><td>区间收益</td><td class="num" id="rp-old-ret">—</td><td class="num" id="rp-wide-ret">—</td></tr>
+            <tr><td>最大回撤</td><td class="num" id="rp-old-mdd">—</td><td class="num" id="rp-wide-mdd">—</td></tr>
+            <tr><td>期望/笔</td><td class="num" id="rp-old-exp">—</td><td class="num" id="rp-wide-exp">—</td></tr>
+            <tr><td>样本笔数</td><td class="num" id="rp-old-n">—</td><td class="num" id="rp-wide-n">—</td></tr>
+          </table>
+          <div class="foot-note">数据源 jq_panel.json（CI 每工作日刷新）· 静态结论部分来自 config.json 落账的验证记录</div>
+        </div>
+        <div>
+          <div class="rp-h">Ⅴ · 方法论边界（诚实声明）</div>
+          <ul class="rp-list">
+            <li><b>样本量有限</b>：n=21 笔，CI 较宽（45.4~82.8%），胜率点估计应读作「区间」而非单点。</li>
+            <li><b>无任何策略能保证稳定盈利</b>——幻方 2026-07 也有单月 −20%+ 回撤。能保证的是胜率结构、风控纪律、熔断机制。</li>
+            <li><b>回测≠未来</b>：一切以 ≥20 交易日前瞻账本审计为准，前瞻证据 &gt; 回测证据。</li>
+            <li><b>拍板权归主任</b>：策略改版/参数变更/切换生产卡，一律主任批准。</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="foot-note">蒸馏来源：Microsoft Qlib（因子注册表）· vn.py（事件驱动/时钟）· Freqtrade（风控保护器/熔断）· QuantConnect Lean（统一对象模型）· 幻方量化（多因子打分/熔断/胜率结构）—— 完整蒸馏矩阵见 <a class="plainlink" href="https://github.com/JivonKiang">jivonQuant 仓库 README</a></div>
+    </div>
+
+    <!-- Q75 量化信号 -->
+    <div class="card span12 reveal d3">
+      <div class="seal">Q</div>
+      <div class="tag">Q75 Quant Executor · 纸面执行账本</div>
+      <h3>Q75 量化信号</h3>
+      <div class="stats" style="margin-top:14px">
+        <div class="s"><span class="v" id="q75-wr">—</span><span class="k">账本胜率</span></div>
+        <div class="s"><span class="v" id="q75-n">—</span><span class="k">已平仓笔数</span></div>
+        <div class="s"><span class="v" id="q75-total">—</span><span class="k">纸面总资产</span></div>
+        <div class="s"><span class="v" id="q75-pos">—</span><span class="k">在市标的</span></div>
+      </div>
+      <div id="q75-actions" class="foot-note" style="margin-top:12px;font-size:13px;color:var(--ink-dim)">信号加载中…</div>
+      <div class="foot-note">训练/测试分离回测 75.1%（2024 起真实日线 365 笔）· 每工作日自动执行 · 止盈 1.5% / 止损 5% / 持有 10 日</div>
+    </div>
+
+    <!-- 策略实验室 -->
+    <div class="card span12 reveal d3">
+      <div class="seal">略</div>
+      <div class="tag">Strategy Lab · 七项目归一</div>
+      <h3>策略实验室</h3>
+      <div class="strategy-list">
+        <a class="strat" href="#" onclick="return false">
+          <span class="ico">量</span>
+          <span class="body"><b>jivonQuant (jq)</b><span class="d">主战多因子打分系统 · 部分止盈+移动止盈结构 · 回测胜率 66.7%（详见上方回测报告模块）</span></span>
+          <span class="st"><span class="v">running</span><span class="k">主战系统</span></span>
+        </a>
+        <a class="strat" href="https://jivonkiang.github.io/etf-quant-auto/">
+          <span class="ico">量</span>
+          <span class="body"><b>ETF 量化自动化</b><span class="d">金叉+MACD · 无人值守每日运行 · 信号邮件推送（当前主战系统）</span></span>
+          <span class="st"><span class="v">daily</span><span class="k">自动运行</span></span>
+        </a>
+        <a class="strat" href="https://github.com/JivonKiang/nasdaq-dca">
+          <span class="ico">纳</span>
+          <span class="body"><b>纳指定投助手</b><span class="d">估值定档 DCA · 已并入本面板（legacy 分支保留）</span></span>
+          <span class="st"><span class="v">merged</span><span class="k">已迁移</span></span>
+        </a>
+        <a class="strat" href="https://github.com/JivonKiang/fund-trend-system">
+          <span class="ico">趋</span>
+          <span class="body"><b>基金趋势量化</b><span class="d">指数 MA60-120 策略回测 + 信号推送（2026-06 归档）</span></span>
+          <span class="st"><span class="v">archived</span><span class="k">历史策略</span></span>
+        </a>
+        <a class="strat" href="https://github.com/JivonKiang/alipay-quant-system">
+          <span class="ico">板</span>
+          <span class="body"><b>C 类基金量化推荐</b><span class="d">热门板块扫描 + 滚动胜率回测（2026-07 归档）</span></span>
+          <span class="st"><span class="v">archived</span><span class="k">历史策略</span></span>
+        </a>
+        <a class="strat" href="https://github.com/JivonKiang/etf-quant">
+          <span class="ico">联</span>
+          <span class="body"><b>ETF 联接量化</b><span class="d">MA10/30 金叉+MACD+持有 20 天 · 胜率 66.0%（2026-08 归档）</span></span>
+          <span class="st"><span class="v">archived</span><span class="k">历史策略</span></span>
+        </a>
+      </div>
+      <div class="foot-note">运行中：ETF 量化自动化（每日 11:00/14:30）· 其余策略仓库保留于 GitHub，README 已挂迁移横幅</div>
+    </div>
+
+    <!-- 资产配置回测 -->
+    <div class="card span12 reveal d4">
+      <div class="seal">测</div>
+      <div class="tag">Backtest · investment-dashboard 归一</div>
+      <h3>资产配置回测摘要</h3>
+      <div class="stats" style="margin-top:14px">
+        <div class="s"><span class="v">+25.4%</span><span class="k">当前持仓累计</span></div>
+        <div class="s"><span class="v">4.56%</span><span class="k">年化</span></div>
+        <div class="s"><span class="v">1.15</span><span class="k">夏普</span></div>
+        <div class="s"><span class="v">-3.4%</span><span class="k">最大回撤</span></div>
+        <div class="s"><span class="v">11.3%</span><span class="k">月投定投 IRR</span></div>
+      </div>
+      <table>
+        <tr><th>基金</th><th>年化</th><th>夏普</th><th>最大回撤</th><th>累计</th></tr>
+        <tr><td>华安黄金 ETF</td><td class="num">19.48%</td><td class="num">1.02</td><td class="num down">-28.08%</td><td class="num up">+146.97%</td></tr>
+        <tr><td>广发纳指 100 联接 A</td><td class="num">16.98%</td><td class="num">0.71</td><td class="num down">-29.47%</td><td class="num up">+121.83%</td></tr>
+        <tr><td>博时标普 500 联接 A</td><td class="num">13.26%</td><td class="num">0.71</td><td class="num down">-18.73%</td><td class="num up">+88.19%</td></tr>
+      </table>
+      <div class="foot-note">回测区间 2019-04-15 ~ 2026-06-22 · 完整 7 基金统计见 <a class="plainlink" href="https://github.com/JivonKiang/investment-dashboard">investment-dashboard</a></div>
+    </div>
+
+  </main>
+
+  <footer>
+    <span>jivonlab.com · invest 子域 · GitHub Pages</span>
+    <span>Est. 2026</span>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  function fmt(n){return '¥'+n.toLocaleString('zh-CN')}
+  fetch('main-data.json',{cache:'no-store'}).then(function(r){return r.json()}).then(function(d){
+    var p=d.portfolio||{};
+    if(p.total)document.getElementById('st-total').textContent=fmt(p.total);
+    if(p.steady)document.getElementById('st-steady').textContent=fmt(p.steady);
+    if(p.flexible)document.getElementById('st-flex').textContent=fmt(p.flexible);
+    if(p.growth)document.getElementById('st-growth').textContent=fmt(p.growth);
+    var n=d.nasdaq||{};
+    if(n.ndx_price)document.getElementById('dca-ndx').textContent=n.ndx_price.toLocaleString('zh-CN');
+    if(n.drawdown_pct!=null)document.getElementById('dca-dd').textContent='-'+n.drawdown_pct+'%';
+    if(n.weekly_change_pct!=null)document.getElementById('dca-wk').textContent=(n.weekly_change_pct>0?'+':'')+n.weekly_change_pct+'%';
+    var sig=document.getElementById('dca-signal');
+    if(sig&&n.signal_text){sig.innerHTML='<b>当前信号：</b>'+n.signal_text}
+  }).catch(function(){});
+  fetch('trading_data.json',{cache:'no-store'}).then(function(r){return r.json()}).then(function(d){
+    var env=d.module_1_environment||{};
+    if(env.env_cn)document.getElementById('env-cn').textContent=env.env_cn;
+    if(env.position_ratio!=null)document.getElementById('env-pos').textContent=Math.round(env.position_ratio*100)+'%';
+    if(d.updated)document.getElementById('env-upd').textContent=d.updated.replace('T',' ').slice(0,16);
+  }).catch(function(){});
+  fetch('jq_panel.json',{cache:'no-store'}).then(function(r){return r.json()}).then(function(d){
+    var b=d.backtest||{};
+    if(b.win_rate!=null)document.getElementById('jq-wr').textContent=b.win_rate.toFixed(1)+'%';
+    if(b.profit_loss_ratio!=null)document.getElementById('jq-pl').textContent=b.profit_loss_ratio.toFixed(2);
+    if(b.total_return_pct!=null)document.getElementById('jq-ret').textContent=(b.total_return_pct>0?'+':'')+b.total_return_pct.toFixed(2)+'%';
+    if(b.max_drawdown_pct!=null)document.getElementById('jq-mdd').textContent=b.max_drawdown_pct.toFixed(2)+'%';
+    if(b.expectancy!=null)document.getElementById('jq-exp').textContent=(b.expectancy>0?'+':'')+b.expectancy.toFixed(2);
+    var c=d.current||{}, el=document.getElementById('jq-current');
+    var picks=(c.picks||[]).map(function(x){return x.symbol.slice(0,6)+'('+x.score+')'}).join(' / ');
+    var picksW=(c.picks_wide5||[]).map(function(x){return x.symbol.slice(0,6)+'('+x.score+')'}).join(' / ');
+    el.innerHTML='<b>当前状态：</b>'+ (c.regime||'—') +' · 510300='+c.bench_px+' vs MA60='+c.bench_ma60+
+      (picks?'<br><b>生产卡 Top-3：</b>'+picks:'<br><b>生产卡：</b>无达标标的（宁缺毋滥）')+
+      '<br><b>建议：</b>'+(c.position_advice||'—')+
+      (picksW?'<br><b>挑战卡达标：</b>'+picksW:'');
+    var w=d.wide5_card||{}, wl=document.getElementById('jq-wide5');
+    if(wl){
+      if(w.win_rate!=null){
+        wl.innerHTML='<b>⚔️ 挑战卡 · 宽基5（赛马中）：</b>胜率 '+w.win_rate.toFixed(1)+'% (CI '+
+          (w.win_rate_ci95||[]).join('~')+') · 盈亏比 '+(w.profit_loss_ratio!=null?w.profit_loss_ratio.toFixed(2):'—')+
+          ' · 收益 '+(w.total_return_pct>0?'+':'')+w.total_return_pct.toFixed(2)+'% · 回撤 '+w.max_drawdown_pct.toFixed(2)+'%'+
+          ' · 期望 '+(w.expectancy>0?'+':'')+w.expectancy.toFixed(2)+' · '+w.n_trades+' 笔';
+      } else {wl.textContent='挑战卡数据尚未生成';}
+    }
+    var s=d.structure||{}, st=document.getElementById('jq-structure');
+    if(st){st.innerHTML='<b>五重防守：</b>'+[s.partial_tp,s.trailing,s.time_stop,s.hard_stop,s.regime_gate].filter(Boolean).join(' · ')}
+    /* 回测报告模块：双卡对照表 + 当前 regime 行 */
+    function sg(id,txt){var e=document.getElementById(id);if(e)e.textContent=txt}
+    var w5=d.wide5_card||{};
+    function pct(v,sign){return v==null?'—':(sign&&v>0?'+':'')+v.toFixed(2)+'%'}
+    function n2(v,sign){return v==null?'—':(sign&&v>0?'+':'')+v.toFixed(2)}
+    sg('rp-old-win', b.win_rate!=null?b.win_rate.toFixed(1)+'% (CI '+(b.win_rate_ci95||[]).join('~')+')':'—');
+    sg('rp-wide-win', w5.win_rate!=null?w5.win_rate.toFixed(1)+'% (CI '+(w5.win_rate_ci95||[]).join('~')+')':'—');
+    sg('rp-old-pl', n2(b.profit_loss_ratio));
+    sg('rp-wide-pl', n2(w5.profit_loss_ratio));
+    sg('rp-old-ret', pct(b.total_return_pct,true));
+    sg('rp-wide-ret', pct(w5.total_return_pct,true));
+    sg('rp-old-mdd', pct(b.max_drawdown_pct));
+    sg('rp-wide-mdd', pct(w5.max_drawdown_pct));
+    sg('rp-old-exp', n2(b.expectancy,true));
+    sg('rp-wide-exp', n2(w5.expectancy,true));
+    sg('rp-old-n', b.n_trades!=null?b.n_trades+' 笔':'—');
+    sg('rp-wide-n', w5.n_trades!=null?w5.n_trades+' 笔':'—');
+    var rc=document.getElementById('rp-cur');
+    if(rc&&c.regime){rc.textContent=c.regime+' · '+(c.position_advice||'')}
+  }).catch(function(){
+    var el=document.getElementById('jq-current');
+    if(el)el.textContent='jq 数据尚未生成（首次 CI 运行后可用）';
+  });
+  fetch('q75_signal.json',{cache:'no-store'}).then(function(r){return r.json()}).then(function(s){
+    function fmt(n){return n==null?'—':n}
+    document.getElementById('q75-wr').textContent=s.win_rate!=null?(s.win_rate*100).toFixed(1)+'%':'—';
+    document.getElementById('q75-n').textContent=fmt(s.closed_trades);
+    document.getElementById('q75-total').textContent='¥'+(s.total_value!=null?Math.round(s.total_value).toLocaleString():'—');
+    var syms=Object.keys(s.positions||{});
+    document.getElementById('q75-pos').textContent=syms.length?syms.map(function(x){return x.slice(0,6)}).join(' / '):'空仓';
+    var acts=(s.actions||[]);
+    var el=document.getElementById('q75-actions');
+    if(acts.length){el.innerHTML='<b>'+s.data_day+' 执行：</b>'+acts.join('；')}
+    else{el.innerHTML='<b>'+s.data_day+'</b> 无新信号（趋势闸/超跌条件未触发，空仓等待）'}
+  }).catch(function(){
+    var el=document.getElementById('q75-actions');
+    if(el)el.textContent='Q75 信号数据尚未生成（首次 CI 运行后可用）';
+  });
+})();
+</script>
+</body>
+</html>

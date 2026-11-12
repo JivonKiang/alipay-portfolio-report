@@ -1,0 +1,42 @@
+{
+  "date": "2026-11-12",
+  "data_day": "2026-11-12",
+  "params": {
+    "entry": "both",
+    "ma_n": 30,
+    "rsi_n": 6,
+    "rsi_max": 45,
+    "wr_n": 3,
+    "break_n": 20,
+    "tp": 1.5,
+    "sl": 5.0,
+    "hold": 10
+  },
+  "actions": [
+    "CLOSE 512690.SH @0.440 (tp, ret=+1.62%)",
+    "BUY 512690.SH @0.440 x76100 (rsi=43)"
+  ],
+  "positions": {
+    "512690.SH": {
+      "entry_px": 0.44,
+      "entry_date": "2026-11-12",
+      "shares": 76100,
+      "last_px": 0.44,
+      "unrealized": 0.0
+    }
+  },
+  "cash": 67054.3,
+  "total_value": 100538.3,
+  "closed_trades": 1,
+  "win_rate": 1.0,
+  "pool": [
+    "510300.SH",
+    "510500.SH",
+    "512100.SH",
+    "588000.SH",
+    "512480.SH",
+    "515000.SH",
+    "512690.SH",
+    "518880.SH"
+  ]
+}

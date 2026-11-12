@@ -1,0 +1,13 @@
+[
+  {
+    "sym": "512690.SH",
+    "entry_date": "2026-11-11",
+    "exit_date": "2026-11-12",
+    "entry_px": 0.433,
+    "exit_px": 0.44,
+    "ret": 0.01616628175519641,
+    "reason": "tp",
+    "pnl": 538.3,
+    "status": "closed"
+  }
+]
