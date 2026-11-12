@@ -1,6 +1,6 @@
 {
-  "updated": "2026-11-12T01:04:08+08:00",
-  "run_time": "01:04",
+  "updated": "2026-11-12T11:49:07+08:00",
+  "run_time": "11:49",
   "total_assets": 146000,
   "total_flexible": 96000,
   "module_1_environment": {
@@ -13,9 +13,9 @@
     "index_details": {
       "上证50": {
         "status": "bearish",
-        "current": 2765.54,
-        "ma60": 2842.72,
-        "ma120": 2885.89,
+        "current": 2780.31,
+        "ma60": 2840.09,
+        "ma120": 2884.44,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": false,
@@ -23,9 +23,9 @@
       },
       "沪深300": {
         "status": "bearish",
-        "current": 4075.71,
-        "ma60": 4373.69,
-        "ma120": 4583.4,
+        "current": 4080.14,
+        "ma60": 4363.51,
+        "ma120": 4576.96,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": false,
@@ -33,9 +33,9 @@
       },
       "中证500": {
         "status": "bearish",
-        "current": 6713.18,
-        "ma60": 7341.2,
-        "ma120": 7792.98,
+        "current": 6721.06,
+        "ma60": 7319.13,
+        "ma120": 7777.09,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": false,
@@ -43,9 +43,9 @@
       },
       "创业板指": {
         "status": "bearish",
-        "current": 2572.07,
-        "ma60": 3090.1,
-        "ma120": 3472.52,
+        "current": 2573.52,
+        "ma60": 3072.96,
+        "ma120": 3461.4,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": false,
@@ -53,9 +53,9 @@
       },
       "科创50": {
         "status": "bearish",
-        "current": 1300.38,
-        "ma60": 1498.86,
-        "ma120": 1663.58,
+        "current": 1330.95,
+        "ma60": 1492.09,
+        "ma120": 1659.88,
         "above_ma60": false,
         "above_ma120": false,
         "golden_cross": false,
@@ -67,46 +67,22 @@
     "scanned": 25,
     "total": 25,
     "raw_signals": 5,
-    "actionable_signals": 1,
-    "blocked_signals": 4,
+    "actionable_signals": 4,
+    "blocked_signals": 1,
     "signals": [
       {
         "type": "oversold",
         "label": "🟡 超跌反弹",
         "strength": "weak",
-        "reason": "60日最大回撤-16.7%，今日反弹",
-        "board": "汽车芯片",
-        "change_pct": 2.71,
-        "change_5d": 2.77,
-        "vol_ratio": 1.02,
-        "current": 1404.52,
-        "ma10": 1322.9,
-        "ma20": 1350.7,
-        "ma60": 1498.8,
-        "funds": [
-          {
-            "code": "008888",
-            "name": "国联安中证半导体ETF联接C"
-          }
-        ],
-        "gate_passed": true,
-        "position": 500
-      }
-    ],
-    "blocked": [
-      {
-        "type": "oversold",
-        "label": "🟡 超跌反弹",
-        "strength": "weak",
-        "reason": "60日最大回撤-22.9%，今日反弹",
+        "reason": "60日最大回撤-21.7%，今日反弹",
         "board": "半导体",
-        "change_pct": 3.1,
-        "change_5d": 3.11,
-        "vol_ratio": 1.01,
-        "current": 2273.82,
-        "ma10": 2118.2,
-        "ma20": 2183.0,
-        "ma60": 2538.1,
+        "change_pct": 1.58,
+        "change_5d": 8.34,
+        "vol_ratio": 0.89,
+        "current": 2309.65,
+        "ma10": 2138.7,
+        "ma20": 2185.1,
+        "ma60": 2529.7,
         "funds": [
           {
             "code": "008888",
@@ -117,45 +93,66 @@
             "name": "国泰CES半导体芯片ETF联接C"
           }
         ],
-        "gate_passed": false,
-        "block_reason": "涨幅3.1%≥3%"
+        "gate_passed": true,
+        "position": 500
       },
       {
         "type": "oversold",
         "label": "🟡 超跌反弹",
         "strength": "weak",
-        "reason": "60日最大回撤-23.4%，今日反弹",
+        "reason": "60日最大回撤-16.5%，今日反弹",
+        "board": "汽车芯片",
+        "change_pct": 0.26,
+        "change_5d": 6.54,
+        "vol_ratio": 0.74,
+        "current": 1408.18,
+        "ma10": 1331.8,
+        "ma20": 1353.0,
+        "ma60": 1495.8,
+        "funds": [
+          {
+            "code": "008888",
+            "name": "国联安中证半导体ETF联接C"
+          }
+        ],
+        "gate_passed": true,
+        "position": 500
+      },
+      {
+        "type": "oversold",
+        "label": "🟡 超跌反弹",
+        "strength": "weak",
+        "reason": "60日最大回撤-23.2%，今日反弹",
         "board": "铜缆高速连接",
-        "change_pct": 3.9,
-        "change_5d": 5.03,
-        "vol_ratio": 1.04,
-        "current": 2178.73,
-        "ma10": 2036.3,
-        "ma20": 2112.9,
-        "ma60": 2446.0,
+        "change_pct": 0.28,
+        "change_5d": 8.95,
+        "vol_ratio": 0.7,
+        "current": 2184.87,
+        "ma10": 2049.4,
+        "ma20": 2111.4,
+        "ma60": 2440.1,
         "funds": [
           {
             "code": "012629",
             "name": "广发国证半导体芯片ETF联接C"
           }
         ],
-        "gate_passed": false,
-        "block_reason": "涨幅3.9%≥3%"
+        "gate_passed": true,
+        "position": 500
       },
       {
         "type": "oversold",
         "label": "🟡 超跌反弹",
         "strength": "weak",
-        "reason": "60日最大回撤-24.4%，今日反弹",
+        "reason": "60日最大回撤-23.9%，今日反弹",
         "board": "PCB",
-        "change_pct": 3.58,
-        "change_5d": 3.33,
-        "vol_ratio": 1.0,
-        "current": 3379.4,
-        "ma10": 3190.9,
-        "ma20": 3355.0,
-        "ma60": 3827.5,
-        "from_cache": true,
+        "change_pct": 0.62,
+        "change_5d": 8.38,
+        "vol_ratio": 0.75,
+        "current": 3400.32,
+        "ma10": 3209.9,
+        "ma20": 3342.4,
+        "ma60": 3816.9,
         "funds": [
           {
             "code": "002256",
@@ -166,9 +163,11 @@
             "name": "国泰CES半导体芯片ETF联接C"
           }
         ],
-        "gate_passed": false,
-        "block_reason": "涨幅3.58%≥3%"
-      },
+        "gate_passed": true,
+        "position": 500
+      }
+    ],
+    "blocked": [
       {
         "type": "oversold",
         "label": "🟡 超跌反弹",
@@ -195,10 +194,10 @@
     ]
   },
   "module_3_position": {
-    "total_suggested": 500,
+    "total_suggested": 2000,
     "single_max": 5760,
     "strategy": "熊市 — 清仓做反弹",
-    "diversification_note": "建议分散到1只基金"
+    "diversification_note": "建议分散到4只基金"
   },
   "module_4_exit": {
     "exit_signals": [],
@@ -289,18 +288,18 @@
       "bear",
       "bear",
       "bear",
-      "bear",
       "range",
+      "bear",
       "bear",
       "bear"
     ]
   },
   "summary": {
     "environment": "熊市 — 清仓做反弹",
-    "buy_signals": 1,
+    "buy_signals": 4,
     "exit_signals": 0,
-    "today_budget": 500,
+    "today_budget": 2000,
     "action_required": true,
-    "key_action": "优先关注 汽车芯片 (🟡 超跌反弹)"
+    "key_action": "优先关注 半导体 (🟡 超跌反弹)"
   }
 }

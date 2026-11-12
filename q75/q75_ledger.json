@@ -1,11 +1,11 @@
 {
-  "cash": 66702.3,
+  "cash": 67054.3,
   "history": [
     {
       "sym": "512690.SH",
-      "entry_date": "2026-11-11",
-      "entry_px": 0.433,
-      "shares": 76900,
+      "entry_date": "2026-11-12",
+      "entry_px": 0.44,
+      "shares": 76100,
       "status": "open"
     }
   ]
