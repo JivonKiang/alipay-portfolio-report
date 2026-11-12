@@ -1,9 +1,8 @@
 name: Quick Money Hourly Scan
 
 on:
-  schedule:
-    # 北京时间 9:00-15:00 每个整点 (UTC+8 → UTC+0: 1-7)
-    - cron: '0 1,2,3,4,5,6,7 * * 1-5'
+  # 2026-11-12: schedule 迁移至阿里云中继（scripts/relay_run_scan.sh quickmoney 模式，9:00-15:00 整点）
+  # 根因：GitHub schedule 高负载日静默失守（实锤 2026-11-12 上午全 miss）；workflow_dispatch 保留应急
   workflow_dispatch:
 
 permissions:
@@ -36,5 +35,6 @@ jobs:
             echo "No changes, skipping commit"
           else
             git commit -m "快钱模块数据更新 [$(TZ='Asia/Shanghai' date +'%Y-%m-%d %H:%M')]"
+            git pull --rebase origin main || true
             git push
           fi

@@ -1,9 +1,8 @@
 name: Right-Side Scan (MACD+KDJ)
 
 on:
-  schedule:
-    # UTC 6:10 = 北京时间 14:10（周一至周五）
-    - cron: '10 6 * * 1-5'
+  # 2026-11-12: schedule 迁移至阿里云中继（scripts/relay_run_scan.sh scan 模式，14:10）
+  # 根因：GitHub schedule 高负载日静默失守（实锤 2026-11-12 上午全 miss）；workflow_dispatch 保留应急
   workflow_dispatch:
 
 permissions:
