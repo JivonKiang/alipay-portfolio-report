@@ -1,11 +1,9 @@
 name: Trading System (5-Module)
 
 on:
-  schedule:
-    # 北京时间 11:00 → UTC 3:00 (周一至周五)
-    - cron: '0 3 * * 1-5'
-    # 北京时间 14:30 → UTC 6:30 (周一至周五)
-    - cron: '30 6 * * 1-5'
+  # 2026-11-12: schedule 迁移至阿里云中继 cron（11:00/14:30 北京时间，周一至五）
+  # 根因：GitHub schedule 高负载日静默失守（当日实锤 trading-system/quick-money/update 三 workflow 全 miss）
+  # 禁用 GitHub schedule 防双跑；workflow_dispatch 保留应急手动触发
   workflow_dispatch:
 
 jobs:
