@@ -12,10 +12,7 @@
     "sl": 5.0,
     "hold": 10
   },
-  "actions": [
-    "CLOSE 512690.SH @0.440 (tp, ret=+1.62%)",
-    "BUY 512690.SH @0.440 x76100 (rsi=43)"
-  ],
+  "actions": [],
   "positions": {
     "512690.SH": {
       "entry_px": 0.44,
